@@ -1,0 +1,64 @@
+import {
+  Check,
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+import {
+  CAR_PRICE_PRECISION,
+  CAR_PRICE_SCALE,
+  CAR_STATUS_LENGTH,
+  CAR_TYPE_LENGTH,
+  CarStatus,
+} from '@shared';
+
+import { Rental } from '@modules/rentals/entities';
+
+@Entity({ schema: 'rental', name: 'cars' })
+@Check('"pricePerHour" > 0')
+export class Car {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  imageUrl: string;
+
+  @Column()
+  model: string;
+
+  @Column({ type: 'int' })
+  year: number;
+
+  @Column({ type: 'text' })
+  description: string;
+
+  @Column({
+    type: 'decimal',
+    precision: CAR_PRICE_PRECISION,
+    scale: CAR_PRICE_SCALE,
+  })
+  pricePerHour: number;
+
+  @Column({ type: 'varchar', length: CAR_TYPE_LENGTH })
+  type: string;
+
+  @Column({
+    type: 'varchar',
+    length: CAR_STATUS_LENGTH,
+    default: CarStatus.AVAILABLE,
+  })
+  status: CarStatus;
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
+
+  @OneToMany(() => Rental, (rental) => rental.car)
+  rentals: Rental[];
+}

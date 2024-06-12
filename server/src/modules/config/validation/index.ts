@@ -5,4 +5,4 @@ import { postgresValidationSchema } from './postgres';
 
 export const configValidationSchema = Joi.object()
   .concat(appValidationSchema)
-  .concat(postgresValidationSchema)
+  .concat(postgresValidationSchema);
