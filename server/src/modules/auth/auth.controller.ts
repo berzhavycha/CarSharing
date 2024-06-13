@@ -1,10 +1,11 @@
 import { Controller, Post, Body, Res, HttpStatus, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto, RegisterUserDto } from './dtos';
-import { Response } from 'express-serve-static-core';
+import { Response, Request as ExpressRequest } from 'express-serve-static-core';
 import { User } from '@modules/users';
 import { plainToClass } from 'class-transformer';
-import { LocalAuthGuard } from './guards';
+import { JwtRefreshTokenGuard, LocalAuthGuard } from './guards';
+import { errorMessages } from './constants';
 
 
 @Controller('auth')
@@ -33,8 +34,25 @@ export class AuthController {
         const { user, tokens } = await this.authService.signIn(req.user);
         this.authService.setCookies(res, tokens);
 
-
         const transformedUser = plainToClass(User, user);
         res.status(HttpStatus.OK).json(transformedUser);
+    }
+
+    @Post('refresh-token')
+    @UseGuards(JwtRefreshTokenGuard)
+    async refreshAccess(
+        @Res() res: Response,
+        @Request() req: ExpressRequest,
+    ): Promise<void> {
+        const refreshToken = req.cookies.tokens?.refreshToken;
+
+        if (!refreshToken) {
+            throw new Error(errorMessages.REFRESH_TOKEN_NOT_FOUND);
+        }
+
+        const tokens = await this.authService.refreshAccessToken(refreshToken);
+        this.authService.setCookies(res, tokens);
+
+        res.status(HttpStatus.OK).send()
     }
 }

@@ -54,6 +54,24 @@ export class AuthService {
         };
     }
 
+
+    async refreshAccessToken(refreshToken: string): Promise<ITokens> {
+        const decoded = await this.jwtService.verifyAsync(refreshToken, {
+            secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+        });
+
+        await this.validateRefreshToken(decoded.sub, refreshToken);
+
+        return this.generateTokens(decoded.sub, decoded.email);
+    }
+
+    async validateRefreshToken(userId: string, token: string): Promise<void> {
+        const { refreshTokenHash } = await this.usersService.findById(userId);
+        if (refreshTokenHash && !(await bcrypt.compare(token, refreshTokenHash))) {
+          throw new UnauthorizedException(errorMessages.INVALID_REFRESH_TOKEN);
+        }
+      }
+
     private async hash(value: string): Promise<HashResult> {
         const salt = await bcrypt.genSalt();
         return { salt, hash: await bcrypt.hash(value, salt) };
