@@ -7,6 +7,7 @@ import { OriginalCarsModule } from '@modules/original-cars';
 import { RentalsModule } from '@modules/rentals';
 import { TransactionsModule } from '@modules/transactions';
 import { UsersModule } from '@modules/users';
+import { AuthModule } from '@modules/auth';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { UsersModule } from '@modules/users';
     OriginalCarsModule,
     RentalsModule,
     TransactionsModule,
+    AuthModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }
