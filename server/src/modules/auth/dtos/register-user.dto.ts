@@ -1,13 +1,14 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { Roles } from '../constants';
 
-export class UserDto {
+export class RegisterUserDto {
   @IsNotEmpty()
   @IsEmail()
   readonly email: string;
 
   @IsNotEmpty()
   @IsString()
+  @MinLength(8, { message: 'Password must be at least 8 characters long' })
   readonly password: string;
 
   @IsNotEmpty()

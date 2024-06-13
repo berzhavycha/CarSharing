@@ -3,7 +3,7 @@ import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/co
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { DUPLICATE_EMAIL_ERROR_CODE, errorMessages } from './constants';
-import { UserDto } from './dtos';
+import { RegisterUserDto } from './dtos';
 import { AuthResult, ITokens, JwtPayload } from './interfaces';
 import { JwtService } from '@nestjs/jwt';
 import { NODE_ENV, ONE_DAY_MILLISECONDS } from '@shared';
@@ -21,7 +21,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) { }
 
-    async signUp(registerUserDto: UserDto): Promise<AuthResult> {
+    async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
         try {
             const { password, ...safeUser } = registerUserDto;
 
@@ -45,6 +45,13 @@ export class AuthService {
                 throw error;
             }
         }
+    }
+
+    async signIn(signedInUser: User): Promise<AuthResult> {
+        return {
+            user: signedInUser,
+            tokens: await this.generateTokens(signedInUser.id, signedInUser.email),
+        };
     }
 
     private async hash(value: string): Promise<HashResult> {
@@ -95,17 +102,17 @@ export class AuthService {
     async validateUserCredentials(
         email: string,
         password: string,
-      ): Promise<User | null> {
+    ): Promise<User | null> {
         const user = await this.usersService.findByEmail(email);
         if (!user) {
-          throw new UnauthorizedException(errorMessages.INVALID_EMAIL);
+            throw new UnauthorizedException(errorMessages.INVALID_EMAIL);
         }
-    
+
         if (await bcrypt.compare(password, user.passwordHash)) {
-          return plainToClass(User, user);
+            return plainToClass(User, user);
         }
-    
+
         throw new UnauthorizedException(errorMessages.INVALID_PASSWORD);
-      }
-    
+    }
+
 }
