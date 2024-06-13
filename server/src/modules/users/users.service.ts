@@ -4,16 +4,16 @@ import { Repository } from 'typeorm';
 
 import { Roles } from '@shared';
 
+import { USER_DEFAULT_BALANCE } from './constants';
 import { Role, User } from './entities';
 import { SafeUser } from './interfaces';
-import { USER_DEFAULT_BALANCE } from './constants';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     @InjectRepository(Role) private readonly rolesRepository: Repository<Role>,
-  ) { }
+  ) {}
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -58,7 +58,10 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { email }, relations: ['role'] });
+    return this.usersRepository.findOne({
+      where: { email },
+      relations: ['role'],
+    });
   }
 
   async findById(id: string): Promise<User | null> {

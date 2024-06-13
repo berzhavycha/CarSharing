@@ -3,7 +3,7 @@ import {
   Controller,
   HttpStatus,
   Post,
-  Request,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -17,6 +17,7 @@ import { errorMessages } from './constants';
 import { CurrentUser } from './decorators';
 import { LoginUserDto, RegisterUserDto } from './dtos';
 import { JwtAuthGuard, JwtRefreshTokenGuard, LocalAuthGuard } from './guards';
+import { RequestWithUser } from './interfaces';
 
 @Controller('auth')
 export class AuthController {
@@ -39,7 +40,7 @@ export class AuthController {
   async signIn(
     @Body() userDto: LoginUserDto,
     @Res() res: Response,
-    @Request() req,
+    @Req() req: RequestWithUser,
   ): Promise<void> {
     const { user, tokens } = await this.authService.signIn(req.user);
     this.authService.setTokensCookies(res, tokens);
@@ -52,7 +53,7 @@ export class AuthController {
   @UseGuards(JwtRefreshTokenGuard)
   async refreshAccess(
     @Res() res: Response,
-    @Request() req: ExpressRequest,
+    @Req() req: ExpressRequest,
   ): Promise<void> {
     const refreshToken = req.cookies.tokens?.refreshToken;
 
