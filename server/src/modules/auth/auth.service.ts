@@ -1,5 +1,5 @@
 import { UsersService } from '@modules/users/users.service';
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { DUPLICATE_EMAIL_ERROR_CODE, errorMessages } from './constants';
@@ -9,6 +9,8 @@ import { JwtService } from '@nestjs/jwt';
 import { NODE_ENV, ONE_DAY_MILLISECONDS } from '@shared';
 import { Response } from 'express-serve-static-core';
 import { HashResult } from './interfaces/hash-result.interface';
+import { User } from '@modules/users';
+import { plainToClass } from 'class-transformer';
 
 
 @Injectable()
@@ -78,4 +80,32 @@ export class AuthService {
                 this.configService.get<string>('NODE_ENV') === NODE_ENV.production,
         });
     }
+
+
+    async validateUserById(id: string): Promise<User> {
+        const user = await this.usersService.findById(id);
+
+        if (!user) {
+            throw new UnauthorizedException();
+        }
+
+        return plainToClass(User, user);
+    }
+
+    async validateUserCredentials(
+        email: string,
+        password: string,
+      ): Promise<User | null> {
+        const user = await this.usersService.findByEmail(email);
+        if (!user) {
+          throw new UnauthorizedException(errorMessages.INVALID_EMAIL);
+        }
+    
+        if (await bcrypt.compare(password, user.passwordHash)) {
+          return plainToClass(User, user);
+        }
+    
+        throw new UnauthorizedException(errorMessages.INVALID_PASSWORD);
+      }
+    
 }
