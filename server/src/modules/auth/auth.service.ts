@@ -107,7 +107,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  setCookies(response: Response, tokens: ITokens): void {
+  setTokensCookies(response: Response, tokens: ITokens): void {
     response.cookie('tokens', tokens, {
       httpOnly: true,
       maxAge:
@@ -119,7 +119,7 @@ export class AuthService {
     });
   }
 
-  clearCookies(response: Response): void {
+  clearTokensCookies(response: Response): void {
     response.clearCookie('tokens', {
       httpOnly: true,
       sameSite: 'lax',

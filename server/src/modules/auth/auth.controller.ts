@@ -28,7 +28,7 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<void> {
     const { user, tokens } = await this.authService.signUp(userDto);
-    this.authService.setCookies(res, tokens);
+    this.authService.setTokensCookies(res, tokens);
 
     const transformedUser = plainToClass(User, user);
     res.status(HttpStatus.CREATED).json(transformedUser);
@@ -42,7 +42,7 @@ export class AuthController {
     @Request() req,
   ): Promise<void> {
     const { user, tokens } = await this.authService.signIn(req.user);
-    this.authService.setCookies(res, tokens);
+    this.authService.setTokensCookies(res, tokens);
 
     const transformedUser = plainToClass(User, user);
     res.status(HttpStatus.OK).json(transformedUser);
@@ -61,7 +61,7 @@ export class AuthController {
     }
 
     const tokens = await this.authService.refreshAccessToken(refreshToken);
-    this.authService.setCookies(res, tokens);
+    this.authService.setTokensCookies(res, tokens);
 
     res.status(HttpStatus.OK).send();
   }
@@ -73,7 +73,7 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<void> {
     await this.authService.signOut(id);
-    this.authService.clearCookies(res);
+    this.authService.clearTokensCookies(res);
 
     res.status(HttpStatus.OK).send();
   }

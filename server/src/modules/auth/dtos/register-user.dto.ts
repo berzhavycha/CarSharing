@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 
 import { Roles } from '@shared';
+import { PASSWORD_MIN_LENGTH, errorMessages } from '../constants';
 
 export class RegisterUserDto {
   @IsNotEmpty()
@@ -15,7 +16,7 @@ export class RegisterUserDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(8, { message: 'Password must be at least 8 characters long' })
+  @MinLength(PASSWORD_MIN_LENGTH, { message: errorMessages.SMALL_PASSWORD })
   readonly password: string;
 
   @IsNotEmpty()

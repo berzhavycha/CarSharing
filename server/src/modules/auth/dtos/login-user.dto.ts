@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { PASSWORD_MIN_LENGTH, errorMessages } from '../constants';
 
 export class LoginUserDto {
   @IsNotEmpty()
@@ -7,6 +8,6 @@ export class LoginUserDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(8, { message: 'Password must be at least 8 characters long' })
+  @MinLength(PASSWORD_MIN_LENGTH, { message: errorMessages.SMALL_PASSWORD })
   readonly password: string;
 }
