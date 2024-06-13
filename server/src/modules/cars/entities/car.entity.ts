@@ -19,7 +19,7 @@ import {
 import { Rental } from '@modules/rentals/entities';
 
 @Entity({ schema: 'rental', name: 'cars' })
-@Check('"pricePerHour" > 0')
+@Check('"price_per_hour" > 0')
 export class Car {
   @PrimaryGeneratedColumn('uuid')
   id: string;

@@ -15,7 +15,7 @@ import { User } from '@modules/users/entities';
 import { RENTAL_STATUS_LENGTH, RentalStatus } from '../constants';
 
 @Entity({ name: 'rentals', schema: 'rental' })
-@Check('"rentalStart" < "rentalEnd"')
+@Check('"rental_start" < "rental_end"')
 export class Rental {
   @PrimaryGeneratedColumn('uuid')
   id: string;

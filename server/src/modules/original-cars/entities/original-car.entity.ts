@@ -12,7 +12,7 @@ import { CAR_PRICE_PRECISION, CAR_PRICE_SCALE, CAR_TYPE_LENGTH } from '@shared';
 import { Rental } from '@modules/rentals/entities';
 
 @Entity({ schema: 'rental', name: 'original_cars' })
-@Check('"pricePerHour" > 0')
+@Check('"price_per_hour" > 0')
 export class OriginalCar {
   @PrimaryGeneratedColumn('uuid')
   id: string;
