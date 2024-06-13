@@ -6,10 +6,11 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { extractJWTFromCookies } from '@shared';
 
+import { User } from '@modules/users';
+
 import { JwtPayload } from '../interfaces';
 
-import { AuthService } from './../auth.service';
-import { User } from '@modules/users';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class JwtRefreshTokenStrategy extends PassportStrategy(

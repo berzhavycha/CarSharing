@@ -1,5 +1,12 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString, MinLength } from 'class-validator';
-import { Roles } from '../constants';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+} from 'class-validator';
+
+import { Roles } from '@shared';
 
 export class RegisterUserDto {
   @IsNotEmpty()

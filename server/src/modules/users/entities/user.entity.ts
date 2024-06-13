@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -14,7 +15,6 @@ import { Transaction } from '@modules/transactions/entities';
 import { USER_BALANCE_PRECISION, USER_BALANCE_SCALE } from '../constants';
 
 import { Role } from './role.entity';
-import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'users', schema: 'auth' })
 export class User {
