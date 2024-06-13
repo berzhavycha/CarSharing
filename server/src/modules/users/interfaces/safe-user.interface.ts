@@ -5,5 +5,6 @@ export interface SafeUser {
   email: string;
   firstName: string;
   lastName: string;
+  balance?: number;
   role: Roles
 }
