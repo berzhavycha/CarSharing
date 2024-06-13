@@ -1,4 +1,4 @@
 export interface HashResult {
-    salt: string;
-    hash: string;
+  salt: string;
+  hash: string;
 }

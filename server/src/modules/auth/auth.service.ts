@@ -1,17 +1,21 @@
-import { UsersService } from '@modules/users/users.service';
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+    ConflictException,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { plainToClass } from 'class-transformer';
+import { Response } from 'express-serve-static-core';
+
+import { NODE_ENV, ONE_DAY_MILLISECONDS } from '@shared';
+
+import { User, UsersService } from '@modules/users';
+
 import { DUPLICATE_EMAIL_ERROR_CODE, errorMessages } from './constants';
 import { RegisterUserDto } from './dtos';
-import { AuthResult, ITokens, JwtPayload } from './interfaces';
-import { JwtService } from '@nestjs/jwt';
-import { NODE_ENV, ONE_DAY_MILLISECONDS } from '@shared';
-import { Response } from 'express-serve-static-core';
-import { HashResult } from './interfaces/hash-result.interface';
-import { User } from '@modules/users';
-import { plainToClass } from 'class-transformer';
-
+import { HashResult, AuthResult, ITokens, JwtPayload } from './interfaces';
 
 @Injectable()
 export class AuthService {
@@ -31,7 +35,7 @@ export class AuthService {
                 passwordHash: hash,
                 passwordSalt: salt,
                 refreshTokenHash: null,
-                refreshTokenSalt: null
+                refreshTokenSalt: null,
             });
 
             return {
@@ -55,7 +59,10 @@ export class AuthService {
     }
 
     async signOut(userId: string): Promise<void> {
-        await this.usersService.updateUser(userId, { refreshTokenHash: null, refreshTokenSalt: null });
+        await this.usersService.updateUser(userId, {
+            refreshTokenHash: null,
+            refreshTokenSalt: null,
+        });
     }
 
     async refreshAccessToken(refreshToken: string): Promise<ITokens> {
@@ -92,7 +99,10 @@ export class AuthService {
         });
 
         const { salt, hash } = await this.hash(refreshToken);
-        await this.usersService.updateUser(userId, { refreshTokenHash: hash, refreshTokenSalt: salt });
+        await this.usersService.updateUser(userId, {
+            refreshTokenHash: hash,
+            refreshTokenSalt: salt,
+        });
 
         return { accessToken, refreshToken };
     }
@@ -143,5 +153,4 @@ export class AuthService {
 
         throw new UnauthorizedException(errorMessages.INVALID_PASSWORD);
     }
-
 }

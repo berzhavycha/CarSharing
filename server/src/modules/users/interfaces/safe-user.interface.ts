@@ -1,4 +1,4 @@
-import { Roles } from "@modules/auth/constants";
+import { Roles } from '@shared';
 
 export interface SafeUser {
   id?: string;
@@ -6,5 +6,5 @@ export interface SafeUser {
   firstName: string;
   lastName: string;
   balance?: number;
-  role: Roles
+  role: Roles;
 }
