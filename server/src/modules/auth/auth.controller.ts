@@ -4,8 +4,9 @@ import { LoginUserDto, RegisterUserDto } from './dtos';
 import { Response, Request as ExpressRequest } from 'express-serve-static-core';
 import { User } from '@modules/users';
 import { plainToClass } from 'class-transformer';
-import { JwtRefreshTokenGuard, LocalAuthGuard } from './guards';
+import { JwtAuthGuard, JwtRefreshTokenGuard, LocalAuthGuard } from './guards';
 import { errorMessages } from './constants';
+import { CurrentUser } from './decorators';
 
 
 @Controller('auth')
@@ -52,6 +53,18 @@ export class AuthController {
 
         const tokens = await this.authService.refreshAccessToken(refreshToken);
         this.authService.setCookies(res, tokens);
+
+        res.status(HttpStatus.OK).send()
+    }
+
+    @Post('sign-out')
+    @UseGuards(JwtAuthGuard)
+    public async signOut(
+        @CurrentUser('id') id: string,
+        @Res() res: Response,
+    ): Promise<void> {
+        await this.authService.signOut(id);
+        this.authService.clearCookies(res);
 
         res.status(HttpStatus.OK).send()
     }
