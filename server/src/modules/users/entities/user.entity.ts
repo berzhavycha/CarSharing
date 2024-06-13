@@ -14,6 +14,7 @@ import { Transaction } from '@modules/transactions/entities';
 import { USER_BALANCE_PRECISION, USER_BALANCE_SCALE } from '../constants';
 
 import { Role } from './role.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'users', schema: 'auth' })
 export class User {
@@ -29,15 +30,19 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Exclude()
   @Column()
   passwordHash: string;
 
+  @Exclude()
   @Column()
   passwordSalt: string;
 
+  @Exclude()
   @Column({ nullable: true })
   refreshTokenHash: string | null;
 
+  @Exclude()
   @Column({ nullable: true })
   refreshTokenSalt: string | null;
 
