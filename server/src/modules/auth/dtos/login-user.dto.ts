@@ -1,5 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
-import { PASSWORD_MIN_LENGTH, errorMessages } from '../constants';
+
+import { errorMessages, PASSWORD_MIN_LENGTH } from '../constants';
 
 export class LoginUserDto {
   @IsNotEmpty()

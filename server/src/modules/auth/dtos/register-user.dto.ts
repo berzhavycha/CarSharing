@@ -7,7 +7,8 @@ import {
 } from 'class-validator';
 
 import { Roles } from '@shared';
-import { PASSWORD_MIN_LENGTH, errorMessages } from '../constants';
+
+import { errorMessages, PASSWORD_MIN_LENGTH } from '../constants';
 
 export class RegisterUserDto {
   @IsNotEmpty()
