@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -28,6 +29,7 @@ export class Car {
   imageUrl: string;
 
   @Column()
+  @Index()
   model: string;
 
   @Column({ type: 'int' })

@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -42,12 +43,15 @@ export class Rental {
   updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.rentals)
+  @Index()
   user: User;
 
   @ManyToOne(() => Car, (car) => car.rentals)
+  @Index()
   car: Car;
 
   @ManyToOne(() => OriginalCar, (originalCar) => originalCar.rentals)
+  @Index()
   originalCar: OriginalCar;
 
   @OneToMany(() => Transaction, (transaction) => transaction.rental)

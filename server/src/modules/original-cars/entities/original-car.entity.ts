@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -21,6 +22,7 @@ export class OriginalCar {
   imageUrl: string;
 
   @Column()
+  @Index()
   model: string;
 
   @Column({ type: 'int' })
