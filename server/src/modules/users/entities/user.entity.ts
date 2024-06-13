@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 
 import { Rental } from '@modules/rentals/entities';
+import { Transaction } from '@modules/transactions/entities';
 
 import { USER_BALANCE_PRECISION, USER_BALANCE_SCALE } from '../constants';
 
@@ -51,8 +52,9 @@ export class User {
   @ManyToOne(() => Role, (role) => role.users)
   role: Role;
 
-  @OneToMany(() => Rental, (rental) => rental.user, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => Rental, (rental) => rental.user)
   rentals: Rental[];
+
+  @OneToMany(() => Transaction, (transaction) => transaction.user)
+  transactions: Transaction[];
 }

@@ -4,12 +4,14 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { Car } from '@modules/cars/entities';
 import { OriginalCar } from '@modules/original-cars/entities';
+import { Transaction } from '@modules/transactions/entities';
 import { User } from '@modules/users/entities';
 
 import { RENTAL_STATUS_LENGTH, RentalStatus } from '../constants';
@@ -47,4 +49,7 @@ export class Rental {
 
   @ManyToOne(() => OriginalCar, (originalCar) => originalCar.rentals)
   originalCar: OriginalCar;
+
+  @OneToMany(() => Transaction, (transaction) => transaction.rental)
+  transactions: Transaction[];
 }
