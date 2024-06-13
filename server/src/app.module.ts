@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { AuthModule } from '@modules/auth';
 import { CarsModule } from '@modules/cars';
 import { ConfigModule } from '@modules/config';
 import { DatabaseModule } from '@modules/database';
@@ -17,6 +18,7 @@ import { UsersModule } from '@modules/users';
     OriginalCarsModule,
     RentalsModule,
     TransactionsModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
