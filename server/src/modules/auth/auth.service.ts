@@ -54,6 +54,9 @@ export class AuthService {
         };
     }
 
+    async signOut(userId: string): Promise<void> {
+        await this.usersService.updateUser(userId, { refreshTokenHash: null, refreshTokenSalt: null });
+    }
 
     async refreshAccessToken(refreshToken: string): Promise<ITokens> {
         const decoded = await this.jwtService.verifyAsync(refreshToken, {
@@ -68,9 +71,9 @@ export class AuthService {
     async validateRefreshToken(userId: string, token: string): Promise<void> {
         const { refreshTokenHash } = await this.usersService.findById(userId);
         if (refreshTokenHash && !(await bcrypt.compare(token, refreshTokenHash))) {
-          throw new UnauthorizedException(errorMessages.INVALID_REFRESH_TOKEN);
+            throw new UnauthorizedException(errorMessages.INVALID_REFRESH_TOKEN);
         }
-      }
+    }
 
     private async hash(value: string): Promise<HashResult> {
         const salt = await bcrypt.genSalt();
@@ -106,6 +109,14 @@ export class AuthService {
         });
     }
 
+    clearCookies(response: Response): void {
+        response.clearCookie('tokens', {
+            httpOnly: true,
+            sameSite: 'lax',
+            secure:
+                this.configService.get<string>('NODE_ENV') === NODE_ENV.production,
+        });
+    }
 
     async validateUserById(id: string): Promise<User> {
         const user = await this.usersService.findById(id);
