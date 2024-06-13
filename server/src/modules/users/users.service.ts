@@ -2,16 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { Roles } from '@shared';
+
 import { Role, User } from './entities';
 import { SafeUser } from './interfaces';
-import { Roles } from '@shared'
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     @InjectRepository(Role) private readonly rolesRepository: Repository<Role>,
-  ) { }
+  ) {}
 
   async createUser(userData: {
     userDetails: SafeUser;

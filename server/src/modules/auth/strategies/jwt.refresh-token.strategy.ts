@@ -8,9 +8,8 @@ import { extractJWTFromCookies } from '@shared';
 
 import { User } from '@modules/users';
 
-import { JwtPayload } from '../interfaces';
-
 import { AuthService } from '../auth.service';
+import { JwtPayload } from '../interfaces';
 
 @Injectable()
 export class JwtRefreshTokenStrategy extends PassportStrategy(
