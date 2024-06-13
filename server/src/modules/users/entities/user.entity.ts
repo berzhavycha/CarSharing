@@ -32,8 +32,14 @@ export class User {
   @Column()
   passwordHash: string;
 
+  @Column()
+  passwordSalt: string;
+
   @Column({ nullable: true })
   refreshTokenHash: string | null;
+
+  @Column({ nullable: true })
+  refreshTokenSalt: string | null;
 
   @Column({
     type: 'decimal',
