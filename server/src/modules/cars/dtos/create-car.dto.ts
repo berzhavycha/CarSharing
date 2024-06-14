@@ -1,5 +1,5 @@
-import { IsString, IsInt, IsDecimal, IsEnum, Length } from 'class-validator';
-import { CAR_TYPE_LENGTH, CarStatus, CAR_PRICE_PRECISION, CAR_PRICE_SCALE } from '@shared';
+import { IsString, IsInt, IsEnum, Length, IsNumber } from 'class-validator';
+import { CAR_TYPE_LENGTH, CarStatus } from '@shared';
 
 export class CreateCarDto {
     @IsString()
@@ -14,7 +14,7 @@ export class CreateCarDto {
     @IsString()
     description: string;
 
-    @IsDecimal({ decimal_digits: `${CAR_PRICE_PRECISION},${CAR_PRICE_SCALE}` })
+    @IsNumber()
     pricePerHour: number;
 
     @IsString()

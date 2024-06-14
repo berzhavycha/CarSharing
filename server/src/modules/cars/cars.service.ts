@@ -62,7 +62,7 @@ export class CarsService {
         const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
         if (search) {
-            queryBuilder.where('car.name LIKE :name', { name: `%${search}%` });
+            queryBuilder.where('car.model LIKE :name', { name: `%${search}%` });
         }
 
         const skip = (page - 1) * limit
