@@ -16,8 +16,7 @@ import { Roles } from '@shared';
 import { RoleGuard } from '@modules/auth';
 
 import { CarsService } from './cars.service';
-import { CreateCarDto, UpdateCarDto } from './dtos';
-import { QueryCarsDto } from './dtos';
+import { CreateCarDto, QueryCarsDto, UpdateCarDto } from './dtos';
 import { Car } from './entities';
 
 @Controller('cars')
