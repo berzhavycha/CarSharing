@@ -1,7 +1,8 @@
-import { Body, Controller, Param, ParseUUIDPipe, Patch, Post, Delete, Get } from '@nestjs/common';
+import { Body, Controller, Param, ParseUUIDPipe, Patch, Post, Delete, Get, Query } from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CreateCarDto, UpdateCarDto } from './dtos';
 import { Car } from './entities';
+import { QueryCarsDto } from './dtos/query-cars.dto';
 
 @Controller('cars')
 export class CarsController {
@@ -10,6 +11,11 @@ export class CarsController {
     @Post()
     create(@Body() createCarDto: CreateCarDto): Promise<Car> {
         return this.carsService.createCar(createCarDto);
+    }
+
+    @Get()
+    findAll(@Query() listCarsDto: QueryCarsDto): Promise<Car[]> {
+        return this.carsService.findAll(listCarsDto);
     }
 
     @Get(':id')

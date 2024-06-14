@@ -2,9 +2,10 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Car } from './entities';
-import { CreateCarDto, UpdateCarDto } from './dtos';
-import { errorMessages } from './constants';
+import { CreateCarDto, QueryCarsDto, UpdateCarDto } from './dtos';
+import { DEFAULT_ORDER_COLUMN, errorMessages } from './constants';
 import { RentalStatus } from '@modules/rentals';
+import { DEFAULT_ORDER, DEFAULT_PAGINATION_PAGE, DEFAULT_PAGINATION_LIMIT } from '@shared';
 
 @Injectable()
 export class CarsService {
@@ -53,5 +54,24 @@ export class CarsService {
         }
 
         return car;
+    }
+
+    async findAll(listCarsDto: QueryCarsDto): Promise<Car[]> {
+        const { search, page = DEFAULT_PAGINATION_PAGE, limit = DEFAULT_PAGINATION_LIMIT, order = DEFAULT_ORDER, sort = DEFAULT_ORDER_COLUMN } = listCarsDto;
+
+        const queryBuilder = this.carsRepository.createQueryBuilder('car');
+
+        if (search) {
+            queryBuilder.where('car.name LIKE :name', { name: `%${search}%` });
+        }
+
+        const skip = (page - 1) * limit
+
+        queryBuilder
+            .take(limit)
+            .skip(skip)
+            .orderBy(`car.${sort}`, order);
+
+        return queryBuilder.getMany();
     }
 }
