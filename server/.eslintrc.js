@@ -19,6 +19,7 @@ module.exports = {
     jest: true,
   },
   rules: {
+    "no-duplicate-imports": "error",
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'error',
