@@ -1,10 +1,13 @@
-import { Body, Controller, Param, ParseUUIDPipe, Patch, Post, Delete, Get, Query } from '@nestjs/common';
+import { Body, Controller, Param, ParseUUIDPipe, Patch, Post, Delete, Get, Query, UseGuards } from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CreateCarDto, UpdateCarDto } from './dtos';
 import { Car } from './entities';
-import { QueryCarsDto } from './dtos/query-cars.dto';
+import { QueryCarsDto } from './dtos';
+import { RoleGuard } from '@modules/auth';
+import { Roles } from '@shared';
 
 @Controller('cars')
+@UseGuards(RoleGuard(Roles.ADMIN))
 export class CarsController {
     constructor(private readonly carsService: CarsService) { }
 
