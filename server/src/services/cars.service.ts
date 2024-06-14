@@ -1,13 +1,3 @@
-import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@dtos';
-import { Car } from '@entities';
-import {
-  CAR_DEFAULT_ORDER_COLUMN,
-  carErrorMessages,
-  DEFAULT_ORDER,
-  DEFAULT_PAGINATION_LIMIT,
-  DEFAULT_PAGINATION_PAGE,
-  RentalStatus,
-} from '@helpers';
 import {
   BadRequestException,
   Injectable,
@@ -15,6 +5,17 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
+import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
+import { Car } from '@/entities';
+import {
+  CAR_DEFAULT_ORDER_COLUMN,
+  carErrorMessages,
+  DEFAULT_ORDER,
+  DEFAULT_PAGINATION_LIMIT,
+  DEFAULT_PAGINATION_PAGE,
+  RentalStatus,
+} from '@/helpers';
 
 @Injectable()
 export class CarsService {

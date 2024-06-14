@@ -18,16 +18,16 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@controllers": [
+      "@/controllers": [
         "src/controllers"
       ],
-      "@controllers/*": [
+      "@/controllers/*": [
         "src/controllers/*"
       ],
-      "@core": [
+      "@/core": [
         "src/core"
       ],
-      "@core/*": [
+      "@/core/*": [
         "src/core/*"
       ],
       "@decorators": [
@@ -36,52 +36,52 @@
       "@decorators/*": [
         "src/decorators/*"
       ],
-      "@entities": [
+      "@/entities": [
         "src/entities"
       ],
-      "@entities/*": [
+      "@/entities/*": [
         "src/entities/*"
       ],
-      "@dtos": [
+      "@/dtos": [
         "src/dtos"
       ],
-      "@dtos/*": [
+      "@/dtos/*": [
         "src/dtos/*"
       ],
-      "@guards": [
+      "@/guards": [
         "src/guards"
       ],
-      "@guards/*": [
+      "@/guards/*": [
         "src/guards/*"
       ],
-      "@helpers": [
+      "@/helpers": [
         "src/helpers"
       ],
-      "@helpers/*": [
+      "@/helpers/*": [
         "src/helpers/*"
       ],
-      "@interfaces": [
+      "@/interfaces": [
         "src/interfaces"
       ],
-      "@interfaces/*": [
+      "@/interfaces/*": [
         "src/interfaces/*"
       ],
-      "@modules": [
+      "@/modules": [
         "src/modules"
       ],
-      "@modules/*": [
+      "@/modules/*": [
         "src/modules/*"
       ],
-      "@services": [
+      "@/services": [
         "src/services"
       ],
-      "@services/*": [
+      "@/services/*": [
         "src/services/*"
       ],
-      "@types": [
+      "@/types": [
         "src/types"
       ],
-      "@types/*": [
+      "@/types/*": [
         "src/types/*"
       ]
     }

@@ -1,14 +1,15 @@
-import { AuthController } from '@controllers';
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+
+import { AuthController } from '@/controllers';
 import {
   JwtConfig,
   JwtRefreshTokenStrategy,
   JwtStrategy,
   LocalStrategy,
-} from '@core';
-import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
-import { AuthService } from '@services';
+} from '@/core';
+import { AuthService } from '@/services';
 
 import { UsersModule } from './users.module';
 

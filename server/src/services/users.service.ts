@@ -1,9 +1,10 @@
-import { Role, User } from '@entities';
-import { Roles, USER_DEFAULT_BALANCE } from '@helpers';
-import { SafeUser } from '@interfaces';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
+import { Role, User } from '@/entities';
+import { Roles, USER_DEFAULT_BALANCE } from '@/helpers';
+import { SafeUser } from '@/interfaces';
 
 @Injectable()
 export class UsersService {
