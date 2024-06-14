@@ -44,4 +44,14 @@ export class CarsService {
 
         await this.carsRepository.remove(car);
     }
+
+    async findOne(id: string): Promise<Car> {
+        const car = await this.carsRepository.findOne({ where: { id } });
+
+        if (!car) {
+            throw new NotFoundException(errorMessages.CAR_BY_ID_NOT_FOUND(id));
+        }
+
+        return car;
+    }
 }
