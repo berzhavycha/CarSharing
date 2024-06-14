@@ -1,6 +1,7 @@
-import { Roles } from '@helpers';
-import { RequestWithUser } from '@interfaces';
 import { CanActivate, ExecutionContext, mixin, Type } from '@nestjs/common';
+
+import { Roles } from '@/helpers';
+import { RequestWithUser } from '@/interfaces';
 
 import { JwtAuthGuard } from './jwt-auth.guard';
 

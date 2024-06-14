@@ -1,7 +1,3 @@
-import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@dtos';
-import { Car } from '@entities';
-import { RoleGuard } from '@guards';
-import { Roles } from '@helpers';
 import {
   Body,
   Controller,
@@ -14,7 +10,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { CarsService } from '@services';
+
+import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
+import { Car } from '@/entities';
+import { RoleGuard } from '@/guards';
+import { Roles } from '@/helpers';
+import { CarsService } from '@/services';
 
 @Controller('cars')
 @UseGuards(RoleGuard(Roles.ADMIN))

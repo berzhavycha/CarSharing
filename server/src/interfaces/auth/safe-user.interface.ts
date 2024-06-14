@@ -1,4 +1,4 @@
-import { Roles } from '@helpers';
+import { Roles } from '@/helpers';
 
 export interface SafeUser {
   id?: string;

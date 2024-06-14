@@ -1,7 +1,8 @@
-import { DEFAULT_PAGINATION_LIMIT, DEFAULT_PAGINATION_PAGE } from '@helpers';
-import { Order } from '@types';
 import { Transform } from 'class-transformer';
 import { IsInt, IsOptional, IsString } from 'class-validator';
+
+import { DEFAULT_PAGINATION_LIMIT, DEFAULT_PAGINATION_PAGE } from '@/helpers';
+import { Order } from '@/types';
 
 export class PaginationDto {
   @IsOptional()

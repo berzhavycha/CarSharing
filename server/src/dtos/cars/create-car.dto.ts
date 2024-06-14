@@ -1,5 +1,6 @@
-import { CAR_TYPE_LENGTH, CarStatus } from '@helpers';
 import { IsEnum, IsInt, IsNumber, IsString, Length } from 'class-validator';
+
+import { CAR_TYPE_LENGTH, CarStatus } from '@/helpers';
 
 export class CreateCarDto {
   @IsString()

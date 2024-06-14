@@ -1,11 +1,4 @@
 import {
-  CAR_PRICE_PRECISION,
-  CAR_PRICE_SCALE,
-  CAR_STATUS_LENGTH,
-  CAR_TYPE_LENGTH,
-  CarStatus,
-} from '@helpers';
-import {
   Check,
   Column,
   CreateDateColumn,
@@ -15,6 +8,14 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import {
+  CAR_PRICE_PRECISION,
+  CAR_PRICE_SCALE,
+  CAR_STATUS_LENGTH,
+  CAR_TYPE_LENGTH,
+  CarStatus,
+} from '@/helpers';
 
 import { Rental } from './rental.entity';
 

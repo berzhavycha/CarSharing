@@ -1,5 +1,6 @@
-import { authErrorMessages, PASSWORD_MIN_LENGTH } from '@helpers';
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+
+import { authErrorMessages, PASSWORD_MIN_LENGTH } from '@/helpers';
 
 export class LoginUserDto {
   @IsNotEmpty()

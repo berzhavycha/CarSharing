@@ -1,4 +1,3 @@
-import { USER_BALANCE_PRECISION, USER_BALANCE_SCALE } from '@helpers';
 import { Exclude } from 'class-transformer';
 import {
   Column,
@@ -9,6 +8,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { USER_BALANCE_PRECISION, USER_BALANCE_SCALE } from '@/helpers';
 
 import { Rental } from './rental.entity';
 import { Role } from './role.entity';

@@ -1,12 +1,3 @@
-import { RegisterUserDto } from '@dtos';
-import { User } from '@entities';
-import {
-  authErrorMessages,
-  DUPLICATE_EMAIL_ERROR_CODE,
-  NODE_ENV,
-  ONE_DAY_MILLISECONDS,
-} from '@helpers';
-import { AuthResult, HashResult, ITokens, JwtPayload } from '@interfaces';
 import {
   ConflictException,
   Injectable,
@@ -17,6 +8,16 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { plainToClass } from 'class-transformer';
 import { Response } from 'express-serve-static-core';
+
+import { RegisterUserDto } from '@/dtos';
+import { User } from '@/entities';
+import {
+  authErrorMessages,
+  DUPLICATE_EMAIL_ERROR_CODE,
+  NODE_ENV,
+  ONE_DAY_MILLISECONDS,
+} from '@/helpers';
+import { AuthResult, HashResult, ITokens, JwtPayload } from '@/interfaces';
 
 import { UsersService } from './users.service';
 

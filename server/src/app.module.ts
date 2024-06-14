@@ -1,4 +1,6 @@
-import { ConfigModule, DatabaseModule } from '@core';
+import { Module } from '@nestjs/common';
+
+import { ConfigModule, DatabaseModule } from '@/core';
 import {
   AuthModule,
   CarsModule,
@@ -6,8 +8,7 @@ import {
   RentalsModule,
   TransactionsModule,
   UsersModule,
-} from '@modules';
-import { Module } from '@nestjs/common';
+} from '@/modules';
 
 @Module({
   imports: [

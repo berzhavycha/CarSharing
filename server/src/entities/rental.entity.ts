@@ -1,4 +1,3 @@
-import { RENTAL_STATUS_LENGTH, RentalStatus } from '@helpers';
 import {
   Check,
   Column,
@@ -10,6 +9,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { RENTAL_STATUS_LENGTH, RentalStatus } from '@/helpers';
 
 import { Car } from './car.entity';
 import { OriginalCar } from './original-car.entity';

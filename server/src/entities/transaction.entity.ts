@@ -1,9 +1,4 @@
 import {
-  TRANSACTION_AMOUNT_PRECISION,
-  TRANSACTION_AMOUNT_SCALE,
-  TransactionType,
-} from '@helpers';
-import {
   Column,
   CreateDateColumn,
   Entity,
@@ -11,6 +6,12 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import {
+  TRANSACTION_AMOUNT_PRECISION,
+  TRANSACTION_AMOUNT_SCALE,
+  TransactionType,
+} from '@/helpers';
 
 import { Rental } from './rental.entity';
 import { User } from './user.entity';

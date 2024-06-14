@@ -1,7 +1,8 @@
-import { Role, User } from '@entities';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersService } from '@services';
+
+import { Role, User } from '@/entities';
+import { UsersService } from '@/services';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Role])],

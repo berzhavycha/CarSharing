@@ -1,9 +1,4 @@
 import { CurrentUser } from '@decorators';
-import { LoginUserDto, RegisterUserDto } from '@dtos';
-import { User } from '@entities';
-import { JwtAuthGuard, JwtRefreshTokenGuard, LocalAuthGuard } from '@guards';
-import { authErrorMessages } from '@helpers';
-import { RequestWithUser } from '@interfaces';
 import {
   Body,
   Controller,
@@ -13,9 +8,15 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { AuthService } from '@services';
 import { plainToClass } from 'class-transformer';
 import { Request as ExpressRequest, Response } from 'express-serve-static-core';
+
+import { LoginUserDto, RegisterUserDto } from '@/dtos';
+import { User } from '@/entities';
+import { JwtAuthGuard, JwtRefreshTokenGuard, LocalAuthGuard } from '@/guards';
+import { authErrorMessages } from '@/helpers';
+import { RequestWithUser } from '@/interfaces';
+import { AuthService } from '@/services';
 
 @Controller('auth')
 export class AuthController {
