@@ -1,26 +1,27 @@
-import { IsString, IsInt, IsEnum, Length, IsNumber } from 'class-validator';
+import { IsEnum, IsInt, IsNumber, IsString, Length } from 'class-validator';
+
 import { CAR_TYPE_LENGTH, CarStatus } from '@shared';
 
 export class CreateCarDto {
-    @IsString()
-    imageUrl: string;
+  @IsString()
+  imageUrl: string;
 
-    @IsString()
-    model: string;
+  @IsString()
+  model: string;
 
-    @IsInt()
-    year: number;
+  @IsInt()
+  year: number;
 
-    @IsString()
-    description: string;
+  @IsString()
+  description: string;
 
-    @IsNumber()
-    pricePerHour: number;
+  @IsNumber()
+  pricePerHour: number;
 
-    @IsString()
-    @Length(1, CAR_TYPE_LENGTH)
-    type: string;
+  @IsString()
+  @Length(1, CAR_TYPE_LENGTH)
+  type: string;
 
-    @IsEnum(CarStatus)
-    status: CarStatus;
+  @IsEnum(CarStatus)
+  status: CarStatus;
 }
