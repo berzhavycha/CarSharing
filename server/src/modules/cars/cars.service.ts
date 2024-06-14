@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Car } from './entities';
 import { CreateCarDto, UpdateCarDto } from './dtos';
 import { errorMessages } from './constants';
+import { RentalStatus } from '@modules/rentals';
 
 @Injectable()
 export class CarsService {
@@ -28,5 +29,19 @@ export class CarsService {
         }
 
         return this.carsRepository.save(car);
+    }
+
+    async removeCar(id: string): Promise<void> {
+        const car = await this.carsRepository.findOne({ where: { id }, relations: ['rentals'] })
+
+        if (!car) {
+            throw new NotFoundException(errorMessages.CAR_BY_ID_NOT_FOUND(id));
+        }
+
+        if (car.rentals.some(rental => rental.status === RentalStatus.ACTIVE)) {
+            throw new BadRequestException(errorMessages.CAR_CANNOT_BE_DELETED)
+        }
+
+        await this.carsRepository.remove(car);
     }
 }
