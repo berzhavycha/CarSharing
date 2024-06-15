@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 
-import { ConfigModule, DatabaseModule } from '@/core';
 import {
   AuthModule,
   CarsModule,
+  ConfigModule,
+  DatabaseModule,
   OriginalCarsModule,
   RentalsModule,
   TransactionsModule,
