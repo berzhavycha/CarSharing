@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { typeOrmConfig } from './configs';
+import { typeOrmConfig } from '@/core';
 
 @Module({
   imports: [TypeOrmModule.forRootAsync(typeOrmConfig)],
