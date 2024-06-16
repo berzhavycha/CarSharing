@@ -9,8 +9,10 @@ import { Repository } from 'typeorm';
 import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { Car } from '@/entities';
 import {
+  applySearchAndPagination,
   CAR_DEFAULT_ORDER_COLUMN,
   carErrorMessages,
+  CarStatus,
   DEFAULT_ORDER,
   DEFAULT_PAGINATION_LIMIT,
   DEFAULT_PAGINATION_PAGE,
@@ -22,7 +24,7 @@ export class CarsService {
   constructor(
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
-  ) {}
+  ) { }
 
   async createCar(createCarDto: CreateCarDto): Promise<Car> {
     const car = this.carsRepository.create(createCarDto);
@@ -80,13 +82,39 @@ export class CarsService {
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
-    if (search) {
-      queryBuilder.where('car.model LIKE :name', { name: `%${search}%` });
-    }
+    applySearchAndPagination(queryBuilder, {
+      search,
+      page,
+      limit,
+      order,
+      sort,
+      entityAlias: 'car',
+    });
 
-    const skip = (page - 1) * limit;
+    return queryBuilder.getMany();
+  }
 
-    queryBuilder.take(limit).skip(skip).orderBy(`car.${sort}`, order);
+  async findAllAvailable(listCarsDto: QueryCarsDto): Promise<Car[]> {
+    const {
+      search,
+      page = DEFAULT_PAGINATION_PAGE,
+      limit = DEFAULT_PAGINATION_LIMIT,
+      order = DEFAULT_ORDER,
+      sort = CAR_DEFAULT_ORDER_COLUMN,
+    } = listCarsDto;
+
+    const queryBuilder = this.carsRepository.createQueryBuilder('car');
+
+    queryBuilder.where('car.status = :status', { available: CarStatus.AVAILABLE });
+
+    applySearchAndPagination(queryBuilder, {
+      search,
+      page,
+      limit,
+      order,
+      sort,
+      entityAlias: 'car',
+    });
 
     return queryBuilder.getMany();
   }
