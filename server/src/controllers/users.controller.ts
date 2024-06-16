@@ -18,7 +18,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
     @Patch(':id')
-    updateUser(
+    async updateUser(
         @Param('id', ParseUUIDPipe) id: string,
         @Body() updateUserDto: UpdateUserDto
     ): Promise<User> {
