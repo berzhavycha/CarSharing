@@ -26,7 +26,7 @@ export class Rental {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   rentalStart: Date;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamp', nullable: true })
   rentalEnd: Date;
 
   @Column()

@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Get,
     Post,
     UseGuards,
 } from '@nestjs/common';
@@ -20,5 +21,10 @@ export class RentalsController {
     @Post()
     async rentCar(@Body() rentCarDto: RentCarDto, @CurrentUser() user: User): Promise<Rental> {
         return this.rentalsService.rentCar(rentCarDto, user)
+    }
+
+    @Get('/current')
+    async getCurrentRental(@CurrentUser('id') id: string): Promise<Rental> {
+        return this.rentalsService.findByUserId(id)
     }
 }
