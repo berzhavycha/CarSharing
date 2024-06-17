@@ -21,7 +21,7 @@ import { AuthService } from '@/services';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('sign-up')
   async signUp(
@@ -80,10 +80,8 @@ export class AuthController {
 
   @Get('current-user')
   @UseGuards(JwtAuthGuard)
-  async getCurrentUser(
-    @CurrentUser() user: User,
-  ): Promise<User | null> {
-    if(user) return user
+  async getCurrentUser(@CurrentUser() user: User): Promise<User | null> {
+    if (user) return user;
     return null;
   }
 }

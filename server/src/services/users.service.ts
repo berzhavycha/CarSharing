@@ -4,7 +4,12 @@ import { EntityManager, Repository } from 'typeorm';
 
 import { UpdateUserBalanceDto } from '@/dtos';
 import { Rental, User } from '@/entities';
-import { Roles, TransactionType, USER_DEFAULT_BALANCE, usersErrorMessages } from '@/helpers';
+import {
+  Roles,
+  TransactionType,
+  USER_DEFAULT_BALANCE,
+  usersErrorMessages,
+} from '@/helpers';
 import { SafeUser } from '@/interfaces';
 
 import { RolesService } from './roles.service';
@@ -16,7 +21,7 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
-  ) { }
+  ) {}
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -62,7 +67,10 @@ export class UsersService {
   }
 
   async findById(id: string): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id }, relations: ['role'] });
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      relations: ['role'],
+    });
 
     if (!user) {
       throw new NotFoundException(usersErrorMessages.USER_NOT_FOUND);
