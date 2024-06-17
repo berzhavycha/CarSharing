@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
 import { UpdateUserBalanceDto } from '@/dtos';
 import { Rental, User } from '@/entities';
-import { Roles, TransactionType, USER_DEFAULT_BALANCE } from '@/helpers';
+import { Roles, TransactionType, USER_DEFAULT_BALANCE, usersErrorMessages } from '@/helpers';
 import { SafeUser } from '@/interfaces';
 
 import { RolesService } from './roles.service';
@@ -16,7 +16,7 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
-  ) {}
+  ) { }
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -61,8 +61,14 @@ export class UsersService {
     });
   }
 
-  async findById(id: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { id }, relations: ['role'] });
+  async findById(id: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ where: { id }, relations: ['role'] });
+
+    if (!user) {
+      throw new NotFoundException(usersErrorMessages.USER_NOT_FOUND);
+    }
+
+    return user;
   }
 
   async updateUser(
@@ -71,12 +77,7 @@ export class UsersService {
   ): Promise<User | null> {
     const user = await this.findById(id);
 
-    if (!user) {
-      return null;
-    }
-
     Object.assign(user, updateUserDto);
-
     return this.usersRepository.save(user);
   }
 
@@ -90,10 +91,6 @@ export class UsersService {
     manager?: EntityManager,
   ): Promise<User | null> {
     const user = await this.findById(options.id);
-
-    if (!user) {
-      return null;
-    }
 
     const updateBalance = async (manager: EntityManager): Promise<User> => {
       await this.transactionsService.createTransaction(
