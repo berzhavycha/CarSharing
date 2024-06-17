@@ -6,21 +6,21 @@ import { Role } from '@/entities';
 
 @Injectable()
 export class RolesService {
-    constructor(
-        @InjectRepository(Role) private readonly rolesRepository: Repository<Role>,
-    ) { }
+  constructor(
+    @InjectRepository(Role) private readonly rolesRepository: Repository<Role>,
+  ) {}
 
-    async createRole(name: string): Promise<Role> {
-        const role = this.rolesRepository.create({
-            name,
-        });
+  async createRole(name: string): Promise<Role> {
+    const role = this.rolesRepository.create({
+      name,
+    });
 
-        return this.rolesRepository.save(role);
-    }
+    return this.rolesRepository.save(role);
+  }
 
-    async findByName(name: string): Promise<Role | null> {
-        return this.rolesRepository.findOne({
-            where: { name },
-        });
-    }
+  async findByName(name: string): Promise<Role | null> {
+    return this.rolesRepository.findOne({
+      where: { name },
+    });
+  }
 }

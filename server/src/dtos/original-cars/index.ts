@@ -1,1 +1,1 @@
-export * from './create-original-car.dto'
+export * from './create-original-car.dto';

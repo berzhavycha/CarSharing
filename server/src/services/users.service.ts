@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
+import { UpdateUserBalanceDto } from '@/dtos';
 import { Rental, User } from '@/entities';
 import { Roles, TransactionType, USER_DEFAULT_BALANCE } from '@/helpers';
 import { SafeUser } from '@/interfaces';
-import { UpdateUserBalanceDto } from '@/dtos';
-import { TransactionsService } from './transactions.service';
+
 import { RolesService } from './roles.service';
+import { TransactionsService } from './transactions.service';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +16,7 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
-  ) { }
+  ) {}
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -32,10 +33,10 @@ export class UsersService {
       refreshTokenSalt,
     } = userData;
 
-    let role = await this.rolesService.findByName(userDetails.role)
+    let role = await this.rolesService.findByName(userDetails.role);
 
     if (!role) {
-      role = await this.rolesService.createRole(userDetails.role)
+      role = await this.rolesService.createRole(userDetails.role);
     }
 
     const balance = role.name !== Roles.ADMIN ? USER_DEFAULT_BALANCE : null;
@@ -79,12 +80,15 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async updateUserBalance(options: {
-    id: string,
-    balanceDto: UpdateUserBalanceDto,
-    transactionType: TransactionType,
-    rental?: Rental
-  }, manager?: EntityManager): Promise<User | null> {
+  async updateUserBalance(
+    options: {
+      id: string;
+      balanceDto: UpdateUserBalanceDto;
+      transactionType: TransactionType;
+      rental?: Rental;
+    },
+    manager?: EntityManager,
+  ): Promise<User | null> {
     const user = await this.findById(options.id);
 
     if (!user) {
@@ -92,13 +96,16 @@ export class UsersService {
     }
 
     const updateBalance = async (manager: EntityManager): Promise<User> => {
-      await this.transactionsService.createTransaction({
-        amount: options.balanceDto.amount,
-        description: `${options.transactionType} for ${options.id} user account`,
-        type: options.transactionType,
-        user,
-        rental: options.rental,
-      }, manager);
+      await this.transactionsService.createTransaction(
+        {
+          amount: options.balanceDto.amount,
+          description: `${options.transactionType} for ${options.id} user account`,
+          type: options.transactionType,
+          user,
+          rental: options.rental,
+        },
+        manager,
+      );
 
       user.balance = user.balance + options.balanceDto.amount;
       return manager.save(user);

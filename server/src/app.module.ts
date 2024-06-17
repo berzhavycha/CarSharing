@@ -21,6 +21,6 @@ import {
     RentalsModule,
     TransactionsModule,
     AuthModule,
-  ]
+  ],
 })
-export class AppModule { }
+export class AppModule {}

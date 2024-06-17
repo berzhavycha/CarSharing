@@ -1,8 +1,6 @@
-import {
-    IsNumber,
-} from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 export class UpdateUserBalanceDto {
-    @IsNumber()
-    amount: number
+  @IsNumber()
+  amount: number;
 }

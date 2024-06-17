@@ -26,7 +26,7 @@ export class Transaction {
     type: 'decimal',
     precision: TRANSACTION_AMOUNT_PRECISION,
     scale: TRANSACTION_AMOUNT_SCALE,
-    transformer: new DecimalColumnTransformer()
+    transformer: new DecimalColumnTransformer(),
   })
   amount: number;
 

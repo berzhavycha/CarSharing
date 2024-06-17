@@ -1,9 +1,9 @@
 import { IsNumber, IsString } from 'class-validator';
 
 export class RentCarDto {
-    @IsString()
-    carId: string;
+  @IsString()
+  carId: string;
 
-    @IsNumber()
-    hours: number
+  @IsNumber()
+  hours: number;
 }

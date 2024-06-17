@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { UsersController } from '@/controllers';
 import { Role, User } from '@/entities';
 import { RolesService, UsersService } from '@/services';
-import { UsersController } from '@/controllers';
+
 import { TransactionsModule } from './transactions.module';
 
 @Module({
@@ -12,4 +13,4 @@ import { TransactionsModule } from './transactions.module';
   providers: [UsersService, RolesService],
   exports: [UsersService],
 })
-export class UsersModule { }
+export class UsersModule {}

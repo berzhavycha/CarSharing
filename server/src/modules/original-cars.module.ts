@@ -7,6 +7,6 @@ import { OriginalCarsService } from '@/services';
 @Module({
   imports: [TypeOrmModule.forFeature([OriginalCar])],
   providers: [OriginalCarsService],
-  exports: [OriginalCarsService]
+  exports: [OriginalCarsService],
 })
-export class OriginalCarsModule { }
+export class OriginalCarsModule {}

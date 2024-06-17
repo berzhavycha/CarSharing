@@ -43,7 +43,7 @@ export class Car {
     type: 'decimal',
     precision: CAR_PRICE_PRECISION,
     scale: CAR_PRICE_SCALE,
-    transformer: new DecimalColumnTransformer()
+    transformer: new DecimalColumnTransformer(),
   })
   pricePerHour: number;
 

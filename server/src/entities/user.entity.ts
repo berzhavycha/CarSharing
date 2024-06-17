@@ -9,7 +9,11 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { DecimalColumnTransformer, USER_BALANCE_PRECISION, USER_BALANCE_SCALE } from '@/helpers';
+import {
+  DecimalColumnTransformer,
+  USER_BALANCE_PRECISION,
+  USER_BALANCE_SCALE,
+} from '@/helpers';
 
 import { Rental } from './rental.entity';
 import { Role } from './role.entity';
@@ -50,7 +54,7 @@ export class User {
     nullable: true,
     precision: USER_BALANCE_PRECISION,
     scale: USER_BALANCE_SCALE,
-    transformer: new DecimalColumnTransformer()
+    transformer: new DecimalColumnTransformer(),
   })
   balance: number | null;
 
