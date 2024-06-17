@@ -79,4 +79,15 @@ export class RentalsService {
             relations: ['originalCar']
         })
     }
+
+    async findAllUserRentals(userId: string): Promise<Rental[]> {
+        return this.rentalsRepository.find({
+            where: {
+                user: {
+                    id: userId
+                }
+            },
+            relations: ['originalCar']
+        })
+    }
 }

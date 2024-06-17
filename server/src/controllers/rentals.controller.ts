@@ -27,4 +27,9 @@ export class RentalsController {
     async getCurrentRental(@CurrentUser('id') id: string): Promise<Rental> {
         return this.rentalsService.findByUserId(id)
     }
+
+    @Get('/history')
+    async getUserHistory(@CurrentUser('id') id: string): Promise<Rental[]> {
+        return this.rentalsService.findAllUserRentals(id)
+    }
 }
