@@ -1,17 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 
-import { Role, User } from '@/entities';
-import { Roles, USER_DEFAULT_BALANCE } from '@/helpers';
+import { User } from '@/entities';
+import { Roles, TransactionType, USER_DEFAULT_BALANCE } from '@/helpers';
 import { SafeUser } from '@/interfaces';
 import { UpdateUserBalanceDto } from '@/dtos';
+import { TransactionsService } from './transactions.service';
+import { RolesService } from './roles.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
-    @InjectRepository(Role) private readonly rolesRepository: Repository<Role>,
+    private readonly entityManager: EntityManager,
+    private readonly transactionsService: TransactionsService,
+    private readonly rolesService: RolesService,
   ) { }
 
   async createUser(userData: {
@@ -29,16 +33,10 @@ export class UsersService {
       refreshTokenSalt,
     } = userData;
 
-    let role = await this.rolesRepository.findOne({
-      where: { name: userDetails.role },
-    });
+    let role = await this.rolesService.findByName(userDetails.role)
 
     if (!role) {
-      role = this.rolesRepository.create({
-        name: userDetails.role,
-      });
-
-      await this.rolesRepository.save(role);
+      role = await this.rolesService.createRole(userDetails.role)
     }
 
     const balance = role.name !== Roles.ADMIN ? USER_DEFAULT_BALANCE : null;
@@ -89,8 +87,16 @@ export class UsersService {
       return null;
     }
 
-    user.balance = user.balance + updateUserBalanceDto.amount;
+    return this.entityManager.transaction(async manager => {
+      await this.transactionsService.createTransaction({
+        amount: updateUserBalanceDto.amount,
+        description: `Top-up ${id} user account`,
+        type: TransactionType.RENTAL_PAYMENT,
+        user
+      }, manager);
 
-    return this.usersRepository.save(user);
+      user.balance = user.balance + updateUserBalanceDto.amount;
+      return this.usersRepository.save(user);
+    });
   }
 }

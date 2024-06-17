@@ -16,7 +16,7 @@ export class TransactionsService {
         description?: string,
         type: TransactionType,
         user: User,
-        rental: Rental
+        rental?: Rental
     }, manager: EntityManager): Promise<Transaction> {
         const transaction = this.transactionsRepository.create(transactionData);
         return manager.save(transaction);
