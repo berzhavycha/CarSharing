@@ -83,7 +83,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   async getCurrentUser(
     @CurrentUser() user: User,
-  ): Promise<User> {
-    return user;
+  ): Promise<User | null> {
+    if(user) return user
+    return null;
   }
 }
