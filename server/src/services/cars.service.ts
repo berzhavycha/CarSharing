@@ -24,7 +24,7 @@ export class CarsService {
   constructor(
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
-  ) {}
+  ) { }
 
   async createCar(createCarDto: CreateCarDto): Promise<Car> {
     const car = this.carsRepository.create(createCarDto);
@@ -32,27 +32,14 @@ export class CarsService {
   }
 
   async updateCar(id: string, updateCarDto: UpdateCarDto): Promise<Car> {
-    const car = await this.carsRepository.preload({
-      id: id,
-      ...updateCarDto,
-    });
+    const car = await this.findById(id);
 
-    if (!car) {
-      throw new NotFoundException(carErrorMessages.CAR_BY_ID_NOT_FOUND(id));
-    }
-
+    Object.assign(car, updateCarDto);
     return this.carsRepository.save(car);
   }
 
   async removeCar(id: string): Promise<void> {
-    const car = await this.carsRepository.findOne({
-      where: { id },
-      relations: ['rentals'],
-    });
-
-    if (!car) {
-      throw new NotFoundException(carErrorMessages.CAR_BY_ID_NOT_FOUND(id));
-    }
+    const car = await this.findById(id)
 
     if (car.rentals.some((rental) => rental.status === RentalStatus.ACTIVE)) {
       throw new BadRequestException(carErrorMessages.CAR_CANNOT_BE_DELETED);
@@ -61,8 +48,8 @@ export class CarsService {
     await this.carsRepository.remove(car);
   }
 
-  async findOne(id: string): Promise<Car> {
-    const car = await this.carsRepository.findOne({ where: { id } });
+  async findById(id: string): Promise<Car> {
+    const car = await this.carsRepository.findOne({ where: { id }, relations: ['rentals'] });
 
     if (!car) {
       throw new NotFoundException(carErrorMessages.CAR_BY_ID_NOT_FOUND(id));
@@ -106,7 +93,7 @@ export class CarsService {
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
     queryBuilder.where('car.status = :status', {
-      available: CarStatus.AVAILABLE,
+      status: CarStatus.AVAILABLE,
     });
 
     applySearchAndPagination(queryBuilder, {
