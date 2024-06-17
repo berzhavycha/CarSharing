@@ -3,8 +3,8 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   UseGuards,
 } from '@nestjs/common';
 
@@ -28,21 +28,21 @@ export class RentalsController {
     return this.rentalsService.rentCar(rentCarDto, user);
   }
 
-  @Put('/:id/return')
+  @Get('/current')
+  async getCurrentRental(@CurrentUser('id') id: string): Promise<Rental | null> {
+    return this.rentalsService.findActiveByUserId(id);
+  }
+  
+  @Get('/history')
+  async getUserHistory(@CurrentUser('id') id: string): Promise<Rental[]> {
+    return this.rentalsService.findAllUserRentals(id);
+  }
+ 
+  @Patch('/:id/return')
   async returnCar(
     @Param('id') id: string,
     @CurrentUser() user: User,
   ): Promise<Rental> {
     return this.rentalsService.returnCar(id, user);
-  }
-
-  @Get('/current')
-  async getCurrentRental(@CurrentUser('id') id: string): Promise<Rental> {
-    return this.rentalsService.findByUserId(id);
-  }
-
-  @Get('/history')
-  async getUserHistory(@CurrentUser('id') id: string): Promise<Rental[]> {
-    return this.rentalsService.findAllUserRentals(id);
   }
 }

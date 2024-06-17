@@ -33,6 +33,12 @@ export class CarsController {
     return this.carsService.findAll(listCarsDto);
   }
 
+  @Get('/available')
+  @UseGuards(JwtAuthGuard)
+  async findAllAvailable(@Query() listCarsDto: QueryCarsDto): Promise<Car[]> {
+    return this.carsService.findAllAvailable(listCarsDto);
+  }
+  
   @Get(':id')
   @UseGuards(RoleGuard(Roles.ADMIN))
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Car> {
@@ -52,11 +58,5 @@ export class CarsController {
   @UseGuards(RoleGuard(Roles.ADMIN))
   async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return this.carsService.removeCar(id);
-  }
-
-  @Get('available')
-  @UseGuards(JwtAuthGuard)
-  async findAllAvailable(@Query() listCarsDto: QueryCarsDto): Promise<Car[]> {
-    return this.carsService.findAllAvailable(listCarsDto);
   }
 }

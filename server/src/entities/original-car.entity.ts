@@ -12,6 +12,7 @@ import {
   CAR_PRICE_PRECISION,
   CAR_PRICE_SCALE,
   CAR_TYPE_LENGTH,
+  DecimalColumnTransformer,
 } from '@/helpers';
 
 import { Rental } from './rental.entity';
@@ -39,6 +40,7 @@ export class OriginalCar {
     type: 'decimal',
     precision: CAR_PRICE_PRECISION,
     scale: CAR_PRICE_SCALE,
+    transformer: new DecimalColumnTransformer(),
   })
   pricePerHour: number;
 

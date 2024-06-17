@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
   Post,
   Req,
@@ -20,7 +21,7 @@ import { AuthService } from '@/services';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('sign-up')
   async signUp(
@@ -68,7 +69,7 @@ export class AuthController {
 
   @Post('sign-out')
   @UseGuards(JwtAuthGuard)
-  public async signOut(
+  async signOut(
     @CurrentUser('id') id: string,
     @Res() res: Response,
   ): Promise<void> {
@@ -76,5 +77,13 @@ export class AuthController {
     this.authService.clearTokensCookies(res);
 
     res.status(HttpStatus.OK).send();
+  }
+
+  @Get('current-user')
+  @UseGuards(JwtAuthGuard)
+  async getCurrentUser(
+    @CurrentUser() user: User,
+  ): Promise<User> {
+    return user;
   }
 }
