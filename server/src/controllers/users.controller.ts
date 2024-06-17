@@ -10,7 +10,7 @@ import { User } from '@/entities';
 import { JwtAuthGuard, RoleGuard } from '@/guards';
 import { UsersService } from '@/services';
 import { CurrentUser } from '@decorators';
-import { Roles } from '@/helpers';
+import { Roles, TransactionType } from '@/helpers';
 
 @Controller('users')
 export class UsersController {
@@ -31,6 +31,10 @@ export class UsersController {
         @CurrentUser('id') id: string,
         @Body() updateUserBalanceDto: UpdateUserBalanceDto
     ): Promise<User> {
-        return this.usersService.updateUserBalance(id, updateUserBalanceDto)
+        return this.usersService.updateUserBalance({
+            id,
+            balanceDto: updateUserBalanceDto,
+            transactionType: TransactionType.TOP_UP
+        })
     }
 }

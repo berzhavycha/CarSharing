@@ -1,12 +1,12 @@
 import { RentCarDto } from "@/dtos";
 import { Rental, User } from "@/entities";
-import { CarStatus, rentalsErrorMessages, RentalStatus, TransactionType } from "@/helpers";
+import { CarStatus, ONE_HOUR_MILLISECONDS, rentalsErrorMessages, RentalStatus, TransactionType } from "@/helpers";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, EntityManager } from "typeorm";
 import { CarsService } from "./cars.service";
-import { TransactionsService } from "./transactions.service";
 import { OriginalCarsService } from "./original-cars.service";
+import { UsersService } from "./users.service";
 
 @Injectable()
 export class RentalsService {
@@ -15,8 +15,8 @@ export class RentalsService {
         private rentalsRepository: Repository<Rental>,
         private carsService: CarsService,
         private originalCarsService: OriginalCarsService,
-        private transactionsService: TransactionsService,
-        private entityManager: EntityManager
+        private usersService: UsersService,
+        private readonly entityManager: EntityManager,
     ) { }
 
     async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
@@ -37,13 +37,17 @@ export class RentalsService {
             throw new BadRequestException(rentalsErrorMessages.CAR_NOT_AVAILABLE);
         }
 
+
         const rentalCost = car.pricePerHour * rentCarDto.hours;
         if (user.balance < rentalCost) {
             throw new BadRequestException(rentalsErrorMessages.INSUFFICIENT_BALANCE);
         }
 
         return this.entityManager.transaction(async manager => {
-            const originalCar = await this.originalCarsService.createOriginalCar(car)
+            const originalCar = await this.originalCarsService.createOriginalCarTransaction(car, manager)
+
+            car.status = CarStatus.BOOKED
+            await manager.save(car)
 
             const rental = this.rentalsRepository.create({
                 car,
@@ -53,20 +57,62 @@ export class RentalsService {
                 requestedHours: rentCarDto.hours
             });
 
-            user.balance -= rentalCost;
-            await manager.save(user);
             const createdRental = await manager.save(rental);
 
-            await this.transactionsService.createTransaction({
-                amount: -rentalCost,
-                description: `Rental of car ${car.model}`,
-                type: TransactionType.RENTAL_PAYMENT,
-                user,
-                rental: rental,
-            }, manager);
+            await this.usersService.updateUserBalance({
+                id: user.id,
+                balanceDto: { amount: -rentalCost },
+                transactionType: TransactionType.RENTAL_PAYMENT,
+                rental: createdRental
+            }, manager)
 
             return createdRental;
         });
+    }
+
+    async returnCar(rentalId: string, user: User): Promise<Rental> {
+        const rental = await this.rentalsRepository.findOne({ where: { id: rentalId }, relations: ['car', 'originalCar', 'user'] });
+
+        if (!rental) {
+            throw new BadRequestException(rentalsErrorMessages.RENTAL_NOT_FOUND);
+        }
+
+        if (rental.rentalEnd !== null) {
+            throw new BadRequestException(rentalsErrorMessages.CAR_IS_RETURNED);
+        }
+
+        return this.entityManager.transaction(async manager => {
+            const returnDate = new Date()
+            const hoursDifference = Math.ceil((returnDate.getTime() - rental.rentalStart.getTime()) / ONE_HOUR_MILLISECONDS);
+
+            if (hoursDifference < rental.requestedHours) {
+                const refundAmount = rental.car.pricePerHour * (rental.requestedHours - hoursDifference);
+
+                await this.usersService.updateUserBalance({
+                    id: user.id,
+                    balanceDto: { amount: refundAmount },
+                    transactionType: TransactionType.REFUND,
+                    rental
+                }, manager)
+            } else if (hoursDifference > rental.requestedHours) {
+                const fineAmount = rental.car.pricePerHour * (hoursDifference - rental.requestedHours);
+
+                await this.usersService.updateUserBalance({
+                    id: user.id,
+                    balanceDto: { amount: -fineAmount },
+                    transactionType: TransactionType.PENALTY,
+                    rental
+                }, manager)
+            }
+
+            rental.car.status = CarStatus.AVAILABLE
+            await manager.save(rental.car)
+
+            rental.rentalEnd = returnDate
+            rental.status = RentalStatus.CLOSED
+
+            return manager.save(rental)
+        })
     }
 
     async findByUserId(userId: string): Promise<Rental> {
