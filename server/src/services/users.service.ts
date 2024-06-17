@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Role, User } from '@/entities';
 import { Roles, USER_DEFAULT_BALANCE } from '@/helpers';
 import { SafeUser } from '@/interfaces';
+import { UpdateUserBalanceDto } from '@/dtos';
 
 @Injectable()
 export class UsersService {
@@ -77,6 +78,18 @@ export class UsersService {
     }
 
     Object.assign(user, updateUserDto);
+
+    return this.usersRepository.save(user);
+  }
+
+  async updateUserBalance(id: string, updateUserBalanceDto: UpdateUserBalanceDto): Promise<User | null> {
+    const user = await this.findById(id);
+
+    if (!user) {
+      return null;
+    }
+
+    user.balance = user.balance + updateUserBalanceDto.amount;
 
     return this.usersRepository.save(user);
   }

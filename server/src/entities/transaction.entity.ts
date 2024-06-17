@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 
 import {
+  DecimalColumnTransformer,
   TRANSACTION_AMOUNT_PRECISION,
   TRANSACTION_AMOUNT_SCALE,
   TransactionType,
@@ -25,6 +26,7 @@ export class Transaction {
     type: 'decimal',
     precision: TRANSACTION_AMOUNT_PRECISION,
     scale: TRANSACTION_AMOUNT_SCALE,
+    transformer: new DecimalColumnTransformer()
   })
   amount: number;
 
