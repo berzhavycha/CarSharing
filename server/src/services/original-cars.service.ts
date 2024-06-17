@@ -3,7 +3,7 @@ import { OriginalCar } from "@/entities";
 import { DEFAULT_PAGINATION_PAGE, DEFAULT_PAGINATION_LIMIT, DEFAULT_ORDER, carErrorMessages, CAR_DEFAULT_ORDER_COLUMN, applySearchAndPagination } from "@/helpers";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { EntityManager, Repository } from "typeorm";
 
 @Injectable()
 export class OriginalCarsService {
@@ -15,6 +15,11 @@ export class OriginalCarsService {
     async createOriginalCar(createCarDto: CreateOriginalCarDto): Promise<OriginalCar> {
         const car = this.originalCarsRepository.create(createCarDto);
         return this.originalCarsRepository.save(car);
+    }
+
+    async createOriginalCarTransaction(createCarDto: CreateOriginalCarDto, manager: EntityManager): Promise<OriginalCar> {
+        const car = manager.create(OriginalCar, createCarDto);
+        return manager.save(car);
     }
 
     async findOne(id: string): Promise<OriginalCar> {

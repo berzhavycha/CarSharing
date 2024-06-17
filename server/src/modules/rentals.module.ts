@@ -4,12 +4,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Rental } from '@/entities';
 import { RentalsService } from '@/services';
 import { RentalsController } from '@/controllers';
-import { TransactionsModule } from './transactions.module';
 import { CarsModule } from './cars.module';
 import { OriginalCarsModule } from './original-cars.module';
+import { UsersModule } from './users.module';
 
 @Module({
-  imports: [TransactionsModule, CarsModule, OriginalCarsModule, TypeOrmModule.forFeature([Rental])],
+  imports: [UsersModule, CarsModule, OriginalCarsModule, TypeOrmModule.forFeature([Rental])],
   controllers: [RentalsController],
   providers: [RentalsService]
 })

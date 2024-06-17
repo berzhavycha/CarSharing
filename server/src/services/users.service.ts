@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import { User } from '@/entities';
+import { Rental, User } from '@/entities';
 import { Roles, TransactionType, USER_DEFAULT_BALANCE } from '@/helpers';
 import { SafeUser } from '@/interfaces';
 import { UpdateUserBalanceDto } from '@/dtos';
@@ -13,7 +13,6 @@ import { RolesService } from './roles.service';
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
-    private readonly entityManager: EntityManager,
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
   ) { }
@@ -80,23 +79,35 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async updateUserBalance(id: string, updateUserBalanceDto: UpdateUserBalanceDto): Promise<User | null> {
-    const user = await this.findById(id);
+  async updateUserBalance(options: {
+    id: string,
+    balanceDto: UpdateUserBalanceDto,
+    transactionType: TransactionType,
+    rental?: Rental
+  }, manager?: EntityManager): Promise<User | null> {
+    const user = await this.findById(options.id);
 
     if (!user) {
       return null;
     }
 
-    return this.entityManager.transaction(async manager => {
+    const updateBalance = async (manager: EntityManager): Promise<User> => {
       await this.transactionsService.createTransaction({
-        amount: updateUserBalanceDto.amount,
-        description: `Top-up ${id} user account`,
-        type: TransactionType.RENTAL_PAYMENT,
-        user
+        amount: options.balanceDto.amount,
+        description: `${options.transactionType} for ${options.id} user account`,
+        type: options.transactionType,
+        user,
+        rental: options.rental,
       }, manager);
 
-      user.balance = user.balance + updateUserBalanceDto.amount;
-      return this.usersRepository.save(user);
-    });
+      user.balance = user.balance + options.balanceDto.amount;
+      return manager.save(user);
+    };
+
+    if (manager) {
+      return updateBalance(manager);
+    }
+
+    return this.usersRepository.manager.transaction(updateBalance);
   }
 }
