@@ -19,7 +19,7 @@ import { CarsService } from '@/services';
 
 @Controller('cars')
 export class CarsController {
-  constructor(private readonly carsService: CarsService) { }
+  constructor(private readonly carsService: CarsService) {}
 
   @Post()
   @UseGuards(RoleGuard(Roles.ADMIN))
@@ -55,7 +55,7 @@ export class CarsController {
   }
 
   @Get('available')
-  @UseGuards(JwtAuthGuard) 
+  @UseGuards(JwtAuthGuard)
   async findAllAvailable(@Query() listCarsDto: QueryCarsDto): Promise<Car[]> {
     return this.carsService.findAllAvailable(listCarsDto);
   }

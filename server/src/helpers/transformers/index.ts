@@ -1,1 +1,1 @@
-export * from './decimal-column.transformer'
+export * from './decimal-column.transformer';

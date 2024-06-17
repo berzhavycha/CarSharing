@@ -1,1 +1,1 @@
-export * from './rent-car.dto'
+export * from './rent-car.dto';

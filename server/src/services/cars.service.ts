@@ -24,7 +24,7 @@ export class CarsService {
   constructor(
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
-  ) { }
+  ) {}
 
   async createCar(createCarDto: CreateCarDto): Promise<Car> {
     const car = this.carsRepository.create(createCarDto);
@@ -105,7 +105,9 @@ export class CarsService {
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
-    queryBuilder.where('car.status = :status', { available: CarStatus.AVAILABLE });
+    queryBuilder.where('car.status = :status', {
+      available: CarStatus.AVAILABLE,
+    });
 
     applySearchAndPagination(queryBuilder, {
       search,
