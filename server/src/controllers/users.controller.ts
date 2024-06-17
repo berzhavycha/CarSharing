@@ -1,6 +1,5 @@
-import { Body, Controller, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, ParseUUIDPipe, Patch, UseGuards, Param } from '@nestjs/common';
 
-import { CurrentUser } from '@/decorators';
 import { UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
 import { User } from '@/entities';
 import { JwtAuthGuard, RoleGuard } from '@/guards';
@@ -9,21 +8,21 @@ import { UsersService } from '@/services';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
-  @Patch()
+  @Patch(':id')
   @UseGuards(JwtAuthGuard)
   async updateUser(
-    @CurrentUser('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<User> {
     return this.usersService.updateUser(id, updateUserDto);
   }
 
-  @Patch('top-up')
+  @Patch(':id/top-up')
   @UseGuards(RoleGuard(Roles.USER))
   async topUpUserAccount(
-    @CurrentUser('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserBalanceDto: UpdateUserBalanceDto,
   ): Promise<User> {
     return this.usersService.updateUserBalance({
