@@ -1,4 +1,3 @@
-import { CurrentUser } from '@decorators';
 import {
   Body,
   Controller,
@@ -9,6 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
+import { CurrentUser } from '@/decorators';
 import { RentCarDto } from '@/dtos';
 import { Rental, User } from '@/entities';
 import { RoleGuard } from '@/guards';

@@ -1,4 +1,3 @@
-import { CurrentUser } from '@decorators';
 import {
   Body,
   Controller,
@@ -11,6 +10,7 @@ import {
 import { plainToClass } from 'class-transformer';
 import { Request as ExpressRequest, Response } from 'express-serve-static-core';
 
+import { CurrentUser } from '@/decorators';
 import { LoginUserDto, RegisterUserDto } from '@/dtos';
 import { User } from '@/entities';
 import { JwtAuthGuard, JwtRefreshTokenGuard, LocalAuthGuard } from '@/guards';
