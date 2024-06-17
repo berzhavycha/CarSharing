@@ -11,7 +11,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     @InjectRepository(Role) private readonly rolesRepository: Repository<Role>,
-  ) {}
+  ) { }
 
   async createUser(userData: {
     userDetails: SafeUser;

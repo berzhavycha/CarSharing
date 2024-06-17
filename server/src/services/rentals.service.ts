@@ -3,7 +3,7 @@ import { Rental, User } from "@/entities";
 import { CarStatus, rentalsErrorMessages, RentalStatus, TransactionType } from "@/helpers";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Repository, EntityManager } from "typeorm";
 import { CarsService } from "./cars.service";
 import { TransactionsService } from "./transactions.service";
 
@@ -14,6 +14,7 @@ export class RentalsService {
         private rentalsRepository: Repository<Rental>,
         private carsService: CarsService,
         private transactionsService: TransactionsService,
+        private entityManager: EntityManager
     ) { }
 
     async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
@@ -39,12 +40,13 @@ export class RentalsService {
             throw new BadRequestException(rentalsErrorMessages.INSUFFICIENT_BALANCE);
         }
 
-        return this.rentalsRepository.manager.transaction(async manager => {
+        return this.entityManager.transaction(async manager => {
             const rental = this.rentalsRepository.create({
                 car,
                 user,
                 status: RentalStatus.ACTIVE,
             });
+
             const createdRental = await manager.save(rental);
 
             user.balance -= rentalCost;
@@ -56,10 +58,9 @@ export class RentalsService {
                 type: TransactionType.RENTAL_PAYMENT,
                 user,
                 rental: createdRental,
-            });
+            }, manager);
 
-            return rental;
+            return createdRental;
         });
     }
-
 }
