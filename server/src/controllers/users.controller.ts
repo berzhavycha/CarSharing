@@ -1,6 +1,6 @@
-import { CurrentUser } from '@decorators';
 import { Body, Controller, Patch, UseGuards } from '@nestjs/common';
 
+import { CurrentUser } from '@/decorators';
 import { UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
 import { User } from '@/entities';
 import { JwtAuthGuard, RoleGuard } from '@/guards';
