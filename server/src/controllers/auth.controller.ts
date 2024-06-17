@@ -45,8 +45,7 @@ export class AuthController {
     const { user, tokens } = await this.authService.signIn(req.user);
     this.authService.setTokensCookies(res, tokens);
 
-    const transformedUser = plainToClass(User, user);
-    res.status(HttpStatus.OK).json(transformedUser);
+    res.status(HttpStatus.OK).json(user);
   }
 
   @Post('refresh-token')
