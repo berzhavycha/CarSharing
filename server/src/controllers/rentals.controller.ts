@@ -18,7 +18,7 @@ import { RentalsService } from '@/services';
 @Controller('rentals')
 @UseGuards(RoleGuard(Roles.USER))
 export class RentalsController {
-  constructor(private readonly rentalsService: RentalsService) {}
+  constructor(private readonly rentalsService: RentalsService) { }
 
   @Post()
   async rentCar(
@@ -28,17 +28,17 @@ export class RentalsController {
     return this.rentalsService.rentCar(rentCarDto, user);
   }
 
-  @Get('/current')
+  @Get('current')
   async getCurrentRental(@CurrentUser('id') id: string): Promise<Rental | null> {
     return this.rentalsService.findActiveByUserId(id);
   }
-  
-  @Get('/history')
+
+  @Get('history')
   async getUserHistory(@CurrentUser('id') id: string): Promise<Rental[]> {
     return this.rentalsService.findAllUserRentals(id);
   }
- 
-  @Patch('/:id/return')
+
+  @Patch(':id')
   async returnCar(
     @Param('id') id: string,
     @CurrentUser() user: User,
