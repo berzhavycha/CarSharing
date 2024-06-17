@@ -19,7 +19,7 @@ import { CarsService } from '@/services';
 
 @Controller('cars')
 export class CarsController {
-  constructor(private readonly carsService: CarsService) {}
+  constructor(private readonly carsService: CarsService) { }
 
   @Post()
   @UseGuards(RoleGuard(Roles.ADMIN))
@@ -36,7 +36,7 @@ export class CarsController {
   @Get(':id')
   @UseGuards(RoleGuard(Roles.ADMIN))
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Car> {
-    return this.carsService.findOne(id);
+    return this.carsService.findById(id);
   }
 
   @Patch(':id')
