@@ -11,6 +11,7 @@ import { Car } from '@/entities';
 import {
   applySearchAndPagination,
   CAR_DEFAULT_ORDER_COLUMN,
+  CAR_DEFAULT_SEARCH_COLUMN,
   carErrorMessages,
   CarStatus,
   DEFAULT_ORDER,
@@ -71,6 +72,7 @@ export class CarsService {
 
     applySearchAndPagination(queryBuilder, {
       search,
+      searchColumn: CAR_DEFAULT_SEARCH_COLUMN,
       page,
       limit,
       order,

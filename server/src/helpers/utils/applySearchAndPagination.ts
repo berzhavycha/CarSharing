@@ -6,6 +6,7 @@ export function applySearchAndPagination<T>(
   queryBuilder: SelectQueryBuilder<T>,
   options: {
     search?: string;
+    searchColumn?: string;
     page: number;
     limit: number;
     order: Order;
@@ -13,11 +14,11 @@ export function applySearchAndPagination<T>(
     entityAlias: string;
   },
 ): SelectQueryBuilder<T> {
-  const { search, page, limit, order, sort, entityAlias } = options;
+  const { search, searchColumn, page, limit, order, sort, entityAlias } = options;
 
-  if (search) {
-    queryBuilder.andWhere(`${entityAlias}.model LIKE :name`, {
-      name: `%${search}%`,
+  if (search && searchColumn) {
+    queryBuilder.andWhere(`LOWER(${entityAlias}.${searchColumn}) LIKE LOWER(:search)`, {
+      search: `%${search}%`,
     });
   }
 
@@ -27,3 +28,4 @@ export function applySearchAndPagination<T>(
 
   return queryBuilder;
 }
+
