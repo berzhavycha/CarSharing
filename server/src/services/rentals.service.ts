@@ -6,6 +6,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, EntityManager } from "typeorm";
 import { CarsService } from "./cars.service";
 import { TransactionsService } from "./transactions.service";
+import { OriginalCarsService } from "./original-cars.service";
 
 @Injectable()
 export class RentalsService {
@@ -13,6 +14,7 @@ export class RentalsService {
         @InjectRepository(Rental)
         private rentalsRepository: Repository<Rental>,
         private carsService: CarsService,
+        private originalCarsService: OriginalCarsService,
         private transactionsService: TransactionsService,
         private entityManager: EntityManager
     ) { }
@@ -41,27 +43,40 @@ export class RentalsService {
         }
 
         return this.entityManager.transaction(async manager => {
+            const originalCar = await this.originalCarsService.createOriginalCar(car)
+
             const rental = this.rentalsRepository.create({
                 car,
                 user,
+                originalCar,
                 status: RentalStatus.ACTIVE,
                 requestedHours: rentCarDto.hours
             });
 
-            const createdRental = await manager.save(rental);
-
             user.balance -= rentalCost;
             await manager.save(user);
+            const createdRental = await manager.save(rental);
 
             await this.transactionsService.createTransaction({
                 amount: -rentalCost,
                 description: `Rental of car ${car.model}`,
                 type: TransactionType.RENTAL_PAYMENT,
                 user,
-                rental: createdRental,
+                rental: rental,
             }, manager);
 
             return createdRental;
         });
+    }
+
+    async findByUserId(userId: string): Promise<Rental> {
+        return this.rentalsRepository.findOne({
+            where: {
+                user: {
+                    id: userId
+                }
+            },
+            relations: ['originalCar']
+        })
     }
 }

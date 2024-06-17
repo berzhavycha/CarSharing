@@ -5,9 +5,11 @@ import { Rental } from '@/entities';
 import { RentalsService } from '@/services';
 import { RentalsController } from '@/controllers';
 import { TransactionsModule } from './transactions.module';
+import { CarsModule } from './cars.module';
+import { OriginalCarsModule } from './original-cars.module';
 
 @Module({
-  imports: [TransactionsModule, TypeOrmModule.forFeature([Rental])],
+  imports: [TransactionsModule, CarsModule, OriginalCarsModule, TypeOrmModule.forFeature([Rental])],
   controllers: [RentalsController],
   providers: [RentalsService]
 })

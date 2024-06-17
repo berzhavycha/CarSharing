@@ -44,7 +44,7 @@ export class Transaction {
   @Index()
   user: User;
 
-  @ManyToOne(() => User, (rental) => rental.transactions)
+  @ManyToOne(() => Rental, (rental) => rental.transactions)
   @Index()
   rental: Rental;
 }
