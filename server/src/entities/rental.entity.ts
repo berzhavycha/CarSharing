@@ -29,6 +29,9 @@ export class Rental {
   @Column({ type: 'timestamp' })
   rentalEnd: Date;
 
+  @Column()
+  requestedHours: number;
+
   @Column({
     type: 'varchar',
     length: RENTAL_STATUS_LENGTH,

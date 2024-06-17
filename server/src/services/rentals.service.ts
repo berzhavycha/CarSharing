@@ -45,6 +45,7 @@ export class RentalsService {
                 car,
                 user,
                 status: RentalStatus.ACTIVE,
+                requestedHours: rentCarDto.hours
             });
 
             const createdRental = await manager.save(rental);
