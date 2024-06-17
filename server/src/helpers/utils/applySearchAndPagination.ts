@@ -14,12 +14,16 @@ export function applySearchAndPagination<T>(
     entityAlias: string;
   },
 ): SelectQueryBuilder<T> {
-  const { search, searchColumn, page, limit, order, sort, entityAlias } = options;
+  const { search, searchColumn, page, limit, order, sort, entityAlias } =
+    options;
 
   if (search && searchColumn) {
-    queryBuilder.andWhere(`LOWER(${entityAlias}.${searchColumn}) LIKE LOWER(:search)`, {
-      search: `%${search}%`,
-    });
+    queryBuilder.andWhere(
+      `LOWER(${entityAlias}.${searchColumn}) LIKE LOWER(:search)`,
+      {
+        search: `%${search}%`,
+      },
+    );
   }
 
   const skip = (page - 1) * limit;
@@ -28,4 +32,3 @@ export function applySearchAndPagination<T>(
 
   return queryBuilder;
 }
-
