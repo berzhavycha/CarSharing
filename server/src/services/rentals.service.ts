@@ -31,7 +31,7 @@ export class RentalsService {
     const existingActiveUserRental = await this.rentalsRepository.findOne({
       where: {
         user: { id: user.id },
-        rentalEnd: null,
+        status: RentalStatus.ACTIVE,
       },
     });
 
@@ -68,6 +68,7 @@ export class RentalsService {
         originalCar,
         status: RentalStatus.ACTIVE,
         requestedHours: rentCarDto.hours,
+        rentalStart: new Date()
       });
 
       const createdRental = await manager.save(rental);
@@ -145,14 +146,15 @@ export class RentalsService {
     });
   }
 
-  async findByUserId(userId: string): Promise<Rental> {
+  async findActiveByUserId(userId: string): Promise<Rental | null> {
     return this.rentalsRepository.findOne({
       where: {
+        status: RentalStatus.ACTIVE,
         user: {
           id: userId,
         },
       },
-      relations: ['originalCar'],
+      relations: ['originalCar', 'user'],
     });
   }
 
