@@ -6,7 +6,7 @@ import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
 import { applySearchAndPagination } from '@/helpers';
 import { QueryCarsDto, } from '@/dtos';
 import { NotFoundException } from '@nestjs/common';
-import { repositoryMock, mockOriginalCar } from '../mocks';
+import { repositoryMock, mockOriginalCar, mockQueryBuilder } from '../mocks';
 
 jest.mock('@/helpers/utils/applySearchAndPagination', () => ({
     applySearchAndPagination: jest.fn(),
@@ -19,15 +19,6 @@ const createCarDtoMock = {
     description: "Car description",
     pricePerHour: 100,
     type: "Sport",
-};
-
-const mockQueryBuilder = {
-    where: jest.fn().mockReturnThis(),
-    andWhere: jest.fn().mockReturnThis(),
-    skip: jest.fn().mockReturnThis(),
-    take: jest.fn().mockReturnThis(),
-    orderBy: jest.fn().mockReturnThis(),
-    getMany: jest.fn().mockResolvedValue([]),
 };
 
 describe('OriginalCarsService', () => {
