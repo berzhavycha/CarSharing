@@ -23,10 +23,10 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
-    "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./src/modules/database/configs/index.ts",
-    "typeorm:generate-migration": "npm run typeorm -- -d ./src/modules/database/configs/index.ts migration:generate ./src/modules/database/migrations/$npm_config_name",
-    "typeorm:create-migration": "npm run typeorm -- migration:create ./src/modules/database/migrations/$npm_config_name",
-    "typeorm:revert-migration": "npm run typeorm -- -d ./src/modules/database/configs/index.ts migration:revert"
+    "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./src/core/database/ormconfig.ts",
+    "typeorm:generate-migration": "npm run typeorm -- -d ./src/core/database/ormconfig.ts migration:generate ./src/core/database/migrations/%npm_config_name%",
+    "typeorm:create-migration": "npm run typeorm -- migration:create ./src/core/database/migrations/$npm_config_name",
+    "typeorm:revert-migration": "npm run typeorm -- -d ./src/core/database/ormconfig.ts migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -63,7 +63,7 @@
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
     "@types/supertest": "^6.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.0",
     "@typescript-eslint/parser": "^7.13.0",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
