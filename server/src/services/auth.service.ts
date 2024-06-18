@@ -27,7 +27,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
     try {
@@ -86,12 +86,12 @@ export class AuthService {
     }
   }
 
-  private async hash(value: string): Promise<HashResult> {
+  async hash(value: string): Promise<HashResult> {
     const salt = await bcrypt.genSalt();
     return { salt, hash: await bcrypt.hash(value, salt) };
   }
 
-  private async generateTokens(
+  async generateTokens(
     userId: string,
     email: string,
   ): Promise<ITokens> {
