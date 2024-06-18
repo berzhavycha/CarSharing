@@ -81,6 +81,18 @@ describe('AuthService', () => {
 
     afterEach(() => {
         jest.clearAllMocks();
+        jest.spyOn(authService, 'hash').mockClear();
+        jest.spyOn(authService, 'generateTokens').mockClear();
+        jest.spyOn(mockUsersService, 'createUser').mockClear();
+        jest.spyOn(mockUsersService, 'updateUser').mockClear();
+        jest.spyOn(mockUsersService, 'findById').mockClear();
+        jest.spyOn(mockUsersService, 'findByEmail').mockClear();
+        mockJwtService.signAsync.mockClear();
+        mockJwtService.verifyAsync.mockClear();
+    });
+
+    it('should be defined', () => {
+        expect(authService).toBeDefined();
     });
 
     describe('signUp', () => {
