@@ -33,7 +33,7 @@ describe('TransanctionsService', () => {
     });
 
     describe('createTransaction', () => {
-        it('should create a role', async () => {
+        it('should create a transanction', async () => {
             const mockEntityManager = {
                 save: jest.fn(),
             };
