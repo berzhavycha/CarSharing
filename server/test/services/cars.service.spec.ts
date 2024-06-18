@@ -6,20 +6,11 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CarStatus, RentalStatus, applySearchAndPagination, carErrorMessages } from '@/helpers';
 import { QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { mockCar, repositoryMock } from '../mocks';
+import { mockCar, repositoryMock, mockQueryBuilder } from '../mocks';
 
 jest.mock('@/helpers/utils/applySearchAndPagination', () => ({
     applySearchAndPagination: jest.fn(),
 }));
-
-const mockQueryBuilder = {
-    where: jest.fn().mockReturnThis(),
-    andWhere: jest.fn().mockReturnThis(),
-    skip: jest.fn().mockReturnThis(),
-    take: jest.fn().mockReturnThis(),
-    orderBy: jest.fn().mockReturnThis(),
-    getMany: jest.fn().mockResolvedValue([]),
-};
 
 describe('CarsService', () => {
     let carsService: CarsService;
