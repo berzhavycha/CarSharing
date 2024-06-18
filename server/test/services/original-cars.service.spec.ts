@@ -6,34 +6,11 @@ import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
 import { applySearchAndPagination } from '@/helpers';
 import { QueryCarsDto, } from '@/dtos';
 import { NotFoundException } from '@nestjs/common';
+import { repositoryMock, mockOriginalCar } from '../mocks';
 
 jest.mock('@/helpers/utils/applySearchAndPagination', () => ({
     applySearchAndPagination: jest.fn(),
 }));
-
-export const originalCarsRepositoryMock = {
-    create: jest.fn(),
-    save: jest.fn(),
-    findOne: jest.fn(),
-    find: jest.fn(),
-    remove: jest.fn(),
-    createQueryBuilder: jest.fn().mockReturnThis(),
-    where: jest.fn().mockReturnThis(),
-    getMany: jest.fn(),
-};
-
-const mockOriginalCar = {
-    id: 'car-id',
-    imageUrl: "old-image-url",
-    model: "Model 1",
-    year: 2024,
-    description: "Car description",
-    pricePerHour: 100,
-    type: "Sport",
-    rentals: [],
-    updatedAt: new Date(),
-    createdAt: new Date()
-} as OriginalCar;
 
 const createCarDtoMock = {
     imageUrl: "image-url",
@@ -63,7 +40,7 @@ describe('OriginalCarsService', () => {
                 OriginalCarsService,
                 {
                     provide: getRepositoryToken(OriginalCar),
-                    useValue: originalCarsRepositoryMock,
+                    useValue: repositoryMock,
                 },
             ],
         }).compile();
