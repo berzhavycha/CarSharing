@@ -6,36 +6,11 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CarStatus, RentalStatus, applySearchAndPagination, carErrorMessages } from '@/helpers';
 import { QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { mockCar, repositoryMock } from '../mocks';
 
 jest.mock('@/helpers/utils/applySearchAndPagination', () => ({
     applySearchAndPagination: jest.fn(),
 }));
-
-export const carsRepositoryMock = {
-    create: jest.fn(),
-    save: jest.fn(),
-    findOne: jest.fn(),
-    find: jest.fn(),
-    remove: jest.fn(),
-    createQueryBuilder: jest.fn().mockReturnThis(),
-    where: jest.fn().mockReturnThis(),
-    getMany: jest.fn(),
-};
-
-const mockCar = {
-    id: 'car-id',
-    imageUrl: "old-image-url",
-    model: "Model 1",
-    year: 2024,
-    description: "Car description",
-    pricePerHour: 100,
-    type: "Sport",
-    status: CarStatus.AVAILABLE,
-    rentals: [],
-    updatedAt: new Date(),
-    createdAt: new Date()
-} as Car;
-
 
 const mockQueryBuilder = {
     where: jest.fn().mockReturnThis(),
@@ -56,7 +31,7 @@ describe('CarsService', () => {
                 CarsService,
                 {
                     provide: getRepositoryToken(Car),
-                    useValue: carsRepositoryMock,
+                    useValue: repositoryMock,
                 },
             ],
         }).compile();
