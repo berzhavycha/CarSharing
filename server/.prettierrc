@@ -5,8 +5,7 @@
   "printWidth": 80,
   "tabWidth": 2,
   "importOrder": [
-    "^@shared",
-    "^@modules/(.*)$",
+    "^@/*/(.*)$",
     "^../(.*)$",
     "^[./]"
   ],
