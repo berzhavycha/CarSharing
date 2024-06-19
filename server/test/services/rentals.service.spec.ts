@@ -5,7 +5,12 @@ import { EntityManager, Repository } from 'typeorm';
 
 import { RentCarDto } from '@/dtos';
 import { Car, Rental, User } from '@/entities';
-import { CarStatus, RentalStatus, TransactionType } from '@/helpers';
+import {
+  CarStatus,
+  ONE_HOUR_MILLISECONDS,
+  RentalStatus,
+  TransactionType,
+} from '@/helpers';
 import {
   CarsService,
   OriginalCarsService,
@@ -75,80 +80,14 @@ describe('RentalsService', () => {
     expect(rentalsService).toBeDefined();
   });
 
-  describe('findActiveByUserId', () => {
-    it('should return a rental when found', async () => {
-      const mockUser: User = {
-        id: 'user-id-1',
-      } as User;
-
-      jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(mockRental);
-
-      const result = await rentalsService.findActiveByUserId(mockUser.id);
-
-      expect(result).toEqual(mockRental);
-      expect(rentalsRepository.findOne).toHaveBeenCalledWith({
-        where: {
-          status: RentalStatus.ACTIVE,
-          user: {
-            id: mockUser.id,
-          },
-        },
-        relations: ['originalCar', 'user'],
-      });
-    });
-
-    it('should throw NotFoundException when rental is not found', async () => {
-      const nonExistingId = 'non-existing-id';
-
-      jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
-
-      const result = await rentalsService.findActiveByUserId(nonExistingId);
-      expect(result).toBe(null);
-      expect(rentalsRepository.findOne).toHaveBeenCalledWith({
-        where: {
-          status: RentalStatus.ACTIVE,
-          user: {
-            id: nonExistingId,
-          },
-        },
-        relations: ['originalCar', 'user'],
-      });
-    });
-  });
-
-  describe('findAllUserRentals', () => {
-    it('should return user rentals when found', async () => {
-      const mockUser: User = {
-        id: 'user-id-1',
-      } as User;
-
-      const userRentals = [
-        mockRental,
-        { ...mockRental, id: '2nd-rental' },
-        { ...mockRental, id: '3rd-rental' },
-      ];
-      jest.spyOn(rentalsRepository, 'find').mockResolvedValue(userRentals);
-
-      const result = await rentalsService.findAllUserRentals(mockUser.id);
-
-      expect(result).toEqual(userRentals);
-      expect(rentalsRepository.find).toHaveBeenCalledWith({
-        where: {
-          user: {
-            id: mockUser.id,
-          },
-        },
-        relations: ['originalCar'],
-      });
-    });
-  });
-
   describe('rentCar', () => {
     it('should throw BadRequestException if user already has an active rental', async () => {
       const rentCarDto: RentCarDto = { carId: 'car-id-1', hours: 2 };
       const user: User = { id: 'user-id-1', balance: 100 } as User;
 
-      jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(mockRental);
+      jest
+        .spyOn(rentalsRepository, 'findOne')
+        .mockResolvedValue({ ...mockRental, status: RentalStatus.ACTIVE });
 
       await expect(rentalsService.rentCar(rentCarDto, user)).rejects.toThrow(
         BadRequestException,
@@ -178,7 +117,7 @@ describe('RentalsService', () => {
       const rentCarDto: RentCarDto = { carId: 'car-id-1', hours: 2 };
       const user: User = { id: 'user-id-1', balance: 10 } as User;
 
-      const car: Car = {
+      const car = {
         ...mockCar,
         status: CarStatus.AVAILABLE,
         pricePerHour: 20,
@@ -235,6 +174,7 @@ describe('RentalsService', () => {
           });
         });
 
+      jest.spyOn(rentalsRepository, 'create').mockReturnValue(mockRental);
       jest
         .spyOn(originalCarsService, 'createOriginalCarTransaction')
         .mockResolvedValue(mockOriginalCar);
@@ -263,7 +203,6 @@ describe('RentalsService', () => {
 
   describe('returnCar', () => {
     const mockNow = new Date('2023-01-01T12:00:00Z').getTime();
-    const ONE_HOUR_MILLISECONDS = 3600000;
 
     beforeAll(() => {
       jest.useFakeTimers();
@@ -276,7 +215,7 @@ describe('RentalsService', () => {
 
     it('should throw BadRequestException if rental is not found', async () => {
       const rentalId = 'non-existing-id';
-      const user: User = { id: 'user-id-1' } as User;
+      const user = { id: 'user-id-1' } as User;
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
 
@@ -291,7 +230,7 @@ describe('RentalsService', () => {
 
     it('should throw BadRequestException if the car has already been returned', async () => {
       const rentalId = 'existing-id';
-      const user: User = { id: 'user-id-1' } as User;
+      const user = { id: 'user-id-1' } as User;
 
       const returnedRental = { ...mockRental, rentalEnd: new Date() } as Rental;
 
@@ -310,7 +249,7 @@ describe('RentalsService', () => {
 
     it('should return the car and provide a refund if returned within requested hours', async () => {
       const rentalId = 'existing-id';
-      const user: User = { id: 'user-id-1' } as User;
+      const user = { id: 'user-id-1' } as User;
       const rentalStart = new Date(mockNow - 1 * ONE_HOUR_MILLISECONDS);
       const rental = {
         ...mockRental,
@@ -351,7 +290,7 @@ describe('RentalsService', () => {
 
     it('should return the car and apply a penalty if returned after requested hours', async () => {
       const rentalId = 'existing-id';
-      const user: User = { id: 'user-id-1' } as User;
+      const user = { id: 'user-id-1' } as User;
       const rentalStart = new Date(mockNow - 3 * ONE_HOUR_MILLISECONDS);
       const rental = {
         ...mockRental,
@@ -424,6 +363,74 @@ describe('RentalsService', () => {
       expect(rental.car.status).toBe(CarStatus.AVAILABLE);
       expect(rental.status).toBe(RentalStatus.CLOSED);
       expect(rental.rentalEnd).not.toBeNull();
+    });
+  });
+
+  describe('findActiveByUserId', () => {
+    it('should return a rental when found', async () => {
+      const mockUser = {
+        id: 'user-id-1',
+      } as User;
+
+      jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(mockRental);
+
+      const result = await rentalsService.findActiveByUserId(mockUser.id);
+
+      expect(result).toEqual(mockRental);
+      expect(rentalsRepository.findOne).toHaveBeenCalledWith({
+        where: {
+          status: RentalStatus.ACTIVE,
+          user: {
+            id: mockUser.id,
+          },
+        },
+        relations: ['originalCar', 'user'],
+      });
+    });
+
+    it('should return null when rental is not found', async () => {
+      const nonExistingId = 'non-existing-id';
+
+      jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
+
+      const result = await rentalsService.findActiveByUserId(nonExistingId);
+      expect(result).toBe(null);
+      expect(rentalsRepository.findOne).toHaveBeenCalledWith({
+        where: {
+          status: RentalStatus.ACTIVE,
+          user: {
+            id: nonExistingId,
+          },
+        },
+        relations: ['originalCar', 'user'],
+      });
+    });
+  });
+
+  describe('findAllUserRentals', () => {
+    it('should return user rentals when found', async () => {
+      const mockUser: User = {
+        id: 'user-id-1',
+      } as User;
+
+      const userRentals = [
+        mockRental,
+        { ...mockRental, id: '2nd-rental' },
+        { ...mockRental, id: '3rd-rental' },
+      ];
+      jest.spyOn(rentalsRepository, 'find').mockResolvedValue(userRentals);
+
+      const result = await rentalsService.findAllUserRentals(mockUser.id);
+
+      expect(result).toEqual(userRentals);
+      expect(rentalsRepository.find).toHaveBeenCalledWith({
+        where: {
+          user: {
+            id: mockUser.id,
+          },
+        },
+        relations: ['originalCar'],
+      });
     });
   });
 });
