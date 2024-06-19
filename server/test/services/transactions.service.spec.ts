@@ -5,7 +5,7 @@ import { EntityManager, Repository } from 'typeorm';
 import { Transaction } from '@/entities';
 import { TransactionsService } from '@/services';
 
-import { mockTransanction, repositoryMock } from '../mocks';
+import { mockEntityManager, mockTransanction, repositoryMock } from '../mocks';
 
 describe('TransanctionsService', () => {
   let transactionsService: TransactionsService;
@@ -38,24 +38,20 @@ describe('TransanctionsService', () => {
 
   describe('createTransaction', () => {
     it('should create a transanction', async () => {
-      const mockEntityManager = {
-        save: jest.fn(),
-      };
-
       jest
         .spyOn(transactionsRepository, 'create')
         .mockReturnValue(mockTransanction);
       jest.spyOn(mockEntityManager, 'save').mockResolvedValue(mockTransanction);
 
       const result = await transactionsService.createTransaction(
-        { ...mockTransanction },
+        mockTransanction,
         mockEntityManager as unknown as EntityManager,
       );
 
       expect(result).toBe(mockTransanction);
-      expect(transactionsRepository.create).toHaveBeenCalledWith({
-        ...mockTransanction,
-      });
+      expect(transactionsRepository.create).toHaveBeenCalledWith(
+        mockTransanction,
+      );
       expect(mockEntityManager.save).toHaveBeenCalledWith(mockTransanction);
     });
   });
