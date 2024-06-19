@@ -71,6 +71,19 @@ describe('RentalsController', () => {
         mockUserId,
       );
     });
+
+    it('should return null if there is no active rental for a user', async () => {
+      const mockUserId = 'user123';
+
+      jest.spyOn(rentalsService, 'findActiveByUserId').mockResolvedValue(null);
+
+      const result = await rentalsController.getCurrentUserRental(mockUserId);
+
+      expect(result).toBe(null);
+      expect(rentalsService.findActiveByUserId).toHaveBeenCalledWith(
+        mockUserId,
+      );
+    });
   });
 
   describe('getUserHistory', () => {
