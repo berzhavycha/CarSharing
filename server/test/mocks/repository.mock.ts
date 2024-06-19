@@ -7,4 +7,8 @@ export const repositoryMock = {
     createQueryBuilder: jest.fn().mockReturnThis(),
     where: jest.fn().mockReturnThis(),
     getMany: jest.fn(),
+    manager: {
+        save: jest.fn(),
+        transaction: jest.fn(),
+    },
 };
