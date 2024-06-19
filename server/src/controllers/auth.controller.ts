@@ -6,6 +6,7 @@ import {
   Post,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
@@ -57,7 +58,7 @@ export class AuthController {
     const refreshToken = req.cookies.tokens?.refreshToken;
 
     if (!refreshToken) {
-      throw new Error(authErrorMessages.REFRESH_TOKEN_NOT_FOUND);
+      throw new UnauthorizedException(authErrorMessages.REFRESH_TOKEN_NOT_FOUND);
     }
 
     const tokens = await this.authService.refreshAccessToken(refreshToken);
