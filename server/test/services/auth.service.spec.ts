@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { Response } from 'express-serve-static-core';
 import { User } from '@/entities';
 import { plainToClass } from 'class-transformer';
+import { mockTokens } from '../mocks';
 
 jest.mock('@nestjs/config');
 const mockConfigService = {
@@ -46,11 +47,6 @@ const mockUser = {
     lastName: "lastName",
     passwordHash: 'passwordhash',
     role: Roles.USER
-}
-
-const mockTokens = {
-    accessToken: 'mock-access-token',
-    refreshToken: 'mock-refresh-token'
 }
 
 const mockHash = {
