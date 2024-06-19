@@ -1,4 +1,4 @@
-import { Car, OriginalCar, User } from '@/entities';
+import { Car, OriginalCar, Rental, User } from '@/entities';
 import { RentalStatus } from '@/helpers';
 
 export const mockRental = {
@@ -13,4 +13,4 @@ export const mockRental = {
   car: new Car(),
   originalCar: new OriginalCar(),
   transactions: [],
-};
+} as Rental;
