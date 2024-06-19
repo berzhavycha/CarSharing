@@ -8,20 +8,17 @@ import { OriginalCar } from '@/entities';
 import { applySearchAndPagination } from '@/helpers';
 import { OriginalCarsService } from '@/services';
 
-import { mockOriginalCar, mockQueryBuilder, repositoryMock } from '../mocks';
+import {
+  createCarDtoMock,
+  mockEntityManager,
+  mockOriginalCar,
+  mockQueryBuilder,
+  repositoryMock,
+} from '../mocks';
 
 jest.mock('@/helpers/utils/applySearchAndPagination', () => ({
   applySearchAndPagination: jest.fn(),
 }));
-
-const createCarDtoMock = {
-  imageUrl: 'image-url',
-  model: 'Model 1',
-  year: 2024,
-  description: 'Car description',
-  pricePerHour: 100,
-  type: 'Sport',
-};
 
 describe('OriginalCarsService', () => {
   let originalCarsService: OriginalCarsService;
@@ -80,13 +77,8 @@ describe('OriginalCarsService', () => {
         ...createCarDtoMock,
       } as OriginalCar;
 
-      const mockEntityManager = {
-        create: jest.fn().mockReturnValue(createdCar),
-        save: jest.fn().mockResolvedValue(createdCar),
-      };
-
-      const createSpy = jest.spyOn(mockEntityManager, 'create');
-      const saveSpy = jest.spyOn(mockEntityManager, 'save');
+      jest.spyOn(mockEntityManager, 'create').mockReturnValue(createdCar);
+      jest.spyOn(mockEntityManager, 'save').mockResolvedValue(createdCar);
 
       const result = await originalCarsService.createOriginalCarTransaction(
         createCarDtoMock,
@@ -94,15 +86,18 @@ describe('OriginalCarsService', () => {
       );
 
       expect(result).toEqual(createdCar);
-      expect(createSpy).toHaveBeenCalledWith(OriginalCar, createCarDtoMock);
-      expect(saveSpy).toHaveBeenCalledWith(createdCar);
+      expect(mockEntityManager.create).toHaveBeenCalledWith(
+        OriginalCar,
+        createCarDtoMock,
+      );
+      expect(mockEntityManager.save).toHaveBeenCalledWith(createdCar);
     });
 
     it('should propagate error when save operation fails', async () => {
-      const mockEntityManager = {
-        create: jest.fn().mockReturnValue(createCarDtoMock),
-        save: jest.fn().mockRejectedValue(new Error('Save failed')),
-      };
+      jest.spyOn(mockEntityManager, 'create').mockReturnValue(mockOriginalCar);
+      jest
+        .spyOn(mockEntityManager, 'save')
+        .mockRejectedValue(new Error('Save failed'));
 
       await expect(
         originalCarsService.createOriginalCarTransaction(
@@ -115,7 +110,7 @@ describe('OriginalCarsService', () => {
         OriginalCar,
         createCarDtoMock,
       );
-      expect(mockEntityManager.save).toHaveBeenCalledWith(createCarDtoMock);
+      expect(mockEntityManager.save).toHaveBeenCalledWith(mockOriginalCar);
     });
   });
 

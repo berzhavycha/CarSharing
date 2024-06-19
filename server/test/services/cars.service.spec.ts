@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 
-import { QueryCarsDto, UpdateCarDto } from '@/dtos';
+import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { Car } from '@/entities';
 import {
   applySearchAndPagination,
@@ -14,6 +14,7 @@ import {
 import { CarsService } from '@/services';
 
 import {
+  createCarDtoMock,
   mockCar,
   mockQueryBuilder,
   mockRental,
@@ -53,16 +54,6 @@ describe('CarsService', () => {
 
   describe('createCar', () => {
     it('should create a car', async () => {
-      const createCarDtoMock = {
-        imageUrl: 'image-url',
-        model: 'Model 1',
-        year: 2024,
-        description: 'Car description',
-        pricePerHour: 100,
-        type: 'Sport',
-        status: CarStatus.AVAILABLE,
-      };
-
       const createdCar = {
         id: 'car-id',
         ...createCarDtoMock,
@@ -71,7 +62,9 @@ describe('CarsService', () => {
       jest.spyOn(carsRepository, 'create').mockReturnValue(createdCar);
       jest.spyOn(carsRepository, 'save').mockResolvedValue(createdCar);
 
-      const result = await carsService.createCar(createCarDtoMock);
+      const result = await carsService.createCar(
+        createCarDtoMock as CreateCarDto,
+      );
 
       expect(result).toBe(createdCar);
       expect(carsRepository.create).toHaveBeenCalledWith(createCarDtoMock);
