@@ -2,10 +2,11 @@ import { Test } from '@nestjs/testing'
 import { RolesService, TransactionsService, UsersService } from '@/services';
 import { User } from '@/entities';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { usersErrorMessages } from '@/helpers';
+import { EntityManager, Repository } from 'typeorm';
+import { TransactionType, usersErrorMessages } from '@/helpers';
 import { NotFoundException } from '@nestjs/common';
-import { repositoryMock, mockRole, mockUser, createUserDtoMock, userDetails, secureUserData } from '../mocks';
+import { repositoryMock, mockRole, mockUser, createUserDtoMock, userDetails, secureUserData, mockRental } from '../mocks';
+import { UpdateUserBalanceDto } from '@/dtos';
 
 const mockTransanctionService = {
     createTransaction: jest.fn()
@@ -16,7 +17,7 @@ const mockRoleService = {
     findByName: jest.fn()
 }
 
-describe('Users', () => {
+describe('UsersService', () => {
     let usersService: UsersService;
     let transactionsService: TransactionsService;
     let rolesService: RolesService;
@@ -158,6 +159,70 @@ describe('Users', () => {
 
             expect(usersService.findById).toHaveBeenCalledWith(nonExistingId);
             expect(usersRepository.save).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('updateUserBalance', () => {
+        const balanceDto: UpdateUserBalanceDto = { amount: 20 };
+        const options = {
+            id: mockUser.id,
+            balanceDto,
+            transactionType: TransactionType.REFUND,
+            rental: mockRental,
+        };
+
+        const mockUserBalance = mockUser.balance
+
+        it('should update user balance within a transaction if manager is provided', async () => {
+            const mockManager = {
+                save: jest.fn().mockResolvedValue(mockUser),
+            } as unknown as EntityManager;
+
+
+            jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+            const result = await usersService.updateUserBalance(options, mockManager);
+
+            expect(result).toEqual(mockUser);
+            expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
+            expect(transactionsService.createTransaction).toHaveBeenCalledWith(
+                {
+                    amount: balanceDto.amount,
+                    description: `${options.transactionType} for ${options.id} user account`,
+                    type: options.transactionType,
+                    user: { ...mockUser },
+                    rental: options.rental,
+                },
+                mockManager
+            );
+
+
+            expect(mockManager.save).toHaveBeenCalledWith({
+                ...mockUser,
+                balance: mockUserBalance + balanceDto.amount,
+            });
+        });
+
+        it('should update user balance and create a transaction', async () => {
+            jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+            jest.spyOn(usersRepository.manager, 'transaction').mockResolvedValue(mockUser);
+
+            const result = await usersService.updateUserBalance(options);
+
+            expect(result).toEqual(mockUser);
+            expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
+            expect(usersRepository.manager.transaction).toHaveBeenCalled();
+        });
+
+        it('should throw NotFoundException if user is not found', async () => {
+            jest.spyOn(usersService, 'findById').mockImplementationOnce(() => {
+                throw new NotFoundException(usersErrorMessages.USER_NOT_FOUND);
+            });
+
+            await expect(usersService.updateUserBalance(options)).rejects.toThrow(NotFoundException);
+
+            expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
+            expect(transactionsService.createTransaction).not.toHaveBeenCalled();
+            expect(usersRepository.manager.transaction).not.toHaveBeenCalled();
         });
     });
 })

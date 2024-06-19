@@ -26,7 +26,7 @@ const mockEntityManager = {
     transaction: jest.fn()
 };
 
-describe('Rentals', () => {
+describe('RentalsService', () => {
     let rentalsService: RentalsService;
     let rentalsRepository: Repository<Rental>;
     let carsService: CarsService;
