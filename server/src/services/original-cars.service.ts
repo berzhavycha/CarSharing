@@ -35,7 +35,7 @@ export class OriginalCarsService {
     return manager.save(car);
   }
 
-  async findOne(id: string): Promise<OriginalCar> {
+  async findById(id: string): Promise<OriginalCar> {
     const car = await this.originalCarsRepository.findOne({ where: { id } });
 
     if (!car) {
