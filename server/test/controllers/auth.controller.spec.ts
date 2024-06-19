@@ -1,7 +1,7 @@
 import { HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToClass } from 'class-transformer';
-import { Request, Response } from 'express-serve-static-core';
+import { Request } from 'express-serve-static-core';
 
 import { AuthController } from '@/controllers';
 import { LoginUserDto, RegisterUserDto } from '@/dtos';
@@ -10,7 +10,7 @@ import { Roles } from '@/helpers';
 import { RequestWithUser } from '@/interfaces';
 import { AuthService } from '@/services';
 
-import { mockAuthService, mockTokens, mockUser } from '../mocks';
+import { mockAuthService, mockTokens, mockUser, responseMock } from '../mocks';
 
 describe('AuthController', () => {
   let authService: AuthService;
@@ -53,11 +53,6 @@ describe('AuthController', () => {
         .spyOn(authService, 'signUp')
         .mockResolvedValue({ user: mockUser, tokens: mockTokens });
 
-      const responseMock = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn().mockReturnThis(),
-      } as unknown as Response;
-
       await authController.signUp(userDto, responseMock);
 
       expect(authService.signUp).toHaveBeenCalledWith(userDto);
@@ -80,10 +75,6 @@ describe('AuthController', () => {
       };
 
       const requestMock = { user: mockUser } as RequestWithUser;
-      const responseMock = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn().mockReturnThis(),
-      } as unknown as Response;
 
       jest
         .spyOn(authService, 'signIn')
@@ -111,11 +102,6 @@ describe('AuthController', () => {
         },
       } as Request;
 
-      const responseMock = {
-        status: jest.fn().mockReturnThis(),
-        send: jest.fn().mockReturnThis(),
-      } as unknown as Response;
-
       jest
         .spyOn(authService, 'refreshAccessToken')
         .mockResolvedValue(mockTokens);
@@ -136,11 +122,6 @@ describe('AuthController', () => {
         cookies: {},
       } as Request;
 
-      const responseMock = {
-        status: jest.fn().mockReturnThis(),
-        send: jest.fn().mockReturnThis(),
-      } as unknown as Response;
-
       await expect(
         authController.refreshAccess(responseMock, requestMock),
       ).rejects.toThrow(UnauthorizedException);
@@ -154,11 +135,6 @@ describe('AuthController', () => {
   describe('signOut', () => {
     it('should sign out a user', async () => {
       const userId = 'mockUserId';
-
-      const responseMock = {
-        status: jest.fn().mockReturnThis(),
-        send: jest.fn().mockReturnThis(),
-      } as unknown as Response;
 
       await authController.signOut(userId, responseMock);
 
