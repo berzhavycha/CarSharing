@@ -30,7 +30,7 @@ export class Rental {
   rentalEnd: Date;
 
   @Column()
-  requestedHours: number;
+  requestedDays: number;
 
   @Column({
     type: 'varchar',

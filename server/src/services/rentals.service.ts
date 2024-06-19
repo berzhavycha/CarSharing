@@ -6,6 +6,7 @@ import { RentCarDto } from '@/dtos';
 import { Rental, User } from '@/entities';
 import {
   CarStatus,
+  HOURS_IN_DAY,
   ONE_HOUR_MILLISECONDS,
   rentalsErrorMessages,
   RentalStatus,
@@ -25,7 +26,7 @@ export class RentalsService {
     private originalCarsService: OriginalCarsService,
     private usersService: UsersService,
     private readonly entityManager: EntityManager,
-  ) {}
+  ) { }
 
   async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
     const existingActiveUserRental = await this.rentalsRepository.findOne({
@@ -47,7 +48,7 @@ export class RentalsService {
       throw new BadRequestException(rentalsErrorMessages.CAR_NOT_AVAILABLE);
     }
 
-    const rentalCost = car.pricePerHour * rentCarDto.hours;
+    const rentalCost = car.pricePerDay * rentCarDto.days;
     if (user.balance < rentalCost) {
       throw new BadRequestException(rentalsErrorMessages.INSUFFICIENT_BALANCE);
     }
@@ -67,7 +68,7 @@ export class RentalsService {
         user,
         originalCar,
         status: RentalStatus.ACTIVE,
-        requestedHours: rentCarDto.hours,
+        requestedDays: rentCarDto.days,
         rentalStart: new Date(),
       });
 
@@ -104,13 +105,14 @@ export class RentalsService {
     return this.entityManager.transaction(async (manager) => {
       const returnDate = new Date();
       const hoursDifference = Math.ceil(
-        (returnDate.getTime() - rental.rentalStart.getTime()) /
-          ONE_HOUR_MILLISECONDS,
+        (returnDate.getTime() - rental.rentalStart.getTime()) / ONE_HOUR_MILLISECONDS,
       );
 
-      if (hoursDifference < rental.requestedHours) {
-        const refundAmount =
-          rental.car.pricePerHour * (rental.requestedHours - hoursDifference);
+      const hoursInRequestedDays = rental.requestedDays * HOURS_IN_DAY;
+      const pricePerHour = rental.car.pricePerDay / HOURS_IN_DAY;
+
+      if (hoursDifference < hoursInRequestedDays) {
+        const refundAmount = pricePerHour * (hoursInRequestedDays - hoursDifference);
 
         await this.usersService.updateUserBalance(
           {
@@ -121,9 +123,8 @@ export class RentalsService {
           },
           manager,
         );
-      } else if (hoursDifference > rental.requestedHours) {
-        const fineAmount =
-          rental.car.pricePerHour * (hoursDifference - rental.requestedHours);
+      } else if (hoursDifference > hoursInRequestedDays) {
+        const fineAmount = pricePerHour * (hoursDifference - hoursInRequestedDays);
 
         await this.usersService.updateUserBalance(
           {
