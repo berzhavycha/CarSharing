@@ -80,7 +80,6 @@ describe('CarsService', () => {
                 status: CarStatus.BOOKED
             };
 
-
             const updatedCar = {
                 ...mockCar,
                 ...updateCarDtoMock
