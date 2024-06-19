@@ -32,6 +32,12 @@ export class Rental {
   @Column()
   requestedDays: number;
 
+  @Column({ default: '' })
+  pickUpLocation: string;
+
+  @Column({ default: '' })
+  dropOffLocation: string;
+
   @Column({
     type: 'varchar',
     length: RENTAL_STATUS_LENGTH,
