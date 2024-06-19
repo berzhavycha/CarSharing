@@ -13,7 +13,12 @@ import {
 } from '@/helpers';
 import { CarsService } from '@/services';
 
-import { mockCar, mockQueryBuilder, repositoryMock } from '../mocks';
+import {
+  mockCar,
+  mockQueryBuilder,
+  mockRental,
+  repositoryMock,
+} from '../mocks';
 
 jest.mock('@/helpers/utils/applySearchAndPagination', () => ({
   applySearchAndPagination: jest.fn(),
@@ -77,12 +82,6 @@ describe('CarsService', () => {
   describe('updateCar', () => {
     it('should update a car', async () => {
       const updateCarDtoMock = {
-        imageUrl: 'new-image-url',
-        model: 'Updated Model',
-        year: 2025,
-        description: 'Updated Car description',
-        pricePerHour: 120,
-        type: 'SUV',
         status: CarStatus.BOOKED,
       };
 
@@ -125,19 +124,30 @@ describe('CarsService', () => {
 
   describe('removeCar', () => {
     it('should remove a car when no active rentals exist', async () => {
-      jest.spyOn(carsService, 'findById').mockResolvedValue(mockCar);
+      const carWithNoActiveRentals = {
+        ...mockCar,
+        rentals: [{ ...mockRental, status: RentalStatus.CLOSED }],
+      };
+
+      jest
+        .spyOn(carsService, 'findById')
+        .mockResolvedValue(carWithNoActiveRentals);
       jest.spyOn(carsRepository, 'remove').mockResolvedValue(undefined);
 
-      await carsService.removeCar('car-id');
+      await carsService.removeCar(carWithNoActiveRentals.id);
 
-      expect(carsService.findById).toHaveBeenCalledWith('car-id');
-      expect(carsRepository.remove).toHaveBeenCalledWith(mockCar);
+      expect(carsService.findById).toHaveBeenCalledWith(
+        carWithNoActiveRentals.id,
+      );
+      expect(carsRepository.remove).toHaveBeenCalledWith(
+        carWithNoActiveRentals,
+      );
     });
 
     it('should throw BadRequestException when active rentals exist', async () => {
       const carWithActiveRental = {
         ...mockCar,
-        rentals: [{ status: RentalStatus.ACTIVE }],
+        rentals: [{ ...mockRental, status: RentalStatus.ACTIVE }],
       } as Car;
 
       jest
