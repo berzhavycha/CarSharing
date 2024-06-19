@@ -10,6 +10,7 @@ import { RolesService, TransactionsService, UsersService } from '@/services';
 
 import {
   createUserDtoMock,
+  mockEntityManager,
   mockRental,
   mockRole,
   mockRoleService,
@@ -60,8 +61,27 @@ describe('UsersService', () => {
   });
 
   describe('createUser', () => {
-    it('should create a user', async () => {
+    it('should create a user with existing role', async () => {
       jest.spyOn(rolesService, 'findByName').mockResolvedValue(mockRole);
+
+      jest.spyOn(usersRepository, 'create').mockReturnValue(mockUser);
+      jest.spyOn(usersRepository, 'save').mockResolvedValue(mockUser);
+
+      const result = await usersService.createUser(createUserDtoMock);
+
+      expect(result).toBe(mockUser);
+      expect(usersRepository.create).toHaveBeenCalledWith({
+        ...userDetails,
+        ...secureUserData,
+        balance: 0,
+        role: mockRole,
+      });
+      expect(usersRepository.save).toHaveBeenCalledWith(mockUser);
+    });
+
+    it('should create a user and a new role', async () => {
+      jest.spyOn(rolesService, 'findByName').mockResolvedValue(null);
+      jest.spyOn(rolesService, 'createRole').mockResolvedValue(mockRole);
 
       jest.spyOn(usersRepository, 'create').mockReturnValue(mockUser);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(mockUser);
@@ -192,12 +212,12 @@ describe('UsersService', () => {
     const mockUserBalance = mockUser.balance;
 
     it('should update user balance within a transaction if manager is provided', async () => {
-      const mockManager = {
-        save: jest.fn().mockResolvedValue(mockUser),
-      } as unknown as EntityManager;
-
-      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
-      const result = await usersService.updateUserBalance(options, mockManager);
+      jest.spyOn(mockEntityManager, 'save').mockResolvedValue(mockUser),
+        jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      const result = await usersService.updateUserBalance(
+        options,
+        mockEntityManager as unknown as EntityManager,
+      );
 
       expect(result).toEqual(mockUser);
       expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
@@ -209,10 +229,10 @@ describe('UsersService', () => {
           user: { ...mockUser },
           rental: options.rental,
         },
-        mockManager,
+        mockEntityManager,
       );
 
-      expect(mockManager.save).toHaveBeenCalledWith({
+      expect(mockEntityManager.save).toHaveBeenCalledWith({
         ...mockUser,
         balance: mockUserBalance + balanceDto.amount,
       });
