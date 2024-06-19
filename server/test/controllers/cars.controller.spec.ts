@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CarsController } from '@/controllers';
-import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
+import { QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { Car } from '@/entities';
 import { CarStatus } from '@/helpers';
 import { CarsService } from '@/services';
 
-import { mockCar, mockCarsService } from '../mocks';
+import { createCarDtoMock, mockCar, mockCarsService } from '../mocks';
 
 describe('CarsController', () => {
   let carsService: CarsService;
@@ -37,27 +37,18 @@ describe('CarsController', () => {
 
   describe('create', () => {
     it('should create a new car', async () => {
-      const createCarDto: CreateCarDto = {
-        imageUrl: 'image-url',
-        model: 'Model 1',
-        year: 2020,
-        description: 'Description',
-        pricePerHour: 100,
-        type: 'Light',
-        status: CarStatus.AVAILABLE,
-      };
-
       const createdCar = {
         id: 'car-id',
-        ...createCarDto,
+        ...createCarDtoMock,
       } as Car;
 
       jest.spyOn(carsService, 'createCar').mockResolvedValue(createdCar);
 
-      const result = await carsController.create(createCarDto);
+      const dto = { ...createCarDtoMock, status: CarStatus.AVAILABLE };
+      const result = await carsController.create(dto);
 
       expect(result).toBe(createdCar);
-      expect(carsService.createCar).toHaveBeenCalledWith(createCarDto);
+      expect(carsService.createCar).toHaveBeenCalledWith(dto);
     });
   });
 
