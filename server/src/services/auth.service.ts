@@ -86,15 +86,12 @@ export class AuthService {
     }
   }
 
-  private async hash(value: string): Promise<HashResult> {
+  async hash(value: string): Promise<HashResult> {
     const salt = await bcrypt.genSalt();
     return { salt, hash: await bcrypt.hash(value, salt) };
   }
 
-  private async generateTokens(
-    userId: string,
-    email: string,
-  ): Promise<ITokens> {
+  async generateTokens(userId: string, email: string): Promise<ITokens> {
     const payload: JwtPayload = { sub: userId, email };
     const accessToken = await this.jwtService.signAsync(payload);
     const refreshToken = await this.jwtService.signAsync(payload, {
