@@ -27,7 +27,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
     try {
@@ -91,10 +91,7 @@ export class AuthService {
     return { salt, hash: await bcrypt.hash(value, salt) };
   }
 
-  async generateTokens(
-    userId: string,
-    email: string,
-  ): Promise<ITokens> {
+  async generateTokens(userId: string, email: string): Promise<ITokens> {
     const payload: JwtPayload = { sub: userId, email };
     const accessToken = await this.jwtService.signAsync(payload);
     const refreshToken = await this.jwtService.signAsync(payload, {
