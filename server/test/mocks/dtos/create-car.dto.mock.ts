@@ -5,7 +5,7 @@ export const createCarDtoMock = {
   description: 'Car description',
   pricePerHour: 100,
   type: 'Sport',
-  gasoline: 'Petrol',
+  fuelType: 'Petrol',
   fuelCapacity: 50,
   capacity: 50,
   steering: 'Left-Hand',
