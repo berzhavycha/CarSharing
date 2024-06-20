@@ -5,5 +5,11 @@ export class RentCarDto {
   carId: string;
 
   @IsNumber()
-  hours: number;
+  days: number;
+
+  @IsString()
+  pickUpLocation: string;
+
+  @IsString()
+  dropOffLocation: string;
 }

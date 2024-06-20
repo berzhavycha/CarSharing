@@ -25,7 +25,7 @@
     "typeorm": "ts-node ./node_modules/typeorm/cli",
     "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./src/core/database/ormconfig.ts",
     "typeorm:generate-migration": "npm run typeorm -- -d ./src/core/database/ormconfig.ts migration:generate ./src/core/database/migrations/%npm_config_name%",
-    "typeorm:create-migration": "npm run typeorm -- migration:create ./src/core/database/migrations/$npm_config_name",
+    "typeorm:create-migration": "npm run typeorm -- migration:create ./src/core/database/migrations/%npm_config_name%",
     "typeorm:revert-migration": "npm run typeorm -- -d ./src/core/database/ormconfig.ts migration:revert"
   },
   "dependencies": {

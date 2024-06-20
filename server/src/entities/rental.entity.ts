@@ -30,7 +30,13 @@ export class Rental {
   rentalEnd: Date;
 
   @Column()
-  requestedHours: number;
+  requestedDays: number;
+
+  @Column({ default: '' })
+  pickUpLocation: string;
+
+  @Column({ default: '' })
+  dropOffLocation: string;
 
   @Column({
     type: 'varchar',
