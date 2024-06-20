@@ -1,4 +1,4 @@
-import { Header } from "@/components";
+import { Header } from "@/layouts";
 import { MainUserPage } from "@/pages";
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 
