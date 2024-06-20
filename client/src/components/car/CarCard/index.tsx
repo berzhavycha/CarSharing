@@ -2,6 +2,8 @@ import { FC } from 'react';
 import { FaCog, FaGasPump, FaUsers } from 'react-icons/fa';
 import styled from 'styled-components';
 
+import { Price, PrimaryButton } from '@/components/common';
+
 import { CarFeature } from '../CarFeature';
 
 type CarCardProps = {
@@ -39,10 +41,8 @@ export const CarCard: FC<CarCardProps> = ({
         <CarFeature icon={<FaUsers />} text={`${capacity} People`} />
       </Features>
       <Footer>
-        <Price>
-          ${pricePerHour}.00<Metric> / hour</Metric>
-        </Price>
-        <RentButton>Rent Now</RentButton>
+        <Price amount={pricePerHour} metric="hours" />
+        <PrimaryButton content="Rent Now" onClick={() => console.log('rent')} />
       </Footer>
     </CardWrapper>
   );
@@ -63,13 +63,13 @@ const Header = styled.div`
 const Title = styled.h2`
   font-size: 20px;
   font-weight: 700;
-  color: #1a202c;
+  color: var(--dark);
   margin-bottom: 5px;
 `;
 
 const Type = styled.p`
   font-size: 14px;
-  color: #90a3bf;
+  color: var(--gray);
   font-weight: 600;
   margin: 0;
 `;
@@ -82,7 +82,7 @@ const CarImageWrapper = styled.div`
 
 const ShadowImage = styled.img`
   position: absolute;
-  bottom: 20px;
+  bottom: 15px;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
@@ -107,31 +107,4 @@ const Footer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`;
-
-const Price = styled.span`
-  font-size: 20px;
-  font-weight: bold;
-  color: #1a202c;
-`;
-
-const Metric = styled.span`
-  font-size: 14px;
-  font-weight: normal;
-  color: #90a3bf;
-`;
-
-const RentButton = styled.button`
-  background-color: #3563e9;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: var(--default-transition);
-
-  &:hover {
-    background-color: #2b4fad;
-  }
 `;

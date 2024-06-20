@@ -45,6 +45,6 @@ const SearchInput = styled.input`
 `;
 
 const SearchIcon = styled(FaSearch)`
-  color: #596780;
+  color: var(--light-dark);
   font-weight: lighter;
 `;
