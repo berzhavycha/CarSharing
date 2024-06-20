@@ -16,7 +16,7 @@ export class CreateCarDto {
   description: string;
 
   @IsNumber()
-  pricePerDay: number;
+  pricePerHour: number;
 
   @IsString()
   @Length(1, CAR_FIELD_MEDIUM_LENGTH)
@@ -30,7 +30,7 @@ export class CreateCarDto {
 
   @IsString()
   @Length(1, CAR_FIELD_MEDIUM_LENGTH)
-  gasoline: string;
+  fuelType: string;
 
   @IsString()
   @Length(1, CAR_FIELD_MEDIUM_LENGTH)

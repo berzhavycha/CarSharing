@@ -10,14 +10,13 @@ import {
 } from 'typeorm';
 
 import {
-  CAR_DEFAULT_CAPACITY,
-  CAR_DEFAULT_FUEL_CAPACITY,
-  CAR_DEFAULT_GASOLINE,
+  CarDefaultFuelCapacity,
   CAR_DEFAULT_STEERING,
   CAR_FIELD_DEFAULT_PRECISION,
   CAR_FIELD_DEFAULT_SCALE,
   CAR_FIELD_MEDIUM_LENGTH,
   CAR_FIELD_SMALL_LENGTH,
+  CarFuelType,
   CarStatus,
   DecimalColumnTransformer,
 } from '@/helpers';
@@ -25,9 +24,9 @@ import {
 import { Rental } from './rental.entity';
 
 @Entity({ schema: 'rental', name: 'cars' })
-@Check('"price_per_day" > 0')
+@Check('"price_per_hour" > 0')
 @Check('"fuel_capacity" >= 0')
-@Index(['type', 'capacity', 'pricePerDay'])
+@Index(['type', 'capacity', 'pricePerHour'])
 export class Car {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -51,8 +50,7 @@ export class Car {
     scale: CAR_FIELD_DEFAULT_SCALE,
     transformer: new DecimalColumnTransformer(),
   })
-  @Index()
-  pricePerDay: number;
+  pricePerHour: number;
 
   @Column({ type: 'varchar', length: CAR_FIELD_MEDIUM_LENGTH })
   type: string;
@@ -64,15 +62,15 @@ export class Car {
   })
   status: CarStatus;
 
-  @Column({ type: 'int', default: CAR_DEFAULT_CAPACITY })
+  @Column({ type: 'int' })
   capacity: number;
 
   @Column({
     type: 'varchar',
     length: CAR_FIELD_MEDIUM_LENGTH,
-    default: CAR_DEFAULT_GASOLINE,
+    default: CarFuelType.PETROL,
   })
-  gasoline: string;
+  fuelType: string;
 
   @Column({
     type: 'varchar',
@@ -86,7 +84,7 @@ export class Car {
     precision: CAR_FIELD_DEFAULT_PRECISION,
     scale: CAR_FIELD_DEFAULT_SCALE,
     transformer: new DecimalColumnTransformer(),
-    default: CAR_DEFAULT_FUEL_CAPACITY,
+    default: CarDefaultFuelCapacity[CarFuelType.PETROL],
   })
   fuelCapacity: number;
 
