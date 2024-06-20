@@ -53,6 +53,12 @@
       "@/router/*": [
         "src/router/*"
       ],
+      "@/helpers": [
+        "src/helpers"
+      ],
+      "@/helpers/*": [
+        "src/helpers/*"
+      ],
     },
   },
   "include": [
