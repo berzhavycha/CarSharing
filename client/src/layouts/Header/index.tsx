@@ -2,20 +2,26 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import { Container } from '@/components';
 import { HeaderOptions, CarSearch } from './components';
+import { useOutlet } from 'react-router-dom';
 
 export const Header: FC = () => {
+  const outlet = useOutlet()
+
   return (
-    <Section>
-      <Container>
-        <Nav>
-          <LeftSection>
-            <Logo>CARRENT</Logo>
-            <CarSearch />
-          </LeftSection>
-          <HeaderOptions />
-        </Nav>
-      </Container>
-    </Section>
+    <>
+      <Section>
+        <Container>
+          <Nav>
+            <LeftSection>
+              <Logo>CARRENT</Logo>
+              <CarSearch />
+            </LeftSection>
+            <HeaderOptions />
+          </Nav>
+        </Container>
+      </Section>
+      {outlet}
+    </>
   );
 };
 
