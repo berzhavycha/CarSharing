@@ -6,7 +6,6 @@ import { RentCarDto } from '@/dtos';
 import { Rental, User } from '@/entities';
 import {
   CarStatus,
-  HOURS_IN_DAY,
   ONE_HOUR_MILLISECONDS,
   rentalsErrorMessages,
   RentalStatus,
@@ -54,11 +53,11 @@ export class RentalsService {
     }
 
     return this.entityManager.transaction(async (manager) => {
-      // const originalCar =
-      //   await this.originalCarsService.createOriginalCarTransaction(
-      //     car,
-      //     manager,
-      //   );
+      const originalCar =
+        await this.originalCarsService.createOriginalCarTransaction(
+          car,
+          manager,
+        );
 
       car.status = CarStatus.BOOKED;
       await manager.save(car);
@@ -66,7 +65,7 @@ export class RentalsService {
       const rental = this.rentalsRepository.create({
         car,
         user,
-        // originalCar,
+        originalCar,
         status: RentalStatus.ACTIVE,
         requestedHours: rentCarDto.days,
         rentalStart: new Date(),
@@ -109,12 +108,10 @@ export class RentalsService {
         ONE_HOUR_MILLISECONDS,
       );
 
-      const hoursInRequestedDays = rental.requestedHours * HOURS_IN_DAY;
-      const pricePerHour = rental.car.pricePerHour / HOURS_IN_DAY;
-
-      if (hoursDifference < hoursInRequestedDays) {
+      console.log(hoursDifference)
+      if (hoursDifference < rental.requestedHours) {
         const refundAmount =
-          pricePerHour * (hoursInRequestedDays - hoursDifference);
+          rental.car.pricePerHour * Math.ceil(rental.requestedHours - hoursDifference);
 
         await this.usersService.updateUserBalance(
           {
@@ -125,9 +122,9 @@ export class RentalsService {
           },
           manager,
         );
-      } else if (hoursDifference > hoursInRequestedDays) {
+      } else if (hoursDifference > rental.requestedHours) {
         const fineAmount =
-          pricePerHour * (hoursDifference - hoursInRequestedDays);
+          rental.car.pricePerHour * Math.ceil(hoursDifference - rental.requestedHours);
 
         await this.usersService.updateUserBalance(
           {
