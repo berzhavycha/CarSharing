@@ -8,10 +8,10 @@ const ENV = buildEnvProxy<Record<string, unknown>>(
     (key) => `VITE_${key}`,
 );
 
-let CONFIG: unknown;
+export let Env: Config;
 
 try {
-    CONFIG = parseConfig(ENV);
+    Env = parseConfig(ENV);
 } catch (error) {
     if (error instanceof ZodError) {
         error.errors.forEach(err => {
@@ -20,5 +20,4 @@ try {
     }
 }
 
-export const CONFIG_TYPED = CONFIG as Config;
 
