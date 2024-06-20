@@ -6,7 +6,7 @@ export const mockOriginalCar = {
   model: 'Model 1',
   year: 2024,
   description: 'Car description',
-  pricePerDay: 100,
+  pricePerHour: 100,
   type: 'Sport',
   rentals: [],
   gasoline: 'Petrol',
