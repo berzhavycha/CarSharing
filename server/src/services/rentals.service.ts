@@ -6,7 +6,6 @@ import { RentCarDto } from '@/dtos';
 import { Rental, User } from '@/entities';
 import {
   CarStatus,
-  HOURS_IN_DAY,
   ONE_HOUR_MILLISECONDS,
   rentalsErrorMessages,
   RentalStatus,
@@ -26,7 +25,7 @@ export class RentalsService {
     private originalCarsService: OriginalCarsService,
     private usersService: UsersService,
     private readonly entityManager: EntityManager,
-  ) {}
+  ) { }
 
   async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
     const existingActiveUserRental = await this.rentalsRepository.findOne({
@@ -48,7 +47,7 @@ export class RentalsService {
       throw new BadRequestException(rentalsErrorMessages.CAR_NOT_AVAILABLE);
     }
 
-    const rentalCost = car.pricePerDay * rentCarDto.days;
+    const rentalCost = car.pricePerHour * rentCarDto.days;
     if (user.balance < rentalCost) {
       throw new BadRequestException(rentalsErrorMessages.INSUFFICIENT_BALANCE);
     }
@@ -68,7 +67,7 @@ export class RentalsService {
         user,
         originalCar,
         status: RentalStatus.ACTIVE,
-        requestedDays: rentCarDto.days,
+        requestedHours: rentCarDto.days,
         rentalStart: new Date(),
       });
 
@@ -106,15 +105,13 @@ export class RentalsService {
       const returnDate = new Date();
       const hoursDifference = Math.ceil(
         (returnDate.getTime() - rental.rentalStart.getTime()) /
-          ONE_HOUR_MILLISECONDS,
+        ONE_HOUR_MILLISECONDS,
       );
 
-      const hoursInRequestedDays = rental.requestedDays * HOURS_IN_DAY;
-      const pricePerHour = rental.car.pricePerDay / HOURS_IN_DAY;
-
-      if (hoursDifference < hoursInRequestedDays) {
+      console.log(hoursDifference)
+      if (hoursDifference < rental.requestedHours) {
         const refundAmount =
-          pricePerHour * (hoursInRequestedDays - hoursDifference);
+          rental.car.pricePerHour * Math.ceil(rental.requestedHours - hoursDifference);
 
         await this.usersService.updateUserBalance(
           {
@@ -125,9 +122,9 @@ export class RentalsService {
           },
           manager,
         );
-      } else if (hoursDifference > hoursInRequestedDays) {
+      } else if (hoursDifference > rental.requestedHours) {
         const fineAmount =
-          pricePerHour * (hoursDifference - hoursInRequestedDays);
+          rental.car.pricePerHour * Math.ceil(hoursDifference - rental.requestedHours);
 
         await this.usersService.updateUserBalance(
           {

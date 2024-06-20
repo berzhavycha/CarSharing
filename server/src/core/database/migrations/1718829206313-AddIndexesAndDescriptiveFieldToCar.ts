@@ -1,8 +1,8 @@
+import { CarDefaultCapacity } from '@/helpers';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AddIndexesAndDescriptiveFieldToCar1718829206313
-  implements MigrationInterface
-{
+  implements MigrationInterface {
   name = 'AddIndexesAndDescriptiveFieldToCar1718829206313';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -10,7 +10,7 @@ export class AddIndexesAndDescriptiveFieldToCar1718829206313
       `ALTER TABLE "rental"."rentals" RENAME COLUMN "requested_hours" TO "requested_days"`,
     );
     await queryRunner.query(
-      `ALTER TABLE "rental"."cars" ADD "capacity" integer NOT NULL DEFAULT '4'`,
+      `ALTER TABLE "rental"."cars" ADD "capacity" integer NOT NULL`,
     );
     await queryRunner.query(
       `ALTER TABLE "rental"."cars" ADD "gasoline" character varying(50) NOT NULL DEFAULT 'Petrol'`,
@@ -22,8 +22,43 @@ export class AddIndexesAndDescriptiveFieldToCar1718829206313
       `ALTER TABLE "rental"."cars" ADD "fuel_capacity" numeric(10,2) NOT NULL DEFAULT '60'`,
     );
     await queryRunner.query(
-      `ALTER TABLE "rental"."original_cars" ADD "capacity" integer NOT NULL DEFAULT '4'`,
+      `ALTER TABLE "rental"."original_cars" ADD "capacity" integer NOT NULL`,
     );
+
+    await queryRunner.query(`
+      UPDATE "rental"."cars"
+      SET "capacity" =
+        CASE "type"
+          WHEN 'SUV' THEN ${CarDefaultCapacity.SUV}
+          WHEN 'MVP' THEN ${CarDefaultCapacity.MVP}
+          WHEN 'Sport' THEN ${CarDefaultCapacity.Sport}
+          WHEN 'Hatchback' THEN ${CarDefaultCapacity.Hatchback}
+          WHEN 'Sedan' THEN ${CarDefaultCapacity.Sedan}
+          WHEN 'Coupe' THEN ${CarDefaultCapacity.Coupe}
+          WHEN 'Crossover' THEN ${CarDefaultCapacity.Crossover}
+          WHEN 'Pickup' THEN ${CarDefaultCapacity.Pickup}
+          WHEN 'Minivan' THEN ${CarDefaultCapacity.Minivan}
+          ELSE ${CarDefaultCapacity.Sedan}
+        END
+    `);
+
+    await queryRunner.query(`
+      UPDATE "rental"."original_cars"
+      SET "capacity" =
+        CASE "type"
+          WHEN 'SUV' THEN ${CarDefaultCapacity.SUV}
+          WHEN 'MVP' THEN ${CarDefaultCapacity.MVP}
+          WHEN 'Sport' THEN ${CarDefaultCapacity.Sport}
+          WHEN 'Hatchback' THEN ${CarDefaultCapacity.Hatchback}
+          WHEN 'Sedan' THEN ${CarDefaultCapacity.Sedan}
+          WHEN 'Coupe' THEN ${CarDefaultCapacity.Coupe}
+          WHEN 'Crossover' THEN ${CarDefaultCapacity.Crossover}
+          WHEN 'Pickup' THEN ${CarDefaultCapacity.Pickup}
+          WHEN 'Minivan' THEN ${CarDefaultCapacity.Minivan}
+          ELSE ${CarDefaultCapacity.Sedan}
+        END
+    `);
+
     await queryRunner.query(
       `ALTER TABLE "rental"."original_cars" ADD "gasoline" character varying(50) NOT NULL DEFAULT 'Petrol'`,
     );
