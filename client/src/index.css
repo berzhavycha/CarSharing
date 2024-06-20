@@ -3,3 +3,8 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+:root {
+    --default-border: 1px solid rgba(195, 212, 233, 0.5);
+    --default-transition: all .2s ease;
+}
