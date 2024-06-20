@@ -187,7 +187,7 @@ describe('RentalsService', () => {
       const car: Car = {
         ...mockCar,
         status: CarStatus.AVAILABLE,
-        pricePerDay: 20,
+        pricePerHour: 20,
       } as Car;
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
@@ -286,9 +286,9 @@ describe('RentalsService', () => {
       const rental = {
         ...mockRental,
         rentalStart,
-        requestedDays: 2,
+        requestedHours: 2,
         rentalEnd: null,
-        car: { ...mockCar, pricePerDay: 200 },
+        car: { ...mockCar, pricePerHour: 200 },
       } as Rental;
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
@@ -330,9 +330,9 @@ describe('RentalsService', () => {
       const rental = {
         ...mockRental,
         rentalStart,
-        requestedDays: 1,
+        requestedHours: 1,
         rentalEnd: null,
-        car: { ...mockCar, pricePerDay: 200 },
+        car: { ...mockCar, pricePerHour: 200 },
       } as Rental;
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
@@ -371,7 +371,7 @@ describe('RentalsService', () => {
       const rental = {
         ...mockRental,
         rentalStart,
-        requestedDays: 2,
+        requestedHours: 2,
         rentalEnd: null,
         car: { ...mockCar, pricePerHour: 20 },
       } as Rental;

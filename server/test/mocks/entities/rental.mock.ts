@@ -5,7 +5,7 @@ export const mockRental = {
   id: 'rental-id',
   rentalStart: new Date(),
   rentalEnd: new Date(),
-  requestedDays: 2,
+  requestedHours: 2,
   status: RentalStatus.ACTIVE,
   pickUpLocation: 'London',
   dropOffLocation: 'London',

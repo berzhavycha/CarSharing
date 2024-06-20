@@ -30,7 +30,7 @@ export class Rental {
   rentalEnd: Date;
 
   @Column()
-  requestedDays: number;
+  requestedHours: number;
 
   @Column({ default: '' })
   pickUpLocation: string;

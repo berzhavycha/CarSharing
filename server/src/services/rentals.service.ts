@@ -26,7 +26,7 @@ export class RentalsService {
     private originalCarsService: OriginalCarsService,
     private usersService: UsersService,
     private readonly entityManager: EntityManager,
-  ) {}
+  ) { }
 
   async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
     const existingActiveUserRental = await this.rentalsRepository.findOne({
@@ -48,17 +48,17 @@ export class RentalsService {
       throw new BadRequestException(rentalsErrorMessages.CAR_NOT_AVAILABLE);
     }
 
-    const rentalCost = car.pricePerDay * rentCarDto.days;
+    const rentalCost = car.pricePerHour * rentCarDto.days;
     if (user.balance < rentalCost) {
       throw new BadRequestException(rentalsErrorMessages.INSUFFICIENT_BALANCE);
     }
 
     return this.entityManager.transaction(async (manager) => {
-      const originalCar =
-        await this.originalCarsService.createOriginalCarTransaction(
-          car,
-          manager,
-        );
+      // const originalCar =
+      //   await this.originalCarsService.createOriginalCarTransaction(
+      //     car,
+      //     manager,
+      //   );
 
       car.status = CarStatus.BOOKED;
       await manager.save(car);
@@ -66,9 +66,9 @@ export class RentalsService {
       const rental = this.rentalsRepository.create({
         car,
         user,
-        originalCar,
+        // originalCar,
         status: RentalStatus.ACTIVE,
-        requestedDays: rentCarDto.days,
+        requestedHours: rentCarDto.days,
         rentalStart: new Date(),
       });
 
@@ -106,11 +106,11 @@ export class RentalsService {
       const returnDate = new Date();
       const hoursDifference = Math.ceil(
         (returnDate.getTime() - rental.rentalStart.getTime()) /
-          ONE_HOUR_MILLISECONDS,
+        ONE_HOUR_MILLISECONDS,
       );
 
-      const hoursInRequestedDays = rental.requestedDays * HOURS_IN_DAY;
-      const pricePerHour = rental.car.pricePerDay / HOURS_IN_DAY;
+      const hoursInRequestedDays = rental.requestedHours * HOURS_IN_DAY;
+      const pricePerHour = rental.car.pricePerHour / HOURS_IN_DAY;
 
       if (hoursDifference < hoursInRequestedDays) {
         const refundAmount =
