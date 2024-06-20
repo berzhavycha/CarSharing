@@ -1,50 +1,52 @@
 import { ChangeEvent, FC } from "react";
 import styled from "styled-components";
-import { FaSearch, FaCog } from 'react-icons/fa';
+import { FaSearch } from "react-icons/fa";
 
 type Props = {
-    search: string;
-    onSearchChange: (text: string) => void;
-}
+  search: string;
+  onSearchChange: (text: string) => void;
+};
 
 export const SearchBar: FC<Props> = ({ search, onSearchChange }) => {
-    const onChange = (e: ChangeEvent<HTMLInputElement>): void => onSearchChange(e.target.value)
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    onSearchChange(e.target.value);
+  };
 
-    return (
-        <Bar>
-            <SearchIcon />
-            <SearchInput type="text" value={search} onChange={onChange} placeholder="Search something here" />
-            <FilterIcon />
-        </Bar>
-    )
-}
+  return (
+    <SearchContainer>
+      <SearchIcon />
+      <SearchInput
+        type="text"
+        value={search}
+        onChange={handleChange}
+        placeholder="Search something here"
+      />
+    </SearchContainer>
+  );
+};
 
-const Bar = styled.div`
+const SearchContainer = styled.div`
   display: flex;
   align-items: center;
-  background: none;
-  padding: 5px 10px;
+  background: none; 
+  padding: 5px 10px 5px 15px;
   border-radius: 35px;
   width: 500px;
   border: var(--default-border);
 `;
 
 const SearchInput = styled.input`
+  flex: 1;
   border: none;
   background: none;
   outline: none;
-  width: 100%;
-  padding: 5px;
+  padding: 5px 12px;
   font-size: 16px;
 `;
 
 const SearchIcon = styled(FaSearch)`
   color: #596780;
-  margin-right: 10px;
-  font-weight: light;
+  font-weight: lighter;
 `;
 
-const FilterIcon = styled(FaCog)`
-  color: #596780;
-`;
 
