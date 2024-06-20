@@ -1,5 +1,6 @@
 import { IsEnum, IsInt, IsNumber, IsString, Length } from 'class-validator';
-import { CarStatus, CAR_FIELD_MEDIUM_LENGTH } from '@/helpers';
+
+import { CAR_FIELD_MEDIUM_LENGTH, CarStatus } from '@/helpers';
 
 export class CreateCarDto {
   @IsString()
