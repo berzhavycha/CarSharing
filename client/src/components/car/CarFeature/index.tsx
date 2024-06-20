@@ -18,7 +18,7 @@ export const CarFeature: FC<Props> = ({ icon, text }) => {
 const Feature = styled.div`
   display: flex;
   align-items: center;
-  color: #90a3bf;
+  color: var(--gray);
   font-size: 14px;
 
   svg {

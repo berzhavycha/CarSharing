@@ -1,6 +1,9 @@
 import { forwardRef, useState } from 'react';
-import { FaCheckCircle, FaExclamationCircle, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import styled from 'styled-components';
+
+import { CheckIcon } from '../CheckIcon';
+import { ErrorIcon } from '../ErrorIcon';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -19,8 +22,6 @@ export const TextInput = forwardRef<HTMLInputElement, InputProps>(
 
     const inputType = isPasswordShown ? 'password' : 'text';
 
-    const isValid = !error;
-
     return (
       <FormBlock>
         <Label>{label}</Label>
@@ -36,16 +37,7 @@ export const TextInput = forwardRef<HTMLInputElement, InputProps>(
               {isPasswordShown ? <FaEyeSlash /> : <FaEye />}
             </TogglePasswordButton>
           )}
-          {formSubmitted && isValid && (
-            <CheckIcon>
-              <FaCheckCircle />
-            </CheckIcon>
-          )}
-          {formSubmitted && !isValid && error && (
-            <ErrorIcon>
-              <FaExclamationCircle />
-            </ErrorIcon>
-          )}
+          {formSubmitted && (!error ? <CheckIcon /> : <ErrorIcon />)}
         </InputWrapper>
         <ErrorMessage>{error}</ErrorMessage>
       </FormBlock>
@@ -94,16 +86,4 @@ export const ErrorMessage = styled.div`
   font-size: 12px;
   min-height: 18px;
   margin-top: 5px;
-`;
-
-export const ErrorIcon = styled.span`
-  color: red;
-  position: absolute;
-  right: -20px;
-`;
-
-export const CheckIcon = styled.i`
-  color: green;
-  position: absolute;
-  right: -20px;
 `;

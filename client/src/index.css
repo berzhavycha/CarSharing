@@ -8,8 +8,11 @@
     --default-border: 1px solid rgba(195, 212, 233, 0.5);
     --default-transition: all .2s ease;
     --main-bg-color: #F6F7F9;
-    --main-blue: #3563E9;
-    --dark-blue: #0b246c;
+    --main-blue: #3563e9;
+    --dark-blue: #2b4fad;
+    --gray: #90A3BF;
+    --dark: #1a202c;
+    --light-dark: #596780;
 }
 
 body {

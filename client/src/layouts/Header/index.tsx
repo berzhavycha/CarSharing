@@ -49,5 +49,5 @@ const Nav = styled.div`
 const Logo = styled.div`
   font-size: 32px;
   font-weight: bold;
-  color: #3563e9;
+  color: var(--main-blue);
 `;
