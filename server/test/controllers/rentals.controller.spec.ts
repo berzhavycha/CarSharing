@@ -5,7 +5,7 @@ import { RentCarDto } from '@/dtos';
 import { Rental } from '@/entities';
 import { RentalsService } from '@/services';
 
-import { mockCar, mockRental, mockRentalsService, mockUser } from '../mocks';
+import { mockRental, mockRentalsService, mockUser } from '../mocks';
 
 describe('RentalsController', () => {
   let rentalsController: RentalsController;
@@ -36,23 +36,19 @@ describe('RentalsController', () => {
 
   describe('createRental', () => {
     it('should create a new rental', async () => {
-      const mockRentCarDto: RentCarDto = {
-        carId: mockCar.id,
-        hours: 2,
+      const rentCarDto: RentCarDto = {
+        carId: 'car-id-1',
+        days: 2,
+        pickUpLocation: 'London',
+        dropOffLocation: 'London',
       };
 
       jest.spyOn(rentalsService, 'rentCar').mockResolvedValue(mockRental);
 
-      const result = await rentalsController.createRental(
-        mockRentCarDto,
-        mockUser,
-      );
+      const result = await rentalsController.createRental(rentCarDto, mockUser);
 
       expect(result).toBe(mockRental);
-      expect(rentalsService.rentCar).toHaveBeenCalledWith(
-        mockRentCarDto,
-        mockUser,
-      );
+      expect(rentalsService.rentCar).toHaveBeenCalledWith(rentCarDto, mockUser);
     });
   });
 
