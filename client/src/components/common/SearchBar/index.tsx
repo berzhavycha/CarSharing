@@ -1,6 +1,6 @@
-import { ChangeEvent, FC } from "react";
-import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
+import { ChangeEvent, FC } from 'react';
+import { FaSearch } from 'react-icons/fa';
+import styled from 'styled-components';
 
 type Props = {
   search: string;
@@ -28,7 +28,7 @@ export const SearchBar: FC<Props> = ({ search, onSearchChange }) => {
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
-  background: none; 
+  background: none;
   padding: 5px 10px 5px 15px;
   border-radius: 35px;
   width: 500px;
@@ -48,5 +48,3 @@ const SearchIcon = styled(FaSearch)`
   color: #596780;
   font-weight: lighter;
 `;
-
-

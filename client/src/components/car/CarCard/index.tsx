@@ -1,7 +1,8 @@
-import styled from "styled-components";
-import { FaGasPump, FaCog, FaUsers } from "react-icons/fa";
-import { FC } from "react";
-import { CarFeature } from "../CarFeature";
+import { FC } from 'react';
+import { FaCog, FaGasPump, FaUsers } from 'react-icons/fa';
+import styled from 'styled-components';
+
+import { CarFeature } from '../CarFeature';
 
 type CarCardProps = {
   model: string;
@@ -11,7 +12,7 @@ type CarCardProps = {
   capacity: number;
   pricePerHour: number;
   imageUrl: string;
-}
+};
 
 export const CarCard: FC<CarCardProps> = ({
   model,
@@ -20,7 +21,7 @@ export const CarCard: FC<CarCardProps> = ({
   transmission,
   capacity,
   pricePerHour,
-  imageUrl
+  imageUrl,
 }) => {
   return (
     <CardWrapper>
@@ -38,7 +39,9 @@ export const CarCard: FC<CarCardProps> = ({
         <CarFeature icon={<FaUsers />} text={`${capacity} People`} />
       </Features>
       <Footer>
-        <Price>${pricePerHour}.00<Metric> / hour</Metric></Price>
+        <Price>
+          ${pricePerHour}.00<Metric> / hour</Metric>
+        </Price>
         <RentButton>Rent Now</RentButton>
       </Footer>
     </CardWrapper>
@@ -60,13 +63,13 @@ const Header = styled.div`
 const Title = styled.h2`
   font-size: 20px;
   font-weight: 700;
-  color: #1A202C;
+  color: #1a202c;
   margin-bottom: 5px;
 `;
 
 const Type = styled.p`
   font-size: 14px;
-  color: #90A3BF;
+  color: #90a3bf;
   font-weight: 600;
   margin: 0;
 `;
@@ -82,7 +85,7 @@ const ShadowImage = styled.img`
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%; 
+  width: 100%;
   height: auto;
   z-index: 2;
 `;
@@ -109,17 +112,17 @@ const Footer = styled.div`
 const Price = styled.span`
   font-size: 20px;
   font-weight: bold;
-  color: #1A202C;
+  color: #1a202c;
 `;
 
 const Metric = styled.span`
   font-size: 14px;
   font-weight: normal;
-  color: #90A3BF;
+  color: #90a3bf;
 `;
 
 const RentButton = styled.button`
-  background-color: #3563E9;
+  background-color: #3563e9;
   color: white;
   border: none;
   border-radius: 5px;
@@ -127,7 +130,7 @@ const RentButton = styled.button`
   font-size: 16px;
   cursor: pointer;
   transition: var(--default-transition);
-  
+
   &:hover {
     background-color: #2b4fad;
   }

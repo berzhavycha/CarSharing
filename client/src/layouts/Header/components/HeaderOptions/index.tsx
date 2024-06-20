@@ -1,8 +1,6 @@
-import { FC } from "react";
-
-import { FaGear } from "react-icons/fa6";
-import styled from "styled-components";
-
+import { FC } from 'react';
+import { FaGear } from 'react-icons/fa6';
+import styled from 'styled-components';
 
 export const HeaderOptions: FC = () => {
   return (
@@ -12,8 +10,8 @@ export const HeaderOptions: FC = () => {
       </IconWrapper>
       <UserAvatar src="https://via.placeholder.com/40" alt="User Avatar" />
     </IconGroup>
-  )
-}
+  );
+};
 
 const IconGroup = styled.div`
   display: flex;
@@ -33,7 +31,7 @@ const IconWrapper = styled.div`
   justify-content: center;
   align-items: center;
   transition: var(--default-transition);
-  
+
   &:hover {
     color: #1e3a8a;
     border-color: #1e3a8a;

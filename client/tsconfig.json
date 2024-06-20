@@ -59,6 +59,12 @@
       "@/helpers/*": [
         "src/helpers/*"
       ],
+      "@/types": [
+        "src/types"
+      ],
+      "@/types/*": [
+        "src/types/*"
+      ],
     },
   },
   "include": [
