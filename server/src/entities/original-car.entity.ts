@@ -52,10 +52,18 @@ export class OriginalCar {
   @Column({ type: 'int', default: CAR_DEFAULT_CAPACITY })
   capacity: number;
 
-  @Column({ type: 'varchar', length: CAR_FIELD_MEDIUM_LENGTH, default: CAR_DEFAULT_GASOLINE })
+  @Column({
+    type: 'varchar',
+    length: CAR_FIELD_MEDIUM_LENGTH,
+    default: CAR_DEFAULT_GASOLINE,
+  })
   gasoline: string;
 
-  @Column({ type: 'varchar', length: CAR_FIELD_MEDIUM_LENGTH, default: CAR_DEFAULT_STEERING })
+  @Column({
+    type: 'varchar',
+    length: CAR_FIELD_MEDIUM_LENGTH,
+    default: CAR_DEFAULT_STEERING,
+  })
   steering: string;
 
   @Column({
@@ -63,7 +71,7 @@ export class OriginalCar {
     precision: CAR_FIELD_DEFAULT_PRECISION,
     scale: CAR_FIELD_DEFAULT_SCALE,
     transformer: new DecimalColumnTransformer(),
-    default: CAR_DEFAULT_FUEL_CAPACITY
+    default: CAR_DEFAULT_FUEL_CAPACITY,
   })
   fuelCapacity: number;
 

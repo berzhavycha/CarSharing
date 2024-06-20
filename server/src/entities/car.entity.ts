@@ -10,16 +10,16 @@ import {
 } from 'typeorm';
 
 import {
+  CAR_DEFAULT_CAPACITY,
+  CAR_DEFAULT_FUEL_CAPACITY,
+  CAR_DEFAULT_GASOLINE,
+  CAR_DEFAULT_STEERING,
   CAR_FIELD_DEFAULT_PRECISION,
   CAR_FIELD_DEFAULT_SCALE,
-  CAR_FIELD_SMALL_LENGTH,
   CAR_FIELD_MEDIUM_LENGTH,
+  CAR_FIELD_SMALL_LENGTH,
   CarStatus,
   DecimalColumnTransformer,
-  CAR_DEFAULT_CAPACITY,
-  CAR_DEFAULT_GASOLINE,
-  CAR_DEFAULT_FUEL_CAPACITY,
-  CAR_DEFAULT_STEERING,
 } from '@/helpers';
 
 import { Rental } from './rental.entity';
@@ -67,10 +67,18 @@ export class Car {
   @Column({ type: 'int', default: CAR_DEFAULT_CAPACITY })
   capacity: number;
 
-  @Column({ type: 'varchar', length: CAR_FIELD_MEDIUM_LENGTH, default: CAR_DEFAULT_GASOLINE })
+  @Column({
+    type: 'varchar',
+    length: CAR_FIELD_MEDIUM_LENGTH,
+    default: CAR_DEFAULT_GASOLINE,
+  })
   gasoline: string;
 
-  @Column({ type: 'varchar', length: CAR_FIELD_MEDIUM_LENGTH, default: CAR_DEFAULT_STEERING })
+  @Column({
+    type: 'varchar',
+    length: CAR_FIELD_MEDIUM_LENGTH,
+    default: CAR_DEFAULT_STEERING,
+  })
   steering: string;
 
   @Column({
@@ -78,7 +86,7 @@ export class Car {
     precision: CAR_FIELD_DEFAULT_PRECISION,
     scale: CAR_FIELD_DEFAULT_SCALE,
     transformer: new DecimalColumnTransformer(),
-    default: CAR_DEFAULT_FUEL_CAPACITY
+    default: CAR_DEFAULT_FUEL_CAPACITY,
   })
   fuelCapacity: number;
 

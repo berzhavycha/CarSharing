@@ -82,7 +82,13 @@ describe('RentalsService', () => {
 
   describe('rentCar', () => {
     it('should throw BadRequestException if user already has an active rental', async () => {
-      const rentCarDto: RentCarDto = { carId: 'car-id-1', hours: 2 };
+      const rentCarDto: RentCarDto = {
+        carId: 'car-id-1',
+        days: 2,
+        pickUpLocation: 'London',
+        dropOffLocation: 'London',
+      };
+
       const user: User = { id: 'user-id-1', balance: 100 } as User;
 
       jest
@@ -101,7 +107,12 @@ describe('RentalsService', () => {
     });
 
     it('should throw BadRequestException if the car is not available', async () => {
-      const rentCarDto: RentCarDto = { carId: 'car-id-1', hours: 2 };
+      const rentCarDto: RentCarDto = {
+        carId: 'car-id-1',
+        days: 2,
+        pickUpLocation: 'London',
+        dropOffLocation: 'London',
+      };
       const user: User = { id: 'user-id-1', balance: 100 } as User;
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
@@ -114,7 +125,13 @@ describe('RentalsService', () => {
     });
 
     it('should throw BadRequestException if the user has insufficient balance', async () => {
-      const rentCarDto: RentCarDto = { carId: 'car-id-1', hours: 2 };
+      const rentCarDto: RentCarDto = {
+        carId: 'car-id-1',
+        days: 2,
+        pickUpLocation: 'London',
+        dropOffLocation: 'London',
+      };
+
       const user: User = { id: 'user-id-1', balance: 10 } as User;
 
       const car = {
@@ -133,7 +150,13 @@ describe('RentalsService', () => {
     });
 
     it('should throw BadRequestException if the car is not available', async () => {
-      const rentCarDto: RentCarDto = { carId: 'car-id-1', hours: 2 };
+      const rentCarDto: RentCarDto = {
+        carId: 'car-id-1',
+        days: 2,
+        pickUpLocation: 'London',
+        dropOffLocation: 'London',
+      };
+
       const user: User = { id: 'user-id-1', balance: 100 } as User;
 
       const car: Car = {
@@ -152,13 +175,19 @@ describe('RentalsService', () => {
     });
 
     it('should create a rental successfully', async () => {
-      const rentCarDto: RentCarDto = { carId: 'car-id-1', hours: 2 };
-      const user: User = { id: 'user-id-1', balance: 100 } as User;
+      const rentCarDto: RentCarDto = {
+        carId: 'car-id-1',
+        days: 2,
+        pickUpLocation: 'London',
+        dropOffLocation: 'London',
+      };
+
+      const user: User = { id: 'user-id-1', balance: 1000 } as User;
 
       const car: Car = {
         ...mockCar,
         status: CarStatus.AVAILABLE,
-        pricePerHour: 20,
+        pricePerDay: 20,
       } as Car;
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
@@ -250,13 +279,16 @@ describe('RentalsService', () => {
     it('should return the car and provide a refund if returned within requested hours', async () => {
       const rentalId = 'existing-id';
       const user = { id: 'user-id-1' } as User;
-      const rentalStart = new Date(mockNow - 1 * ONE_HOUR_MILLISECONDS);
+      const RENTAL_HOURS = 35;
+      const rentalStart = new Date(
+        mockNow - RENTAL_HOURS * ONE_HOUR_MILLISECONDS,
+      );
       const rental = {
         ...mockRental,
         rentalStart,
-        requestedHours: 2,
+        requestedDays: 2,
         rentalEnd: null,
-        car: { ...mockCar, pricePerHour: 20 },
+        car: { ...mockCar, pricePerDay: 200 },
       } as Rental;
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
@@ -277,7 +309,7 @@ describe('RentalsService', () => {
       expect(usersService.updateUserBalance).toHaveBeenCalledWith(
         {
           id: user.id,
-          balanceDto: { amount: 20 },
+          balanceDto: { amount: 108.33333333333334 },
           transactionType: TransactionType.REFUND,
           rental,
         },
@@ -291,13 +323,16 @@ describe('RentalsService', () => {
     it('should return the car and apply a penalty if returned after requested hours', async () => {
       const rentalId = 'existing-id';
       const user = { id: 'user-id-1' } as User;
-      const rentalStart = new Date(mockNow - 3 * ONE_HOUR_MILLISECONDS);
+      const RENTAL_HOURS = 27;
+      const rentalStart = new Date(
+        mockNow - RENTAL_HOURS * ONE_HOUR_MILLISECONDS,
+      );
       const rental = {
         ...mockRental,
         rentalStart,
-        requestedHours: 2,
+        requestedDays: 1,
         rentalEnd: null,
-        car: { ...mockCar, pricePerHour: 20 },
+        car: { ...mockCar, pricePerDay: 200 },
       } as Rental;
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
@@ -318,7 +353,7 @@ describe('RentalsService', () => {
       expect(usersService.updateUserBalance).toHaveBeenCalledWith(
         {
           id: user.id,
-          balanceDto: { amount: -20 },
+          balanceDto: { amount: -25 },
           transactionType: TransactionType.PENALTY,
           rental,
         },
@@ -332,11 +367,11 @@ describe('RentalsService', () => {
     it('should return the car with no refund or penalty if returned at exact requested hours', async () => {
       const rentalId = 'existing-id';
       const user: User = { id: 'user-id-1' } as User;
-      const rentalStart = new Date(mockNow - 2 * ONE_HOUR_MILLISECONDS);
+      const rentalStart = new Date(mockNow - 48 * ONE_HOUR_MILLISECONDS);
       const rental = {
         ...mockRental,
         rentalStart,
-        requestedHours: 2,
+        requestedDays: 2,
         rentalEnd: null,
         car: { ...mockCar, pricePerHour: 20 },
       } as Rental;
