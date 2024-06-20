@@ -1,11 +1,13 @@
 import { FC } from 'react';
-import styled from 'styled-components';
-import { Container } from '@/components';
-import { HeaderOptions, CarSearch } from './components';
 import { useOutlet } from 'react-router-dom';
+import styled from 'styled-components';
+
+import { Container } from '@/components';
+
+import { CarSearch, HeaderOptions } from './components';
 
 export const Header: FC = () => {
-  const outlet = useOutlet()
+  const outlet = useOutlet();
 
   return (
     <>
@@ -25,19 +27,18 @@ export const Header: FC = () => {
   );
 };
 
-
 const Section = styled.div`
   padding: 30px;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-`
+`;
 
 const LeftSection = styled.div`
   width: 60%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-`
+`;
 
 const Nav = styled.div`
   display: flex;
@@ -48,5 +49,5 @@ const Nav = styled.div`
 const Logo = styled.div`
   font-size: 32px;
   font-weight: bold;
-  color: #3563E9;
+  color: #3563e9;
 `;

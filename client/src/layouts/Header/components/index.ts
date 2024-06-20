@@ -1,2 +1,2 @@
-export * from './HeaderOptions'
-export * from './CarSearch'
+export * from './HeaderOptions';
+export * from './CarSearch';
