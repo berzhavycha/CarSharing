@@ -1,11 +1,12 @@
 import { Env } from "@/core";
 import { UNEXPECTED_ERROR_MESSAGE, pickUserErrorMessages, transformUserResponse } from "@/helpers";
 import { User, UserDto } from "@/types";
+import { FieldErrorsState } from "@/types/error";
 import axios, { AxiosError } from "axios";
 
 type AuthResponse = {
     user: User | null;
-    errors: { [key: string]: string };
+    errors: FieldErrorsState<UserDto> | null;
 }
 
 type HookReturn = {
@@ -19,7 +20,7 @@ export const useAuth = (): HookReturn => {
 
             return {
                 user: transformUserResponse(data),
-                errors: {}
+                errors: null
             }
         } catch (error) {
             if (error instanceof AxiosError) {
@@ -31,7 +32,7 @@ export const useAuth = (): HookReturn => {
 
             return {
                 user: null,
-                errors: { unexpected: UNEXPECTED_ERROR_MESSAGE }
+                errors: { unexpectedError: UNEXPECTED_ERROR_MESSAGE }
             }
         }
     }
