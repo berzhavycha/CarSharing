@@ -8,9 +8,14 @@ import '@fontsource/plus-jakarta-sans/800.css';
 import { RouterProvider } from 'react-router-dom';
 
 import { router } from './router';
+import { CurrentUserProvider } from './context';
 
 function App(): JSX.Element {
-  return <RouterProvider router={router} />;
+  return (
+    <CurrentUserProvider>
+      <RouterProvider router={router} />
+    </CurrentUserProvider>
+  );
 }
 
 export default App;
