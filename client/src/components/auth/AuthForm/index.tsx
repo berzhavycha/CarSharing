@@ -5,6 +5,7 @@ import { ZodSchema } from 'zod';
 
 import { Input } from '../Input';
 import { SubmitButton } from '../SubmitButton';
+import { Select } from '../Select';
 
 type ContextType<TUser extends FieldValues> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,8 +40,6 @@ export const AuthForm = <TUser extends FieldValues>({
     resolver: zodResolver(validationSchema),
   });
 
-  console.log(formHandle.formState.errors, '');
-
   const contextValue: ContextType<TUser> = {
     formHandle: formHandle,
   };
@@ -61,3 +60,4 @@ export const AuthForm = <TUser extends FieldValues>({
 
 AuthForm.Input = Input;
 AuthForm.SubmitButton = SubmitButton;
+AuthForm.Select = Select;

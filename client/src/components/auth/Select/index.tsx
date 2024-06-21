@@ -1,18 +1,17 @@
 import { FC } from 'react';
 
-import { InputProps, TextInput } from '@/components/common';
-
 import { useAuthForm } from '../AuthForm';
+import { SelectField, SelectProps } from '@/components/common/SelectField';
 
-type Props = Omit<InputProps, 'name'> & {
+type Props = Omit<SelectProps, 'name'> & {
     name: string;
 };
 
-export const Input: FC<Props> = ({ name, label, ...props }) => {
+export const Select: FC<Props> = ({ name, label, onChange, ...props }) => {
     const {
         formHandle: {
             register,
-            formState: { errors, isSubmitted },
+            formState: { errors },
         },
     } = useAuthForm();
 
@@ -20,12 +19,13 @@ export const Input: FC<Props> = ({ name, label, ...props }) => {
     const errorText = typeof errorMessage === 'string' ? errorMessage : '';
 
     return (
-        <TextInput
+        <SelectField
             {...props}
-            {...register(name)}
+            {...register(name, {
+                onChange
+            })}
             label={label}
             error={errorText}
-            formSubmitted={isSubmitted}
             autoComplete="off"
         />
     );

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
 import { AuthForm, Container, FormBlocks, FormInner, Span, Title } from '@/components/auth';
-import { AuthType, regularUserSchema } from '@/helpers';
+import { AuthType, userSchema } from '@/helpers';
 import { UserDto } from '@/types';
 
 export const SignInPage: FC = () => {
@@ -19,7 +19,7 @@ export const SignInPage: FC = () => {
           <Link to="/sign-up">Register here</Link> instead
         </Span>
         <AuthForm<UserDto>
-          validationSchema={regularUserSchema(AuthType.SIGN_IN)}
+          validationSchema={userSchema(AuthType.SIGN_IN)}
           onSubmit={onSubmit}
         >
           <FormBlocks>
