@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
-import { AuthForm, Container, FormBlocks, FormInner, Span, Title } from '@/components/auth';
+import { AuthForm, Container, FormBlocks, FormInner, Span, Title } from '@/components';
 import { AuthType, getBaseSchema } from '@/helpers';
 import { UserDto } from '@/types';
 

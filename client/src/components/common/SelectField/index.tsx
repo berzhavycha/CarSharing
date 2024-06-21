@@ -1,38 +1,40 @@
 import React, { FC, forwardRef } from 'react';
 import styled from 'styled-components';
-import { Label } from '../TextInput';
-import { FormBlock } from '../FormBlock';
+
 import { ErrorMessage } from '../ErrorMessage';
+import { FormBlock } from '../FormBlock';
+import { Label } from '../TextInput';
 
 type Option = {
-    value: string;
-    label: string;
-}
+  value: string;
+  label: string;
+};
 
 export interface SelectProps extends React.InputHTMLAttributes<HTMLSelectElement> {
-    label?: string;
-    error?: string;
-    isSecured?: boolean;
-    formSubmitted?: boolean;
-    options: Option[];
+  label?: string;
+  error?: string;
+  isSecured?: boolean;
+  formSubmitted?: boolean;
+  options: Option[];
 }
 
-export const SelectField: FC<SelectProps> = forwardRef<HTMLSelectElement, SelectProps>(({ label, options, error, ...props }, ref) => {
+export const SelectField: FC<SelectProps> = forwardRef<HTMLSelectElement, SelectProps>(
+  ({ label, options, error, ...props }, ref) => {
     return (
-        <FormBlock>
-            <Label>{label}</Label>
-            <SelectElement ref={ref} {...props}>
-                {options.map(option => (
-                    <option key={option.value} value={option.value}>
-                        {option.label}
-                    </option>
-                ))}
-            </SelectElement>
-            <ErrorMessage>{error}</ErrorMessage>
-        </FormBlock>
+      <FormBlock>
+        <Label>{label}</Label>
+        <SelectElement ref={ref} {...props}>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </SelectElement>
+        <ErrorMessage>{error}</ErrorMessage>
+      </FormBlock>
     );
-});
-
+  },
+);
 
 const SelectElement = styled.select`
   width: 200px;
@@ -41,4 +43,3 @@ const SelectElement = styled.select`
   outline: none;
   border: 1px solid #ccc;
 `;
-

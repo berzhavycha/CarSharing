@@ -1,4 +1,5 @@
 export * from './AuthForm';
 export * from './Input';
 export * from './SubmitButton';
-export * from './styles';
+export * from './FormInner';
+export * from './Select'
