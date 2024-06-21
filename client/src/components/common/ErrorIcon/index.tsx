@@ -2,9 +2,13 @@ import { FC } from 'react';
 import { FaExclamationCircle } from 'react-icons/fa';
 import styled from 'styled-components';
 
-export const ErrorIcon: FC = () => {
+type Props = {
+  right?: number
+}
+
+export const ErrorIcon: FC<Props> = ({ right }) => {
   return (
-    <ErrorIconWrapper>
+    <ErrorIconWrapper right={right}>
       <FaExclamationCircle />
     </ErrorIconWrapper>
   );

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 type Props = {
   type?: 'button' | 'submit' | 'reset';
-  onClick: () => Promise<void> | void;
+  onClick?: () => Promise<void> | void;
   content: string;
 };
 
