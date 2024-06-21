@@ -7,7 +7,7 @@ export const Container = styled.div`
 `;
 
 export const FormInner = styled.div`
-  width: 400px;
+  width: 900px;
   padding: 40px;
   position: absolute;
   top: 50%;
