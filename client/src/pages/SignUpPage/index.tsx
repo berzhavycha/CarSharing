@@ -2,8 +2,8 @@ import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AuthForm, ErrorMessage, FormInner, Span, Title } from '@/components';
-import { AuthType, getBaseSchema } from '@/helpers';
+import { AuthForm, ErrorMessage } from '@/components';
+import { AuthType, Roles, getBaseSchema } from '@/helpers';
 import { useAuth } from '@/hooks';
 import { FieldErrorsState, UserDto } from '@/types';
 
@@ -11,11 +11,11 @@ export const SignUpPage: FC = () => {
   const [userRole, setUserRole] = useState<string>('user');
   const [showSecretCodeInput, setShowSecretCodeInput] = useState<boolean>(false);
   const [authError, setAuthErrors] = useState<FieldErrorsState<UserDto> | null>(null);
-  const { auth } = useAuth();
+  const { auth } = useAuth(AuthType.SIGN_UP);
 
   const handleUserTypeChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     setUserRole(event.target.value);
-    setShowSecretCodeInput(event.target.value === 'admin');
+    setShowSecretCodeInput(event.target.value === Roles.ADMIN);
   };
 
   const onSubmit = async (data: UserDto): Promise<void> => {
@@ -81,10 +81,7 @@ export const SignUpPage: FC = () => {
   );
 };
 
-const FormBlocks = styled.div`
-  display: grid;
-  gap: 10px 40px;
-`;
+
 
 const PasswordWrapper = styled.div`
   grid-column: span 3;
@@ -100,6 +97,31 @@ const RoleWrapper = styled.div`
   gap: 10px 40px;
 `;
 
-const ErrorMessageWrapper = styled.div`
+export const ErrorMessageWrapper = styled.div`
   margin: 20px 0;
+`;
+
+const FormInner = styled.div`
+  width: 900px;
+  padding: 40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+`;
+
+export const Title = styled.span`
+  font-size: 24px;
+  display: block;
+  margin-bottom: 10px;
+`;
+
+export const Span = styled.span`
+  font-size: 18px;
+`;
+
+const FormBlocks = styled.div`
+  display: grid;
+  gap: 10px 40px;
 `;

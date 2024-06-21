@@ -15,12 +15,12 @@ export const getBaseSchema = (actionType: AuthType, role: string): ZodSchema => 
         message: `Password must be at least ${Env.PASSWORD_MIN_LENGTH} characters long`,
       })
       .min(1, { message: 'Password is required' }),
-    firstName: z.string().min(1, { message: 'First Name is required' }),
-    lastName: z.string().min(1, { message: 'Last Name is required' }),
   });
 
   if (actionType === AuthType.SIGN_UP) {
     const extendedSchema = baseSchema.extend({
+      firstName: z.string().min(1, { message: 'First Name is required' }),
+      lastName: z.string().min(1, { message: 'Last Name is required' }),
       confirmPassword: z.string().min(1, { message: 'Confirm password is required' }),
     });
 
