@@ -2,10 +2,10 @@ import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AuthForm, FormInner, Span, Title, ErrorMessage } from '@/components';
+import { AuthForm, ErrorMessage, FormInner, Span, Title } from '@/components';
 import { AuthType, getBaseSchema } from '@/helpers';
 import { useAuth } from '@/hooks';
-import { UserDto, FieldErrorsState } from '@/types';
+import { FieldErrorsState, UserDto } from '@/types';
 
 export const SignUpPage: FC = () => {
   const [userRole, setUserRole] = useState<string>('user');
