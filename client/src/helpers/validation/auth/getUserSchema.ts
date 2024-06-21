@@ -1,9 +1,9 @@
 import { z, ZodSchema } from 'zod';
 
 import { Env } from '@/core';
-import { AuthType } from '@/helpers';
+import { AuthType, Roles } from '@/helpers';
 
-export const userSchema = (actionType: AuthType): ZodSchema => {
+export const getBaseSchema = (actionType: AuthType, role: string): ZodSchema => {
   const baseSchema = z.object({
     email: z
       .string()
@@ -17,11 +17,10 @@ export const userSchema = (actionType: AuthType): ZodSchema => {
       .min(1, { message: 'Password is required' }),
     firstName: z.string().min(1, { message: 'First Name is required' }),
     lastName: z.string().min(1, { message: 'Last Name is required' }),
-    invitationCode: z.string().min(1, { message: 'Invitation Code is required' }),
   });
 
   if (actionType === AuthType.SIGN_UP) {
-    return baseSchema
+    baseSchema
       .extend({
         confirmPassword: z.string().min(1, { message: 'Confirm password is required' }),
       })
@@ -29,6 +28,13 @@ export const userSchema = (actionType: AuthType): ZodSchema => {
         message: 'Passwords do not match',
         path: ['confirmPassword'],
       });
+  }
+
+  if (role === Roles.ADMIN) {
+    baseSchema
+      .extend({
+        invitationCode: z.string().min(1, { message: 'Invitation Code is required' }),
+      })
   }
 
   return baseSchema;

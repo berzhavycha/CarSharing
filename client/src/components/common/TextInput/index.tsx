@@ -35,7 +35,7 @@ export const TextInput = forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {isSecured && (
-            <TogglePasswordButton type="button" onClick={togglePasswordVisibility}>
+            <TogglePasswordButton tabIndex={-1} type="button" onClick={togglePasswordVisibility}>
               {isPasswordShown ? <FaEyeSlash /> : <FaEye />}
             </TogglePasswordButton>
           )}
