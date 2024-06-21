@@ -3,7 +3,7 @@ import { z, ZodSchema } from 'zod';
 import { Env } from '@/core';
 import { AuthType } from '@/helpers';
 
-export const regularUserSchema = (actionType: AuthType): ZodSchema => {
+export const userSchema = (actionType: AuthType): ZodSchema => {
   const baseSchema = z.object({
     email: z
       .string()
@@ -17,6 +17,7 @@ export const regularUserSchema = (actionType: AuthType): ZodSchema => {
       .min(1, { message: 'Password is required' }),
     firstName: z.string().min(1, { message: 'First Name is required' }),
     lastName: z.string().min(1, { message: 'Last Name is required' }),
+    invitationCode: z.string().min(1, { message: 'Invitation Code is required' }),
   });
 
   if (actionType === AuthType.SIGN_UP) {
@@ -32,3 +33,5 @@ export const regularUserSchema = (actionType: AuthType): ZodSchema => {
 
   return baseSchema;
 };
+
+

@@ -4,3 +4,4 @@ export * from './TextInput';
 export * from './PrimaryButton';
 export * from './Price';
 export * from './CheckIcon';
+export * from './FormBlock'

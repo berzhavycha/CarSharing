@@ -4,6 +4,8 @@ import styled from 'styled-components';
 
 import { CheckIcon } from '../CheckIcon';
 import { ErrorIcon } from '../ErrorIcon';
+import { FormBlock } from '../FormBlock';
+import { ErrorMessage } from '../ErrorMessage';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -55,13 +57,6 @@ const TogglePasswordButton = styled.button`
   padding-right: 10px;
 `;
 
-export const FormBlock = styled.div`
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-`;
-
 export const Label = styled.label`
   margin-bottom: 5px;
 `;
@@ -79,11 +74,4 @@ export const InputField = styled.input`
   outline: none;
   padding: 10px;
   padding-right: 25px;
-`;
-
-export const ErrorMessage = styled.div`
-  color: red;
-  font-size: 12px;
-  min-height: 18px;
-  margin-top: 5px;
 `;

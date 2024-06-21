@@ -1,1 +1,1 @@
-export * from './regularUser';
+export * from './userSchema';

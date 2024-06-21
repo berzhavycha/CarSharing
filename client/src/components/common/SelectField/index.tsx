@@ -1,6 +1,8 @@
 import React, { FC, forwardRef } from 'react';
 import styled from 'styled-components';
 import { Label } from '../TextInput';
+import { FormBlock } from '../FormBlock';
+import { ErrorMessage } from '../ErrorMessage';
 
 type Option = {
     value: string;
@@ -15,9 +17,9 @@ export interface SelectProps extends React.InputHTMLAttributes<HTMLSelectElement
     options: Option[];
 }
 
-export const SelectField: FC<SelectProps> = forwardRef<HTMLSelectElement, SelectProps>(({ label, options, ...props }, ref) => {
+export const SelectField: FC<SelectProps> = forwardRef<HTMLSelectElement, SelectProps>(({ label, options, error, ...props }, ref) => {
     return (
-        <RoleSelectWrapper>
+        <FormBlock>
             <Label>{label}</Label>
             <SelectElement ref={ref} {...props}>
                 {options.map(option => (
@@ -26,21 +28,17 @@ export const SelectField: FC<SelectProps> = forwardRef<HTMLSelectElement, Select
                     </option>
                 ))}
             </SelectElement>
-        </RoleSelectWrapper>
+            <ErrorMessage>{error}</ErrorMessage>
+        </FormBlock>
     );
 });
 
 
-const RoleSelectWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-`;
-
 const SelectElement = styled.select`
-  flex: 1;
+  width: 200px;
   padding: 8px;
   border-radius: 5px;
+  outline: none;
   border: 1px solid #ccc;
 `;
+
