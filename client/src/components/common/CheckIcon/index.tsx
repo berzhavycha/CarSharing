@@ -2,9 +2,13 @@ import { FC } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
 import styled from 'styled-components';
 
-export const CheckIcon: FC = () => {
+type Props = {
+  right?: number
+}
+
+export const CheckIcon: FC<Props> = ({ right }) => {
   return (
-    <CheckIconWrapper>
+    <CheckIconWrapper right={right}>
       <FaCheckCircle />
     </CheckIconWrapper>
   );

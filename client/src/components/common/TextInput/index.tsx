@@ -7,7 +7,7 @@ import { ErrorIcon } from '../ErrorIcon';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  error: string;
+  error?: string;
   isSecured?: boolean;
   formSubmitted?: boolean;
 }
@@ -26,7 +26,7 @@ export const TextInput = forwardRef<HTMLInputElement, InputProps>(
       <FormBlock>
         <Label>{label}</Label>
         <InputWrapper>
-          <Input
+          <InputField
             ref={ref}
             type={inputType}
             placeholder={placeholder || `Enter your ${label}`}
@@ -37,7 +37,7 @@ export const TextInput = forwardRef<HTMLInputElement, InputProps>(
               {isPasswordShown ? <FaEyeSlash /> : <FaEye />}
             </TogglePasswordButton>
           )}
-          {formSubmitted && (!error ? <CheckIcon /> : <ErrorIcon />)}
+          {formSubmitted && (!error ? <CheckIcon right={-20} /> : <ErrorIcon right={-20} />)}
         </InputWrapper>
         <ErrorMessage>{error}</ErrorMessage>
       </FormBlock>
@@ -73,7 +73,7 @@ export const InputWrapper = styled.div`
   position: relative;
 `;
 
-export const Input = styled.input`
+export const InputField = styled.input`
   width: 100%;
   border: none;
   outline: none;
