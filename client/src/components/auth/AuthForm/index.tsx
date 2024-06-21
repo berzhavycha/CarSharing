@@ -4,8 +4,8 @@ import { FieldValues, useForm, UseFormReturn } from 'react-hook-form';
 import { ZodSchema } from 'zod';
 
 import { Input } from '../Input';
-import { SubmitButton } from '../SubmitButton';
 import { Select } from '../Select';
+import { SubmitButton } from '../SubmitButton';
 
 type ContextType<TUser extends FieldValues> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

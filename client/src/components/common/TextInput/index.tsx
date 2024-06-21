@@ -4,8 +4,8 @@ import styled from 'styled-components';
 
 import { CheckIcon } from '../CheckIcon';
 import { ErrorIcon } from '../ErrorIcon';
-import { FormBlock } from '../FormBlock';
 import { ErrorMessage } from '../ErrorMessage';
+import { FormBlock } from '../FormBlock';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;

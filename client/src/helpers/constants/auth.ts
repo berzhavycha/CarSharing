@@ -6,5 +6,5 @@ export enum AuthType {
 
 export enum Roles {
   ADMIN = 'admin',
-  USER = 'user'
+  USER = 'user',
 }
