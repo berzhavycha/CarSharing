@@ -5,4 +5,4 @@ export * from './PrimaryButton';
 export * from './Price';
 export * from './CheckIcon';
 export * from './FormBlock';
-export * from './ErrorMessage'
+export * from './ErrorMessage';
