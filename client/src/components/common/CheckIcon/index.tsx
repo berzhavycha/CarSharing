@@ -8,18 +8,18 @@ type Props = {
 
 export const CheckIcon: FC<Props> = ({ right }) => {
   return (
-    <CheckIconWrapper right={right}>
+    <CheckIconWrapper $right={right}>
       <FaCheckCircle />
     </CheckIconWrapper>
   );
 };
 
 type IconProps = {
-  right?: number;
+  $right?: number;
 };
 
 export const CheckIconWrapper = styled.span<IconProps>`
   color: green;
   position: absolute;
-  right: ${(props): string => `${props.right}px`};
+  right: ${(props): string => `${props.$right}px`};
 `;

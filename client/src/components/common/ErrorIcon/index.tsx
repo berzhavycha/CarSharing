@@ -8,18 +8,18 @@ type Props = {
 
 export const ErrorIcon: FC<Props> = ({ right }) => {
   return (
-    <ErrorIconWrapper right={right}>
+    <ErrorIconWrapper $right={right}>
       <FaExclamationCircle />
     </ErrorIconWrapper>
   );
 };
 
 type IconProps = {
-  right?: number;
+  $right?: number;
 };
 
 export const ErrorIconWrapper = styled.span<IconProps>`
   color: red;
   position: absolute;
-  right: ${(props): string => `${props.right}px`};
+  right: ${(props): string => `${props.$right}px`};
 `;
