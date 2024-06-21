@@ -3,8 +3,8 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import styled from 'styled-components';
 
 type Props = {
-  right?: number
-}
+  right?: number;
+};
 
 export const ErrorIcon: FC<Props> = ({ right }) => {
   return (
