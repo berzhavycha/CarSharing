@@ -8,4 +8,7 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   readonly lastName?: string;
+
+  @IsOptional()
+  readonly picture?: Express.Multer.File;
 }
