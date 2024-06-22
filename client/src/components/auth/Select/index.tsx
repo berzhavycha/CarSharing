@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { SelectField, SelectProps } from '@/components/common/SelectField';
+import { SelectField, SelectProps } from '@/components/common';
 
 import { useAuthForm } from '../AuthForm';
 
@@ -8,7 +8,7 @@ type Props = Omit<SelectProps, 'name'> & {
   name: string;
 };
 
-export const Select: FC<Props> = ({ name, label, onChange, ...props }) => {
+export const Select: FC<Props> = ({ name, label, onChange, error, ...props }) => {
   const {
     formHandle: {
       register,
@@ -16,8 +16,9 @@ export const Select: FC<Props> = ({ name, label, onChange, ...props }) => {
     },
   } = useAuthForm();
 
-  const errorMessage = errors[name]?.message;
-  const errorText = typeof errorMessage === 'string' ? errorMessage : '';
+  const errorMessage = errors[name]?.message as string;
+  const errorText = errorMessage || error;
+
 
   return (
     <SelectField

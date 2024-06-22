@@ -8,12 +8,12 @@ import { Select } from '../Select';
 import { SubmitButton } from '../SubmitButton';
 
 type ContextType<TUser extends FieldValues> = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  formHandle: UseFormReturn<TUser, any, undefined>;
+  formHandle: UseFormReturn<TUser>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const AuthFormContext = createContext<ContextType<any> | null>(null);
+
 
 export const useAuthForm = <TUser extends FieldValues>(): ContextType<TUser> => {
   const context = useContext(AuthFormContext);
@@ -22,7 +22,7 @@ export const useAuthForm = <TUser extends FieldValues>(): ContextType<TUser> => 
     throw new Error('useAuthForm must be used within an AuthForm');
   }
 
-  return context;
+  return context as ContextType<TUser>;
 };
 
 type Props<TUser extends FieldValues> = PropsWithChildren & {
