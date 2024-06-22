@@ -21,7 +21,7 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
-  ) {}
+  ) { }
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -82,8 +82,13 @@ export class UsersService {
   async updateUser(
     id: string,
     updateUserDto: Partial<User>,
+    picture?: Express.Multer.File
   ): Promise<User | null> {
     const user = await this.findById(id);
+
+    if (picture) {
+      user.pictureUrl = `../../uploads/${picture.filename}`;
+    }
 
     Object.assign(user, updateUserDto);
     return this.usersRepository.save(user);

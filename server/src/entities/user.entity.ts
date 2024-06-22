@@ -24,6 +24,9 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ nullable: true })
+  pictureUrl: string;
+
   @Column()
   firstName: string;
 
