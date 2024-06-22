@@ -2,12 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import { UpdateUserBalanceDto } from '@/dtos';
+import { UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
 import { Rental, User } from '@/entities';
 import {
   Roles,
   TransactionType,
   USER_DEFAULT_BALANCE,
+  hashValue,
   usersErrorMessages,
 } from '@/helpers';
 import { SafeUser } from '@/interfaces';
@@ -15,6 +16,7 @@ import { SafeUser } from '@/interfaces';
 import { RolesService } from './roles.service';
 import { TransactionsService } from './transactions.service';
 import { ConfigService } from '@nestjs/config';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -83,13 +85,19 @@ export class UsersService {
 
   async updateUser(
     id: string,
-    updateUserDto: Partial<User>,
+    updateUserDto: UpdateUserDto | Partial<User>,
     picture?: Express.Multer.File
   ): Promise<User | null> {
-    const user = await this.findById(id);
+    let user = await this.findById(id);
 
     if (picture) {
       user.pictureUrl = `${this.configService.get<string>('MULTER_DEST')}/${picture.filename}`;
+    }
+
+    if (updateUserDto instanceof UpdateUserDto && updateUserDto.password) {
+      const { salt, hash } = await hashValue(updateUserDto.password)
+      user.passwordSalt = salt
+      user.passwordHash = hash
     }
 
     Object.assign(user, updateUserDto);

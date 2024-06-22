@@ -1,14 +1,8 @@
-import { IsOptional, IsString } from 'class-validator';
+import { PartialType, OmitType } from '@nestjs/mapped-types';
+import { IsOptional } from 'class-validator';
+import { RegisterUserDto } from '../auth';
 
-export class UpdateUserDto {
-  @IsOptional()
-  @IsString()
-  readonly firstName?: string;
-
-  @IsOptional()
-  @IsString()
-  readonly lastName?: string;
-
+export class UpdateUserDto extends PartialType(OmitType(RegisterUserDto, ['role'])) {
   @IsOptional()
   readonly picture?: Express.Multer.File;
 }

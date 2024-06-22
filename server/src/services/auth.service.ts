@@ -5,19 +5,20 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 import { plainToClass } from 'class-transformer';
 import { Response } from 'express-serve-static-core';
+import * as bcrypt from 'bcrypt';
 
 import { RegisterUserDto } from '@/dtos';
 import { User } from '@/entities';
 import {
   authErrorMessages,
   DUPLICATE_EMAIL_ERROR_CODE,
+  hashValue,
   NODE_ENV,
   ONE_DAY_MILLISECONDS,
 } from '@/helpers';
-import { AuthResult, HashResult, ITokens, JwtPayload } from '@/interfaces';
+import { AuthResult, ITokens, JwtPayload } from '@/interfaces';
 
 import { UsersService } from './users.service';
 
@@ -27,13 +28,13 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
     try {
       const { password, ...safeUser } = registerUserDto;
 
-      const { salt, hash } = await this.hash(password);
+      const { salt, hash } = await hashValue(password);
       const user = await this.usersService.createUser({
         userDetails: safeUser,
         passwordHash: hash,
@@ -86,11 +87,6 @@ export class AuthService {
     }
   }
 
-  async hash(value: string): Promise<HashResult> {
-    const salt = await bcrypt.genSalt();
-    return { salt, hash: await bcrypt.hash(value, salt) };
-  }
-
   async generateTokens(userId: string, email: string): Promise<ITokens> {
     const payload: JwtPayload = { sub: userId, email };
     const accessToken = await this.jwtService.signAsync(payload);
@@ -99,7 +95,7 @@ export class AuthService {
       expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_TIME'),
     });
 
-    const { salt, hash } = await this.hash(refreshToken);
+    const { salt, hash } = await hashValue(refreshToken);
     await this.usersService.updateUser(userId, {
       refreshTokenHash: hash,
       refreshTokenSalt: salt,
