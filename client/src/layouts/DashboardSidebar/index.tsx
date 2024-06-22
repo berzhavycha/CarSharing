@@ -59,7 +59,7 @@ const DashboardWrapper = styled.div`
 `;
 
 const Sidebar = styled.div`
-  width: 300px;
+  min-width: 20%;
   background-color: var(--main-blue);
   color: white;
   height: 100vh;
@@ -130,7 +130,7 @@ const LogoutButton = styled.button`
   font-size: 16px;
   padding: 10px 0;
   margin: 0 auto;
-  margin-top: 120%;
+  margin-top: 100%;
   transition: var(--default-transition);
 
   &:hover {

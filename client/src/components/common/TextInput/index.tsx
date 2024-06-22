@@ -67,7 +67,7 @@ export const InputWrapper = styled.div`
   position: relative;
 `;
 
-export const InputField = styled.input`
+const InputField = styled.input`
   width: 100%;
   border: none;
   outline: none;

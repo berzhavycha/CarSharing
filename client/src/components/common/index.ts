@@ -6,3 +6,4 @@ export * from './Price';
 export * from './CheckIcon';
 export * from './ErrorMessage';
 export * from './SelectField'
+export * from './InputField'
