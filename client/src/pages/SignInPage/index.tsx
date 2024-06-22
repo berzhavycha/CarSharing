@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -6,19 +6,17 @@ import { AuthForm, ErrorMessage } from '@/components';
 import { useCurrentUser } from '@/context';
 import { AuthType, getBaseSchema } from '@/helpers';
 import { useAuth } from '@/hooks';
-import { FieldErrorsState, UserDto } from '@/types';
+import { UserDto } from '@/types';
 
 import { ErrorMessageWrapper, Span, Title } from '../SignUpPage';
 
 export const SignInPage: FC = () => {
-  const [authError, setAuthErrors] = useState<FieldErrorsState<UserDto> | null>(null);
-  const { auth } = useAuth(AuthType.SIGN_IN);
+  const { auth, errors } = useAuth(AuthType.SIGN_IN);
   const { setCurrentUser } = useCurrentUser();
 
   const onSubmit = async (data: UserDto): Promise<void> => {
-    const { user, errors } = await auth(data);
+    const { user } = await auth(data);
     setCurrentUser(user);
-    setAuthErrors(errors);
   };
 
   return (
@@ -29,15 +27,15 @@ export const SignInPage: FC = () => {
         <Link to="/sign-up">Register here</Link> instead
       </Span>
       <ErrorMessageWrapper>
-        <ErrorMessage>{authError?.unexpectedError ?? ''}</ErrorMessage>
+        <ErrorMessage>{errors?.unexpectedError ?? ''}</ErrorMessage>
       </ErrorMessageWrapper>
       <AuthForm<UserDto>
         validationSchema={getBaseSchema(AuthType.SIGN_IN, 'none')}
         onSubmit={onSubmit}
       >
         <FormBlocks>
-          <AuthForm.Input label="Email" name="email" error={authError?.email} />
-          <AuthForm.Input label="Password" name="password" error={authError?.password} isSecured />
+          <AuthForm.Input label="Email" name="email" error={errors?.email} />
+          <AuthForm.Input label="Password" name="password" error={errors?.password} isSecured />
         </FormBlocks>
         <AuthForm.SubmitButton content="Log In" />
       </AuthForm>

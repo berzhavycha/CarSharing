@@ -6,46 +6,47 @@ import {
   AuthType,
   pickUserErrorMessages,
   transformUserResponse,
-  UNEXPECTED_ERROR_MESSAGE,
 } from '@/helpers';
 import { User, UserDto } from '@/types';
 import { FieldErrorsState } from '@/types/error';
+import { useState } from 'react';
 
 type AuthResponse = {
   user: User | null;
-  errors: FieldErrorsState<UserDto> | null;
 };
 
 type HookReturn = {
   auth: (userDto: UserDto) => Promise<AuthResponse>;
+  errors: FieldErrorsState<UserDto> | null
 };
 
 export const useAuth = (authType: AuthType): HookReturn => {
+  const [errors, setErrors] = useState<FieldErrorsState<UserDto> | null>(null);
+
   const apiEndpoint = authType === AuthType.SIGN_IN ? 'sign-in' : 'sign-up';
 
   const auth = async (userDto: UserDto): Promise<AuthResponse> => {
     try {
+      setErrors(null)
+
       const { data } = await axiosInstance.post(`${Env.API_BASE_URL}/auth/${apiEndpoint}`, userDto);
+
       return {
         user: transformUserResponse(data),
-        errors: null,
       };
     } catch (error) {
       if (error instanceof AxiosError) {
-        return {
-          user: null,
-          errors: pickUserErrorMessages([error.response?.data.message]),
-        };
+        setErrors(pickUserErrorMessages([error.response?.data.message]))
       }
 
       return {
         user: null,
-        errors: { unexpectedError: UNEXPECTED_ERROR_MESSAGE },
       };
     }
   };
 
   return {
     auth,
+    errors
   };
 };

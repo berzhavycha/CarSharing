@@ -2,7 +2,6 @@ import React, { FC, forwardRef } from 'react';
 import styled from 'styled-components';
 
 import { ErrorMessage } from '../ErrorMessage';
-import { FormBlock } from '../FormBlock';
 import { Label } from '../TextInput';
 
 type Option = {
@@ -21,7 +20,7 @@ export interface SelectProps extends React.InputHTMLAttributes<HTMLSelectElement
 export const SelectField: FC<SelectProps> = forwardRef<HTMLSelectElement, SelectProps>(
   ({ label, options, error, ...props }, ref) => {
     return (
-      <FormBlock>
+      <>
         <Label>{label}</Label>
         <SelectElement ref={ref} {...props}>
           {options.map((option) => (
@@ -31,7 +30,7 @@ export const SelectField: FC<SelectProps> = forwardRef<HTMLSelectElement, Select
           ))}
         </SelectElement>
         <ErrorMessage>{error}</ErrorMessage>
-      </FormBlock>
+      </>
     );
   },
 );

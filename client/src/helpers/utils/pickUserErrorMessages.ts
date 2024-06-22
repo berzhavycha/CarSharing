@@ -1,10 +1,17 @@
 import { UserDto } from '@/types';
 import { FieldErrorsState } from '@/types/error';
-
 import { UNEXPECTED_ERROR_MESSAGE } from '../constants';
 
+const fieldMappings: Record<string, keyof UserDto> = {
+  'email': 'email',
+  'password': 'password',
+  'role': 'role',
+  'firstname': 'firstName',
+  'lastname': 'lastName',
+};
+
 export const pickUserErrorMessages = (inputErrorMessages: string[]): FieldErrorsState<UserDto> => {
-  const fieldErrors = {
+  const fieldErrors: FieldErrorsState<UserDto> = {
     email: '',
     firstName: '',
     lastName: '',
@@ -13,20 +20,17 @@ export const pickUserErrorMessages = (inputErrorMessages: string[]): FieldErrors
     unexpectedError: '',
   };
 
-  console.log(inputErrorMessages);
-
   inputErrorMessages.forEach((error) => {
-    if (error.toLocaleLowerCase().includes('email') && !fieldErrors.email) {
-      fieldErrors.email = error;
-    } else if (error.toLocaleLowerCase().includes('password') && !fieldErrors.password) {
-      fieldErrors.password = error;
-    } else if (error.toLocaleLowerCase().includes('role') && !fieldErrors.password) {
-      fieldErrors.role = error;
-    } else if (error.toLocaleLowerCase().includes('firstName') && !fieldErrors.password) {
-      fieldErrors.role = error;
-    } else if (error.toLocaleLowerCase().includes('lastName') && !fieldErrors.password) {
-      fieldErrors.role = error;
-    } else {
+    const lowerCaseError = error.toLowerCase();
+
+    for (const key in fieldMappings) {
+      if (lowerCaseError.includes(key) && !fieldErrors[fieldMappings[key]]) {
+        fieldErrors[fieldMappings[key]] = error;
+        return;
+      }
+    }
+
+    if (!fieldErrors.unexpectedError) {
       fieldErrors.unexpectedError = UNEXPECTED_ERROR_MESSAGE;
     }
   });
