@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { AuthForm, ErrorMessage } from '@/components';
-import { AuthType, Roles, getBaseSchema } from '@/helpers';
+import { AuthType, getBaseSchema, Roles } from '@/helpers';
 import { useAuth } from '@/hooks';
 import { FieldErrorsState, UserDto } from '@/types';
 
@@ -80,8 +80,6 @@ export const SignUpPage: FC = () => {
     </FormInner>
   );
 };
-
-
 
 const PasswordWrapper = styled.div`
   grid-column: span 3;

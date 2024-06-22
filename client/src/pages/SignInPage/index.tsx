@@ -1,12 +1,13 @@
 import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { AuthForm, ErrorMessage } from '@/components';
 import { AuthType, getBaseSchema } from '@/helpers';
-import { FieldErrorsState, UserDto } from '@/types';
 import { useAuth } from '@/hooks';
+import { FieldErrorsState, UserDto } from '@/types';
+
 import { ErrorMessageWrapper, Span, Title } from '../SignUpPage';
-import styled from 'styled-components';
 
 export const SignInPage: FC = () => {
   const [authError, setAuthErrors] = useState<FieldErrorsState<UserDto> | null>(null);
@@ -14,7 +15,7 @@ export const SignInPage: FC = () => {
 
   const onSubmit = async (data: UserDto): Promise<void> => {
     const { user, errors } = await auth(data);
-    console.log(errors, user)
+    console.log(errors, user);
     setAuthErrors(errors);
   };
 
@@ -41,7 +42,6 @@ export const SignInPage: FC = () => {
     </FormInner>
   );
 };
-
 
 const FormInner = styled.div`
   width: 400px;
