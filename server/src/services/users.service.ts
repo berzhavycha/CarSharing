@@ -14,6 +14,7 @@ import { SafeUser } from '@/interfaces';
 
 import { RolesService } from './roles.service';
 import { TransactionsService } from './transactions.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
@@ -21,6 +22,7 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
+    private readonly configService: ConfigService
   ) { }
 
   async createUser(userData: {
@@ -87,7 +89,7 @@ export class UsersService {
     const user = await this.findById(id);
 
     if (picture) {
-      user.pictureUrl = `../../uploads/${picture.filename}`;
+      user.pictureUrl = `${this.configService.get<string>('MULTER_DEST')}/${picture.filename}`;
     }
 
     Object.assign(user, updateUserDto);

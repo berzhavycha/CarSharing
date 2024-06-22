@@ -12,7 +12,7 @@ async function bootstrap(): Promise<void> {
 
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
-  app.use(multer({ dest: '../uploads' }).single('picture'));
+  app.use(multer({ dest: configService.get<string>('MULTER_DEST') }).single('picture'));
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
@@ -20,7 +20,7 @@ async function bootstrap(): Promise<void> {
     origin: configService.get<string>('CORS_ORIGIN'),
     credentials: true,
   });
-  
+
   const port = configService.get<number>('PORT');
 
   await app.listen(port);
