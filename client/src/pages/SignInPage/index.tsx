@@ -3,21 +3,21 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { AuthForm, ErrorMessage } from '@/components';
+import { useCurrentUser } from '@/context';
 import { AuthType, getBaseSchema } from '@/helpers';
 import { useAuth } from '@/hooks';
 import { FieldErrorsState, UserDto } from '@/types';
 
 import { ErrorMessageWrapper, Span, Title } from '../SignUpPage';
-import { useCurrentUser } from '@/context';
 
 export const SignInPage: FC = () => {
   const [authError, setAuthErrors] = useState<FieldErrorsState<UserDto> | null>(null);
   const { auth } = useAuth(AuthType.SIGN_IN);
-  const { setCurrentUser } = useCurrentUser()
+  const { setCurrentUser } = useCurrentUser();
 
   const onSubmit = async (data: UserDto): Promise<void> => {
     const { user, errors } = await auth(data);
-    setCurrentUser(user)
+    setCurrentUser(user);
     setAuthErrors(errors);
   };
 

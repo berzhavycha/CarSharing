@@ -3,17 +3,17 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { AuthForm, ErrorMessage } from '@/components';
+import { useCurrentUser } from '@/context';
 import { AuthType, getBaseSchema, Roles } from '@/helpers';
 import { useAuth } from '@/hooks';
 import { FieldErrorsState, UserDto } from '@/types';
-import { useCurrentUser } from '@/context';
 
 export const SignUpPage: FC = () => {
   const [userRole, setUserRole] = useState<string>('user');
   const [showSecretCodeInput, setShowSecretCodeInput] = useState<boolean>(false);
   const [authError, setAuthErrors] = useState<FieldErrorsState<UserDto> | null>(null);
   const { auth } = useAuth(AuthType.SIGN_UP);
-  const { setCurrentUser } = useCurrentUser()
+  const { setCurrentUser } = useCurrentUser();
 
   const handleUserTypeChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     setUserRole(event.target.value);
@@ -22,7 +22,7 @@ export const SignUpPage: FC = () => {
 
   const onSubmit = async (data: UserDto): Promise<void> => {
     const { user, errors } = await auth({ ...data, role: userRole });
-    setCurrentUser(user)
+    setCurrentUser(user);
     setAuthErrors(errors);
   };
 
