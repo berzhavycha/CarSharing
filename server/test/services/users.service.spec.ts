@@ -20,6 +20,19 @@ import {
   secureUserData,
   userDetails,
 } from '../mocks';
+import { ConfigService } from '@nestjs/config';
+
+jest.mock('@nestjs/config');
+const mockConfigService = {
+  get: jest.fn().mockImplementation((key: string) => {
+    switch (key) {
+      case 'MULTER_DEST':
+        return '/uploads';
+      default:
+        return undefined;
+    }
+  }),
+};
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -42,6 +55,10 @@ describe('UsersService', () => {
         {
           provide: RolesService,
           useValue: mockRoleService,
+        },
+        {
+          provide: ConfigService,
+          useValue: mockConfigService,
         },
       ],
     }).compile();
@@ -197,6 +214,27 @@ describe('UsersService', () => {
 
       expect(usersService.findById).toHaveBeenCalledWith(nonExistingId);
       expect(usersRepository.save).not.toHaveBeenCalled();
+    });
+
+    it('should update user with file', async () => {
+      const mockFile = {
+        filename: 'test.jpg',
+      } as Express.Multer.File;
+
+      const updatedUser = {
+        ...mockUser,
+        pictureUrl: '/uploads/test.jpg',
+        ...updateUserDtoMock,
+      } as User;
+
+      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
+
+      const result = await usersService.updateUser(mockUser.id, updateUserDtoMock, mockFile);
+
+      expect(result).toEqual(updatedUser);
+      expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
+      expect(usersRepository.save).toHaveBeenCalledWith(updatedUser);
     });
   });
 

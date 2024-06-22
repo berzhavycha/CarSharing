@@ -108,7 +108,6 @@ export class RentalsService {
         ONE_HOUR_MILLISECONDS,
       );
 
-      console.log(hoursDifference)
       if (hoursDifference < rental.requestedHours) {
         const refundAmount =
           rental.car.pricePerHour * Math.ceil(rental.requestedHours - hoursDifference);
