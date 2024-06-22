@@ -2,9 +2,9 @@ import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AuthForm, ErrorMessage } from '@/components';
+import { CustomForm, ErrorMessage } from '@/components';
 import { useCurrentUser } from '@/context';
-import { AuthType, getBaseSchema, Roles } from '@/helpers';
+import { AuthType, getUserSchema, Roles } from '@/helpers';
 import { useAuth } from '@/hooks';
 import { UserDto } from '@/types';
 
@@ -36,22 +36,22 @@ export const SignUpPage: FC = () => {
       <ErrorMessageWrapper>
         <ErrorMessage>{errors?.unexpectedError ?? ''}</ErrorMessage>
       </ErrorMessageWrapper>
-      <AuthForm<UserDto>
-        validationSchema={getBaseSchema(AuthType.SIGN_UP, userRole)}
+      <CustomForm<UserDto>
+        validationSchema={getUserSchema(AuthType.SIGN_UP, userRole)}
         onSubmit={onSubmit}
       >
         <FormBlocks>
-          <AuthForm.Input label="First Name" name="firstName" error={errors?.firstName} />
-          <AuthForm.Input label="Last Name" name="lastName" error={errors?.lastName} />
-          <AuthForm.Input label="Email" name="email" error={errors?.email} />
+          <CustomForm.Input label="First Name" name="firstName" error={errors?.firstName} />
+          <CustomForm.Input label="Last Name" name="lastName" error={errors?.lastName} />
+          <CustomForm.Input label="Email" name="email" error={errors?.email} />
           <PasswordWrapper>
-            <AuthForm.Input
+            <CustomForm.Input
               label="Password"
               name="password"
               isSecured
               error={errors?.password}
             />
-            <AuthForm.Input
+            <CustomForm.Input
               label="Confirm Password"
               name="confirmPassword"
               isSecured
@@ -59,7 +59,7 @@ export const SignUpPage: FC = () => {
             />
           </PasswordWrapper>
           <RoleWrapper>
-            <AuthForm.Select
+            <CustomForm.Select
               onChange={handleUserTypeChange}
               label="Role"
               name="role"
@@ -69,7 +69,7 @@ export const SignUpPage: FC = () => {
               ]}
             />
             {showSecretCodeInput && (
-              <AuthForm.Input
+              <CustomForm.Input
                 label="Invitation Code"
                 name="invitationCode"
                 isSecured
@@ -78,8 +78,8 @@ export const SignUpPage: FC = () => {
             )}
           </RoleWrapper>
         </FormBlocks>
-        <AuthForm.SubmitButton content="Register" />
-      </AuthForm>
+        <CustomForm.SubmitButton content="Register" />
+      </CustomForm>
     </FormInner>
   );
 };
@@ -99,7 +99,7 @@ const RoleWrapper = styled.div`
 `;
 
 export const ErrorMessageWrapper = styled.div`
-  margin: 20px 0;
+  margin: 15px 0;
 `;
 
 const FormInner = styled.div`
@@ -126,7 +126,8 @@ export const Span = styled.span`
 
 const FormBlocks = styled.div`
   display: grid;
-  gap: 10px 40px;
+  gap: 0px 40px;
+  margin-bottom: 30px;
 `;
 
 

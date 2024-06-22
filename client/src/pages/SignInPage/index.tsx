@@ -2,9 +2,9 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { AuthForm, ErrorMessage } from '@/components';
+import { CustomForm, ErrorMessage } from '@/components';
 import { useCurrentUser } from '@/context';
-import { AuthType, getBaseSchema } from '@/helpers';
+import { AuthType, getUserSchema } from '@/helpers';
 import { useAuth } from '@/hooks';
 import { UserDto } from '@/types';
 
@@ -29,16 +29,16 @@ export const SignInPage: FC = () => {
       <ErrorMessageWrapper>
         <ErrorMessage>{errors?.unexpectedError ?? ''}</ErrorMessage>
       </ErrorMessageWrapper>
-      <AuthForm<UserDto>
-        validationSchema={getBaseSchema(AuthType.SIGN_IN, 'none')}
+      <CustomForm<UserDto>
+        validationSchema={getUserSchema(AuthType.SIGN_IN, 'none')}
         onSubmit={onSubmit}
       >
         <FormBlocks>
-          <AuthForm.Input label="Email" name="email" error={errors?.email} />
-          <AuthForm.Input label="Password" name="password" error={errors?.password} isSecured />
+          <CustomForm.Input label="Email" name="email" error={errors?.email} />
+          <CustomForm.Input label="Password" name="password" error={errors?.password} isSecured />
         </FormBlocks>
-        <AuthForm.SubmitButton content="Log In" />
-      </AuthForm>
+        <CustomForm.SubmitButton content="Log In" />
+      </CustomForm>
     </FormInner>
   );
 };

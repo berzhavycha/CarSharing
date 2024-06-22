@@ -2,7 +2,7 @@ import React, { FC, forwardRef } from 'react';
 import styled from 'styled-components';
 
 import { ErrorMessage } from '../ErrorMessage';
-import { Label } from '../TextInput';
+import { Label } from '../InputField';
 
 type Option = {
   value: string;
