@@ -8,6 +8,15 @@ export default defineConfig({
   resolve: {
     alias: {
       '@/core': path.resolve(__dirname, './src/core'),
+      '@/components': path.resolve(__dirname, './src/components'),
+      '@/pages': path.resolve(__dirname, './src/pages'),
+      '@/router': path.resolve(__dirname, './src/router'),
+      '@/layouts': path.resolve(__dirname, './src/layouts'),
+      '@/helpers': path.resolve(__dirname, './src/helpers'),
+      '@/types': path.resolve(__dirname, './src/types'),
+      '@/hooks': path.resolve(__dirname, './src/hooks'),
+      '@/context': path.resolve(__dirname, './src/context'),
+      '@/api': path.resolve(__dirname, './src/api'),
     },
   },
 })
