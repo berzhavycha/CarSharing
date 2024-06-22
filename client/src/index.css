@@ -14,6 +14,7 @@
     --gray: #90A3BF;
     --dark: #1a202c;
     --light-dark: #596780;
+    --default-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 body {

@@ -3,6 +3,61 @@ import styled from 'styled-components';
 import { NavLink, Outlet } from 'react-router-dom';
 import { FaCar, FaBookOpen, FaCog, FaFileAlt, FaExchangeAlt, FaClipboardList, FaSignOutAlt } from 'react-icons/fa';
 
+interface MenuItemType {
+    icon: JSX.Element;
+    label: string;
+    path: string;
+    type: 'general' | 'report';
+}
+
+export const DashboardSidebar: FC = () => {
+    const menuItems: MenuItemType[] = [
+        { icon: <FaBookOpen />, label: 'Bookings', path: 'bookings', type: 'general' },
+        { icon: <FaCog />, label: 'Settings', path: 'settings', type: 'general' },
+        { icon: <FaFileAlt />, label: 'Report', path: 'report', type: 'report' },
+        { icon: <FaExchangeAlt />, label: 'Transactions', path: 'transactions', type: 'report' },
+        { icon: <FaClipboardList />, label: 'Car Report', path: 'car-report', type: 'report' },
+    ];
+
+    const firstReportIndex = menuItems.findIndex(item => item.type === 'report');
+
+    return (
+        <DashboardWrapper>
+            <Sidebar>
+                <Logo>
+                    <FaCar /> CARRENT
+                </Logo>
+                {menuItems.map((item, index) => (
+                    <Fragment key={index}>
+                        {index === firstReportIndex && <Divider />}
+                        <MenuItemWrapper>
+                            <MenuItem
+                                to={item.path}
+                                className={({ isActive }) => isActive ? "active" : ""}
+                            >
+                                <Icon className="icon">{item.icon}</Icon>
+                                {item.label}
+                            </MenuItem>
+                        </MenuItemWrapper>
+                    </Fragment>
+                ))}
+                <LogoutButton>
+                    <Icon>
+                        <FaSignOutAlt />
+                    </Icon>
+                    Logout
+                </LogoutButton>
+            </Sidebar>
+            <Outlet />
+        </DashboardWrapper>
+    );
+};
+
+
+const DashboardWrapper = styled.div`
+  display: flex;
+`;
+
 const Sidebar = styled.div`
   width: 300px;
   background-color: var(--main-blue);
@@ -74,61 +129,11 @@ const LogoutButton = styled.button`
   cursor: pointer;
   font-size: 16px;
   padding: 10px 0;
-  margin-left: 40px;
-  margin-top: 100%;
+  margin: 0 auto;
+  margin-top: 120%;
   transition: var(--default-transition);
 
   &:hover {
     background-color: var(--dark-blue) ;
   }
 `;
-
-interface MenuItemType {
-    icon: JSX.Element;
-    label: string;
-    path: string;
-    type: 'general' | 'report';
-}
-
-export const DashboardSidebar: FC = () => {
-    const menuItems: MenuItemType[] = [
-        { icon: <FaBookOpen />, label: 'Bookings', path: 'bookings', type: 'general' },
-        { icon: <FaCog />, label: 'Settings', path: 'settings', type: 'general' },
-        { icon: <FaFileAlt />, label: 'Report', path: 'report', type: 'report' },
-        { icon: <FaExchangeAlt />, label: 'Transactions', path: 'transactions', type: 'report' },
-        { icon: <FaClipboardList />, label: 'Car Report', path: 'car-report', type: 'report' },
-    ];
-
-    const firstReportIndex = menuItems.findIndex(item => item.type === 'report');
-
-    return (
-        <>
-            <Sidebar>
-                <Logo>
-                    <FaCar /> CARRENT
-                </Logo>
-                {menuItems.map((item, index) => (
-                    <Fragment key={index}>
-                        {index === firstReportIndex && <Divider />}
-                        <MenuItemWrapper>
-                            <MenuItem
-                                to={item.path}
-                                className={({ isActive }) => isActive ? "active" : ""}
-                            >
-                                <Icon className="icon">{item.icon}</Icon>
-                                {item.label}
-                            </MenuItem>
-                        </MenuItemWrapper>
-                    </Fragment>
-                ))}
-                <LogoutButton>
-                    <Icon>
-                        <FaSignOutAlt />
-                    </Icon>
-                    Logout
-                </LogoutButton>
-            </Sidebar>
-            <Outlet />
-        </>
-    );
-};
