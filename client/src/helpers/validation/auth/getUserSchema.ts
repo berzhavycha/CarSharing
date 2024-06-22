@@ -3,7 +3,7 @@ import { z, ZodSchema } from 'zod';
 import { Env } from '@/core';
 import { AuthType, Roles } from '@/helpers';
 
-export const getBaseSchema = (actionType: AuthType, role: string): ZodSchema => {
+export const getUserSchema = (actionType: AuthType, role: string): ZodSchema => {
   let baseSchema = z.object({
     email: z
       .string()

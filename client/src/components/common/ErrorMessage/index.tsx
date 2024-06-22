@@ -4,5 +4,5 @@ export const ErrorMessage = styled.div`
   color: red;
   font-size: 12px;
   min-height: 18px;
-  margin-top: 5px;
+  margin: 2px 0 5px;
 `;

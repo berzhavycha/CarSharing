@@ -1,5 +1,5 @@
 import { InputField } from "@/components/common";
-import { AuthType, getBaseSchema } from "@/helpers";
+import { AuthType, getUserSchema } from "@/helpers";
 import { UserDto } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FC } from "react";
@@ -9,7 +9,7 @@ import styled from "styled-components";
 export const ProfileSettingsForm: FC = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<UserDto>({
         mode: 'onSubmit',
-        resolver: zodResolver(getBaseSchema(AuthType.SIGN_IN, 'none')),
+        resolver: zodResolver(getUserSchema(AuthType.SIGN_IN, 'none')),
     });
 
 

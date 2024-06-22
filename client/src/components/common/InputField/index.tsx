@@ -3,15 +3,18 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import styled from 'styled-components';
 
 import { ErrorMessage } from '../ErrorMessage';
+import { CheckIcon } from '../CheckIcon';
+import { ErrorIcon } from '../ErrorIcon';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label?: string;
     error?: string;
     isSecured?: boolean;
+    formSubmitted?: boolean
 }
 
 export const InputField = forwardRef<HTMLInputElement, InputProps>(
-    ({ placeholder, label, error, isSecured, ...props }, ref) => {
+    ({ placeholder, label, error, isSecured, formSubmitted, ...props }, ref) => {
         const [isPasswordShown, setIsPasswordShown] = useState<boolean>(Boolean(isSecured));
 
         const togglePasswordVisibility = (): void => {
@@ -34,6 +37,7 @@ export const InputField = forwardRef<HTMLInputElement, InputProps>(
                         {isPasswordShown ? <FaEyeSlash /> : <FaEye />}
                     </TogglePasswordButton>
                 )}
+                {formSubmitted && (!error ? <CheckIcon right={-25} /> : <ErrorIcon right={-25} />)}
                 <ErrorMessage>{error}</ErrorMessage>
             </InputGroup>
         );
@@ -62,7 +66,7 @@ const InputGroup = styled.div`
     position: relative;
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
     font-size: 14px;
     color: #666;
     margin-bottom: 5px;

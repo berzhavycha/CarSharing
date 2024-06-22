@@ -21,5 +21,7 @@ type IconProps = {
 export const CheckIconWrapper = styled.span<IconProps>`
   color: green;
   position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   right: ${(props): string => `${props.$right}px`};
 `;
