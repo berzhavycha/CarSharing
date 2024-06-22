@@ -1,7 +1,8 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom';
 
-import { DashboardSidebar, Header, UserSettings } from '@/layouts';
+import { DashboardSidebar, Header } from '@/layouts';
 import { MainUserPage, SignInPage, SignUpPage } from '@/pages';
+import { UserSettings } from '@/components';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(

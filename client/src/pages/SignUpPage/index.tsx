@@ -106,10 +106,12 @@ const FormInner = styled.div`
   width: 900px;
   padding: 40px;
   position: absolute;
+  border-radius: 10px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
+  box-shadow: var(--default-box-shadow);
 `;
 
 export const Title = styled.span`
