@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import { axiosInstance } from '@/api';
 import { Env } from '@/core';
 import { transformUserResponse } from '@/helpers';
 import { User } from '@/types';
 
-export const useFetchCurrentUser = (): [User | null, () => void] => {
+type HookReturn = [User | null, Dispatch<SetStateAction<User | null>>]
+
+export const useFetchCurrentUser = (): HookReturn => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -22,9 +24,5 @@ export const useFetchCurrentUser = (): [User | null, () => void] => {
     fetchCurrentUser();
   }, []);
 
-  const onUserSignOut = (): void => {
-    setCurrentUser(null);
-  };
-
-  return [currentUser, onUserSignOut];
+  return [currentUser, setCurrentUser];
 };
