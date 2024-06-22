@@ -30,7 +30,7 @@ export const CurrentUserProvider: FC<PropsWithChildren> = ({ children }) => {
   const contextValue: ContextType = {
     currentUser,
     onUserSignOut,
-    setCurrentUser
+    setCurrentUser,
   };
 
   return <CurrentUserContext.Provider value={contextValue}>{children}</CurrentUserContext.Provider>;

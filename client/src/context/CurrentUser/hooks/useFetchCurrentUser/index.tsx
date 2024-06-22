@@ -5,7 +5,7 @@ import { Env } from '@/core';
 import { transformUserResponse } from '@/helpers';
 import { User } from '@/types';
 
-type HookReturn = [User | null, Dispatch<SetStateAction<User | null>>]
+type HookReturn = [User | null, Dispatch<SetStateAction<User | null>>];
 
 export const useFetchCurrentUser = (): HookReturn => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
