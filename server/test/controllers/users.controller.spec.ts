@@ -6,7 +6,7 @@ import { User } from '@/entities';
 import { TransactionType } from '@/helpers';
 import { UsersService } from '@/services';
 
-import { mockUser, mockUsersService } from '../mocks';
+import { mockPicture, mockUser, mockUsersService } from '../mocks';
 
 describe('UsersController', () => {
   let usersController: UsersController;
@@ -52,13 +52,38 @@ describe('UsersController', () => {
       const result = await usersController.updateUser(
         mockUserId,
         mockUpdateUserDto,
+        undefined
       );
 
       expect(result).toBe(mockUpdatedUser);
       expect(usersService.updateUser).toHaveBeenCalledWith(
         mockUserId,
         mockUpdateUserDto,
+        undefined
       );
+    });
+
+    it('should update user details with file upload', async () => {
+      const mockUserId = mockUser.id;
+      const mockUpdateUserDto: UpdateUserDto = {
+        firstName: 'new first name',
+      };
+
+      jest.spyOn(usersService, 'updateUser').mockImplementation(async (id, dto, file) => {
+        return {
+          ...mockUser,
+          ...dto,
+          pictureUrl: file.filename,
+        };
+      });
+
+      const result = await usersController.updateUser(mockUserId, mockUpdateUserDto, mockPicture);
+
+      expect(result).toBeDefined();
+      expect(result.firstName).toBe(mockUpdateUserDto.firstName);
+      expect(result.pictureUrl).toBe(mockPicture.filename);
+
+      expect(usersService.updateUser).toHaveBeenCalledWith(mockUserId, mockUpdateUserDto, mockPicture);
     });
   });
 

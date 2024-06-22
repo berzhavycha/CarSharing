@@ -12,7 +12,7 @@ async function bootstrap(): Promise<void> {
 
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
-  app.use(multer({ dest: configService.get<string>('MULTER_DEST') }).single('picture'));
+  app.use(multer({ dest: '/server/' + configService.get<string>('MULTER_DEST') }).single('picture'));
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
