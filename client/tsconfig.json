@@ -77,6 +77,12 @@
       "@/context/*": [
         "src/context/*"
       ],
+      "@/api": [
+        "src/api"
+      ],
+      "@/api/*": [
+        "src/api/*"
+      ],
     },
   },
   "include": [

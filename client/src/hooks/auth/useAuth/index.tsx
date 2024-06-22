@@ -1,9 +1,10 @@
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
 import { Env } from '@/core';
 import { AuthType, pickUserErrorMessages, transformUserResponse, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { User, UserDto } from '@/types';
 import { FieldErrorsState } from '@/types/error';
+import { axiosInstance } from '@/api';
 
 type AuthResponse = {
     user: User | null;
@@ -19,7 +20,7 @@ export const useAuth = (authType: AuthType): HookReturn => {
 
     const auth = async (userDto: UserDto): Promise<AuthResponse> => {
         try {
-            const { data } = await axios.post(`${Env.API_BASE_URL}/auth/${apiEndpoint}`, userDto);
+            const { data } = await axiosInstance.post(`${Env.API_BASE_URL}/auth/${apiEndpoint}`, userDto);
             return {
                 user: transformUserResponse(data),
                 errors: null,
