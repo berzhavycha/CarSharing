@@ -1,1 +1,1 @@
-export * from './useFetchCurrentUser'
+export * from './useFetchCurrentUser';

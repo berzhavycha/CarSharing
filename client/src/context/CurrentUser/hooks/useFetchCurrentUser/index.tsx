@@ -1,33 +1,30 @@
-import { Env } from "@/core"
-import { transformUserResponse } from "@/helpers"
-import { User } from "@/types"
-import axios from "axios"
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from 'react';
 
-type HookReturn = {
-    user: User | null,
-    setUser: Dispatch<SetStateAction<User | null>>
-}
+import { axiosInstance } from '@/api';
+import { Env } from '@/core';
+import { transformUserResponse } from '@/helpers';
+import { User } from '@/types';
 
-export const useFetchCurrentUser = (): HookReturn => {
-    const [user, setUser] = useState<User | null>(null)
+export const useFetchCurrentUser = (): [User | null, () => void] => {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-    useEffect(() => {
-        const fetchUser = async (): Promise<void> => {
-            try {
-                const { data } = await axios.get(`${Env.API_BASE_URL}/auth/current-user`);
-                setUser(transformUserResponse(data))
-            } catch (error) {
-                setUser(null)
-                console.log(error)
-            }
-        }
+  useEffect(() => {
+    const fetchCurrentUser = async (): Promise<void> => {
+      try {
+        const { data } = await axiosInstance.get(`${Env.API_BASE_URL}/auth/current-user`);
+        setCurrentUser(transformUserResponse(data));
+      } catch (error) {
+        console.error('Failed to fetch current user:', error);
+        setCurrentUser(null);
+      }
+    };
 
-        fetchUser()
-    }, [])
+    fetchCurrentUser();
+  }, []);
 
-    return {
-        user,
-        setUser
-    }
-}
+  const onUserSignOut = (): void => {
+    setCurrentUser(null);
+  };
+
+  return [currentUser, onUserSignOut];
+};
