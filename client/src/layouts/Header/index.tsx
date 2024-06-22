@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useOutlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Container } from '@/components';
@@ -7,8 +7,6 @@ import { Container } from '@/components';
 import { CarSearch, HeaderOptions } from './components';
 
 export const Header: FC = () => {
-  const outlet = useOutlet();
-
   return (
     <>
       <Section>
@@ -22,7 +20,7 @@ export const Header: FC = () => {
           </Nav>
         </Container>
       </Section>
-      {outlet}
+      <Outlet />
     </>
   );
 };
