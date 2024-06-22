@@ -1,4 +1,4 @@
-import { CustomForm, InputField } from "@/components/common";
+import { CustomForm } from "@/components/common";
 import { AuthType, getUserSchema } from "@/helpers";
 import { FieldErrorsState, UserDto } from "@/types";
 import { FC } from "react";
@@ -37,7 +37,6 @@ export const ProfileSettingsForm: FC = () => {
                     error={errors?.password}
                 />
             </PasswordSection>
-
         </CustomForm>
     )
 }
@@ -58,11 +57,6 @@ const PasswordSection = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 30px;
-
-  h3 {
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
 `;
 
 

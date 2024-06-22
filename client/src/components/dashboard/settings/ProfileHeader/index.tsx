@@ -21,7 +21,7 @@ export const ProfileHeader: FC = () => {
 const ProfileHeaderWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 70px;
+  margin-bottom: 50px;
 `;
 
 const ProfilePicture = styled.div`
