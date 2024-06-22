@@ -1,51 +1,44 @@
-import { InputField } from "@/components/common";
+import { CustomForm, InputField } from "@/components/common";
 import { AuthType, getUserSchema } from "@/helpers";
-import { UserDto } from "@/types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { FieldErrorsState, UserDto } from "@/types";
 import { FC } from "react";
-import { useForm } from "react-hook-form";
 import styled from "styled-components";
 
 export const ProfileSettingsForm: FC = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<UserDto>({
-        mode: 'onSubmit',
-        resolver: zodResolver(getUserSchema(AuthType.SIGN_IN, 'none')),
-    });
+    const errors: FieldErrorsState<UserDto> = {}
+    const onSubmit = (user: UserDto): Promise<void> => {
 
+    }
 
     return (
-        <form>
+        <CustomForm<UserDto>
+            validationSchema={getUserSchema(AuthType.SIGN_UP, '')}
+            onSubmit={onSubmit}
+        >
             <Title>General Information</Title>
             <ProfileSection>
-                <InputField
-                    {...register('firstName')}
-                    label="First Name"
-                />
-                <InputField
-                    {...register('lastName')}
-                    label="Last Name"
-                />
-                <InputField
-                    {...register('email')}
-                    type="email"
-                    label="Email"
-                />
+                <CustomForm.Input label="First Name" name="firstName" error={errors?.firstName} />
+                <CustomForm.Input label="Last Name" name="lastName" error={errors?.lastName} />
+                <CustomForm.Input label="Email" name="email" error={errors?.email} />
             </ProfileSection>
 
             <Title>Change Password</Title>
             <PasswordSection>
-                <InputField
-                    {...register('password')}
+                <CustomForm.Input
                     label="Old Password"
+                    name="password"
                     isSecured
+                    error={errors?.password}
                 />
-                <InputField
-                    {...register('password')}
+                <CustomForm.Input
                     label="New Password"
+                    name="password"
                     isSecured
+                    error={errors?.password}
                 />
             </PasswordSection>
-        </form>
+
+        </CustomForm>
     )
 }
 
