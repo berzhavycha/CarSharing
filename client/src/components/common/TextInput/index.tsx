@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { CheckIcon } from '../CheckIcon';
 import { ErrorIcon } from '../ErrorIcon';
 import { ErrorMessage } from '../ErrorMessage';
-import { FormBlock } from '../FormBlock';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -25,7 +24,7 @@ export const TextInput = forwardRef<HTMLInputElement, InputProps>(
     const inputType = isPasswordShown ? 'password' : 'text';
 
     return (
-      <FormBlock>
+      <>
         <Label>{label}</Label>
         <InputWrapper>
           <InputField
@@ -42,7 +41,7 @@ export const TextInput = forwardRef<HTMLInputElement, InputProps>(
           {formSubmitted && (!error ? <CheckIcon right={-20} /> : <ErrorIcon right={-20} />)}
         </InputWrapper>
         <ErrorMessage>{error}</ErrorMessage>
-      </FormBlock>
+      </>
     );
   },
 );
