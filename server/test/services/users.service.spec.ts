@@ -5,12 +5,13 @@ import { EntityManager, Repository } from 'typeorm';
 
 import { UpdateUserBalanceDto } from '@/dtos';
 import { User } from '@/entities';
-import { TransactionType, usersErrorMessages } from '@/helpers';
+import { TransactionType, hashValue, usersErrorMessages } from '@/helpers';
 import { RolesService, TransactionsService, UsersService } from '@/services';
 
 import {
   createUserDtoMock,
   mockEntityManager,
+  mockHash,
   mockRental,
   mockRole,
   mockRoleService,
@@ -33,6 +34,10 @@ const mockConfigService = {
     }
   }),
 };
+
+jest.mock('@/helpers/utils/hashValue', () => ({
+  hashValue: jest.fn(),
+}));
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -231,6 +236,28 @@ describe('UsersService', () => {
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
 
       const result = await usersService.updateUser(mockUser.id, updateUserDtoMock, mockFile);
+
+      expect(result).toEqual(updatedUser);
+      expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
+      expect(usersRepository.save).toHaveBeenCalledWith(updatedUser);
+    });
+
+    it('should update user password', async () => {
+      const updateUserDtoMock = {
+        password: 'new password',
+      };
+
+      const updatedUser = {
+        ...mockUser,
+        passwordHash: mockHash.hash,
+        passwordSalt: mockHash.salt
+      } as User;
+
+      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
+      (hashValue as jest.Mock).mockResolvedValueOnce(mockHash)
+
+      const result = await usersService.updateUser(mockUser.id, updateUserDtoMock);
 
       expect(result).toEqual(updatedUser);
       expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
