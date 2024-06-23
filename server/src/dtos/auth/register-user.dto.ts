@@ -7,7 +7,6 @@ import {
 } from 'class-validator';
 
 import { authErrorMessages, PASSWORD_MIN_LENGTH, Roles } from '@/helpers';
-import { Exclude } from 'class-transformer';
 
 export class RegisterUserDto {
   @IsNotEmpty()
@@ -17,7 +16,6 @@ export class RegisterUserDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(PASSWORD_MIN_LENGTH, { message: authErrorMessages.SMALL_PASSWORD })
-  @Exclude()
   readonly password: string;
 
   @IsNotEmpty()
