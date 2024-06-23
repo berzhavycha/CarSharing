@@ -17,7 +17,7 @@ export const InputImage: FC<Props> = ({ defaultImage, name, ...props }) => {
   const [preview, setPreview] = useState<string>(defaultImage);
 
 
-  const { ref: registerRef, ...rest } = register(name);
+  const { ref: registerRef, onChange, ...rest } = register(name);
 
 
   const handleUploadedFile = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -33,15 +33,19 @@ export const InputImage: FC<Props> = ({ defaultImage, name, ...props }) => {
     hiddenInputRef.current?.click();
   };
 
+  const onFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    onChange(e)
+    handleUploadedFile(e)
+  }
 
   return (
-    <ProfilePicture onClick={onUpload}>
+    <PictureWrapper onClick={onUpload}>
       <img src={preview} alt={name} />
       <UpdatePicture type="button">Update Picture</UpdatePicture>
       <input
         type="file"
         {...rest}
-        onChange={handleUploadedFile}
+        onChange={onFileChange}
         ref={(e) => {
           registerRef(e);
           hiddenInputRef.current = e;
@@ -49,11 +53,11 @@ export const InputImage: FC<Props> = ({ defaultImage, name, ...props }) => {
         {...props}
         hidden
       />
-    </ProfilePicture>
+    </PictureWrapper>
   )
 };
 
-const ProfilePicture = styled.div`
+const PictureWrapper = styled.div`
   position: relative;
   margin-right: 20px;
   border: none;
