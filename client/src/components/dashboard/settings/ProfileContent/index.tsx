@@ -11,7 +11,7 @@ type Props = {
 export const ProfileContent: FC<Props> = ({ user }) => {
   return (
     <ContentContainer>
-      <ProfileHeader />
+      {/* <ProfileHeader /> */}
       <ProfileSettingsForm />
     </ContentContainer>
   );
