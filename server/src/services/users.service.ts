@@ -16,7 +16,6 @@ import { SafeUser } from '@/interfaces';
 import { RolesService } from './roles.service';
 import { TransactionsService } from './transactions.service';
 import { ConfigService } from '@nestjs/config';
-import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -88,19 +87,22 @@ export class UsersService {
     updateUserDto: UpdateUserDto | Partial<User>,
     picture?: Express.Multer.File
   ): Promise<User | null> {
-    let user = await this.findById(id);
+    const user = await this.findById(id);
 
     if (picture) {
       user.pictureUrl = `${this.configService.get<string>('MULTER_DEST')}/${picture.filename}`;
     }
 
-    if (updateUserDto instanceof UpdateUserDto && updateUserDto.password) {
-      const { salt, hash } = await hashValue(updateUserDto.password)
-      user.passwordSalt = salt
-      user.passwordHash = hash
+    if ('password' in updateUserDto && updateUserDto.password) {
+      const { salt, hash } = await hashValue(updateUserDto.password);
+      user.passwordSalt = salt;
+      user.passwordHash = hash;
+
+      delete updateUserDto.password;
     }
 
     Object.assign(user, updateUserDto);
+
     return this.usersRepository.save(user);
   }
 
