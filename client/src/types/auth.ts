@@ -6,12 +6,6 @@ export type UserDto = {
   lastName: string;
   confirmPassword?: string;
   invitationCode?: string;
+  pictureUrl?: string;
 };
 
-export type User = {
-  email: string;
-  firstName: string;
-  lastName: string;
-  balance: number;
-  role: string;
-};

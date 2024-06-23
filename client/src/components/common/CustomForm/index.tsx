@@ -6,6 +6,7 @@ import { ZodSchema } from 'zod';
 import { Input } from './Input';
 import { Select } from './Select';
 import { SubmitButton } from './SubmitButton';
+import { InputImage } from './InputImage';
 
 type ContextType<TEntity extends FieldValues> = {
   formHandle: UseFormReturn<TEntity>;
@@ -59,5 +60,6 @@ export const CustomForm = <TEntity extends FieldValues>({
 };
 
 CustomForm.Input = Input;
+CustomForm.InputFile = InputImage;
 CustomForm.SubmitButton = SubmitButton;
 CustomForm.Select = Select;
