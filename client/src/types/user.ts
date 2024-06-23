@@ -11,7 +11,7 @@ export type UpdateUserDto = Partial<{
     firstName: string;
     lastName: string;
     email: string;
-    picture: File | undefined;
+    picture: false | File | null | FileList;
     newPassword: string;
     oldPassword: string;
 }>
