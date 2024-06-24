@@ -8,6 +8,7 @@ const fieldMappings: Record<string, keyof UserDto> = {
   'role': 'role',
   'firstname': 'firstName',
   'lastname': 'lastName',
+  'invitation code': 'invitationCode'
 };
 
 export const pickUserErrorMessages = (inputErrorMessages: string[]): FieldErrorsState<UserDto> => {
