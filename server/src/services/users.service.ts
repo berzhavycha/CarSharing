@@ -18,7 +18,6 @@ import * as bcrypt from 'bcrypt';
 
 import { RolesService } from './roles.service';
 import { TransactionsService } from './transactions.service';
-import { ConfigService } from '@nestjs/config';
 import { LocalFilesService } from './local-files.service';
 
 @Injectable()
@@ -27,7 +26,6 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
-    private readonly configService: ConfigService,
     private localFilesService: LocalFilesService
   ) { }
 

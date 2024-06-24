@@ -6,7 +6,13 @@ import { User } from '@/entities';
 import { TransactionType } from '@/helpers';
 import { UsersService } from '@/services';
 
-import { mockPicture, mockUser, mockUsersService } from '../mocks';
+import { mockLocalFile, mockPicture, mockUser, mockUsersService } from '../mocks';
+import { ConfigService } from '@nestjs/config';
+
+jest.mock('@nestjs/config');
+const mockConfigService = {
+  get: jest.fn()
+};
 
 describe('UsersController', () => {
   let usersController: UsersController;
@@ -20,6 +26,7 @@ describe('UsersController', () => {
           provide: UsersService,
           useValue: mockUsersService,
         },
+        { provide: ConfigService, useValue: mockConfigService },
       ],
     }).compile();
 
@@ -59,7 +66,7 @@ describe('UsersController', () => {
       expect(usersService.updateUser).toHaveBeenCalledWith(
         mockUserId,
         mockUpdateUserDto,
-        undefined
+        { filename: undefined, mimetype: undefined, path: undefined }
       );
     });
 
@@ -69,21 +76,17 @@ describe('UsersController', () => {
         firstName: 'new first name',
       };
 
-      jest.spyOn(usersService, 'updateUser').mockImplementation(async (id, dto, file) => {
-        return {
-          ...mockUser,
-          ...dto,
-          pictureUrl: file.filename,
-        };
-      });
+      jest.spyOn(usersService, 'updateUser').mockResolvedValue({
+        ...mockUser,
+        ...mockUpdateUserDto,
+        avatarId: mockLocalFile.id,
+      })
 
       const result = await usersController.updateUser(mockUserId, mockUpdateUserDto, mockPicture);
 
       expect(result).toBeDefined();
       expect(result.firstName).toBe(mockUpdateUserDto.firstName);
-      expect(result.pictureUrl).toBe(mockPicture.filename);
-
-      expect(usersService.updateUser).toHaveBeenCalledWith(mockUserId, mockUpdateUserDto, mockPicture);
+      expect(result.avatarId).toBe(mockUser.avatarId);
     });
   });
 

@@ -6,3 +6,4 @@ export * from './rental.service.mock';
 export * from './roles.service.mock';
 export * from './transaction.service.mock';
 export * from './users.service.mock';
+export * from './local-files.service.mock'

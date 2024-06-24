@@ -7,12 +7,14 @@ import { EntityManager, Repository } from 'typeorm';
 import { UpdateUserBalanceDto } from '@/dtos';
 import { User } from '@/entities';
 import { TransactionType, hashValue, usersErrorMessages } from '@/helpers';
-import { RolesService, TransactionsService, UsersService } from '@/services';
+import { LocalFilesService, RolesService, TransactionsService, UsersService } from '@/services';
 
 import {
   createUserDtoMock,
   mockEntityManager,
   mockHash,
+  mockLocalFile,
+  mockLocalFilesService,
   mockRental,
   mockRole,
   mockRoleService,
@@ -22,19 +24,6 @@ import {
   secureUserData,
   userDetails,
 } from '../mocks';
-import { ConfigService } from '@nestjs/config';
-
-jest.mock('@nestjs/config');
-const mockConfigService = {
-  get: jest.fn().mockImplementation((key: string) => {
-    switch (key) {
-      case 'MULTER_DEST':
-        return '/uploads';
-      default:
-        return undefined;
-    }
-  }),
-};
 
 jest.mock('@/helpers/utils/hashValue', () => ({
   hashValue: jest.fn(),
@@ -45,6 +34,7 @@ describe('UsersService', () => {
   let transactionsService: TransactionsService;
   let rolesService: RolesService;
   let usersRepository: Repository<User>;
+  let localFilesService: LocalFilesService
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -63,9 +53,9 @@ describe('UsersService', () => {
           useValue: mockRoleService,
         },
         {
-          provide: ConfigService,
-          useValue: mockConfigService,
-        },
+          provide: LocalFilesService,
+          useValue: mockLocalFilesService,
+        }
       ],
     }).compile();
 
@@ -73,6 +63,7 @@ describe('UsersService', () => {
     transactionsService = module.get<TransactionsService>(TransactionsService);
     rolesService = module.get<RolesService>(RolesService);
     usersRepository = module.get<Repository<User>>(getRepositoryToken(User));
+    localFilesService = module.get<LocalFilesService>(LocalFilesService)
   });
 
   afterEach(() => {
@@ -223,20 +214,17 @@ describe('UsersService', () => {
     });
 
     it('should update user with file', async () => {
-      const mockFile = {
-        filename: 'test.jpg',
-      } as Express.Multer.File;
-
       const updatedUser = {
         ...mockUser,
-        pictureUrl: '/uploads/test.jpg',
+        avatarId: mockLocalFile.id,
         ...updateUserDtoMock,
       } as User;
 
+      jest.spyOn(localFilesService, 'saveLocalFileData').mockResolvedValue(mockLocalFile);
       jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
 
-      const result = await usersService.updateUser(mockUser.id, updateUserDtoMock, mockFile);
+      const result = await usersService.updateUser(mockUser.id, updateUserDtoMock, mockLocalFile);
 
       expect(result).toEqual(updatedUser);
       expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
@@ -287,7 +275,7 @@ describe('UsersService', () => {
       };
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
-      jest.spyOn(usersService, 'findByEmail').mockResolvedValue({ ...mockUser, id: 'new-id'});
+      jest.spyOn(usersService, 'findByEmail').mockResolvedValue({ ...mockUser, id: 'new-id' });
 
       await expect(usersService.updateUser(mockUser.id, updateUserDtoMock)).rejects.toThrow(
         BadRequestException,

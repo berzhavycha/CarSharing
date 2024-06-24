@@ -8,5 +8,5 @@ export const mockPicture = {
     stream: null,
     destination: null,
     filename: null,
-    path: null,
+    path: 'some/path',
 };

@@ -14,7 +14,6 @@ export const ProfileSettingsForm: FC = () => {
   const [avatar, setAvatar] = useState<string>(DefaultImage);
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
-    console.log(user)
     const { user: updatedUser } = await updateUser(user)
     setCurrentUser(updatedUser)
   };

@@ -44,9 +44,9 @@ export class UsersController {
     @UploadedFile() file: Express.Multer.File,
   ): Promise<User> {
     return this.usersService.updateUser(id, updateUserDto, {
-      path: file.path,
-      filename: file.originalname,
-      mimetype: file.mimetype
+      path: file?.path,
+      filename: file?.originalname,
+      mimetype: file?.mimetype
     });
   }
 
