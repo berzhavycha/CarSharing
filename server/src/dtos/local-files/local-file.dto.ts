@@ -1,12 +1,12 @@
-import { IsString } from "class-validator";
+import { IsString } from 'class-validator';
 
 export class LocalFileDto {
-    @IsString()
-    filename: string;
- 
-    @IsString()
-    path: string;
+  @IsString()
+  filename: string;
 
-    @IsString()
-    mimetype: string;
+  @IsString()
+  path: string;
+
+  @IsString()
+  mimetype: string;
 }

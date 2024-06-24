@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 import {
   AuthModule,
   CarsModule,
   ConfigModule,
   DatabaseModule,
+  LocalFilesModule,
   OriginalCarsModule,
   RentalsModule,
   TransactionsModule,
   UsersModule,
-  LocalFilesModule
 } from '@/modules';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 
 @Module({
   imports: [
@@ -30,4 +30,4 @@ import { join } from 'path';
     }),
   ],
 })
-export class AppModule { }
+export class AppModule {}

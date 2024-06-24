@@ -1,4 +1,4 @@
 export const mockHash = {
-    hash: 'mock-hash',
-    salt: 'mock-salt',
+  hash: 'mock-hash',
+  salt: 'mock-salt',
 };

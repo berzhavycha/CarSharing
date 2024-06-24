@@ -1,24 +1,27 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { EntityManager, Repository } from 'typeorm';
 
 import { LocalFileDto, UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
 import { Rental, User } from '@/entities';
 import {
+  authErrorMessages,
+  hashValue,
   Roles,
   TransactionType,
   USER_DEFAULT_BALANCE,
-  authErrorMessages,
-  hashValue,
   usersErrorMessages,
 } from '@/helpers';
 import { SafeUser } from '@/interfaces';
-import * as bcrypt from 'bcrypt';
 
-
+import { LocalFilesService } from './local-files.service';
 import { RolesService } from './roles.service';
 import { TransactionsService } from './transactions.service';
-import { LocalFilesService } from './local-files.service';
 
 @Injectable()
 export class UsersService {
@@ -26,8 +29,8 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
-    private localFilesService: LocalFilesService
-  ) { }
+    private localFilesService: LocalFilesService,
+  ) {}
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -88,18 +91,20 @@ export class UsersService {
   async updateUser(
     id: string,
     updateUserDto: UpdateUserDto | Partial<User>,
-    fileData?: LocalFileDto
+    fileData?: LocalFileDto,
   ): Promise<User | null> {
     const user = await this.findById(id);
 
     if (fileData) {
       const avatar = await this.localFilesService.saveLocalFileData(fileData);
-      Object.assign(user, { avatarId: avatar.id })
+      Object.assign(user, { avatarId: avatar.id });
     }
 
     if ('oldPassword' in updateUserDto && updateUserDto.oldPassword) {
-      if (!(await bcrypt.compare(updateUserDto.oldPassword, user.passwordHash))) {
-        throw new BadRequestException(usersErrorMessages.INVALID_OLD_PASSWORD)
+      if (
+        !(await bcrypt.compare(updateUserDto.oldPassword, user.passwordHash))
+      ) {
+        throw new BadRequestException(usersErrorMessages.INVALID_OLD_PASSWORD);
       }
 
       const { salt, hash } = await hashValue(updateUserDto.newPassword);
@@ -111,10 +116,10 @@ export class UsersService {
     }
 
     if (updateUserDto.email) {
-      const existingUserWithEmail = await this.findByEmail(updateUserDto.email)
+      const existingUserWithEmail = await this.findByEmail(updateUserDto.email);
 
       if (existingUserWithEmail.id !== user.id) {
-        throw new BadRequestException(authErrorMessages.DUPLICATE_EMAIL)
+        throw new BadRequestException(authErrorMessages.DUPLICATE_EMAIL);
       }
     }
 

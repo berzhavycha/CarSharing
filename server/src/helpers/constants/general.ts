@@ -8,4 +8,4 @@ export enum NODE_ENV {
   test = 'test',
 }
 
-export const ONE_MB = Math.pow(1024, 2)
+export const ONE_MB = Math.pow(1024, 2);

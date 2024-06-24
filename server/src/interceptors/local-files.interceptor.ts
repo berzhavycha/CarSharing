@@ -1,41 +1,48 @@
-import { FileInterceptor } from '@nestjs/platform-express';
 import { Injectable, mixin, NestInterceptor, Type } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { diskStorage } from 'multer';
 import { Observable } from 'rxjs';
 
 interface LocalFilesInterceptorOptions {
-    fieldName: string;
-    path?: string;
-    fileFilter?: MulterOptions['fileFilter'];
-    limits?: MulterOptions['limits'];
+  fieldName: string;
+  path?: string;
+  fileFilter?: MulterOptions['fileFilter'];
+  limits?: MulterOptions['limits'];
 }
 
-export function LocalFilesInterceptor(options: LocalFilesInterceptorOptions): Type<NestInterceptor> {
-    @Injectable()
-    class Interceptor implements NestInterceptor {
-        fileInterceptor: NestInterceptor;
-        constructor(configService: ConfigService) {
-            const filesDestination = configService.get('UPLOADED_FILES_DESTINATION');
+export function LocalFilesInterceptor(
+  options: LocalFilesInterceptorOptions,
+): Type<NestInterceptor> {
+  @Injectable()
+  class Interceptor implements NestInterceptor {
+    fileInterceptor: NestInterceptor;
+    constructor(configService: ConfigService) {
+      const filesDestination = configService.get('UPLOADED_FILES_DESTINATION');
 
-            const destination = `${filesDestination}${options.path}`
+      const destination = `${filesDestination}${options.path}`;
 
-            const multerOptions: MulterOptions = {
-                storage: diskStorage({
-                    destination
-                }),
-                fileFilter: options.fileFilter,
-                limits: options.limits
-            }
+      const multerOptions: MulterOptions = {
+        storage: diskStorage({
+          destination,
+        }),
+        fileFilter: options.fileFilter,
+        limits: options.limits,
+      };
 
-            this.fileInterceptor = new (FileInterceptor(options.fieldName, multerOptions));
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        intercept(...args: Parameters<NestInterceptor['intercept']>): Observable<any> | Promise<Observable<any>> {
-            return this.fileInterceptor.intercept(...args);
-        }
+      this.fileInterceptor = new (FileInterceptor(
+        options.fieldName,
+        multerOptions,
+      ))();
     }
-    return mixin(Interceptor);
+
+    intercept(
+      ...args: Parameters<NestInterceptor['intercept']>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ): Observable<any> | Promise<Observable<any>> {
+      return this.fileInterceptor.intercept(...args);
+    }
+  }
+  return mixin(Interceptor);
 }

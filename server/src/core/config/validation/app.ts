@@ -5,5 +5,5 @@ export const appValidationSchema = Joi.object({
   PORT: Joi.number().default(4000),
   CORS_ORIGIN: Joi.string().required(),
   UPLOADED_FILES_DESTINATION: Joi.string().default('uploads'),
-  ADMIN_INVITATION_CODE: Joi.string().required()
+  ADMIN_INVITATION_CODE: Joi.string().required(),
 });

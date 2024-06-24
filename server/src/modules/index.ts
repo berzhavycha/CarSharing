@@ -6,4 +6,4 @@ export * from './transactions.module';
 export * from './users.module';
 export * from './database.module';
 export * from './config.module';
-export * from './local-files.module'
+export * from './local-files.module';

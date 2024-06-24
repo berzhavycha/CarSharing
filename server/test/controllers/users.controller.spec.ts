@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { UsersController } from '@/controllers';
@@ -6,12 +7,16 @@ import { User } from '@/entities';
 import { TransactionType } from '@/helpers';
 import { UsersService } from '@/services';
 
-import { mockLocalFile, mockPicture, mockUser, mockUsersService } from '../mocks';
-import { ConfigService } from '@nestjs/config';
+import {
+  mockLocalFile,
+  mockPicture,
+  mockUser,
+  mockUsersService,
+} from '../mocks';
 
 jest.mock('@nestjs/config');
 const mockConfigService = {
-  get: jest.fn()
+  get: jest.fn(),
 };
 
 describe('UsersController', () => {
@@ -59,14 +64,14 @@ describe('UsersController', () => {
       const result = await usersController.updateUser(
         mockUserId,
         mockUpdateUserDto,
-        undefined
+        undefined,
       );
 
       expect(result).toBe(mockUpdatedUser);
       expect(usersService.updateUser).toHaveBeenCalledWith(
         mockUserId,
         mockUpdateUserDto,
-        { filename: undefined, mimetype: undefined, path: undefined }
+        { filename: undefined, mimetype: undefined, path: undefined },
       );
     });
 
@@ -80,9 +85,13 @@ describe('UsersController', () => {
         ...mockUser,
         ...mockUpdateUserDto,
         avatarId: mockLocalFile.id,
-      })
+      });
 
-      const result = await usersController.updateUser(mockUserId, mockUpdateUserDto, mockPicture);
+      const result = await usersController.updateUser(
+        mockUserId,
+        mockUpdateUserDto,
+        mockPicture,
+      );
 
       expect(result).toBeDefined();
       expect(result.firstName).toBe(mockUpdateUserDto.firstName);

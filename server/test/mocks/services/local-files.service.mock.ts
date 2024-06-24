@@ -1,4 +1,4 @@
 export const mockLocalFilesService = {
-    findById: jest.fn(),
-    saveLocalFileData: jest.fn()
+  findById: jest.fn(),
+  saveLocalFileData: jest.fn(),
 };
