@@ -1,12 +1,15 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { ProfileContent } from '../ProfileContent';
+import { ProfileSettingsForm } from '../ProfileSettingsForm';
+import { useCurrentUser } from '@/context';
 
 export const UserSettings: FC = () => {
+  const { currentUser } = useCurrentUser()
+
   return (
     <ProfileContainer>
-      <ProfileContent />
+      <ProfileSettingsForm user={currentUser} />
     </ProfileContainer>
   );
 };
