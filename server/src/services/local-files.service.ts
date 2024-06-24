@@ -1,6 +1,5 @@
-
 import { LocalFileDto } from '@/dtos';
-import { LocalFile } from '@/entities/local-file.entity';
+import { LocalFile } from '@/entities';
 import { localFilesErrors } from '@/helpers';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,7 +17,7 @@ export class LocalFilesService {
         return this.localFilesRepository.save(newFile);
     }
 
-    async getFileById(id: string): Promise<LocalFile> {
+    async findById(id: string): Promise<LocalFile> {
         const file = await this.localFilesRepository.findOne({ where: { id } });
         if (!file) {
             throw new NotFoundException(localFilesErrors.NOT_FOUND);

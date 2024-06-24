@@ -19,7 +19,7 @@ export class LocalFilesController {
 
     @Get(':id')
     async getDatabaseFileById(@Param('id', ParseUUIDPipe) id: string, @Res({ passthrough: true }) response: Response): Promise<StreamableFile> {
-        const file = await this.localFilesService.getFileById(id);
+        const file = await this.localFilesService.findById(id);
 
         const stream = createReadStream(join(process.cwd(), file.path));
 

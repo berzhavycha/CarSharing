@@ -28,6 +28,7 @@ export const mockUser = {
   createdAt: new Date(),
   updatedAt: new Date(),
   rentals: [],
+  avatarId: 'av-id',
   transactions: [],
   ...userDetails,
   ...secureUserData,
