@@ -9,7 +9,10 @@ import {
   RentalsModule,
   TransactionsModule,
   UsersModule,
+  LocalFilesModule
 } from '@/modules';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -21,6 +24,10 @@ import {
     RentalsModule,
     TransactionsModule,
     AuthModule,
+    LocalFilesModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../', 'uploads'),
+    }),
   ],
 })
-export class AppModule {}
+export class AppModule { }

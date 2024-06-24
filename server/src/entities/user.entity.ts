@@ -3,8 +3,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -18,14 +20,24 @@ import {
 import { Rental } from './rental.entity';
 import { Role } from './role.entity';
 import { Transaction } from './transaction.entity';
+import { LocalFile } from './local-file.entity';
 
 @Entity({ name: 'users', schema: 'auth' })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @JoinColumn({ name: 'avatarId' })
+  @OneToOne(
+    () => LocalFile,
+    {
+      nullable: true
+    }
+  )
+  avatar?: LocalFile;
+
   @Column({ nullable: true })
-  pictureUrl: string;
+  avatarId?: string;
 
   @Column()
   firstName: string;

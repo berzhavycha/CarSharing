@@ -83,6 +83,12 @@
       ],
       "@/types/*": [
         "src/types/*"
+      ],
+      "@/interceptors": [
+        "src/interceptors"
+      ],
+      "@/interceptors/*": [
+        "src/interceptors/*"
       ]
     }
   }

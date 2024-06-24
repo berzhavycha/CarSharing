@@ -29,7 +29,20 @@ export const useUpdateUser = (): HookReturn => {
             setErrors(null)
 
             console.log(userDto)
-            const { data } = await axiosInstance.patch(`${Env.API_BASE_URL}/users/${currentUser?.id}`, userDto);
+            const formData = new FormData();
+            formData.append('firstName', userDto.firstName ?? '');
+            formData.append('lastName', userDto.lastName ?? '') ;
+            formData.append('email', userDto.email ?? '');
+            if (userDto.oldPassword) formData.append('oldPassword', userDto.oldPassword);
+            if (userDto.newPassword) formData.append('newPassword', userDto.newPassword);
+            if (userDto.picture) formData.append('picture', userDto.picture as Blob);
+            const { data } = await axiosInstance.patch(`${Env.API_BASE_URL}/users/${currentUser?.id}`,
+                userDto,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
 
             return {
                 user: transformUserResponse(data),

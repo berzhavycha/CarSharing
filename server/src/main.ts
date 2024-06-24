@@ -2,7 +2,6 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
-import * as multer from 'multer';
 
 import { AppModule } from './app.module';
 
@@ -12,7 +11,6 @@ async function bootstrap(): Promise<void> {
 
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
-  app.use(multer({ dest: '/server/' + configService.get<string>('MULTER_DEST') }).single('picture'));
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 

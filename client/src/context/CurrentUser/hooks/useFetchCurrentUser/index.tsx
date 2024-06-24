@@ -16,7 +16,6 @@ export const useFetchCurrentUser = (): HookReturn => {
         const { data } = await axiosInstance.get(`${Env.API_BASE_URL}/auth/current-user`);
         setCurrentUser(transformUserResponse(data));
       } catch (error) {
-        console.error('Failed to fetch current user:', error);
         setCurrentUser(null);
       }
     };

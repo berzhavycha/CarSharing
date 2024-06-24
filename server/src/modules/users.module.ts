@@ -6,11 +6,12 @@ import { Role, User } from '@/entities';
 import { RolesService, UsersService } from '@/services';
 
 import { TransactionsModule } from './transactions.module';
+import { LocalFilesModule } from './local-files.module';
 
 @Module({
-  imports: [TransactionsModule, TypeOrmModule.forFeature([User, Role])],
+  imports: [LocalFilesModule, TransactionsModule, TypeOrmModule.forFeature([User, Role])],
   controllers: [UsersController],
   providers: [UsersService, RolesService],
   exports: [UsersService],
 })
-export class UsersModule {}
+export class UsersModule { }
