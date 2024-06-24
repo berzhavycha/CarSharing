@@ -1,4 +1,4 @@
-import { ConflictException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
@@ -32,6 +32,8 @@ const mockConfigService = {
         return '1d';
       case 'AUTH_COOKIE_EXPIRATION_DAYS_TIME':
         return 7;
+      case 'ADMIN_INVITATION_CODE':
+        return '1234';
       case 'NODE_ENV':
         return 'production';
       default:
@@ -110,6 +112,18 @@ describe('AuthService', () => {
       });
       await expect(authService.signUp(registerUserDto)).rejects.toThrow(
         ConflictException,
+      );
+    });
+
+    it('should throw BadException if invitation code is invalid', async () => {
+      const registerDto = {
+        ...registerUserDto,
+        role: Roles.ADMIN,
+        invitationCode: 'invalid-code'
+      }
+      
+      await expect(authService.signUp(registerDto)).rejects.toThrow(
+        BadRequestException,
       );
     });
   });

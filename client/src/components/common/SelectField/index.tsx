@@ -37,8 +37,9 @@ export const SelectField: FC<SelectProps> = forwardRef<HTMLSelectElement, Select
 
 const SelectElement = styled.select`
   width: 200px;
-  padding: 8px;
+  padding: 10px;
   border-radius: 5px;
   outline: none;
   border: 1px solid #ccc;
+  margin-top: 5px;
 `;

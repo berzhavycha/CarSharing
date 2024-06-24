@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -17,6 +18,7 @@ import {
   hashValue,
   NODE_ENV,
   ONE_DAY_MILLISECONDS,
+  Roles,
 } from '@/helpers';
 import { AuthResult, ITokens, JwtPayload } from '@/interfaces';
 
@@ -33,6 +35,11 @@ export class AuthService {
   async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
     try {
       const { password, ...safeUser } = registerUserDto;
+
+      const invitationCode = this.configService.get<string>('ADMIN_INVITATION_CODE')
+      if (safeUser.role === Roles.ADMIN && invitationCode !== safeUser.invitationCode) {
+        throw new BadRequestException(authErrorMessages.INVALID_INVITATION_CODE)
+      }
 
       const { salt, hash } = await hashValue(password);
       const user = await this.usersService.createUser({
