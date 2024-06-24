@@ -1,1 +1,1 @@
-export * from './local-files.interceptor'
+export * from './local-files.interceptor';

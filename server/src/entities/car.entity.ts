@@ -10,12 +10,12 @@ import {
 } from 'typeorm';
 
 import {
-  CarDefaultFuelCapacity,
   CAR_DEFAULT_STEERING,
   CAR_FIELD_DEFAULT_PRECISION,
   CAR_FIELD_DEFAULT_SCALE,
   CAR_FIELD_MEDIUM_LENGTH,
   CAR_FIELD_SMALL_LENGTH,
+  CarDefaultFuelCapacity,
   CarFuelType,
   CarStatus,
   DecimalColumnTransformer,

@@ -11,7 +11,7 @@ export enum CarFuelType {
   ELECTRIC = 'Electric',
   LPG = 'LPG',
   HYBRID = 'Hybrid',
-  NATURAL_GAS = 'NaturalGas'
+  NATURAL_GAS = 'NaturalGas',
 }
 
 export const CarDefaultFuelCapacity = {
@@ -20,19 +20,19 @@ export const CarDefaultFuelCapacity = {
   [CarFuelType.ELECTRIC]: 500,
   [CarFuelType.LPG]: 50,
   [CarFuelType.HYBRID]: 55,
-  [CarFuelType.NATURAL_GAS]: 45
+  [CarFuelType.NATURAL_GAS]: 45,
 };
 
 export const CarDefaultCapacity = {
   SUV: 6,
   MVP: 7,
-  Hatchback: 5,   
-  Coupe: 4,      
+  Hatchback: 5,
+  Coupe: 4,
   Sedan: 5,
   Sport: 2,
-  Crossover: 5,  
-  Pickup: 5,     
-  Minivan: 7     
+  Crossover: 5,
+  Pickup: 5,
+  Minivan: 7,
 };
 
 export const CAR_DEFAULT_STEERING = 'Left-hand drive';

@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 import { plainToClass } from 'class-transformer';
 import { Response } from 'express-serve-static-core';
-import * as bcrypt from 'bcrypt';
 
 import { RegisterUserDto } from '@/dtos';
 import { User } from '@/entities';
@@ -30,15 +30,22 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
     try {
       const { password, ...safeUser } = registerUserDto;
 
-      const invitationCode = this.configService.get<string>('ADMIN_INVITATION_CODE')
-      if (safeUser.role === Roles.ADMIN && invitationCode !== safeUser.invitationCode) {
-        throw new BadRequestException(authErrorMessages.INVALID_INVITATION_CODE)
+      const invitationCode = this.configService.get<string>(
+        'ADMIN_INVITATION_CODE',
+      );
+      if (
+        safeUser.role === Roles.ADMIN &&
+        invitationCode !== safeUser.invitationCode
+      ) {
+        throw new BadRequestException(
+          authErrorMessages.INVALID_INVITATION_CODE,
+        );
       }
 
       const { salt, hash } = await hashValue(password);

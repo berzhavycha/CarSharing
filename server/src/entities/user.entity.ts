@@ -17,10 +17,10 @@ import {
   USER_BALANCE_SCALE,
 } from '@/helpers';
 
+import { LocalFile } from './local-file.entity';
 import { Rental } from './rental.entity';
 import { Role } from './role.entity';
 import { Transaction } from './transaction.entity';
-import { LocalFile } from './local-file.entity';
 
 @Entity({ name: 'users', schema: 'auth' })
 export class User {
@@ -28,12 +28,9 @@ export class User {
   id: string;
 
   @JoinColumn({ name: 'avatarId' })
-  @OneToOne(
-    () => LocalFile,
-    {
-      nullable: true
-    }
-  )
+  @OneToOne(() => LocalFile, {
+    nullable: true,
+  })
   avatar?: LocalFile;
 
   @Column({ nullable: true })

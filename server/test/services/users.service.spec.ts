@@ -6,8 +6,13 @@ import { EntityManager, Repository } from 'typeorm';
 
 import { UpdateUserBalanceDto } from '@/dtos';
 import { User } from '@/entities';
-import { TransactionType, hashValue, usersErrorMessages } from '@/helpers';
-import { LocalFilesService, RolesService, TransactionsService, UsersService } from '@/services';
+import { hashValue, TransactionType, usersErrorMessages } from '@/helpers';
+import {
+  LocalFilesService,
+  RolesService,
+  TransactionsService,
+  UsersService,
+} from '@/services';
 
 import {
   createUserDtoMock,
@@ -34,7 +39,7 @@ describe('UsersService', () => {
   let transactionsService: TransactionsService;
   let rolesService: RolesService;
   let usersRepository: Repository<User>;
-  let localFilesService: LocalFilesService
+  let localFilesService: LocalFilesService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -55,7 +60,7 @@ describe('UsersService', () => {
         {
           provide: LocalFilesService,
           useValue: mockLocalFilesService,
-        }
+        },
       ],
     }).compile();
 
@@ -63,7 +68,7 @@ describe('UsersService', () => {
     transactionsService = module.get<TransactionsService>(TransactionsService);
     rolesService = module.get<RolesService>(RolesService);
     usersRepository = module.get<Repository<User>>(getRepositoryToken(User));
-    localFilesService = module.get<LocalFilesService>(LocalFilesService)
+    localFilesService = module.get<LocalFilesService>(LocalFilesService);
   });
 
   afterEach(() => {
@@ -220,11 +225,17 @@ describe('UsersService', () => {
         ...updateUserDtoMock,
       } as User;
 
-      jest.spyOn(localFilesService, 'saveLocalFileData').mockResolvedValue(mockLocalFile);
+      jest
+        .spyOn(localFilesService, 'saveLocalFileData')
+        .mockResolvedValue(mockLocalFile);
       jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
 
-      const result = await usersService.updateUser(mockUser.id, updateUserDtoMock, mockLocalFile);
+      const result = await usersService.updateUser(
+        mockUser.id,
+        updateUserDtoMock,
+        mockLocalFile,
+      );
 
       expect(result).toEqual(updatedUser);
       expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
@@ -240,15 +251,18 @@ describe('UsersService', () => {
       const updatedUser = {
         ...mockUser,
         passwordHash: mockHash.hash,
-        passwordSalt: mockHash.salt
+        passwordSalt: mockHash.salt,
       } as User;
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
-      (hashValue as jest.Mock).mockResolvedValueOnce(mockHash)
+      (hashValue as jest.Mock).mockResolvedValueOnce(mockHash);
 
-      const result = await usersService.updateUser(mockUser.id, updateUserDtoMock);
+      const result = await usersService.updateUser(
+        mockUser.id,
+        updateUserDtoMock,
+      );
 
       expect(result).toEqual(updatedUser);
       expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
@@ -264,9 +278,9 @@ describe('UsersService', () => {
       jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
 
-      await expect(usersService.updateUser(mockUser.id, updateUserDtoMock)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        usersService.updateUser(mockUser.id, updateUserDtoMock),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw BadRequestException if provided email if duplicated', async () => {
@@ -275,11 +289,13 @@ describe('UsersService', () => {
       };
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
-      jest.spyOn(usersService, 'findByEmail').mockResolvedValue({ ...mockUser, id: 'new-id' });
+      jest
+        .spyOn(usersService, 'findByEmail')
+        .mockResolvedValue({ ...mockUser, id: 'new-id' });
 
-      await expect(usersService.updateUser(mockUser.id, updateUserDtoMock)).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(
+        usersService.updateUser(mockUser.id, updateUserDtoMock),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 

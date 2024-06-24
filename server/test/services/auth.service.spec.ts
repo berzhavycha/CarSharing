@@ -1,4 +1,8 @@
-import { BadRequestException, ConflictException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
@@ -7,15 +11,15 @@ import { plainToClass } from 'class-transformer';
 import { Response } from 'express-serve-static-core';
 
 import { User } from '@/entities';
-import { DUPLICATE_EMAIL_ERROR_CODE, Roles, hashValue, } from '@/helpers';
+import { DUPLICATE_EMAIL_ERROR_CODE, hashValue, Roles } from '@/helpers';
 import { AuthService, UsersService } from '@/services';
 
 import {
+  mockHash,
   mockJwtService,
   mockTokens,
   mockUser,
   mockUsersService,
-  mockHash
 } from '../mocks';
 
 jest.mock('@/helpers/utils/hashValue', () => ({
@@ -41,7 +45,6 @@ const mockConfigService = {
     }
   }),
 };
-
 
 const mockResponse = {
   cookie: jest.fn(),
@@ -118,9 +121,9 @@ describe('AuthService', () => {
       const registerDto = {
         ...registerUserDto,
         role: Roles.ADMIN,
-        invitationCode: 'invalid-code'
-      }
-      
+        invitationCode: 'invalid-code',
+      };
+
       await expect(authService.signUp(registerDto)).rejects.toThrow(
         BadRequestException,
       );
@@ -259,8 +262,7 @@ describe('AuthService', () => {
     });
 
     it('should throw an error if hashing fails', async () => {
-      (hashValue as jest.Mock)
-        .mockRejectedValue(new Error('Hashing failed'));
+      (hashValue as jest.Mock).mockRejectedValue(new Error('Hashing failed'));
       jest
         .spyOn(jwtService, 'signAsync')
         .mockResolvedValueOnce(mockTokens.accessToken)
