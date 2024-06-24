@@ -7,3 +7,5 @@ export enum NODE_ENV {
   production = 'production',
   test = 'test',
 }
+
+export const ONE_MB = Math.pow(1024, 2)

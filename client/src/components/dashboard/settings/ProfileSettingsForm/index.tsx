@@ -1,18 +1,33 @@
 import { CustomForm } from "@/components/common";
 import { updateUserSchema } from "@/helpers";
 import { UpdateUserDto } from "@/types";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import DefaultImage from '../../../../../public/avatar.webp';
 import { useUpdateUser } from "./hooks";
+import { useCurrentUser } from "@/context";
+import { Env } from "@/core";
+import DefaultImage from '../../../../../public/avatar.webp'
 
 export const ProfileSettingsForm: FC = () => {
   const { updateUser, errors } = useUpdateUser()
+  const { currentUser, setCurrentUser } = useCurrentUser()
+  const [avatar, setAvatar] = useState<string>(DefaultImage);
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
     console.log(user)
-    updateUser(user)
+    const { user: updatedUser } = await updateUser(user)
+    setCurrentUser(updatedUser)
   };
+
+  useEffect(() => {
+    if (currentUser?.avatarId) {
+      setAvatar(`${Env.API_BASE_URL}/local-files/${currentUser.avatarId}`);
+    } else {
+      setAvatar(DefaultImage);
+    }
+  }, [currentUser]);
+
+  console.log(avatar)
 
   return (
     <CustomForm<UpdateUserDto>
@@ -20,7 +35,7 @@ export const ProfileSettingsForm: FC = () => {
       onSubmit={onSubmit}
     >
       <ProfileHeaderWrapper>
-        <CustomForm.InputFile defaultImage={DefaultImage} name="picture" />
+        <CustomForm.InputFile key={avatar} defaultImage={`${Env.API_BASE_URL}/local-files/${currentUser?.avatarId}`} name="picture" />
         <UserInfo>
           <h2>Mason Wilson</h2>
           <span>Admin</span>

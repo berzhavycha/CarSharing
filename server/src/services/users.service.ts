@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import { UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
+import { LocalFileDto, UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
 import { Rental, User } from '@/entities';
 import {
   Roles,
@@ -19,6 +19,7 @@ import * as bcrypt from 'bcrypt';
 import { RolesService } from './roles.service';
 import { TransactionsService } from './transactions.service';
 import { ConfigService } from '@nestjs/config';
+import { LocalFilesService } from './local-files.service';
 
 @Injectable()
 export class UsersService {
@@ -26,7 +27,8 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private localFilesService: LocalFilesService
   ) { }
 
   async createUser(userData: {
@@ -88,12 +90,13 @@ export class UsersService {
   async updateUser(
     id: string,
     updateUserDto: UpdateUserDto | Partial<User>,
-    picture?: Express.Multer.File
+    fileData?: LocalFileDto
   ): Promise<User | null> {
     const user = await this.findById(id);
 
-    if (picture) {
-      user.pictureUrl = `${this.configService.get<string>('MULTER_DEST')}/${picture.filename}`;
+    if (fileData) {
+      const avatar = await this.localFilesService.saveLocalFileData(fileData);
+      Object.assign(user, { avatarId: avatar.id })
     }
 
     if ('oldPassword' in updateUserDto && updateUserDto.oldPassword) {
@@ -116,8 +119,6 @@ export class UsersService {
         throw new BadRequestException(authErrorMessages.DUPLICATE_EMAIL)
       }
     }
-
-    console.log(updateUserDto)
 
     Object.assign(user, updateUserDto);
 

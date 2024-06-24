@@ -16,7 +16,6 @@ export const InputImage: FC<Props> = ({ defaultImage, name, ...props }) => {
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
   const [preview, setPreview] = useState<string>(defaultImage);
 
-
   const { ref: registerRef, onChange, ...rest } = register(name);
 
 
@@ -27,7 +26,6 @@ export const InputImage: FC<Props> = ({ defaultImage, name, ...props }) => {
       setPreview(urlImage);
     }
   };
-
 
   const onUpload = (): void => {
     hiddenInputRef.current?.click();

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Param,
@@ -12,23 +13,41 @@ import {
 import { UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
 import { User } from '@/entities';
 import { JwtAuthGuard, RoleGuard } from '@/guards';
-import { Roles, TransactionType } from '@/helpers';
+import { ONE_MB, Roles, TransactionType, localFilesErrors } from '@/helpers';
 import { UsersService } from '@/services';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { LocalFilesInterceptor } from '@/interceptors';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(
+    private readonly usersService: UsersService,
+  ) { }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('picture'))
+  @UseInterceptors(LocalFilesInterceptor({
+    fieldName: 'picture',
+    path: '/avatars',
+    fileFilter: (request, file, callback) => {
+      if (!file.mimetype.includes('image')) {
+        return callback(new BadRequestException(localFilesErrors.INVALID_IMAGE), false);
+      }
+      callback(null, true);
+    },
+    limits: {
+      fileSize: ONE_MB
+    }
+  }))
   async updateUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
-    @UploadedFile() picture: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<User> {
-    return this.usersService.updateUser(id, updateUserDto, picture);
+    return this.usersService.updateUser(id, updateUserDto, {
+      path: file.path,
+      filename: file.originalname,
+      mimetype: file.mimetype
+    });
   }
 
   @Patch(':id/top-up')

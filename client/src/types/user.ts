@@ -5,7 +5,7 @@ export type User = {
     lastName: string;
     balance: number;
     role: string;
-    pictureUrl: string;
+    avatarId: string;
 };
 
 export type UpdateUserDto = Partial<{
