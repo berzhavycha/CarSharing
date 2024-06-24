@@ -43,7 +43,6 @@ const mockConfigService = {
 };
 
 
-
 const mockResponse = {
   cookie: jest.fn(),
   clearCookie: jest.fn(),

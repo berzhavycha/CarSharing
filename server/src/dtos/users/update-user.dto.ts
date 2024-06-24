@@ -10,5 +10,10 @@ export class UpdateUserDto extends PartialType(OmitType(RegisterUserDto, ['role'
   @IsNotEmpty()
   @IsString()
   @MinLength(PASSWORD_MIN_LENGTH, { message: authErrorMessages.SMALL_PASSWORD })
-  password?: string;
+  oldPassword?: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(PASSWORD_MIN_LENGTH, { message: authErrorMessages.SMALL_PASSWORD })
+  newPassword?: string;
 }

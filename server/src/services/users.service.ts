@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
@@ -8,10 +8,13 @@ import {
   Roles,
   TransactionType,
   USER_DEFAULT_BALANCE,
+  authErrorMessages,
   hashValue,
   usersErrorMessages,
 } from '@/helpers';
 import { SafeUser } from '@/interfaces';
+import * as bcrypt from 'bcrypt';
+
 
 import { RolesService } from './roles.service';
 import { TransactionsService } from './transactions.service';
@@ -93,13 +96,28 @@ export class UsersService {
       user.pictureUrl = `${this.configService.get<string>('MULTER_DEST')}/${picture.filename}`;
     }
 
-    if ('password' in updateUserDto && updateUserDto.password) {
-      const { salt, hash } = await hashValue(updateUserDto.password);
+    if ('oldPassword' in updateUserDto && updateUserDto.oldPassword) {
+      if (!(await bcrypt.compare(updateUserDto.oldPassword, user.passwordHash))) {
+        throw new BadRequestException(usersErrorMessages.INVALID_OLD_PASSWORD)
+      }
+
+      const { salt, hash } = await hashValue(updateUserDto.newPassword);
       user.passwordSalt = salt;
       user.passwordHash = hash;
 
-      delete updateUserDto.password;
+      delete updateUserDto.oldPassword;
+      delete updateUserDto.newPassword;
     }
+
+    if (updateUserDto.email) {
+      const existingUserWithEmail = await this.findByEmail(updateUserDto.email)
+
+      if (existingUserWithEmail.id !== user.id) {
+        throw new BadRequestException(authErrorMessages.DUPLICATE_EMAIL)
+      }
+    }
+
+    console.log(updateUserDto)
 
     Object.assign(user, updateUserDto);
 
