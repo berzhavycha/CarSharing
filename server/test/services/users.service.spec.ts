@@ -1,6 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { EntityManager, Repository } from 'typeorm';
 
 import { UpdateUserBalanceDto } from '@/dtos';
@@ -244,7 +245,8 @@ describe('UsersService', () => {
 
     it('should update user password', async () => {
       const updateUserDtoMock = {
-        password: 'new password',
+        oldPassword: 'old password',
+        newPassword: 'new password',
       };
 
       const updatedUser = {
@@ -255,6 +257,7 @@ describe('UsersService', () => {
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
+      jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
       (hashValue as jest.Mock).mockResolvedValueOnce(mockHash)
 
       const result = await usersService.updateUser(mockUser.id, updateUserDtoMock);
@@ -262,6 +265,33 @@ describe('UsersService', () => {
       expect(result).toEqual(updatedUser);
       expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
       expect(usersRepository.save).toHaveBeenCalledWith(updatedUser);
+    });
+
+    it('should throw BadRequestException if provided old password is invalid', async () => {
+      const updateUserDtoMock = {
+        oldPassword: 'invalid password',
+        newPassword: 'new password',
+      };
+
+      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
+
+      await expect(usersService.updateUser(mockUser.id, updateUserDtoMock)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
+    it('should throw BadRequestException if provided email if duplicated', async () => {
+      const updateUserDtoMock = {
+        email: 'duplicate@gmail.com',
+      };
+
+      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      jest.spyOn(usersService, 'findByEmail').mockResolvedValue({ ...mockUser, id: 'new-id'});
+
+      await expect(usersService.updateUser(mockUser.id, updateUserDtoMock)).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 

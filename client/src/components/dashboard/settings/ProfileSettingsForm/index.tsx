@@ -1,16 +1,17 @@
 import { CustomForm } from "@/components/common";
 import { updateUserSchema } from "@/helpers";
-import { FieldErrorsState, UpdateUserDto } from "@/types";
-import { FC, useState } from "react";
+import { UpdateUserDto } from "@/types";
+import { FC } from "react";
 import styled from "styled-components";
 import DefaultImage from '../../../../../public/avatar.webp';
+import { useUpdateUser } from "./hooks";
 
 export const ProfileSettingsForm: FC = () => {
-  const [errors, setErrors] = useState<FieldErrorsState<UpdateUserDto>>({});
-
+  const { updateUser, errors } = useUpdateUser()
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
     console.log(user)
+    updateUser(user)
   };
 
   return (
@@ -40,13 +41,12 @@ export const ProfileSettingsForm: FC = () => {
           label="Old Password"
           name="oldPassword"
           isSecured
-          error={errors?.oldPassword}
+          error={errors?.password}
         />
         <CustomForm.Input
           label="New Password"
           name="newPassword"
           isSecured
-          error={errors?.newPassword}
         />
       </PasswordSection>
     </CustomForm>
