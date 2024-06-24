@@ -16,6 +16,11 @@ export const getUserSchema = (actionType: AuthType, role: string): ZodSchema => 
       })
       .min(1, { message: 'Password is required' }),
   });
+  if (role === Roles.ADMIN) {
+    baseSchema = baseSchema.extend({
+      invitationCode: z.string().min(1, { message: 'Invitation Code is required' }),
+    });
+  }
 
   if (actionType === AuthType.SIGN_UP) {
     const extendedSchema = baseSchema.extend({
@@ -28,12 +33,6 @@ export const getUserSchema = (actionType: AuthType, role: string): ZodSchema => 
       message: 'Passwords do not match',
       path: ['confirmPassword'],
     }) as unknown as typeof baseSchema;
-  }
-
-  if (role === Roles.ADMIN) {
-    baseSchema = baseSchema.extend({
-      invitationCode: z.string().min(1, { message: 'Invitation Code is required' }),
-    });
   }
 
   return baseSchema;
