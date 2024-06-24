@@ -1,14 +1,15 @@
 import { UserDto } from '@/types';
 import { FieldErrorsState } from '@/types/error';
+
 import { UNEXPECTED_ERROR_MESSAGE } from '../constants';
 
 const fieldMappings: Record<string, keyof UserDto> = {
-  'email': 'email',
-  'password': 'password',
-  'role': 'role',
-  'firstname': 'firstName',
-  'lastname': 'lastName',
-  'invitation code': 'invitationCode'
+  email: 'email',
+  password: 'password',
+  role: 'role',
+  firstname: 'firstName',
+  lastname: 'lastName',
+  'invitation code': 'invitationCode',
 };
 
 export const pickUserErrorMessages = (inputErrorMessages: string[]): FieldErrorsState<UserDto> => {

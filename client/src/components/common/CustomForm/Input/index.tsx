@@ -1,9 +1,9 @@
 import { FC } from 'react';
+import styled from 'styled-components';
 
 import { InputField, InputProps } from '@/components/common';
 
 import { useCustomForm } from '..';
-import styled from 'styled-components';
 
 type Props = Omit<InputProps, 'name'> & {
   name: string;

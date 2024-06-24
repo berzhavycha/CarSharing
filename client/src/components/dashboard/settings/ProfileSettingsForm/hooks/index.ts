@@ -1,1 +1,1 @@
-export * from './useUpdateUser'
+export * from './useUpdateUser';

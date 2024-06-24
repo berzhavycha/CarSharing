@@ -1,15 +1,11 @@
 import { AxiosError } from 'axios';
+import { useState } from 'react';
 
 import { axiosInstance } from '@/api';
 import { Env } from '@/core';
-import {
-  AuthType,
-  pickUserErrorMessages,
-  transformUserResponse,
-} from '@/helpers';
+import { AuthType, pickUserErrorMessages, transformUserResponse } from '@/helpers';
 import { User, UserDto } from '@/types';
 import { FieldErrorsState } from '@/types/error';
-import { useState } from 'react';
 
 type AuthResponse = {
   user: User | null;
@@ -17,7 +13,7 @@ type AuthResponse = {
 
 type HookReturn = {
   auth: (userDto: UserDto) => Promise<AuthResponse>;
-  errors: FieldErrorsState<UserDto> | null
+  errors: FieldErrorsState<UserDto> | null;
 };
 
 export const useAuth = (authType: AuthType): HookReturn => {
@@ -27,7 +23,7 @@ export const useAuth = (authType: AuthType): HookReturn => {
 
   const auth = async (userDto: UserDto): Promise<AuthResponse> => {
     try {
-      setErrors(null)
+      setErrors(null);
 
       const { data } = await axiosInstance.post(`${Env.API_BASE_URL}/auth/${apiEndpoint}`, userDto);
 
@@ -36,7 +32,7 @@ export const useAuth = (authType: AuthType): HookReturn => {
       };
     } catch (error) {
       if (error instanceof AxiosError) {
-        setErrors(pickUserErrorMessages([error.response?.data.message]))
+        setErrors(pickUserErrorMessages([error.response?.data.message]));
       }
 
       return {
@@ -47,6 +43,6 @@ export const useAuth = (authType: AuthType): HookReturn => {
 
   return {
     auth,
-    errors
+    errors,
   };
 };

@@ -1,9 +1,9 @@
 import { ChangeEvent, FC, useRef, useState } from 'react';
+import styled from 'styled-components';
 
 import { InputProps } from '@/components/common';
 
 import { useCustomForm } from '..';
-import styled from 'styled-components';
 
 type Props = Omit<InputProps, 'name'> & {
   name: string;
@@ -11,13 +11,12 @@ type Props = Omit<InputProps, 'name'> & {
 };
 
 export const InputImage: FC<Props> = ({ defaultImage, name, ...props }) => {
-  const { register } = useCustomForm().formHandle
+  const { register } = useCustomForm().formHandle;
 
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
   const [preview, setPreview] = useState<string>(defaultImage);
 
   const { ref: registerRef, onChange, ...rest } = register(name);
-
 
   const handleUploadedFile = (event: ChangeEvent<HTMLInputElement>): void => {
     const file = event.target.files?.[0];
@@ -32,9 +31,9 @@ export const InputImage: FC<Props> = ({ defaultImage, name, ...props }) => {
   };
 
   const onFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    onChange(e)
-    handleUploadedFile(e)
-  }
+    onChange(e);
+    handleUploadedFile(e);
+  };
 
   return (
     <PictureWrapper onClick={onUpload}>
@@ -52,7 +51,7 @@ export const InputImage: FC<Props> = ({ defaultImage, name, ...props }) => {
         hidden
       />
     </PictureWrapper>
-  )
+  );
 };
 
 const PictureWrapper = styled.div`
@@ -84,5 +83,3 @@ const UpdatePicture = styled.button`
   background: none;
   outline: none;
 `;
-
-

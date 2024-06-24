@@ -2,46 +2,46 @@ import { forwardRef, useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import styled from 'styled-components';
 
-import { ErrorMessage } from '../ErrorMessage';
 import { CheckIcon } from '../CheckIcon';
 import { ErrorIcon } from '../ErrorIcon';
+import { ErrorMessage } from '../ErrorMessage';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    label?: string;
-    error?: string;
-    isSecured?: boolean;
-    formSubmitted?: boolean
+  label?: string;
+  error?: string;
+  isSecured?: boolean;
+  formSubmitted?: boolean;
 }
 
 export const InputField = forwardRef<HTMLInputElement, InputProps>(
-    ({ placeholder, label, error, isSecured, formSubmitted, ...props }, ref) => {
-        const [isPasswordShown, setIsPasswordShown] = useState<boolean>(Boolean(isSecured));
+  ({ placeholder, label, error, isSecured, formSubmitted, ...props }, ref) => {
+    const [isPasswordShown, setIsPasswordShown] = useState<boolean>(Boolean(isSecured));
 
-        const togglePasswordVisibility = (): void => {
-            setIsPasswordShown((prevIsPasswordShown) => !prevIsPasswordShown);
-        };
+    const togglePasswordVisibility = (): void => {
+      setIsPasswordShown((prevIsPasswordShown) => !prevIsPasswordShown);
+    };
 
-        const inputType = isPasswordShown ? 'password' : 'text';
+    const inputType = isPasswordShown ? 'password' : 'text';
 
-        return (
-            <InputGroup>
-                <Label>{label}</Label>
-                <Input
-                    ref={ref}
-                    type={inputType}
-                    placeholder={placeholder || `Enter your ${label?.toLowerCase()}`}
-                    {...props}
-                />
-                {isSecured && (
-                    <TogglePasswordButton tabIndex={-1} type="button" onClick={togglePasswordVisibility}>
-                        {isPasswordShown ? <FaEyeSlash /> : <FaEye />}
-                    </TogglePasswordButton>
-                )}
-                {formSubmitted && (!error ? <CheckIcon right={-25} /> : <ErrorIcon right={-25} />)}
-                <ErrorMessage>{error}</ErrorMessage>
-            </InputGroup>
-        );
-    },
+    return (
+      <InputGroup>
+        <Label>{label}</Label>
+        <Input
+          ref={ref}
+          type={inputType}
+          placeholder={placeholder || `Enter your ${label?.toLowerCase()}`}
+          {...props}
+        />
+        {isSecured && (
+          <TogglePasswordButton tabIndex={-1} type="button" onClick={togglePasswordVisibility}>
+            {isPasswordShown ? <FaEyeSlash /> : <FaEye />}
+          </TogglePasswordButton>
+        )}
+        {formSubmitted && (!error ? <CheckIcon right={-25} /> : <ErrorIcon right={-25} />)}
+        <ErrorMessage>{error}</ErrorMessage>
+      </InputGroup>
+    );
+  },
 );
 InputField.displayName = 'InputField';
 
@@ -60,23 +60,22 @@ const TogglePasswordButton = styled.button`
 `;
 
 const InputGroup = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  position: relative;
 `;
 
 export const Label = styled.label`
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 5px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
 `;
 
 const Input = styled.input`
-    padding: 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    font-size: 16px;
-    outline: none;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
 `;
-

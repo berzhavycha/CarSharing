@@ -1,21 +1,24 @@
-import { CustomForm } from "@/components/common";
-import { updateUserSchema } from "@/helpers";
-import { UpdateUserDto } from "@/types";
-import { FC, useEffect, useState } from "react";
-import styled from "styled-components";
-import { useUpdateUser } from "./hooks";
-import { useCurrentUser } from "@/context";
-import { Env } from "@/core";
-import DefaultImage from '../../../../../public/avatar.webp'
+import { FC, useEffect, useState } from 'react';
+import styled from 'styled-components';
+
+import { CustomForm } from '@/components/common';
+import { useCurrentUser } from '@/context';
+import { Env } from '@/core';
+import { updateUserSchema } from '@/helpers';
+import { UpdateUserDto } from '@/types';
+
+import DefaultImage from '../../../../../public/avatar.webp';
+
+import { useUpdateUser } from './hooks';
 
 export const ProfileSettingsForm: FC = () => {
-  const { updateUser, errors } = useUpdateUser()
-  const { currentUser, setCurrentUser } = useCurrentUser()
+  const { updateUser, errors } = useUpdateUser();
+  const { currentUser, setCurrentUser } = useCurrentUser();
   const [avatar, setAvatar] = useState<string>(DefaultImage);
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
-    const { user: updatedUser } = await updateUser(user)
-    setCurrentUser(updatedUser)
+    const { user: updatedUser } = await updateUser(user);
+    setCurrentUser(updatedUser);
   };
 
   useEffect(() => {
@@ -26,20 +29,21 @@ export const ProfileSettingsForm: FC = () => {
     }
   }, [currentUser]);
 
-  console.log(avatar)
+  console.log(avatar);
 
   return (
-    <CustomForm<UpdateUserDto>
-      validationSchema={updateUserSchema}
-      onSubmit={onSubmit}
-    >
+    <CustomForm<UpdateUserDto> validationSchema={updateUserSchema} onSubmit={onSubmit}>
       <ProfileHeaderWrapper>
-        <CustomForm.InputFile key={avatar} defaultImage={`${Env.API_BASE_URL}/local-files/${currentUser?.avatarId}`} name="picture" />
+        <CustomForm.InputFile
+          key={avatar}
+          defaultImage={`${Env.API_BASE_URL}/local-files/${currentUser?.avatarId}`}
+          name="picture"
+        />
         <UserInfo>
           <h2>Mason Wilson</h2>
           <span>Admin</span>
         </UserInfo>
-        <CustomForm.SubmitButton content='Save' />
+        <CustomForm.SubmitButton content="Save" />
       </ProfileHeaderWrapper>
 
       <Title>General Information</Title>
@@ -57,11 +61,7 @@ export const ProfileSettingsForm: FC = () => {
           isSecured
           error={errors?.password}
         />
-        <CustomForm.Input
-          label="New Password"
-          name="newPassword"
-          isSecured
-        />
+        <CustomForm.Input label="New Password" name="newPassword" isSecured />
       </PasswordSection>
     </CustomForm>
   );

@@ -1,1 +1,1 @@
-export * from './updateUserSchema'
+export * from './updateUserSchema';

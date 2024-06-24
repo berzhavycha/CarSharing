@@ -4,6 +4,6 @@ export * from './PrimaryButton';
 export * from './Price';
 export * from './CheckIcon';
 export * from './ErrorMessage';
-export * from './SelectField'
-export * from './InputField'
-export * from './CustomForm'
+export * from './SelectField';
+export * from './InputField';
+export * from './CustomForm';
