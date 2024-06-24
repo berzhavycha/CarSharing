@@ -1,2 +1,2 @@
-export * from './ProfileContent'
-export * from './UserSettings'
+export * from './ProfileContent';
+export * from './UserSettings';

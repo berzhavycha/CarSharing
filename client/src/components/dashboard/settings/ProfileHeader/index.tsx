@@ -1,8 +1,10 @@
-import { PrimaryButton } from "@/components/common";
-import { FC, useRef, useState } from "react";
+import { FC, useRef, useState } from 'react';
+import styled from 'styled-components';
+
+import { PrimaryButton } from '@/components/common';
+
 import DefaultImage from '../../../../../public/avatar.webp';
-import UploadingAnimation from "../../../../../public/uploading.gif";
-import styled from "styled-components";
+import UploadingAnimation from '../../../../../public/uploading.gif';
 
 export const ProfileHeader: FC = () => {
   const [avatarURL, setAvatarURL] = useState(DefaultImage);
@@ -12,7 +14,7 @@ export const ProfileHeader: FC = () => {
     if (fileUploadRef.current) {
       fileUploadRef.current.click();
     }
-  }
+  };
 
   const uploadImageDisplay = async (): Promise<void> => {
     try {
@@ -20,37 +22,32 @@ export const ProfileHeader: FC = () => {
 
       const uploadedFile = fileUploadRef.current?.files?.[0];
       if (!uploadedFile) {
-        throw new Error("No file selected");
+        throw new Error('No file selected');
       }
 
       const formData = new FormData();
-      formData.append("file", uploadedFile);
+      formData.append('file', uploadedFile);
     } catch (error) {
       console.error(error);
       setAvatarURL(DefaultImage);
     }
-  }
+  };
 
   return (
     <ProfileHeaderWrapper>
       <ProfilePicture onClick={handleImageUpload}>
         <img src={avatarURL} alt="Profile" />
         <UpdatePicture>Update Picture</UpdatePicture>
-        <input
-          type="file"
-          id="file"
-          ref={fileUploadRef}
-          onChange={uploadImageDisplay}
-          hidden />
+        <input type="file" id="file" ref={fileUploadRef} onChange={uploadImageDisplay} hidden />
       </ProfilePicture>
       <UserInfo>
         <h2>Mason Wilson</h2>
         <span>Admin</span>
       </UserInfo>
-      <PrimaryButton type="submit" content='Save' />
+      <PrimaryButton type="submit" content="Save" />
     </ProfileHeaderWrapper>
-  )
-}
+  );
+};
 
 const ProfileHeaderWrapper = styled.div`
   display: flex;

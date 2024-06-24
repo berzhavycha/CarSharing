@@ -8,4 +8,3 @@ export type UserDto = {
   invitationCode?: string;
   pictureUrl?: string;
 };
-

@@ -45,12 +45,7 @@ export const SignUpPage: FC = () => {
           <CustomForm.Input label="Last Name" name="lastName" error={errors?.lastName} />
           <CustomForm.Input label="Email" name="email" error={errors?.email} />
           <PasswordWrapper>
-            <CustomForm.Input
-              label="Password"
-              name="password"
-              isSecured
-              error={errors?.password}
-            />
+            <CustomForm.Input label="Password" name="password" isSecured error={errors?.password} />
             <CustomForm.Input
               label="Confirm Password"
               name="confirmPassword"
@@ -129,5 +124,3 @@ const FormBlocks = styled.div`
   gap: 0px 40px;
   margin-bottom: 30px;
 `;
-
-

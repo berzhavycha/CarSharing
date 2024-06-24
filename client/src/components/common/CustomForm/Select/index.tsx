@@ -2,8 +2,9 @@ import { FC } from 'react';
 
 import { SelectField, SelectProps } from '@/components/common';
 
-import { useCustomForm } from '..';
 import { FormBlock } from '../Input';
+
+import { useCustomForm } from '..';
 
 type Props = Omit<SelectProps, 'name'> & {
   name: string;
@@ -17,7 +18,6 @@ export const Select: FC<Props> = ({ name, label, onChange, error, ...props }) =>
 
   const errorMessage = errors[name]?.message as string;
   const errorText = errorMessage || error;
-
 
   return (
     <FormBlock>

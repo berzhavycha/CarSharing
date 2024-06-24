@@ -1,58 +1,62 @@
 import { FC, Fragment } from 'react';
-import styled from 'styled-components';
+import {
+  FaBookOpen,
+  FaCar,
+  FaClipboardList,
+  FaCog,
+  FaExchangeAlt,
+  FaFileAlt,
+  FaSignOutAlt,
+} from 'react-icons/fa';
 import { NavLink, Outlet } from 'react-router-dom';
-import { FaCar, FaBookOpen, FaCog, FaFileAlt, FaExchangeAlt, FaClipboardList, FaSignOutAlt } from 'react-icons/fa';
+import styled from 'styled-components';
 
 interface MenuItemType {
-    icon: JSX.Element;
-    label: string;
-    path: string;
-    type: 'general' | 'report';
+  icon: JSX.Element;
+  label: string;
+  path: string;
+  type: 'general' | 'report';
 }
 
 export const DashboardSidebar: FC = () => {
-    const menuItems: MenuItemType[] = [
-        { icon: <FaBookOpen />, label: 'Bookings', path: 'bookings', type: 'general' },
-        { icon: <FaCog />, label: 'Settings', path: 'settings', type: 'general' },
-        { icon: <FaFileAlt />, label: 'Report', path: 'report', type: 'report' },
-        { icon: <FaExchangeAlt />, label: 'Transactions', path: 'transactions', type: 'report' },
-        { icon: <FaClipboardList />, label: 'Car Report', path: 'car-report', type: 'report' },
-    ];
+  const menuItems: MenuItemType[] = [
+    { icon: <FaBookOpen />, label: 'Bookings', path: 'bookings', type: 'general' },
+    { icon: <FaCog />, label: 'Settings', path: 'settings', type: 'general' },
+    { icon: <FaFileAlt />, label: 'Report', path: 'report', type: 'report' },
+    { icon: <FaExchangeAlt />, label: 'Transactions', path: 'transactions', type: 'report' },
+    { icon: <FaClipboardList />, label: 'Car Report', path: 'car-report', type: 'report' },
+  ];
 
-    const firstReportIndex = menuItems.findIndex(item => item.type === 'report');
+  const firstReportIndex = menuItems.findIndex((item) => item.type === 'report');
 
-    return (
-        <DashboardWrapper>
-            <Sidebar>
-                <Logo>
-                    <FaCar /> CARRENT
-                </Logo>
-                {menuItems.map((item, index) => (
-                    <Fragment key={index}>
-                        {index === firstReportIndex && <Divider />}
-                        <MenuItemWrapper>
-                            <MenuItem
-                                to={item.path}
-                                className={({ isActive }) => isActive ? "active" : ""}
-                            >
-                                <Icon className="icon">{item.icon}</Icon>
-                                {item.label}
-                            </MenuItem>
-                        </MenuItemWrapper>
-                    </Fragment>
-                ))}
-                <LogoutButton>
-                    <Icon>
-                        <FaSignOutAlt />
-                    </Icon>
-                    Logout
-                </LogoutButton>
-            </Sidebar>
-            <Outlet />
-        </DashboardWrapper>
-    );
+  return (
+    <DashboardWrapper>
+      <Sidebar>
+        <Logo>
+          <FaCar /> CARRENT
+        </Logo>
+        {menuItems.map((item, index) => (
+          <Fragment key={index}>
+            {index === firstReportIndex && <Divider />}
+            <MenuItemWrapper>
+              <MenuItem to={item.path} className={({ isActive }) => (isActive ? 'active' : '')}>
+                <Icon className="icon">{item.icon}</Icon>
+                {item.label}
+              </MenuItem>
+            </MenuItemWrapper>
+          </Fragment>
+        ))}
+        <LogoutButton>
+          <Icon>
+            <FaSignOutAlt />
+          </Icon>
+          Logout
+        </LogoutButton>
+      </Sidebar>
+      <Outlet />
+    </DashboardWrapper>
+  );
 };
-
 
 const DashboardWrapper = styled.div`
   display: flex;
@@ -134,6 +138,6 @@ const LogoutButton = styled.button`
   transition: var(--default-transition);
 
   &:hover {
-    background-color: var(--dark-blue) ;
+    background-color: var(--dark-blue);
   }
 `;

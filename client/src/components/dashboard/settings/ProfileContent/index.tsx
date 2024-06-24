@@ -1,12 +1,14 @@
-import { User } from '@/types';
 import { FC } from 'react';
 import styled from 'styled-components';
+
+import { User } from '@/types';
+
 import { ProfileHeader } from '../ProfileHeader';
 import { ProfileSettingsForm } from '../ProfileSettingsForm';
 
 type Props = {
-  user: User
-}
+  user: User;
+};
 
 export const ProfileContent: FC<Props> = ({ user }) => {
   return (
@@ -25,6 +27,3 @@ const ContentContainer = styled.div`
   box-shadow: var(--default-box-shadow);
   height: 94%;
 `;
-
-
-
