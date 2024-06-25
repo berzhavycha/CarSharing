@@ -3,20 +3,18 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CustomForm, ErrorMessage } from '@/components';
-import { useCurrentUser } from '@/context';
 import { AuthType, getUserSchema } from '@/helpers';
-import { useAuth } from '@/hooks';
 import { UserDto } from '@/types';
 
 import { ErrorMessageWrapper, Span, Title } from '../SignUpPage';
+import { useStore } from '@/context';
+import { observer } from 'mobx-react-lite';
 
-export const SignInPage: FC = () => {
-  const { auth, errors } = useAuth(AuthType.SIGN_IN);
-  const { setCurrentUser } = useCurrentUser();
+export const SignInPage: FC = observer(() => {
+  const { currentUserStore } = useStore()
 
   const onSubmit = async (data: UserDto): Promise<void> => {
-    const { user } = await auth(data);
-    setCurrentUser(user);
+    await currentUserStore.auth(AuthType.SIGN_IN, data)
   };
 
   return (
@@ -27,21 +25,21 @@ export const SignInPage: FC = () => {
         <Link to="/sign-up">Register here</Link> instead
       </Span>
       <ErrorMessageWrapper>
-        <ErrorMessage>{errors?.unexpectedError ?? ''}</ErrorMessage>
+        <ErrorMessage>{currentUserStore.errors?.unexpectedError ?? ''}</ErrorMessage>
       </ErrorMessageWrapper>
       <CustomForm<UserDto>
         validationSchema={getUserSchema(AuthType.SIGN_IN, 'none')}
         onSubmit={onSubmit}
       >
         <FormBlocks>
-          <CustomForm.Input label="Email" name="email" error={errors?.email} />
-          <CustomForm.Input label="Password" name="password" error={errors?.password} isSecured />
+          <CustomForm.Input label="Email" name="email" error={currentUserStore.errors?.email} />
+          <CustomForm.Input label="Password" name="password" error={currentUserStore.errors?.password} isSecured />
         </FormBlocks>
         <CustomForm.SubmitButton content="Log In" />
       </CustomForm>
     </FormInner>
   );
-};
+});
 
 const FormInner = styled.div`
   width: 400px;

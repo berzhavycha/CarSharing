@@ -12,4 +12,5 @@ export interface ApiAuthResponse {
   createdAt: string;
   updatedAt: string;
   id: string;
+  avatarId: string;
 }

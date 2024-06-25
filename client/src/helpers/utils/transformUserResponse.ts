@@ -1,8 +1,8 @@
-import { User } from '@/types';
+import { AuthenticatedUser } from '@/types';
 
 import { ApiAuthResponse } from '../interfaces';
 
-export const transformUserResponse = (data: ApiAuthResponse): User => {
+export const transformUserResponse = (data: ApiAuthResponse): AuthenticatedUser => {
   return {
     ...data,
     role: data.role.name,
