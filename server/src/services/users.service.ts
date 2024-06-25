@@ -30,7 +30,7 @@ export class UsersService {
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
     private localFilesService: LocalFilesService,
-  ) {}
+  ) { }
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -97,7 +97,7 @@ export class UsersService {
 
     if (fileData) {
       const avatar = await this.localFilesService.saveLocalFileData(fileData);
-      Object.assign(user, { avatarId: avatar.id });
+      Object.assign(user, { avatar });
     }
 
     if ('oldPassword' in updateUserDto && updateUserDto.oldPassword) {

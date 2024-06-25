@@ -27,7 +27,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @JoinColumn({ name: 'avatarId' })
+  @JoinColumn({ name: 'avatar_id' })
   @OneToOne(() => LocalFile, {
     nullable: true,
   })

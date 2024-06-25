@@ -5,3 +5,4 @@ export * from './pagination';
 export * from './user';
 export * from './transaction';
 export * from './rental';
+export * from './local-file'

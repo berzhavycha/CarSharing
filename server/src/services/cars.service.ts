@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
+import { CreateCarDto, LocalFileDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { Car } from '@/entities';
 import {
   applySearchAndPagination,
@@ -19,21 +19,34 @@ import {
   DEFAULT_PAGINATION_PAGE,
   RentalStatus,
 } from '@/helpers';
+import { LocalFilesService } from './local-files.service';
 
 @Injectable()
 export class CarsService {
   constructor(
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
-  ) {}
+    private localFilesService: LocalFilesService
+  ) { }
 
-  async createCar(createCarDto: CreateCarDto): Promise<Car> {
-    const car = this.carsRepository.create(createCarDto);
+  async createCar(createCarDto: CreateCarDto, fileData?: LocalFileDto): Promise<Car> {
+    const carPicture = await this.localFilesService.saveLocalFileData(fileData);
+
+    const car = this.carsRepository.create({
+      ...createCarDto,
+      picture: carPicture
+    });
+
     return this.carsRepository.save(car);
   }
 
-  async updateCar(id: string, updateCarDto: UpdateCarDto): Promise<Car> {
+  async updateCar(id: string, updateCarDto: UpdateCarDto, fileData?: LocalFileDto): Promise<Car> {
     const car = await this.findById(id);
+
+    if (updateCarDto.picture) {
+      const updatedCarPicture = await this.localFilesService.saveLocalFileData(fileData);
+      Object.assign(car, { picture: updatedCarPicture });
+    }
 
     Object.assign(car, updateCarDto);
     return this.carsRepository.save(car);
@@ -52,7 +65,7 @@ export class CarsService {
   async findById(id: string): Promise<Car> {
     const car = await this.carsRepository.findOne({
       where: { id },
-      relations: ['rentals'],
+      relations: ['rentals', 'local_file'],
     });
 
     if (!car) {
