@@ -1,12 +1,22 @@
 import { FC, Fragment } from 'react';
 import { FaCar, FaSignOutAlt } from 'react-icons/fa';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { menuItems } from './constants';
+import { useStore } from '@/context';
 
 export const DashboardSidebar: FC = () => {
   const firstReportIndex = menuItems.findIndex((item) => item.type === 'report');
+
+  const { currentUserStore: { signOut } } = useStore()
+
+  const navigate = useNavigate()
+
+  const onLogout = async (): Promise<void> => {
+    await signOut()
+    navigate('/')
+  }
 
   return (
     <DashboardWrapper>
@@ -25,7 +35,7 @@ export const DashboardSidebar: FC = () => {
             </MenuItemWrapper>
           </Fragment>
         ))}
-        <LogoutButton>
+        <LogoutButton onClick={onLogout}>
           <Icon>
             <FaSignOutAlt />
           </Icon>

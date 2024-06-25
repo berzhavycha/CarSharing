@@ -1,20 +1,25 @@
 import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CustomForm, ErrorMessage } from '@/components';
 import { useStore } from '@/context';
-import { AuthType, getUserSchema } from '@/helpers';
+import { AuthType, Roles, getUserSchema } from '@/helpers';
 import { SignInUserDto } from '@/types';
 
 import { ErrorMessageWrapper, Span, Title } from '../SignUpPage';
 
 export const SignInPage: FC = observer(() => {
   const { currentUserStore } = useStore();
+  const navigate = useNavigate()
 
   const onSubmit = async (data: SignInUserDto): Promise<void> => {
     await currentUserStore.signIn(data);
+    if (currentUserStore.user) {
+      const navigatePath = currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/'
+      navigate(navigatePath)
+    }
   };
 
   return (
