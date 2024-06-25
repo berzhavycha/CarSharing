@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import { InputProps } from '@/components/common';
+import { ErrorMessage, InputProps } from '@/components/common';
 
 import { useCustomForm } from '..';
 
@@ -19,12 +19,18 @@ export const InputImage: FC<Props> = ({
   label,
   circled,
   name,
+  error,
   width = 100,
   height = 100,
   multiple = false,
   ...props
 }) => {
-  const { register } = useCustomForm().formHandle;
+  const { register,
+    formState: { errors },
+  } = useCustomForm().formHandle;
+
+  const errorMessage = errors[name]?.message as string;
+  const errorText = errorMessage || error;
 
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
   const [previews, setPreviews] = useState<string[]>([defaultImage]);
@@ -47,7 +53,7 @@ export const InputImage: FC<Props> = ({
   };
 
   return (
-    <div>
+    <InputImageContainer>
       <PicturesContainer onClick={onUpload}>
         {previews.map((preview, index) => (
           <PictureWrapper
@@ -75,7 +81,10 @@ export const InputImage: FC<Props> = ({
         {...props}
         hidden
       />
-    </div>
+      <ErrorMessageWrapper>
+        <ErrorMessage>{errorText}</ErrorMessage>
+      </ErrorMessageWrapper>
+    </InputImageContainer>
   );
 };
 
@@ -84,6 +93,17 @@ type PictureWrapperProps = {
   $width?: number;
   $height?: number;
 };
+
+const InputImageContainer = styled.div`
+  position: relative;
+`;
+
+const ErrorMessageWrapper = styled.div`
+  width: 500px;
+  position: absolute;
+  bottom: -40px;
+  left: 0
+`;
 
 const PicturesContainer = styled.div`
   display: flex;

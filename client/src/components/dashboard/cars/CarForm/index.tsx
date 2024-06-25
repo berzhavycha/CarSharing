@@ -11,7 +11,7 @@ import DefaultImage from '../../../../../public/car-upload.png';
 
 export const CarForm: FC = observer(() => {
     const onSubmit = (car: CarDto): void => {
-
+        console.log(car)
     }
 
     return (
