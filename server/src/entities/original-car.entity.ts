@@ -4,7 +4,9 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -19,6 +21,7 @@ import {
 } from '@/helpers';
 
 import { Rental } from './rental.entity';
+import { LocalFile } from './local-file.entity';
 
 @Entity({ schema: 'rental', name: 'original_cars' })
 @Check('"price_per_hour" > 0')
@@ -27,8 +30,14 @@ export class OriginalCar {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @JoinColumn({ name: 'picture_id' })
+  @OneToOne(() => LocalFile, {
+    nullable: true,
+  })
+  picture: LocalFile;
+
   @Column()
-  imageUrl: string;
+  pictureId: string;
 
   @Column()
   @Index()

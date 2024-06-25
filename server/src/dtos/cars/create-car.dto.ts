@@ -1,10 +1,10 @@
-import { IsEnum, IsInt, IsNumber, IsString, Length } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
 
 import { CAR_FIELD_MEDIUM_LENGTH, CarStatus } from '@/helpers';
 
 export class CreateCarDto {
-  @IsString()
-  imageUrl: string;
+  @IsNotEmpty()
+  picture: Express.Multer.File;
 
   @IsString()
   model: string;
