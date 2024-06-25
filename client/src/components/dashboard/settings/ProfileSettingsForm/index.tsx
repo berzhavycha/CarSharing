@@ -6,19 +6,15 @@ import { CustomForm } from '@/components/common';
 import { useStore } from '@/context';
 import { Env } from '@/core';
 import { updateUserSchema, uppercaseFirstLetter } from '@/helpers';
-import { AuthenticatedUser, UpdateUserDto } from '@/types';
+import { UpdateUserDto } from '@/types';
 
 import DefaultImage from '../../../../../public/avatar.webp';
 
-type Props = {
-  user: AuthenticatedUser | null;
-};
-
-export const ProfileSettingsForm: FC<Props> = observer(({ user }) => {
-  const { currentUserStore } = useStore();
+export const ProfileSettingsForm: FC = observer(() => {
+  const { currentUserStore: { user, updateErrors, updateUser } } = useStore();
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
-    await currentUserStore.updateUser(user);
+    await updateUser(user);
   };
 
   const avatar = user?.avatarId ? `${Env.API_BASE_URL}/local-files/${user.avatarId}` : DefaultImage;
@@ -52,17 +48,17 @@ export const ProfileSettingsForm: FC<Props> = observer(({ user }) => {
           <CustomForm.Input
             label="First Name"
             name="firstName"
-            error={currentUserStore.updateErrors?.firstName}
+            error={updateErrors?.firstName}
           />
           <CustomForm.Input
             label="Last Name"
             name="lastName"
-            error={currentUserStore.updateErrors?.lastName}
+            error={updateErrors?.lastName}
           />
           <CustomForm.Input
             label="Email"
             name="email"
-            error={currentUserStore.updateErrors?.email}
+            error={updateErrors?.email}
           />
         </ProfileSection>
 
@@ -72,7 +68,7 @@ export const ProfileSettingsForm: FC<Props> = observer(({ user }) => {
             label="Old Password"
             name="oldPassword"
             isSecured
-            error={currentUserStore.updateErrors?.oldPassword}
+            error={updateErrors?.oldPassword}
           />
           <CustomForm.Input label="New Password" name="newPassword" isSecured />
         </PasswordSection>
