@@ -118,7 +118,7 @@ export class UsersService {
     if (updateUserDto.email) {
       const existingUserWithEmail = await this.findByEmail(updateUserDto.email);
 
-      if (existingUserWithEmail.id !== user.id) {
+      if (existingUserWithEmail && existingUserWithEmail.id !== user.id) {
         throw new BadRequestException(authErrorMessages.DUPLICATE_EMAIL);
       }
     }
