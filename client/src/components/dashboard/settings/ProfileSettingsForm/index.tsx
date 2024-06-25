@@ -14,7 +14,14 @@ export const ProfileSettingsForm: FC = observer(() => {
   const { currentUserStore: { user, updateErrors, updateUser } } = useStore();
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
-    await updateUser(user);
+    const userDtoWithoutEmptyPasswords = Object.fromEntries(
+      Object.entries(user).filter(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ([_key, value]) => value !== '' && value !== null && value !== undefined
+      )
+    );
+
+    await updateUser(userDtoWithoutEmptyPasswords);
   };
 
   const avatar = user?.avatarId ? `${Env.API_BASE_URL}/local-files/${user.avatarId}` : DefaultImage;
