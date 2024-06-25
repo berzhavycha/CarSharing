@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { CustomForm } from '@/components/common';
 import { Env } from '@/core';
-import { updateUserSchema } from '@/helpers';
+import { updateUserSchema, uppercaseFirstLetter } from '@/helpers';
 import { UpdateUserDto, AuthenticatedUser } from '@/types';
 
 import DefaultImage from '../../../../../public/avatar.webp';
@@ -22,21 +22,20 @@ export const ProfileSettingsForm: FC<Props> = observer(({ user }) => {
     await currentUserStore.updateUser(user);
   };
 
-  const avatar = user ? `${Env.API_BASE_URL}/local-files/${user.avatarId}` : DefaultImage
+  const avatar = user?.avatarId ? `${Env.API_BASE_URL}/local-files/${user.avatarId}` : DefaultImage
   const defaultFormValues = { firstName: user?.firstName, lastName: user?.lastName, email: user?.email }
 
   return (
     <ContentContainer>
-      <CustomForm<UpdateUserDto> defaultValues={defaultFormValues} validationSchema={updateUserSchema} onSubmit={onSubmit}>
+      <CustomForm<UpdateUserDto> key={user?.id} defaultValues={defaultFormValues} validationSchema={updateUserSchema} onSubmit={onSubmit}>
         <ProfileHeaderWrapper>
           <CustomForm.InputFile
-            key={avatar}
             defaultImage={avatar}
             name="picture"
           />
           <UserInfo>
             <h2>{user?.firstName} {user?.lastName}</h2>
-            <span>{user?.role}</span>
+            <span>{user?.role && uppercaseFirstLetter(user.role)}</span>
           </UserInfo>
           <CustomForm.SubmitButton content="Save" />
         </ProfileHeaderWrapper>
