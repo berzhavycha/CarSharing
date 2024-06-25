@@ -1,4 +1,4 @@
-import { SignInUserDto, SignUpUserDto } from "@/types";
+import { SignInUserDto, SignUpUserDto } from '@/types';
 
 export enum AuthType {
   SIGN_UP = 'signUp',

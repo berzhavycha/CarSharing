@@ -1,16 +1,17 @@
 import { FieldErrorsState } from '@/types/error';
+
 import { UNEXPECTED_ERROR_MESSAGE } from '../constants';
 
 const defaultFieldErrorsState = <T extends object>(): FieldErrorsState<T> => {
   const state: FieldErrorsState<T> = {
-    unexpectedError: ''
+    unexpectedError: '',
   } as FieldErrorsState<T>;
   return state;
 };
 
 export const pickErrorMessages = <T extends object>(
   inputErrorMessages: string[],
-  fieldMappings: Record<string, keyof T>
+  fieldMappings: Record<string, keyof T>,
 ): FieldErrorsState<T> => {
   const fieldErrors: FieldErrorsState<T> = defaultFieldErrorsState<T>();
 
@@ -30,4 +31,3 @@ export const pickErrorMessages = <T extends object>(
 
   return fieldErrors;
 };
-

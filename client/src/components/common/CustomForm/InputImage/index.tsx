@@ -25,7 +25,8 @@ export const InputImage: FC<Props> = ({
   multiple = false,
   ...props
 }) => {
-  const { register,
+  const {
+    register,
     formState: { errors },
   } = useCustomForm().formHandle;
 
@@ -39,7 +40,7 @@ export const InputImage: FC<Props> = ({
 
   const handleUploadedFiles = (event: ChangeEvent<HTMLInputElement>): void => {
     const files = Array.from(event.target.files || []);
-    const previewUrls = files.map(file => URL.createObjectURL(file));
+    const previewUrls = files.map((file) => URL.createObjectURL(file));
     setPreviews(previewUrls);
   };
 
@@ -56,12 +57,7 @@ export const InputImage: FC<Props> = ({
     <InputImageContainer>
       <PicturesContainer onClick={onUpload}>
         {previews.map((preview, index) => (
-          <PictureWrapper
-            key={index}
-            $circled={circled}
-            $width={width}
-            $height={height}
-          >
+          <PictureWrapper key={index} $circled={circled} $width={width} $height={height}>
             <img src={preview} alt={`${name}-${index}`} />
           </PictureWrapper>
         ))}
@@ -102,7 +98,7 @@ const ErrorMessageWrapper = styled.div`
   width: 500px;
   position: absolute;
   bottom: -40px;
-  left: 0
+  left: 0;
 `;
 
 const PicturesContainer = styled.div`
@@ -113,7 +109,7 @@ const PicturesContainer = styled.div`
 
 const PictureWrapper = styled.div<PictureWrapperProps>`
   position: relative;
-  border: var(--default-border); 
+  border: var(--default-border);
   border-radius: ${(props): string => `${props.$circled ? '50%' : '10%'}`};
   overflow: hidden;
   background: none;

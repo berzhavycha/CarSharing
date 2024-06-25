@@ -12,7 +12,7 @@ export const SignUpPage: FC = observer(() => {
   const [userRole, setUserRole] = useState<string>('user');
   const [showSecretCodeInput, setShowSecretCodeInput] = useState<boolean>(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { currentUserStore } = useStore();
 
@@ -25,8 +25,8 @@ export const SignUpPage: FC = observer(() => {
   const onSubmit = async (data: SignUpUserDto): Promise<void> => {
     await currentUserStore.signUp(data);
     if (currentUserStore.user) {
-      const navigatePath = currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/'
-      navigate(navigatePath)
+      const navigatePath = currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/';
+      navigate(navigatePath);
     }
   };
 

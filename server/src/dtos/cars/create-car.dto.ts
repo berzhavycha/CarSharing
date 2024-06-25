@@ -1,4 +1,11 @@
-import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Length,
+} from 'class-validator';
 
 import { CAR_FIELD_MEDIUM_LENGTH, CarStatus } from '@/helpers';
 

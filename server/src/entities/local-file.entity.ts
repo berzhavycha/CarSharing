@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+
 import { Car } from './car.entity';
 import { OriginalCar } from './original-car.entity';
 

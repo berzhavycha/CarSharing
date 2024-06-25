@@ -1,1 +1,1 @@
-export * from './ProfileSettingsForm'
+export * from './ProfileSettingsForm';

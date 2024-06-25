@@ -11,13 +11,15 @@ import { UpdateUserDto } from '@/types';
 import DefaultImage from '../../../../../public/avatar.webp';
 
 export const ProfileSettingsForm: FC = observer(() => {
-  const { currentUserStore: { user, updateErrors, updateUser } } = useStore();
+  const {
+    currentUserStore: { user, updateErrors, updateUser },
+  } = useStore();
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
     const userDtoWithoutEmptyPasswords = Object.fromEntries(
       Object.entries(user).filter(([, value]) => {
-        return value !== '' && value !== null && value !== undefined
-      })
+        return value !== '' && value !== null && value !== undefined;
+      }),
     );
 
     await updateUser(userDtoWithoutEmptyPasswords);
@@ -40,7 +42,12 @@ export const ProfileSettingsForm: FC = observer(() => {
           onSubmit={onSubmit}
         >
           <ProfileHeaderWrapper>
-            <CustomForm.InputFile circled defaultImage={avatar} name="picture" label='Update Avatar'/>
+            <CustomForm.InputFile
+              circled
+              defaultImage={avatar}
+              name="picture"
+              label="Update Avatar"
+            />
             <UserInfo>
               <h2>
                 {user?.firstName} {user?.lastName}
@@ -52,21 +59,9 @@ export const ProfileSettingsForm: FC = observer(() => {
 
           <Title>General Information</Title>
           <ProfileSection>
-            <CustomForm.Input
-              label="First Name"
-              name="firstName"
-              error={updateErrors?.firstName}
-            />
-            <CustomForm.Input
-              label="Last Name"
-              name="lastName"
-              error={updateErrors?.lastName}
-            />
-            <CustomForm.Input
-              label="Email"
-              name="email"
-              error={updateErrors?.email}
-            />
+            <CustomForm.Input label="First Name" name="firstName" error={updateErrors?.firstName} />
+            <CustomForm.Input label="Last Name" name="lastName" error={updateErrors?.lastName} />
+            <CustomForm.Input label="Email" name="email" error={updateErrors?.email} />
           </ProfileSection>
 
           <Title>Change Password</Title>

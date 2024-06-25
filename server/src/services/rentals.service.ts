@@ -25,7 +25,7 @@ export class RentalsService {
     private originalCarsService: OriginalCarsService,
     private usersService: UsersService,
     private readonly entityManager: EntityManager,
-  ) { }
+  ) {}
 
   async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
     const existingActiveUserRental = await this.rentalsRepository.findOne({
@@ -105,7 +105,7 @@ export class RentalsService {
       const returnDate = new Date();
       const hoursDifference = Math.ceil(
         (returnDate.getTime() - rental.rentalStart.getTime()) /
-        ONE_HOUR_MILLISECONDS,
+          ONE_HOUR_MILLISECONDS,
       );
 
       if (hoursDifference < rental.requestedHours) {

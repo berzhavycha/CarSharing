@@ -1,10 +1,14 @@
 import { OmitType } from '@nestjs/mapped-types';
-
-import { CreateCarDto } from '../cars';
-import { LocalFile } from '@/entities';
 import { IsNotEmpty } from 'class-validator';
 
-export class CreateOriginalCarDto extends OmitType(CreateCarDto, ['status', 'pictures']) {
-    @IsNotEmpty()
-    pictures: LocalFile[]
+import { LocalFile } from '@/entities';
+
+import { CreateCarDto } from '../cars';
+
+export class CreateOriginalCarDto extends OmitType(CreateCarDto, [
+  'status',
+  'pictures',
+]) {
+  @IsNotEmpty()
+  pictures: LocalFile[];
 }
