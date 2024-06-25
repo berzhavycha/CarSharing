@@ -1,4 +1,4 @@
-import { createContext, FC, PropsWithChildren, useContext} from 'react';
+import { createContext, FC, PropsWithChildren, useContext, useEffect } from 'react';
 
 import { rootStore, RootStoreType } from '@/app/stores';
 
@@ -15,5 +15,9 @@ export const useStore = (): ContextType => {
 };
 
 export const StoreProvider: FC<PropsWithChildren> = ({ children }) => {
+  useEffect(() => {
+    rootStore.currentUserStore.fetchCurrentUser();
+  }, []);
+
   return <StoreContext.Provider value={rootStore}>{children}</StoreContext.Provider>;
 };
