@@ -12,6 +12,7 @@ export const refreshTokenInterceptor = {
 
     if (
       error.response?.status === UNAUTHORIZED_ERROR_CODE &&
+      !originalRequest.url?.includes('sign-in') &&
       originalRequest &&
       !originalRequest._retry
     ) {
