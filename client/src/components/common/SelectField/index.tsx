@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { ErrorMessage } from '../ErrorMessage';
 import { Label } from '../InputField';
 
-type Option = {
+export type Option = {
   value: string;
   label: string;
 };
@@ -36,10 +36,10 @@ export const SelectField: FC<SelectProps> = forwardRef<HTMLSelectElement, Select
 );
 
 const SelectElement = styled.select`
-  width: 200px;
+  width: 100%;
   padding: 10px;
   border-radius: 5px;
   outline: none;
-  border: 1px solid #ccc;
+  border: var(--input-border);
   margin-top: 5px;
 `;

@@ -7,6 +7,7 @@ import { Input } from './Input';
 import { InputImage } from './InputImage';
 import { Select } from './Select';
 import { SubmitButton } from './SubmitButton';
+import { TextArea } from './TextArea';
 
 type ContextType<TEntity extends FieldValues> = {
   formHandle: UseFormReturn<TEntity>;
@@ -65,3 +66,4 @@ CustomForm.Input = Input;
 CustomForm.InputFile = InputImage;
 CustomForm.SubmitButton = SubmitButton;
 CustomForm.Select = Select;
+CustomForm.TextArea = TextArea;

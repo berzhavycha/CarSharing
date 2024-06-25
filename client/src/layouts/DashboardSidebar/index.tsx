@@ -42,7 +42,9 @@ export const DashboardSidebar: FC = () => {
           Logout
         </LogoutButton>
       </Sidebar>
-      <Outlet />
+      <OutletWrapper>
+        <Outlet />
+      </OutletWrapper>
     </DashboardWrapper>
   );
 };
@@ -53,10 +55,16 @@ const DashboardWrapper = styled.div`
 
 const Sidebar = styled.div`
   min-width: 20%;
+  position: fixed;
   background-color: var(--main-blue);
   color: white;
   height: 100vh;
   padding: 40px 0;
+`;
+
+const OutletWrapper = styled.div`
+  padding-left: 20%;
+  width: 100%;
 `;
 
 const Logo = styled.div`

@@ -40,7 +40,7 @@ export const ProfileSettingsForm: FC = observer(() => {
           onSubmit={onSubmit}
         >
           <ProfileHeaderWrapper>
-            <CustomForm.InputFile defaultImage={avatar} name="picture" />
+            <CustomForm.InputFile circled defaultImage={avatar} name="picture" label='Update Avatar'/>
             <UserInfo>
               <h2>
                 {user?.firstName} {user?.lastName}
