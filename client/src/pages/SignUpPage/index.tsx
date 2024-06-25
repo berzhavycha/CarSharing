@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { CustomForm, ErrorMessage } from '@/components';
 import { AuthType, getUserSchema, Roles } from '@/helpers';
-import { UserDto } from '@/types';
+import { SignUpUserDto } from '@/types';
 import { useStore } from '@/context';
 import { observer } from 'mobx-react-lite';
 
@@ -20,9 +20,8 @@ export const SignUpPage: FC = observer(() => {
     setShowSecretCodeInput(selectedRole === Roles.ADMIN);
   };
 
-  const onSubmit = async (data: UserDto): Promise<void> => {
-    console.log(data)
-    await currentUserStore.auth(AuthType.SIGN_UP, data)
+  const onSubmit = async (data: SignUpUserDto): Promise<void> => {
+    await currentUserStore.signUp(data)
   };
 
   return (
@@ -33,23 +32,23 @@ export const SignUpPage: FC = observer(() => {
         <Link to="/sign-in">Login here</Link> instead
       </Span>
       <ErrorMessageWrapper>
-        <ErrorMessage>{currentUserStore.errors?.unexpectedError ?? ''}</ErrorMessage>
+        <ErrorMessage>{currentUserStore.signUpErrors?.unexpectedError ?? ''}</ErrorMessage>
       </ErrorMessageWrapper>
-      <CustomForm<UserDto>
+      <CustomForm<SignUpUserDto>
         validationSchema={getUserSchema(AuthType.SIGN_UP, userRole)}
         onSubmit={onSubmit}
       >
         <FormBlocks>
-          <CustomForm.Input label="First Name" name="firstName" error={currentUserStore.errors?.firstName} />
-          <CustomForm.Input label="Last Name" name="lastName" error={currentUserStore.errors?.lastName} />
-          <CustomForm.Input label="Email" name="email" error={currentUserStore.errors?.email} />
+          <CustomForm.Input label="First Name" name="firstName" error={currentUserStore.signUpErrors?.firstName} />
+          <CustomForm.Input label="Last Name" name="lastName" error={currentUserStore.signUpErrors?.lastName} />
+          <CustomForm.Input label="Email" name="email" error={currentUserStore.signUpErrors?.email} />
           <PasswordWrapper>
-            <CustomForm.Input label="Password" name="password" isSecured error={currentUserStore.errors?.password} />
+            <CustomForm.Input label="Password" name="password" isSecured error={currentUserStore.signUpErrors?.password} />
             <CustomForm.Input
               label="Confirm Password"
               name="confirmPassword"
               isSecured
-              error={currentUserStore.errors?.confirmPassword}
+              error={currentUserStore.signUpErrors?.confirmPassword}
             />
           </PasswordWrapper>
           <RoleWrapper>
@@ -67,7 +66,7 @@ export const SignUpPage: FC = observer(() => {
                 label="Invitation Code"
                 name="invitationCode"
                 isSecured
-                error={currentUserStore.errors?.invitationCode}
+                error={currentUserStore.signUpErrors?.invitationCode}
               />
             )}
           </RoleWrapper>

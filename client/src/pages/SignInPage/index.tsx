@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { CustomForm, ErrorMessage } from '@/components';
 import { AuthType, getUserSchema } from '@/helpers';
-import { UserDto } from '@/types';
+import { SignInUserDto } from '@/types';
 
 import { ErrorMessageWrapper, Span, Title } from '../SignUpPage';
 import { useStore } from '@/context';
@@ -13,8 +13,8 @@ import { observer } from 'mobx-react-lite';
 export const SignInPage: FC = observer(() => {
   const { currentUserStore } = useStore()
 
-  const onSubmit = async (data: UserDto): Promise<void> => {
-    await currentUserStore.auth(AuthType.SIGN_IN, data)
+  const onSubmit = async (data: SignInUserDto): Promise<void> => {
+    await currentUserStore.signIn(data)
   };
 
   return (
@@ -25,15 +25,15 @@ export const SignInPage: FC = observer(() => {
         <Link to="/sign-up">Register here</Link> instead
       </Span>
       <ErrorMessageWrapper>
-        <ErrorMessage>{currentUserStore.errors?.unexpectedError ?? ''}</ErrorMessage>
+        <ErrorMessage>{currentUserStore.signInErrors?.unexpectedError ?? ''}</ErrorMessage>
       </ErrorMessageWrapper>
-      <CustomForm<UserDto>
+      <CustomForm<SignInUserDto>
         validationSchema={getUserSchema(AuthType.SIGN_IN, 'none')}
         onSubmit={onSubmit}
       >
         <FormBlocks>
-          <CustomForm.Input label="Email" name="email" error={currentUserStore.errors?.email} />
-          <CustomForm.Input label="Password" name="password" error={currentUserStore.errors?.password} isSecured />
+          <CustomForm.Input label="Email" name="email" error={currentUserStore.signInErrors?.email} />
+          <CustomForm.Input label="Password" name="password" error={currentUserStore.signInErrors?.password} isSecured />
         </FormBlocks>
         <CustomForm.SubmitButton content="Log In" />
       </CustomForm>

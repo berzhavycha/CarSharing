@@ -2,8 +2,8 @@ import { types as t, flow } from "mobx-state-tree";
 import { axiosInstance } from '@/api';
 import { Env } from '@/core';
 import { AxiosError } from 'axios';
-import { AuthType, UNEXPECTED_ERROR_MESSAGE, pickUserErrorMessages, transformUserResponse } from '@/helpers';
-import { UserDto, FieldErrorsState, AuthenticatedUser } from '@/types';
+import { UNEXPECTED_ERROR_MESSAGE, pickUserErrorMessages, transformUserResponse } from '@/helpers';
+import { FieldErrorsState, AuthenticatedUser, SignInUserDto, SignUpUserDto } from '@/types';
 
 const User = t.model("User", {
     id: t.string,
@@ -17,21 +17,34 @@ const User = t.model("User", {
 
 export const CurrentUserStore = t.model("CurrentUserStore", {
     user: t.optional(t.maybeNull(User), null),
-    errors: t.optional(t.frozen<FieldErrorsState<UserDto> | null>(), null),
+    signInErrors: t.optional(t.frozen<FieldErrorsState<SignInUserDto> | null>(), null),
+    signUpErrors: t.optional(t.frozen<FieldErrorsState<SignUpUserDto> | null>(), null),
+    signOutErrors: t.optional(t.frozen<FieldErrorsState<AuthenticatedUser> | null>(), null),
 })
     .actions((self) => ({
-        auth: flow(function* (authType: AuthType, userDto: UserDto) {
+        signUp: flow(function* (userDto: SignUpUserDto) {
             try {
-                self.errors = null;
-                const apiEndpoint = authType === AuthType.SIGN_IN ? 'sign-in' : 'sign-up';
-
-                const { data } = yield axiosInstance.post(`${Env.API_BASE_URL}/auth/${apiEndpoint}`, userDto);
+                self.signUpErrors = null;
+                const { data } = yield axiosInstance.post(`${Env.API_BASE_URL}/auth/sign-in`, userDto);
                 self.user = User.create(transformUserResponse(data));
             } catch (error) {
                 if (error instanceof AxiosError) {
-                    self.errors = pickUserErrorMessages([error.response?.data.message]);
+                    self.signUpErrors = pickUserErrorMessages([error.response?.data.message]);
                 } else {
-                    self.errors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
+                    self.signUpErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
+                }
+            }
+        }),
+        signIn: flow(function* (userDto: SignInUserDto) {
+            try {
+                self.signInErrors = null;
+                const { data } = yield axiosInstance.post(`${Env.API_BASE_URL}/auth/sign-in`, userDto);
+                self.user = User.create(transformUserResponse(data));
+            } catch (error) {
+                if (error instanceof AxiosError) {
+                    self.signInErrors = pickUserErrorMessages([error.response?.data.message]);
+                } else {
+                    self.signInErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
                 }
             }
         }),
@@ -42,9 +55,9 @@ export const CurrentUserStore = t.model("CurrentUserStore", {
             try {
                 yield axiosInstance.post(`${Env.API_BASE_URL}/auth/sign-out`);
                 self.user = null;
-                self.errors = null;
+                self.signOutErrors = null;
             } catch (error) {
-                self.errors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
+                self.signOutErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
             }
         }),
         fetchCurrentUser: flow(function* () {
