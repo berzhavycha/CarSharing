@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CarsController } from '@/controllers';
 import { Car } from '@/entities';
 import { CarsService } from '@/services';
+
 import { LocalFilesModule } from './local-files.module';
 
 @Module({
@@ -12,4 +13,4 @@ import { LocalFilesModule } from './local-files.module';
   providers: [CarsService],
   exports: [CarsService],
 })
-export class CarsModule { }
+export class CarsModule {}

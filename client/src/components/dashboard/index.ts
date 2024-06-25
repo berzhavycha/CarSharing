@@ -1,2 +1,2 @@
 export * from './settings';
-export * from './cars'
+export * from './cars';

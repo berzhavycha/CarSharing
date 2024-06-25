@@ -12,13 +12,18 @@ import {
 import { UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
 import { User } from '@/entities';
 import { JwtAuthGuard, RoleGuard } from '@/guards';
-import { defaultFileFilter, defaultLocalFileLimits, Roles, TransactionType } from '@/helpers';
+import {
+  defaultFileFilter,
+  defaultLocalFileLimits,
+  Roles,
+  TransactionType,
+} from '@/helpers';
 import { LocalFilesInterceptor } from '@/interceptors';
 import { UsersService } from '@/services';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
@@ -27,7 +32,7 @@ export class UsersController {
       fieldName: 'picture',
       path: '/avatars',
       fileFilter: defaultFileFilter,
-      limits: defaultLocalFileLimits
+      limits: defaultLocalFileLimits,
     }),
   )
   async updateUser(
@@ -37,10 +42,10 @@ export class UsersController {
   ): Promise<User> {
     const uploadedFile = file
       ? {
-        path: file?.path,
-        filename: file?.originalname,
-        mimetype: file?.mimetype,
-      }
+          path: file?.path,
+          filename: file?.originalname,
+          mimetype: file?.mimetype,
+        }
       : null;
 
     return this.usersService.updateUser(id, updateUserDto, uploadedFile);

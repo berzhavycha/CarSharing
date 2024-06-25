@@ -16,13 +16,13 @@ import {
 import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { Car } from '@/entities';
 import { JwtAuthGuard, RoleGuard } from '@/guards';
-import { Roles, defaultFileFilter, defaultLocalFileLimits } from '@/helpers';
-import { CarsService } from '@/services';
+import { defaultFileFilter, defaultLocalFileLimits, Roles } from '@/helpers';
 import { LocalFilesInterceptor } from '@/interceptors';
+import { CarsService } from '@/services';
 
 @Controller('cars')
 export class CarsController {
-  constructor(private readonly carsService: CarsService) { }
+  constructor(private readonly carsService: CarsService) {}
 
   @Post()
   @UseGuards(RoleGuard(Roles.ADMIN))
@@ -34,7 +34,10 @@ export class CarsController {
       limits: defaultLocalFileLimits,
     }),
   )
-  async create(@Body() createCarDto: CreateCarDto, @UploadedFile() files: Express.Multer.File[]): Promise<Car> {
+  async create(
+    @Body() createCarDto: CreateCarDto,
+    @UploadedFile() files: Express.Multer.File[],
+  ): Promise<Car> {
     return this.carsService.createCar(createCarDto, files);
   }
 
@@ -63,19 +66,20 @@ export class CarsController {
       fieldName: 'picture',
       path: '/cars',
       fileFilter: defaultFileFilter,
-      limits: defaultLocalFileLimits
+      limits: defaultLocalFileLimits,
     }),
   )
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateCarDto: UpdateCarDto,
-    @UploadedFile() files?: Express.Multer.File[]
+    @UploadedFile() files?: Express.Multer.File[],
   ): Promise<Car> {
-    const uploadedFiles = files?.map(file => ({
-      path: file.path,
-      filename: file.originalname,
-      mimetype: file.mimetype,
-    })) || [];
+    const uploadedFiles =
+      files?.map((file) => ({
+        path: file.path,
+        filename: file.originalname,
+        mimetype: file.mimetype,
+      })) || [];
 
     return this.carsService.updateCar(id, updateCarDto, uploadedFiles);
   }

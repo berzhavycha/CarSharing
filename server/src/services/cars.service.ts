@@ -19,6 +19,7 @@ import {
   DEFAULT_PAGINATION_PAGE,
   RentalStatus,
 } from '@/helpers';
+
 import { LocalFilesService } from './local-files.service';
 
 @Injectable()
@@ -26,28 +27,35 @@ export class CarsService {
   constructor(
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
-    private localFilesService: LocalFilesService
-  ) { }
+    private localFilesService: LocalFilesService,
+  ) {}
 
-  async createCar(createCarDto: CreateCarDto, fileData: LocalFileDto[]): Promise<Car> {
+  async createCar(
+    createCarDto: CreateCarDto,
+    fileData: LocalFileDto[],
+  ): Promise<Car> {
     const carPictures = await Promise.all(
-      fileData.map(file => this.localFilesService.saveLocalFileData(file))
+      fileData.map((file) => this.localFilesService.saveLocalFileData(file)),
     );
 
     const car = this.carsRepository.create({
       ...createCarDto,
-      pictures: carPictures
+      pictures: carPictures,
     });
 
     return this.carsRepository.save(car);
   }
 
-  async updateCar(id: string, updateCarDto: UpdateCarDto, fileData?: LocalFileDto[]): Promise<Car> {
+  async updateCar(
+    id: string,
+    updateCarDto: UpdateCarDto,
+    fileData?: LocalFileDto[],
+  ): Promise<Car> {
     const car = await this.findById(id);
 
     if (fileData && fileData.length) {
       const carPictures = await Promise.all(
-        fileData.map(file => this.localFilesService.saveLocalFileData(file))
+        fileData.map((file) => this.localFilesService.saveLocalFileData(file)),
       );
       Object.assign(car, { pictures: carPictures });
     }

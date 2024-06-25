@@ -1,5 +1,5 @@
-import { ONE_MB } from "./general";
+import { ONE_MB } from './general';
 
 export const defaultLocalFileLimits = {
-    fileSize: ONE_MB,
-}
+  fileSize: ONE_MB,
+};

@@ -6,30 +6,28 @@ import { ErrorIcon } from '../ErrorIcon';
 import { ErrorMessage } from '../ErrorMessage';
 
 export interface TextAreasProps extends React.InputHTMLAttributes<HTMLTextAreaElement> {
-    label?: string;
-    error?: string;
-    formSubmitted?: boolean;
+  label?: string;
+  error?: string;
+  formSubmitted?: boolean;
 }
 
 export const TextField = forwardRef<HTMLTextAreaElement, TextAreasProps>(
-    ({ placeholder, label, error, formSubmitted, ...props }, ref) => {
-
-        return (
-            <TextGroup>
-                <Label>{label}</Label>
-                <TextArea
-                    ref={ref}
-                    placeholder={placeholder || `Enter ${label?.toLowerCase()}`}
-                    {...props}
-                />
-                {formSubmitted && (!error ? <CheckIcon right={-25} /> : <ErrorIcon right={-25} />)}
-                <ErrorMessage>{error}</ErrorMessage>
-            </TextGroup>
-        );
-    },
+  ({ placeholder, label, error, formSubmitted, ...props }, ref) => {
+    return (
+      <TextGroup>
+        <Label>{label}</Label>
+        <TextArea
+          ref={ref}
+          placeholder={placeholder || `Enter ${label?.toLowerCase()}`}
+          {...props}
+        />
+        {formSubmitted && (!error ? <CheckIcon right={-25} /> : <ErrorIcon right={-25} />)}
+        <ErrorMessage>{error}</ErrorMessage>
+      </TextGroup>
+    );
+  },
 );
 TextField.displayName = 'TextField';
-
 
 const TextGroup = styled.div`
   display: flex;
