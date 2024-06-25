@@ -34,7 +34,7 @@ export const CurrentUserStore = t
         signUp: flow(function* (userDto: SignUpUserDto) {
             try {
                 self.signUpErrors = null;
-                const { data } = yield axiosInstance.post(`${Env.API_BASE_URL}/auth/sign-in`, userDto);
+                const { data } = yield axiosInstance.post(`${Env.API_BASE_URL}/auth/sign-up`, userDto);
                 self.user = User.create(transformUserResponse(data));
             } catch (error) {
                 if (error instanceof AxiosError) {

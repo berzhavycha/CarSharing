@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { FC, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CustomForm, ErrorMessage } from '@/components';
@@ -12,6 +12,8 @@ export const SignUpPage: FC = observer(() => {
   const [userRole, setUserRole] = useState<string>('user');
   const [showSecretCodeInput, setShowSecretCodeInput] = useState<boolean>(false);
 
+  const navigate = useNavigate()
+
   const { currentUserStore } = useStore();
 
   const handleUserTypeChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -22,6 +24,10 @@ export const SignUpPage: FC = observer(() => {
 
   const onSubmit = async (data: SignUpUserDto): Promise<void> => {
     await currentUserStore.signUp(data);
+    if (currentUserStore.user) {
+      const navigatePath = currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/'
+      navigate(navigatePath)
+    }
   };
 
   return (
