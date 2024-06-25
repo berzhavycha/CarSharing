@@ -8,17 +8,18 @@ import { UpdateUserDto, AuthenticatedUser } from '@/types';
 
 import DefaultImage from '../../../../../public/avatar.webp';
 
-import { useUpdateUser } from './hooks';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '@/context';
 
 type Props = {
   user: AuthenticatedUser | null
 }
 
-export const ProfileSettingsForm: FC<Props> = ({ user }) => {
-  const { updateUser, errors } = useUpdateUser();
+export const ProfileSettingsForm: FC<Props> = observer(({ user }) => {
+  const { currentUserStore } = useStore()
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
-    await updateUser(user);
+    await currentUserStore.updateUser(user);
   };
 
   const avatar = user ? `${Env.API_BASE_URL}/local-files/${user.avatarId}` : DefaultImage
@@ -42,9 +43,9 @@ export const ProfileSettingsForm: FC<Props> = ({ user }) => {
 
         <Title>General Information</Title>
         <ProfileSection>
-          <CustomForm.Input label="First Name" name="firstName" error={errors?.firstName} />
-          <CustomForm.Input label="Last Name" name="lastName" error={errors?.lastName} />
-          <CustomForm.Input label="Email" name="email" error={errors?.email} />
+          <CustomForm.Input label="First Name" name="firstName" error={currentUserStore.updateErrors?.firstName} />
+          <CustomForm.Input label="Last Name" name="lastName" error={currentUserStore.updateErrors?.lastName} />
+          <CustomForm.Input label="Email" name="email" error={currentUserStore.updateErrors?.email} />
         </ProfileSection>
 
         <Title>Change Password</Title>
@@ -53,14 +54,14 @@ export const ProfileSettingsForm: FC<Props> = ({ user }) => {
             label="Old Password"
             name="oldPassword"
             isSecured
-            error={errors?.password}
+            error={currentUserStore.updateErrors?.oldPassword}
           />
           <CustomForm.Input label="New Password" name="newPassword" isSecured />
         </PasswordSection>
       </CustomForm>
     </ContentContainer>
   );
-};
+});
 
 
 const ContentContainer = styled.div`

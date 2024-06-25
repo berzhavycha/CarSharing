@@ -3,7 +3,7 @@ import { axiosInstance } from '@/api';
 import { Env } from '@/core';
 import { AxiosError } from 'axios';
 import { UNEXPECTED_ERROR_MESSAGE, pickUserErrorMessages, transformUserResponse } from '@/helpers';
-import { FieldErrorsState, AuthenticatedUser, SignInUserDto, SignUpUserDto } from '@/types';
+import { FieldErrorsState, AuthenticatedUser, SignInUserDto, SignUpUserDto, UpdateUserDto } from '@/types';
 
 const User = t.model("User", {
     id: t.string,
@@ -20,6 +20,7 @@ export const CurrentUserStore = t.model("CurrentUserStore", {
     signInErrors: t.optional(t.frozen<FieldErrorsState<SignInUserDto> | null>(), null),
     signUpErrors: t.optional(t.frozen<FieldErrorsState<SignUpUserDto> | null>(), null),
     signOutErrors: t.optional(t.frozen<FieldErrorsState<AuthenticatedUser> | null>(), null),
+    updateErrors: t.optional(t.frozen<FieldErrorsState<UpdateUserDto> | null>(), null),
 })
     .actions((self) => ({
         signUp: flow(function* (userDto: SignUpUserDto) {
@@ -58,6 +59,28 @@ export const CurrentUserStore = t.model("CurrentUserStore", {
                 self.signOutErrors = null;
             } catch (error) {
                 self.signOutErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
+            }
+        }),
+        updateUser: flow(function* (userDto: UpdateUserDto) {
+            try {
+                self.updateErrors = null
+                const { data } = yield axiosInstance.patch(
+                    `${Env.API_BASE_URL}/users/${self.user?.id}`,
+                    userDto,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    },
+                );
+
+                self.user = transformUserResponse(data)
+            } catch (error) {
+                if (error instanceof AxiosError) {
+                    self.updateErrors = pickUserErrorMessages([error.response?.data.message]);
+                } else {
+                    self.updateErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
+                }
             }
         }),
         fetchCurrentUser: flow(function* () {
