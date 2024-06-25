@@ -28,4 +28,12 @@ export const updateUserSchema = z.object({
     .refine((val) => !val || val.length >= Env.PASSWORD_MIN_LENGTH, {
       message: 'New password must be at least 8 characters long',
     }),
+}).refine(data => {
+  if (data.newPassword && !data.oldPassword) {
+    return false;
+  }
+  return true;
+}, {
+  message: 'New password cannot be set without providing the old password',
+  path: ['newPassword'],
 });
