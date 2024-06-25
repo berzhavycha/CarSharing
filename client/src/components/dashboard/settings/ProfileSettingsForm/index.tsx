@@ -25,57 +25,65 @@ export const ProfileSettingsForm: FC = observer(() => {
   };
 
   return (
-    <ContentContainer>
-      <CustomForm<UpdateUserDto>
-        key={user?.id}
-        defaultValues={defaultFormValues}
-        validationSchema={updateUserSchema}
-        onSubmit={onSubmit}
-      >
-        <ProfileHeaderWrapper>
-          <CustomForm.InputFile defaultImage={avatar} name="picture" />
-          <UserInfo>
-            <h2>
-              {user?.firstName} {user?.lastName}
-            </h2>
-            <span>{user?.role && uppercaseFirstLetter(user.role)}</span>
-          </UserInfo>
-          <CustomForm.SubmitButton content="Save" />
-        </ProfileHeaderWrapper>
+    <ProfileContainer>
+      <ContentContainer>
+        <CustomForm<UpdateUserDto>
+          key={user?.id}
+          defaultValues={defaultFormValues}
+          validationSchema={updateUserSchema}
+          onSubmit={onSubmit}
+        >
+          <ProfileHeaderWrapper>
+            <CustomForm.InputFile defaultImage={avatar} name="picture" />
+            <UserInfo>
+              <h2>
+                {user?.firstName} {user?.lastName}
+              </h2>
+              <span>{user?.role && uppercaseFirstLetter(user.role)}</span>
+            </UserInfo>
+            <CustomForm.SubmitButton content="Save" />
+          </ProfileHeaderWrapper>
 
-        <Title>General Information</Title>
-        <ProfileSection>
-          <CustomForm.Input
-            label="First Name"
-            name="firstName"
-            error={updateErrors?.firstName}
-          />
-          <CustomForm.Input
-            label="Last Name"
-            name="lastName"
-            error={updateErrors?.lastName}
-          />
-          <CustomForm.Input
-            label="Email"
-            name="email"
-            error={updateErrors?.email}
-          />
-        </ProfileSection>
+          <Title>General Information</Title>
+          <ProfileSection>
+            <CustomForm.Input
+              label="First Name"
+              name="firstName"
+              error={updateErrors?.firstName}
+            />
+            <CustomForm.Input
+              label="Last Name"
+              name="lastName"
+              error={updateErrors?.lastName}
+            />
+            <CustomForm.Input
+              label="Email"
+              name="email"
+              error={updateErrors?.email}
+            />
+          </ProfileSection>
 
-        <Title>Change Password</Title>
-        <PasswordSection>
-          <CustomForm.Input
-            label="Old Password"
-            name="oldPassword"
-            isSecured
-            error={updateErrors?.oldPassword}
-          />
-          <CustomForm.Input label="New Password" name="newPassword" isSecured />
-        </PasswordSection>
-      </CustomForm>
-    </ContentContainer>
+          <Title>Change Password</Title>
+          <PasswordSection>
+            <CustomForm.Input
+              label="Old Password"
+              name="oldPassword"
+              isSecured
+              error={updateErrors?.oldPassword}
+            />
+            <CustomForm.Input label="New Password" name="newPassword" isSecured />
+          </PasswordSection>
+        </CustomForm>
+      </ContentContainer>
+    </ProfileContainer>
   );
 });
+
+const ProfileContainer = styled.div`
+  width: 100%;
+  max-height: 100vh;
+`;
+
 
 const ContentContainer = styled.div`
   padding: 30px;
