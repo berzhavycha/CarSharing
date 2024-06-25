@@ -29,7 +29,7 @@ export const InputField = forwardRef<HTMLInputElement, InputProps>(
         <Input
           ref={ref}
           type={inputType}
-          placeholder={placeholder || `Enter your ${label?.toLowerCase()}`}
+          placeholder={placeholder || `Enter ${label?.toLowerCase()}`}
           {...props}
         />
         {isSecured && (
@@ -74,7 +74,7 @@ export const Label = styled.label`
 
 const Input = styled.input`
   padding: 10px;
-  border: 1px solid #e0e0e0;
+  border: var(--input-border);
   border-radius: 5px;
   font-size: 16px;
   outline: none;

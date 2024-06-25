@@ -8,9 +8,12 @@ import { useCustomForm } from '..';
 type Props = Omit<InputProps, 'name'> & {
   name: string;
   defaultImage: string;
+  circled?: boolean;
+  width?: number;
+  height?: number;
 };
 
-export const InputImage: FC<Props> = ({ defaultImage, name, ...props }) => {
+export const InputImage: FC<Props> = ({ defaultImage, label, circled, name, width, height, ...props }) => {
   const { register } = useCustomForm().formHandle;
 
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
@@ -36,9 +39,9 @@ export const InputImage: FC<Props> = ({ defaultImage, name, ...props }) => {
   };
 
   return (
-    <PictureWrapper onClick={onUpload}>
+    <PictureWrapper onClick={onUpload} $circled={circled} $width={width} $height={height}>
       <img src={preview} alt={name} />
-      <UpdatePicture type="button">Update Picture</UpdatePicture>
+      <UpdatePicture type="button">{label}</UpdatePicture>
       <input
         type="file"
         {...rest}
@@ -54,7 +57,13 @@ export const InputImage: FC<Props> = ({ defaultImage, name, ...props }) => {
   );
 };
 
-const PictureWrapper = styled.div`
+type PictureWrapperProps = {
+  $circled?: boolean;
+  $width: number;
+  $height: number
+};
+
+const PictureWrapper = styled.div<PictureWrapperProps>`
   position: relative;
   margin-right: 20px;
   border: none;
@@ -63,9 +72,9 @@ const PictureWrapper = styled.div`
   cursor: pointer;
 
   img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
+    width: ${(props): string => `${props.$width ?? 100}`}px;
+    height: ${(props): string => `${props.$height ?? 100}`}px;
+    border-radius: ${(props): string => `${props.$circled ? '50%' : '10%'}`};
     object-fit: cover;
   }
 `;

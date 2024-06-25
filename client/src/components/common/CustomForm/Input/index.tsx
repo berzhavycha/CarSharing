@@ -34,6 +34,7 @@ export const Input: FC<Props> = ({ name, label, error, ...props }) => {
 
 export const FormBlock = styled.div`
   margin-bottom: 5px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
