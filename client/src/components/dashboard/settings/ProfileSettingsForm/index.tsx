@@ -81,7 +81,7 @@ export const ProfileSettingsForm: FC = observer(() => {
               label="New Password"
               name="newPassword"
               isSecured
-              error={updateErrors?.oldPassword}
+              error={updateErrors?.newPassword}
             />
           </PasswordSection>
         </CustomForm>

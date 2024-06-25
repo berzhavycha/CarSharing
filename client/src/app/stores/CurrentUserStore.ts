@@ -3,7 +3,7 @@ import { flow, Instance, types as t } from 'mobx-state-tree';
 
 import { axiosInstance } from '@/api';
 import { Env } from '@/core';
-import { pickUserErrorMessages, transformUserResponse, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
+import { pickErrorMessages, signInFieldMappings, signUpFieldMappings, transformUserResponse, UNEXPECTED_ERROR_MESSAGE, updateUserFieldMappings } from '@/helpers';
 import {
     AuthenticatedUser,
     FieldErrorsState,
@@ -38,7 +38,7 @@ export const CurrentUserStore = t
                 self.user = User.create(transformUserResponse(data));
             } catch (error) {
                 if (error instanceof AxiosError) {
-                    self.signUpErrors = pickUserErrorMessages([error.response?.data.message]);
+                    self.signUpErrors = pickErrorMessages<SignUpUserDto>([error.response?.data.message], signUpFieldMappings);
                 } else {
                     self.signUpErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
                 }
@@ -51,7 +51,7 @@ export const CurrentUserStore = t
                 self.user = User.create(transformUserResponse(data));
             } catch (error) {
                 if (error instanceof AxiosError) {
-                    self.signInErrors = pickUserErrorMessages([error.response?.data.message]);
+                    self.signInErrors = pickErrorMessages<SignInUserDto>([error.response?.data.message], signInFieldMappings);
                 } else {
                     self.signInErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
                 }
@@ -82,7 +82,7 @@ export const CurrentUserStore = t
                 self.user = transformUserResponse(data);
             } catch (error) {
                 if (error instanceof AxiosError) {
-                    self.updateErrors = pickUserErrorMessages([error.response?.data.message]);
+                    self.updateErrors = pickErrorMessages<UpdateUserDto>([error.response?.data.message], updateUserFieldMappings);
                 } else {
                     self.updateErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
                 }

@@ -1,3 +1,3 @@
 export * from './transformUserResponse';
-export * from './pickUserErrorMessages';
+export * from './pickErrorMessages';
 export * from './uppercaseFirstLetter';
