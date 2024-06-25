@@ -4,7 +4,7 @@ import { CreateCarDto } from '../cars';
 import { LocalFile } from '@/entities';
 import { IsNotEmpty } from 'class-validator';
 
-export class CreateOriginalCarDto extends OmitType(CreateCarDto, ['status', 'picture']) {
+export class CreateOriginalCarDto extends OmitType(CreateCarDto, ['status', 'pictures']) {
     @IsNotEmpty()
-    picture: LocalFile
+    pictures: LocalFile[]
 }

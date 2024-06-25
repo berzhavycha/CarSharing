@@ -53,11 +53,11 @@ export class RentalsService {
     }
 
     return this.entityManager.transaction(async (manager) => {
-      const originalCar =
-        await this.originalCarsService.createOriginalCarTransaction(
-          car,
-          manager,
-        );
+      // const originalCar =
+      //   await this.originalCarsService.createOriginalCarTransaction(
+      //     car,
+      //     manager,
+      //   );
 
       car.status = CarStatus.BOOKED;
       await manager.save(car);
@@ -65,7 +65,7 @@ export class RentalsService {
       const rental = this.rentalsRepository.create({
         car,
         user,
-        originalCar,
+        // originalCar,
         status: RentalStatus.ACTIVE,
         requestedHours: rentCarDto.days,
         rentalStart: new Date(),

@@ -4,7 +4,7 @@ import { CAR_FIELD_MEDIUM_LENGTH, CarStatus } from '@/helpers';
 
 export class CreateCarDto {
   @IsNotEmpty()
-  picture: Express.Multer.File;
+  pictures: Express.Multer.File[];
 
   @IsString()
   model: string;

@@ -29,23 +29,27 @@ export class CarsService {
     private localFilesService: LocalFilesService
   ) { }
 
-  async createCar(createCarDto: CreateCarDto, fileData?: LocalFileDto): Promise<Car> {
-    const carPicture = await this.localFilesService.saveLocalFileData(fileData);
+  async createCar(createCarDto: CreateCarDto, fileData: LocalFileDto[]): Promise<Car> {
+    const carPictures = await Promise.all(
+      fileData.map(file => this.localFilesService.saveLocalFileData(file))
+    );
 
     const car = this.carsRepository.create({
       ...createCarDto,
-      picture: carPicture
+      pictures: carPictures
     });
 
     return this.carsRepository.save(car);
   }
 
-  async updateCar(id: string, updateCarDto: UpdateCarDto, fileData?: LocalFileDto): Promise<Car> {
+  async updateCar(id: string, updateCarDto: UpdateCarDto, fileData?: LocalFileDto[]): Promise<Car> {
     const car = await this.findById(id);
 
-    if (updateCarDto.picture) {
-      const updatedCarPicture = await this.localFilesService.saveLocalFileData(fileData);
-      Object.assign(car, { picture: updatedCarPicture });
+    if (fileData && fileData.length) {
+      const carPictures = await Promise.all(
+        fileData.map(file => this.localFilesService.saveLocalFileData(file))
+      );
+      Object.assign(car, { pictures: carPictures });
     }
 
     Object.assign(car, updateCarDto);
