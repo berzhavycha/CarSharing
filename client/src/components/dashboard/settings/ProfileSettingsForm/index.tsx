@@ -15,10 +15,9 @@ export const ProfileSettingsForm: FC = observer(() => {
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
     const userDtoWithoutEmptyPasswords = Object.fromEntries(
-      Object.entries(user).filter(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ([_key, value]) => value !== '' && value !== null && value !== undefined
-      )
+      Object.entries(user).filter(([, value]) => {
+        return value !== '' && value !== null && value !== undefined
+      })
     );
 
     await updateUser(userDtoWithoutEmptyPasswords);
@@ -78,7 +77,12 @@ export const ProfileSettingsForm: FC = observer(() => {
               isSecured
               error={updateErrors?.oldPassword}
             />
-            <CustomForm.Input label="New Password" name="newPassword" isSecured />
+            <CustomForm.Input
+              label="New Password"
+              name="newPassword"
+              isSecured
+              error={updateErrors?.oldPassword}
+            />
           </PasswordSection>
         </CustomForm>
       </ContentContainer>
