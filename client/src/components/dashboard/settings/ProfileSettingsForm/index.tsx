@@ -95,7 +95,6 @@ const ProfileContainer = styled.div`
   max-height: 100vh;
 `;
 
-
 const ContentContainer = styled.div`
   padding: 30px;
   background-color: white;
@@ -131,6 +130,9 @@ const ProfileHeaderWrapper = styled.div`
 
 const UserInfo = styled.div`
   flex: 1;
+
+  margin-bottom: 25px;
+  margin-left: 25px;
 
   h2 {
     margin: 0;
