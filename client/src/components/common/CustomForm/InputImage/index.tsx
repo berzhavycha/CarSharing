@@ -11,22 +11,30 @@ type Props = Omit<InputProps, 'name'> & {
   circled?: boolean;
   width?: number;
   height?: number;
+  multiple?: boolean;
 };
 
-export const InputImage: FC<Props> = ({ defaultImage, label, circled, name, width, height, ...props }) => {
+export const InputImage: FC<Props> = ({
+  defaultImage,
+  label,
+  circled,
+  name,
+  width = 100,
+  height = 100,
+  multiple = false,
+  ...props
+}) => {
   const { register } = useCustomForm().formHandle;
 
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
-  const [preview, setPreview] = useState<string>(defaultImage);
+  const [previews, setPreviews] = useState<string[]>([defaultImage]);
 
   const { ref: registerRef, onChange, ...rest } = register(name);
 
-  const handleUploadedFile = (event: ChangeEvent<HTMLInputElement>): void => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const urlImage = URL.createObjectURL(file);
-      setPreview(urlImage);
-    }
+  const handleUploadedFiles = (event: ChangeEvent<HTMLInputElement>): void => {
+    const files = Array.from(event.target.files || []);
+    const previewUrls = files.map(file => URL.createObjectURL(file));
+    setPreviews(previewUrls);
   };
 
   const onUpload = (): void => {
@@ -35,15 +43,29 @@ export const InputImage: FC<Props> = ({ defaultImage, label, circled, name, widt
 
   const onFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
     onChange(e);
-    handleUploadedFile(e);
+    handleUploadedFiles(e);
   };
 
   return (
-    <PictureWrapper onClick={onUpload} $circled={circled} $width={width} $height={height}>
-      <img src={preview} alt={name} />
-      <UpdatePicture type="button">{label}</UpdatePicture>
+    <div>
+      <PicturesContainer onClick={onUpload}>
+        {previews.map((preview, index) => (
+          <PictureWrapper
+            key={index}
+            $circled={circled}
+            $width={width}
+            $height={height}
+          >
+            <img src={preview} alt={`${name}-${index}`} />
+          </PictureWrapper>
+        ))}
+      </PicturesContainer>
+      <UpdatePicture type="button" onClick={onUpload}>
+        {label}
+      </UpdatePicture>
       <input
         type="file"
+        multiple={multiple}
         {...rest}
         onChange={onFileChange}
         ref={(e) => {
@@ -53,42 +75,47 @@ export const InputImage: FC<Props> = ({ defaultImage, label, circled, name, widt
         {...props}
         hidden
       />
-    </PictureWrapper>
+    </div>
   );
 };
 
 type PictureWrapperProps = {
   $circled?: boolean;
   $width?: number;
-  $height?: number
+  $height?: number;
 };
+
+const PicturesContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
 
 const PictureWrapper = styled.div<PictureWrapperProps>`
   position: relative;
-  margin-right: 20px;
-  border: none;
+  border: var(--default-border); 
+  border-radius: ${(props): string => `${props.$circled ? '50%' : '10%'}`};
+  overflow: hidden;
   background: none;
   outline: none;
   cursor: pointer;
 
   img {
-    width: ${(props): string => `${props.$width ?? 100}`}px;
-    height: ${(props): string => `${props.$height ?? 100}`}px;
-    border-radius: ${(props): string => `${props.$circled ? '50%' : '10%'}`};
+    width: ${(props): string => `${props.$width}`}px;
+    height: ${(props): string => `${props.$height}`}px;
     object-fit: cover;
   }
 `;
 
 const UpdatePicture = styled.button`
   width: 100%;
-  position: absolute;
-  bottom: -20px;
+  position: relative;
   cursor: pointer;
-  left: 50%;
-  transform: translateX(-50%);
   font-size: 12px;
   color: #007bff;
   border: none;
   background: none;
   outline: none;
+  margin-top: 10px;
+  text-align: center;
 `;

@@ -1,7 +1,7 @@
 import { CarStatus } from "@/helpers";
 
 export type CarDto = {
-    picture: false | File | null | FileList
+    pictures: false | File[] | null | FileList
     model: string;
     year: number;
     description: string;
