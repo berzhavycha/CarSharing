@@ -3,10 +3,10 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { CustomForm } from '@/components/common';
-import { CarFuelTypeSelect, CarStatusSelect, CarTypeSelect, createCarSchema, uppercaseFirstLetter } from '@/helpers';
+import { CarFuelTypeSelect, CarStatusSelect, CarSteeringTypeSelect, CarTypeSelect, createCarSchema } from '@/helpers';
 import { CarDto } from '@/types';
 
-import DefaultImage from '../../../../../public/avatar.webp';
+import DefaultImage from '../../../../../public/car-upload.png';
 
 
 export const CarForm: FC = observer(() => {
@@ -22,7 +22,7 @@ export const CarForm: FC = observer(() => {
                     onSubmit={onSubmit}
                 >
                     <CarHeaderWrapper>
-                        <CustomForm.InputFile label='Upload Car Image' width={200} height={200} defaultImage={DefaultImage} name="picture" />
+                        <CustomForm.InputFile label='Upload Car Image' defaultImage={DefaultImage} name="pictures" multiple />
                         <CustomForm.SubmitButton content="Save" />
                     </CarHeaderWrapper>
 
@@ -78,10 +78,10 @@ export const CarForm: FC = observer(() => {
                             name="fuelCapacity"
                             type='number'
                         />
-                        <CustomForm.Input
+                        <CustomForm.Select
                             label="Steering"
                             name="steering"
-                            type='text'
+                            options={CarSteeringTypeSelect}
                         />
                     </Section>
                 </CustomForm>
