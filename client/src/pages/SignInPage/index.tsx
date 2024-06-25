@@ -1,20 +1,20 @@
+import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CustomForm, ErrorMessage } from '@/components';
+import { useStore } from '@/context';
 import { AuthType, getUserSchema } from '@/helpers';
 import { SignInUserDto } from '@/types';
 
 import { ErrorMessageWrapper, Span, Title } from '../SignUpPage';
-import { useStore } from '@/context';
-import { observer } from 'mobx-react-lite';
 
 export const SignInPage: FC = observer(() => {
-  const { currentUserStore } = useStore()
+  const { currentUserStore } = useStore();
 
   const onSubmit = async (data: SignInUserDto): Promise<void> => {
-    await currentUserStore.signIn(data)
+    await currentUserStore.signIn(data);
   };
 
   return (
@@ -32,8 +32,17 @@ export const SignInPage: FC = observer(() => {
         onSubmit={onSubmit}
       >
         <FormBlocks>
-          <CustomForm.Input label="Email" name="email" error={currentUserStore.signInErrors?.email} />
-          <CustomForm.Input label="Password" name="password" error={currentUserStore.signInErrors?.password} isSecured />
+          <CustomForm.Input
+            label="Email"
+            name="email"
+            error={currentUserStore.signInErrors?.email}
+          />
+          <CustomForm.Input
+            label="Password"
+            name="password"
+            error={currentUserStore.signInErrors?.password}
+            isSecured
+          />
         </FormBlocks>
         <CustomForm.SubmitButton content="Log In" />
       </CustomForm>

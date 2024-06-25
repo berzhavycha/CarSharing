@@ -1,40 +1,47 @@
+import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
 import styled from 'styled-components';
 
 import { CustomForm } from '@/components/common';
+import { useStore } from '@/context';
 import { Env } from '@/core';
 import { updateUserSchema, uppercaseFirstLetter } from '@/helpers';
-import { UpdateUserDto, AuthenticatedUser } from '@/types';
+import { AuthenticatedUser, UpdateUserDto } from '@/types';
 
 import DefaultImage from '../../../../../public/avatar.webp';
 
-import { observer } from 'mobx-react-lite';
-import { useStore } from '@/context';
-
 type Props = {
-  user: AuthenticatedUser | null
-}
+  user: AuthenticatedUser | null;
+};
 
 export const ProfileSettingsForm: FC<Props> = observer(({ user }) => {
-  const { currentUserStore } = useStore()
+  const { currentUserStore } = useStore();
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
     await currentUserStore.updateUser(user);
   };
 
-  const avatar = user?.avatarId ? `${Env.API_BASE_URL}/local-files/${user.avatarId}` : DefaultImage
-  const defaultFormValues = { firstName: user?.firstName, lastName: user?.lastName, email: user?.email }
+  const avatar = user?.avatarId ? `${Env.API_BASE_URL}/local-files/${user.avatarId}` : DefaultImage;
+  const defaultFormValues = {
+    firstName: user?.firstName,
+    lastName: user?.lastName,
+    email: user?.email,
+  };
 
   return (
     <ContentContainer>
-      <CustomForm<UpdateUserDto> key={user?.id} defaultValues={defaultFormValues} validationSchema={updateUserSchema} onSubmit={onSubmit}>
+      <CustomForm<UpdateUserDto>
+        key={user?.id}
+        defaultValues={defaultFormValues}
+        validationSchema={updateUserSchema}
+        onSubmit={onSubmit}
+      >
         <ProfileHeaderWrapper>
-          <CustomForm.InputFile
-            defaultImage={avatar}
-            name="picture"
-          />
+          <CustomForm.InputFile defaultImage={avatar} name="picture" />
           <UserInfo>
-            <h2>{user?.firstName} {user?.lastName}</h2>
+            <h2>
+              {user?.firstName} {user?.lastName}
+            </h2>
             <span>{user?.role && uppercaseFirstLetter(user.role)}</span>
           </UserInfo>
           <CustomForm.SubmitButton content="Save" />
@@ -42,9 +49,21 @@ export const ProfileSettingsForm: FC<Props> = observer(({ user }) => {
 
         <Title>General Information</Title>
         <ProfileSection>
-          <CustomForm.Input label="First Name" name="firstName" error={currentUserStore.updateErrors?.firstName} />
-          <CustomForm.Input label="Last Name" name="lastName" error={currentUserStore.updateErrors?.lastName} />
-          <CustomForm.Input label="Email" name="email" error={currentUserStore.updateErrors?.email} />
+          <CustomForm.Input
+            label="First Name"
+            name="firstName"
+            error={currentUserStore.updateErrors?.firstName}
+          />
+          <CustomForm.Input
+            label="Last Name"
+            name="lastName"
+            error={currentUserStore.updateErrors?.lastName}
+          />
+          <CustomForm.Input
+            label="Email"
+            name="email"
+            error={currentUserStore.updateErrors?.email}
+          />
         </ProfileSection>
 
         <Title>Change Password</Title>
@@ -62,7 +81,6 @@ export const ProfileSettingsForm: FC<Props> = observer(({ user }) => {
   );
 });
 
-
 const ContentContainer = styled.div`
   padding: 30px;
   background-color: white;
@@ -71,7 +89,6 @@ const ContentContainer = styled.div`
   box-shadow: var(--default-box-shadow);
   height: 94%;
 `;
-
 
 const Title = styled.h3`
   margin-bottom: 30px;

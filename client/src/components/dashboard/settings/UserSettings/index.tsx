@@ -1,12 +1,13 @@
+import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { ProfileSettingsForm } from '../ProfileSettingsForm';
 import { useStore } from '@/context';
-import { observer } from 'mobx-react-lite';
+
+import { ProfileSettingsForm } from '../ProfileSettingsForm';
 
 export const UserSettings: FC = observer(() => {
-  const { currentUserStore } = useStore()
+  const { currentUserStore } = useStore();
 
   return (
     <ProfileContainer>

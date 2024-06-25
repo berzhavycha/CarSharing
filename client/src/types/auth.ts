@@ -9,5 +9,4 @@ export type SignUpUserDto = {
   pictureUrl?: string;
 };
 
-
 export type SignInUserDto = Pick<SignUpUserDto, 'email' | 'password'>;
