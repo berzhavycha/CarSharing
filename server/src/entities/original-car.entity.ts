@@ -4,9 +4,7 @@ import {
   CreateDateColumn,
   Entity,
   Index,
-  JoinColumn,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -29,15 +27,6 @@ import { LocalFile } from './local-file.entity';
 export class OriginalCar {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @JoinColumn({ name: 'picture_id' })
-  @OneToOne(() => LocalFile, {
-    nullable: true,
-  })
-  picture: LocalFile;
-
-  @Column()
-  pictureId: string;
 
   @Column()
   @Index()
@@ -91,4 +80,9 @@ export class OriginalCar {
 
   @OneToMany(() => Rental, (rental) => rental.originalCar)
   rentals: Rental[];
+
+  @OneToMany(() => LocalFile, (localFile) => localFile.car, {
+    cascade: true,
+  })
+  pictures: LocalFile[];
 }

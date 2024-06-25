@@ -28,14 +28,14 @@ export class CarsController {
   @UseGuards(RoleGuard(Roles.ADMIN))
   @UseInterceptors(
     LocalFilesInterceptor({
-      fieldName: 'picture',
+      fieldName: 'pictures',
       path: '/cars',
       fileFilter: defaultFileFilter,
-      limits: defaultLocalFileLimits
+      limits: defaultLocalFileLimits,
     }),
   )
-  async create(@Body() createCarDto: CreateCarDto, @UploadedFile() file: Express.Multer.File): Promise<Car> {
-    return this.carsService.createCar(createCarDto, file);
+  async create(@Body() createCarDto: CreateCarDto, @UploadedFile() files: Express.Multer.File[]): Promise<Car> {
+    return this.carsService.createCar(createCarDto, files);
   }
 
   @Get()
@@ -69,17 +69,15 @@ export class CarsController {
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateCarDto: UpdateCarDto,
-    @UploadedFile() file?: Express.Multer.File
+    @UploadedFile() files?: Express.Multer.File[]
   ): Promise<Car> {
-    const uploadedFile = file
-      ? {
-        path: file?.path,
-        filename: file?.originalname,
-        mimetype: file?.mimetype,
-      }
-      : null;
+    const uploadedFiles = files?.map(file => ({
+      path: file.path,
+      filename: file.originalname,
+      mimetype: file.mimetype,
+    })) || [];
 
-    return this.carsService.updateCar(id, updateCarDto, uploadedFile);
+    return this.carsService.updateCar(id, updateCarDto, uploadedFiles);
   }
 
   @Delete(':id')
