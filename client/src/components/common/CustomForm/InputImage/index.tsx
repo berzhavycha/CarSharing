@@ -59,8 +59,8 @@ export const InputImage: FC<Props> = ({ defaultImage, label, circled, name, widt
 
 type PictureWrapperProps = {
   $circled?: boolean;
-  $width: number;
-  $height: number
+  $width?: number;
+  $height?: number
 };
 
 const PictureWrapper = styled.div<PictureWrapperProps>`
