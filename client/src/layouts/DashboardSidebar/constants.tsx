@@ -1,4 +1,4 @@
-import { FaBookOpen, FaCog, FaFileAlt, FaExchangeAlt, FaClipboardList } from "react-icons/fa";
+import { FaBookOpen, FaClipboardList, FaCog, FaExchangeAlt, FaFileAlt } from 'react-icons/fa';
 
 interface MenuItemType {
   icon: JSX.Element;

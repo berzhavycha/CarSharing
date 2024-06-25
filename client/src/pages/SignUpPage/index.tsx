@@ -1,18 +1,18 @@
+import { observer } from 'mobx-react-lite';
 import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CustomForm, ErrorMessage } from '@/components';
+import { useStore } from '@/context';
 import { AuthType, getUserSchema, Roles } from '@/helpers';
 import { SignUpUserDto } from '@/types';
-import { useStore } from '@/context';
-import { observer } from 'mobx-react-lite';
 
 export const SignUpPage: FC = observer(() => {
   const [userRole, setUserRole] = useState<string>('user');
   const [showSecretCodeInput, setShowSecretCodeInput] = useState<boolean>(false);
 
-  const { currentUserStore } = useStore()
+  const { currentUserStore } = useStore();
 
   const handleUserTypeChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const selectedRole = event.target.value;
@@ -21,7 +21,7 @@ export const SignUpPage: FC = observer(() => {
   };
 
   const onSubmit = async (data: SignUpUserDto): Promise<void> => {
-    await currentUserStore.signUp(data)
+    await currentUserStore.signUp(data);
   };
 
   return (
@@ -39,11 +39,28 @@ export const SignUpPage: FC = observer(() => {
         onSubmit={onSubmit}
       >
         <FormBlocks>
-          <CustomForm.Input label="First Name" name="firstName" error={currentUserStore.signUpErrors?.firstName} />
-          <CustomForm.Input label="Last Name" name="lastName" error={currentUserStore.signUpErrors?.lastName} />
-          <CustomForm.Input label="Email" name="email" error={currentUserStore.signUpErrors?.email} />
+          <CustomForm.Input
+            label="First Name"
+            name="firstName"
+            error={currentUserStore.signUpErrors?.firstName}
+          />
+          <CustomForm.Input
+            label="Last Name"
+            name="lastName"
+            error={currentUserStore.signUpErrors?.lastName}
+          />
+          <CustomForm.Input
+            label="Email"
+            name="email"
+            error={currentUserStore.signUpErrors?.email}
+          />
           <PasswordWrapper>
-            <CustomForm.Input label="Password" name="password" isSecured error={currentUserStore.signUpErrors?.password} />
+            <CustomForm.Input
+              label="Password"
+              name="password"
+              isSecured
+              error={currentUserStore.signUpErrors?.password}
+            />
             <CustomForm.Input
               label="Confirm Password"
               name="confirmPassword"

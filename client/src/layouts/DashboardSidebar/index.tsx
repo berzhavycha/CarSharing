@@ -1,10 +1,8 @@
 import { FC, Fragment } from 'react';
-import {
-  FaCar,
-  FaSignOutAlt,
-} from 'react-icons/fa';
+import { FaCar, FaSignOutAlt } from 'react-icons/fa';
 import { NavLink, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
+
 import { menuItems } from './constants';
 
 export const DashboardSidebar: FC = () => {

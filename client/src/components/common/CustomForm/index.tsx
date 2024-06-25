@@ -40,7 +40,7 @@ export const CustomForm = <TEntity extends FieldValues>({
   const formHandle = useForm<TEntity>({
     mode: 'onSubmit',
     resolver: zodResolver(validationSchema),
-    defaultValues
+    defaultValues,
   });
 
   const contextValue: ContextType<TEntity> = {
