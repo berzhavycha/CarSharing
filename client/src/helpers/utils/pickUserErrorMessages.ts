@@ -1,9 +1,9 @@
-import { UserDto } from '@/types';
+import { SignUpUserDto } from '@/types';
 import { FieldErrorsState } from '@/types/error';
 
 import { UNEXPECTED_ERROR_MESSAGE } from '../constants';
 
-const fieldMappings: Record<string, keyof UserDto> = {
+const fieldMappings: Record<string, keyof SignUpUserDto> = {
   email: 'email',
   password: 'password',
   role: 'role',
@@ -12,8 +12,8 @@ const fieldMappings: Record<string, keyof UserDto> = {
   'invitation code': 'invitationCode',
 };
 
-export const pickUserErrorMessages = (inputErrorMessages: string[]): FieldErrorsState<UserDto> => {
-  const fieldErrors: FieldErrorsState<UserDto> = {
+export const pickUserErrorMessages = (inputErrorMessages: string[]): FieldErrorsState<SignUpUserDto> => {
+  const fieldErrors: FieldErrorsState<SignUpUserDto> = {
     email: '',
     firstName: '',
     lastName: '',
