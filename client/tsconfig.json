@@ -83,6 +83,12 @@
       "@/api/*": [
         "src/api/*"
       ],
+      "@/app": [
+        "src/app"
+      ],
+      "@/app/*": [
+        "src/app/*"
+      ],
     },
   },
   "include": [

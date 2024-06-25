@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BaseSyntheticEvent, createContext, PropsWithChildren, useContext } from 'react';
-import { FieldValues, useForm, UseFormReturn } from 'react-hook-form';
+import { DefaultValues, FieldValues, useForm, UseFormReturn } from 'react-hook-form';
 import { ZodSchema } from 'zod';
 
 import { Input } from './Input';
@@ -19,7 +19,7 @@ export const useCustomForm = <TUser extends FieldValues>(): ContextType<TUser> =
   const context = useContext(CustomFormContext);
 
   if (!context) {
-    throw new Error('useAuthForm must be used within an AuthForm');
+    throw new Error('useCustomForm must be used within an CustomForm');
   }
 
   return context;
@@ -28,16 +28,19 @@ export const useCustomForm = <TUser extends FieldValues>(): ContextType<TUser> =
 type Props<TEntity extends FieldValues> = PropsWithChildren & {
   validationSchema: ZodSchema<TEntity>;
   onSubmit: (user: TEntity) => void;
+  defaultValues?: DefaultValues<TEntity>;
 };
 
 export const CustomForm = <TEntity extends FieldValues>({
   validationSchema,
   children,
   onSubmit,
+  defaultValues,
 }: Props<TEntity>): JSX.Element => {
   const formHandle = useForm<TEntity>({
     mode: 'onSubmit',
     resolver: zodResolver(validationSchema),
+    defaultValues
   });
 
   const contextValue: ContextType<TEntity> = {

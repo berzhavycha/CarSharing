@@ -3,17 +3,16 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CustomForm, ErrorMessage } from '@/components';
-import { useCurrentUser } from '@/context';
 import { AuthType, getUserSchema, Roles } from '@/helpers';
-import { useAuth } from '@/hooks';
 import { UserDto } from '@/types';
+import { useStore } from '@/context';
+import { observer } from 'mobx-react-lite';
 
-export const SignUpPage: FC = () => {
+export const SignUpPage: FC = observer(() => {
   const [userRole, setUserRole] = useState<string>('user');
   const [showSecretCodeInput, setShowSecretCodeInput] = useState<boolean>(false);
 
-  const { auth, errors } = useAuth(AuthType.SIGN_UP);
-  const { setCurrentUser } = useCurrentUser();
+  const { currentUserStore } = useStore()
 
   const handleUserTypeChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const selectedRole = event.target.value;
@@ -22,8 +21,8 @@ export const SignUpPage: FC = () => {
   };
 
   const onSubmit = async (data: UserDto): Promise<void> => {
-    const { user } = await auth({ ...data, role: userRole });
-    setCurrentUser(user);
+    console.log(data)
+    await currentUserStore.auth(AuthType.SIGN_UP, data)
   };
 
   return (
@@ -34,23 +33,23 @@ export const SignUpPage: FC = () => {
         <Link to="/sign-in">Login here</Link> instead
       </Span>
       <ErrorMessageWrapper>
-        <ErrorMessage>{errors?.unexpectedError ?? ''}</ErrorMessage>
+        <ErrorMessage>{currentUserStore.errors?.unexpectedError ?? ''}</ErrorMessage>
       </ErrorMessageWrapper>
       <CustomForm<UserDto>
         validationSchema={getUserSchema(AuthType.SIGN_UP, userRole)}
         onSubmit={onSubmit}
       >
         <FormBlocks>
-          <CustomForm.Input label="First Name" name="firstName" error={errors?.firstName} />
-          <CustomForm.Input label="Last Name" name="lastName" error={errors?.lastName} />
-          <CustomForm.Input label="Email" name="email" error={errors?.email} />
+          <CustomForm.Input label="First Name" name="firstName" error={currentUserStore.errors?.firstName} />
+          <CustomForm.Input label="Last Name" name="lastName" error={currentUserStore.errors?.lastName} />
+          <CustomForm.Input label="Email" name="email" error={currentUserStore.errors?.email} />
           <PasswordWrapper>
-            <CustomForm.Input label="Password" name="password" isSecured error={errors?.password} />
+            <CustomForm.Input label="Password" name="password" isSecured error={currentUserStore.errors?.password} />
             <CustomForm.Input
               label="Confirm Password"
               name="confirmPassword"
               isSecured
-              error={errors?.confirmPassword}
+              error={currentUserStore.errors?.confirmPassword}
             />
           </PasswordWrapper>
           <RoleWrapper>
@@ -68,7 +67,7 @@ export const SignUpPage: FC = () => {
                 label="Invitation Code"
                 name="invitationCode"
                 isSecured
-                error={errors?.invitationCode}
+                error={currentUserStore.errors?.invitationCode}
               />
             )}
           </RoleWrapper>
@@ -77,7 +76,7 @@ export const SignUpPage: FC = () => {
       </CustomForm>
     </FormInner>
   );
-};
+});
 
 const PasswordWrapper = styled.div`
   grid-column: span 3;

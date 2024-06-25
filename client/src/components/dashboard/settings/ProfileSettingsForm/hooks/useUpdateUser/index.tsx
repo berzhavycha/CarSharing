@@ -2,11 +2,11 @@ import { AxiosError } from 'axios';
 import { useState } from 'react';
 
 import { axiosInstance } from '@/api';
-import { useCurrentUser } from '@/context';
 import { Env } from '@/core';
-import { pickUserErrorMessages, transformUserResponse } from '@/helpers';
+import { UNEXPECTED_ERROR_MESSAGE, pickUserErrorMessages, transformUserResponse } from '@/helpers';
 import { UpdateUserDto, UserDto } from '@/types';
 import { FieldErrorsState } from '@/types/error';
+import { useStore } from '@/context';
 
 type HookReturn = {
   updateUser: (userDto: UpdateUserDto) => Promise<void>;
@@ -14,7 +14,7 @@ type HookReturn = {
 };
 
 export const useUpdateUser = (): HookReturn => {
-  const { currentUser, setCurrentUser } = useCurrentUser();
+  const { currentUserStore } = useStore()
   const [errors, setErrors] = useState<FieldErrorsState<UserDto> | null>(null);
 
   const updateUser = async (userDto: UpdateUserDto): Promise<void> => {
@@ -22,7 +22,7 @@ export const useUpdateUser = (): HookReturn => {
       setErrors(null);
 
       const { data } = await axiosInstance.patch(
-        `${Env.API_BASE_URL}/users/${currentUser?.id}`,
+        `${Env.API_BASE_URL}/users/${currentUserStore.user?.id}`,
         userDto,
         {
           headers: {
@@ -31,10 +31,12 @@ export const useUpdateUser = (): HookReturn => {
         },
       );
 
-      setCurrentUser(transformUserResponse(data))
+      currentUserStore.setUser(transformUserResponse(data))
     } catch (error) {
       if (error instanceof AxiosError) {
         setErrors(pickUserErrorMessages([error.response?.data.message]));
+      } else {
+        setErrors({ unexpectedError: UNEXPECTED_ERROR_MESSAGE })
       }
     }
   };

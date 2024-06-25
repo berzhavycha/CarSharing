@@ -16,6 +16,7 @@ export const getUserSchema = (actionType: AuthType, role: string): ZodSchema => 
       })
       .min(1, { message: 'Password is required' }),
   });
+
   if (role === Roles.ADMIN) {
     baseSchema = baseSchema.extend({
       invitationCode: z.string().min(1, { message: 'Invitation Code is required' }),
@@ -26,6 +27,7 @@ export const getUserSchema = (actionType: AuthType, role: string): ZodSchema => 
     const extendedSchema = baseSchema.extend({
       firstName: z.string().min(1, { message: 'First Name is required' }),
       lastName: z.string().min(1, { message: 'Last Name is required' }),
+      role: z.string().min(1, { message: 'Role is required' }),
       confirmPassword: z.string().min(1, { message: 'Confirm password is required' }),
     });
 

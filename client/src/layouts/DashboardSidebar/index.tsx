@@ -1,32 +1,13 @@
 import { FC, Fragment } from 'react';
 import {
-  FaBookOpen,
   FaCar,
-  FaClipboardList,
-  FaCog,
-  FaExchangeAlt,
-  FaFileAlt,
   FaSignOutAlt,
 } from 'react-icons/fa';
 import { NavLink, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-
-interface MenuItemType {
-  icon: JSX.Element;
-  label: string;
-  path: string;
-  type: 'general' | 'report';
-}
+import { menuItems } from './constants';
 
 export const DashboardSidebar: FC = () => {
-  const menuItems: MenuItemType[] = [
-    { icon: <FaBookOpen />, label: 'Bookings', path: 'bookings', type: 'general' },
-    { icon: <FaCog />, label: 'Settings', path: 'settings', type: 'general' },
-    { icon: <FaFileAlt />, label: 'Report', path: 'report', type: 'report' },
-    { icon: <FaExchangeAlt />, label: 'Transactions', path: 'transactions', type: 'report' },
-    { icon: <FaClipboardList />, label: 'Car Report', path: 'car-report', type: 'report' },
-  ];
-
   const firstReportIndex = menuItems.findIndex((item) => item.type === 'report');
 
   return (

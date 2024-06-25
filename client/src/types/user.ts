@@ -1,11 +1,11 @@
-export type User = {
+export type AuthenticatedUser = {
   id: string;
   email: string;
   firstName: string;
   lastName: string;
-  balance: number;
+  balance: number | null;
   role: string;
-  avatarId: string;
+  avatarId: string | null;
 };
 
 export type UpdateUserDto = Partial<{

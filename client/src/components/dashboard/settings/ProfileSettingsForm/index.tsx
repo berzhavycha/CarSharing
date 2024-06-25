@@ -4,14 +4,14 @@ import styled from 'styled-components';
 import { CustomForm } from '@/components/common';
 import { Env } from '@/core';
 import { updateUserSchema } from '@/helpers';
-import { UpdateUserDto, User } from '@/types';
+import { UpdateUserDto, AuthenticatedUser } from '@/types';
 
 import DefaultImage from '../../../../../public/avatar.webp';
 
 import { useUpdateUser } from './hooks';
 
 type Props = {
-  user: User | null
+  user: AuthenticatedUser | null
 }
 
 export const ProfileSettingsForm: FC<Props> = ({ user }) => {
@@ -22,10 +22,11 @@ export const ProfileSettingsForm: FC<Props> = ({ user }) => {
   };
 
   const avatar = user ? `${Env.API_BASE_URL}/local-files/${user.avatarId}` : DefaultImage
+  const defaultFormValues = { firstName: user?.firstName, lastName: user?.lastName, email: user?.email }
 
   return (
     <ContentContainer>
-      <CustomForm<UpdateUserDto> validationSchema={updateUserSchema} onSubmit={onSubmit}>
+      <CustomForm<UpdateUserDto> defaultValues={defaultFormValues} validationSchema={updateUserSchema} onSubmit={onSubmit}>
         <ProfileHeaderWrapper>
           <CustomForm.InputFile
             key={avatar}
@@ -33,8 +34,8 @@ export const ProfileSettingsForm: FC<Props> = ({ user }) => {
             name="picture"
           />
           <UserInfo>
-            <h2>Mason Wilson</h2>
-            <span>Admin</span>
+            <h2>{user?.firstName} {user?.lastName}</h2>
+            <span>{user?.role}</span>
           </UserInfo>
           <CustomForm.SubmitButton content="Save" />
         </ProfileHeaderWrapper>
