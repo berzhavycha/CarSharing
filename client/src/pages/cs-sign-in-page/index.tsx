@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { CSCommonForm, CSCommonErrorMessage } from '@/components';
+import { CSCommonErrorMessage, CSCommonForm } from '@/components';
 import { useStore } from '@/context';
 import { AuthType, getUserSchema, Roles } from '@/helpers';
 import { SignInUserDto } from '@/types';
@@ -30,7 +30,9 @@ export const CSSignInPage: FC = observer(() => {
         <Link to="/sign-up">Register here</Link> instead
       </Span>
       <ErrorMessageWrapper>
-        <CSCommonErrorMessage>{currentUserStore.signInErrors?.unexpectedError ?? ''}</CSCommonErrorMessage>
+        <CSCommonErrorMessage>
+          {currentUserStore.signInErrors?.unexpectedError ?? ''}
+        </CSCommonErrorMessage>
       </ErrorMessageWrapper>
       <CSCommonForm<SignInUserDto>
         validationSchema={getUserSchema(AuthType.SIGN_IN, 'none')}

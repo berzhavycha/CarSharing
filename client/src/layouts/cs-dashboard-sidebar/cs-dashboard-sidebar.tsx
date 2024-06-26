@@ -7,7 +7,7 @@ import { useStore } from '@/context';
 
 import { menuItems } from './constants';
 
-export const DashboardSidebar: FC = () => {
+export const CSDashboardSidebar: FC = () => {
   const firstReportIndex = menuItems.findIndex((item) => item.type === 'report');
 
   const {

@@ -2,23 +2,24 @@ import { FC } from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { Container } from '@/components';
+import { CSCommonContainer } from '@/components';
 
-import { CarSearch, HeaderOptions } from './components';
+import { CSHeaderLayoutCarSearch } from './cs-header-layout-car-search';
+import { CSHeaderLayoutOptions } from './cs-header-layout-options';
 
-export const Header: FC = () => {
+export const CSHeaderLayout: FC = () => {
   return (
     <>
       <Section>
-        <Container>
+        <CSCommonContainer>
           <Nav>
             <LeftSection>
               <Logo>CARRENT</Logo>
-              <CarSearch />
+              <CSHeaderLayoutCarSearch />
             </LeftSection>
-            <HeaderOptions />
+            <CSHeaderLayoutOptions />
           </Nav>
-        </Container>
+        </CSCommonContainer>
       </Section>
       <Outlet />
     </>

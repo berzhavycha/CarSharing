@@ -1,1 +1,1 @@
-export * from './cs-dashboard-profile-settings-form'
+export * from './cs-dashboard-profile-settings-form';

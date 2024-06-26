@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { FaGear } from 'react-icons/fa6';
 import styled from 'styled-components';
 
-export const HeaderOptions: FC = () => {
+export const CSHeaderLayoutOptions: FC = () => {
   return (
     <IconGroup>
       <IconWrapper>

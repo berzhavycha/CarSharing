@@ -6,7 +6,7 @@ type Props = PropsWithChildren & {
   redirectPath: string;
 };
 
-export const ProtectedRoute: FC<Props> = ({ children, isAllowed, redirectPath = '/sign-in' }) => {
+export const CSProtectedRoute: FC<Props> = ({ children, isAllowed, redirectPath = '/sign-in' }) => {
   if (!isAllowed) {
     return <Navigate to={redirectPath} replace />;
   }
