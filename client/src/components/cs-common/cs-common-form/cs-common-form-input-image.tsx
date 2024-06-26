@@ -6,116 +6,122 @@ import { CSCommonErrorMessage, InputProps } from '@/components/cs-common';
 import { useCommonForm } from './cs-common-form';
 
 type Props = Omit<InputProps, 'name'> & {
-    name: string;
-    defaultImage: string;
-    actualImages?: string[];
-    onRemove?: (image: string) => Promise<void> | void;
-    circled?: boolean;
-    width?: number;
-    height?: number;
-    multiple?: boolean;
+  name: string;
+  defaultImage: string;
+  actualImages?: string[];
+  onRemove?: (image: string) => Promise<void> | void;
+  circled?: boolean;
+  width?: number;
+  height?: number;
+  multiple?: boolean;
 };
 
 export const CSCommonFormInputImage: FC<Props> = ({
-    defaultImage,
-    actualImages,
-    label,
-    circled,
-    onRemove,
-    name,
-    error,
-    width = 100,
-    height = 100,
-    multiple = false,
-    ...props
+  defaultImage,
+  actualImages,
+  label,
+  circled,
+  onRemove,
+  name,
+  error,
+  width = 100,
+  height = 100,
+  multiple = false,
+  ...props
 }) => {
-    const {
-        register,
-        formState: { errors },
-    } = useCommonForm().formHandle;
+  const {
+    register,
+    formState: { errors },
+  } = useCommonForm().formHandle;
 
-    const errorMessage = errors[name]?.message as string;
-    const errorText = errorMessage || error;
+  const errorMessage = errors[name]?.message as string;
+  const errorText = errorMessage || error;
 
-    const hiddenInputRef = useRef<HTMLInputElement | null>(null);
-    const [previews, setPreviews] = useState<string[]>(() => (
-        actualImages && actualImages?.length > 0 ? [...actualImages] : [defaultImage]
-    ));
+  const hiddenInputRef = useRef<HTMLInputElement | null>(null);
+  const [previews, setPreviews] = useState<string[]>(() =>
+    actualImages && actualImages?.length > 0 ? [...actualImages] : [defaultImage],
+  );
 
-    const { ref: registerRef, onChange, ...rest } = register(name);
+  const { ref: registerRef, onChange, ...rest } = register(name);
 
-    const handleUploadedFiles = (event: ChangeEvent<HTMLInputElement>): void => {
-        const files = Array.from(event.target.files || []);
-        const previewUrls = files.map((file) => URL.createObjectURL(file));
-        setPreviews(previewUrls.length > 0 ? previewUrls : [defaultImage]);
-    };
+  const handleUploadedFiles = (event: ChangeEvent<HTMLInputElement>): void => {
+    const files = Array.from(event.target.files || []);
+    const previewUrls = files.map((file) => URL.createObjectURL(file));
+    setPreviews(previewUrls.length > 0 ? previewUrls : [defaultImage]);
+  };
 
-    const onUpload = (): void => {
-        hiddenInputRef.current?.click();
-    };
+  const onUpload = (): void => {
+    hiddenInputRef.current?.click();
+  };
 
-    const onFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
-        onChange(e);
-        handleUploadedFiles(e);
-    };
+  const onFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    onChange(e);
+    handleUploadedFiles(e);
+  };
 
-    const removeImage = (index: number): void => {
-        setPreviews((prevPreviews) => {
-            const updatedPreviews = prevPreviews.filter((_, i) => i !== index);
-            return updatedPreviews.length > 0 ? updatedPreviews : [defaultImage];
-        });
-    };
+  const removeImage = (index: number): void => {
+    setPreviews((prevPreviews) => {
+      const updatedPreviews = prevPreviews.filter((_, i) => i !== index);
+      return updatedPreviews.length > 0 ? updatedPreviews : [defaultImage];
+    });
+  };
 
-    return (
-        <InputImageContainer>
-            <PicturesContainer>
-                {previews.map((preview, index) => (
-                    <PictureWrapper onClick={onUpload} key={index} $circled={circled} $width={width} $height={height}>
-                        <img src={preview} alt={`${name}-${index}`} />
-                        {preview !== defaultImage && (
-                            <RemoveButton
-                                type="button"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    removeImage(index);
-                                    console.log(preview)
-                                    if (onRemove) {
-                                        onRemove(preview)
-                                    }
-                                }}
-                            >
-                                &times;
-                            </RemoveButton>
-                        )}
-                    </PictureWrapper>
-                ))}
-            </PicturesContainer>
-            <UpdatePicture type="button" onClick={onUpload}>
-                {label}
-            </UpdatePicture>
-            <input
-                type="file"
-                multiple={multiple}
-                {...rest}
-                onChange={onFileChange}
-                ref={(e) => {
-                    registerRef(e);
-                    hiddenInputRef.current = e;
+  return (
+    <InputImageContainer>
+      <PicturesContainer>
+        {previews.map((preview, index) => (
+          <PictureWrapper
+            onClick={onUpload}
+            key={index}
+            $circled={circled}
+            $width={width}
+            $height={height}
+          >
+            <img src={preview} alt={`${name}-${index}`} />
+            {preview !== defaultImage && (
+              <RemoveButton
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeImage(index);
+                  console.log(preview);
+                  if (onRemove) {
+                    onRemove(preview);
+                  }
                 }}
-                {...props}
-                hidden
-            />
-            <ErrorMessageWrapper>
-                <CSCommonErrorMessage>{errorText}</CSCommonErrorMessage>
-            </ErrorMessageWrapper>
-        </InputImageContainer>
-    );
+              >
+                &times;
+              </RemoveButton>
+            )}
+          </PictureWrapper>
+        ))}
+      </PicturesContainer>
+      <UpdatePicture type="button" onClick={onUpload}>
+        {label}
+      </UpdatePicture>
+      <input
+        type="file"
+        multiple={multiple}
+        {...rest}
+        onChange={onFileChange}
+        ref={(e) => {
+          registerRef(e);
+          hiddenInputRef.current = e;
+        }}
+        {...props}
+        hidden
+      />
+      <ErrorMessageWrapper>
+        <CSCommonErrorMessage>{errorText}</CSCommonErrorMessage>
+      </ErrorMessageWrapper>
+    </InputImageContainer>
+  );
 };
 
 type PictureWrapperProps = {
-    $circled?: boolean;
-    $width?: number;
-    $height?: number;
+  $circled?: boolean;
+  $width?: number;
+  $height?: number;
 };
 
 const InputImageContainer = styled.div`
@@ -179,4 +185,3 @@ const UpdatePicture = styled.button`
   margin-top: 10px;
   text-align: center;
 `;
-

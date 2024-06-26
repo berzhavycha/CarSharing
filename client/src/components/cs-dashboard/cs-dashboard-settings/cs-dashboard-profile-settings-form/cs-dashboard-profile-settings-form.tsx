@@ -11,81 +11,85 @@ import { UpdateUserDto } from '@/types';
 import DefaultImage from '../../../../../public/avatar.webp';
 
 export const CSDashboardProfileSettingsForm: FC = observer(() => {
-    const {
-        currentUserStore: { user, updateErrors, updateUser, removeAvatar },
-    } = useStore();
+  const {
+    currentUserStore: { user, updateErrors, updateUser, removeAvatar },
+  } = useStore();
 
-    const onSubmit = async (user: UpdateUserDto): Promise<void> => {
-        const userDtoWithoutEmptyPasswords = Object.fromEntries(
-            Object.entries(user).filter(([, value]) => {
-                return value !== '' && value !== null && value !== undefined;
-            }),
-        );
-
-        await updateUser(userDtoWithoutEmptyPasswords);
-    };
-
-    const onRemoveAvatar = async (): Promise<void> => await removeAvatar()
-
-    const avatar = user?.avatarId ? [`${Env.API_BASE_URL}/local-files/${user.avatarId}`] : undefined
-    const defaultFormValues = {
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-        email: user?.email,
-    };
-
-    return (
-        <ProfileContainer>
-            <ContentContainer>
-                <CSCommonForm<UpdateUserDto>
-                    key={user?.id}
-                    defaultValues={defaultFormValues}
-                    validationSchema={updateUserSchema}
-                    onSubmit={onSubmit}
-                >
-                    <ProfileHeaderWrapper>
-                        <CSCommonForm.InputFile
-                            defaultImage={DefaultImage}
-                            actualImages={avatar}
-                            onRemove={onRemoveAvatar}
-                            name="picture"
-                            label="Update Avatar"
-                        />
-                        <UserInfo>
-                            <h2>
-                                {user?.firstName} {user?.lastName}
-                            </h2>
-                            <span>{user?.role && uppercaseFirstLetter(user.role)}</span>
-                        </UserInfo>
-                        <CSCommonForm.SubmitButton content="Save" />
-                    </ProfileHeaderWrapper>
-
-                    <Title>General Information</Title>
-                    <ProfileSection>
-                        <CSCommonForm.Input label="First Name" name="firstName" error={updateErrors?.firstName} />
-                        <CSCommonForm.Input label="Last Name" name="lastName" error={updateErrors?.lastName} />
-                        <CSCommonForm.Input label="Email" name="email" error={updateErrors?.email} />
-                    </ProfileSection>
-
-                    <Title>Change Password</Title>
-                    <PasswordSection>
-                        <CSCommonForm.Input
-                            label="Old Password"
-                            name="oldPassword"
-                            isSecured
-                            error={updateErrors?.oldPassword}
-                        />
-                        <CSCommonForm.Input
-                            label="New Password"
-                            name="newPassword"
-                            isSecured
-                            error={updateErrors?.newPassword}
-                        />
-                    </PasswordSection>
-                </CSCommonForm>
-            </ContentContainer>
-        </ProfileContainer>
+  const onSubmit = async (user: UpdateUserDto): Promise<void> => {
+    const userDtoWithoutEmptyPasswords = Object.fromEntries(
+      Object.entries(user).filter(([, value]) => {
+        return value !== '' && value !== null && value !== undefined;
+      }),
     );
+
+    await updateUser(userDtoWithoutEmptyPasswords);
+  };
+
+  const onRemoveAvatar = async (): Promise<void> => await removeAvatar();
+
+  const avatar = user?.avatarId ? [`${Env.API_BASE_URL}/local-files/${user.avatarId}`] : undefined;
+  const defaultFormValues = {
+    firstName: user?.firstName,
+    lastName: user?.lastName,
+    email: user?.email,
+  };
+
+  return (
+    <ProfileContainer>
+      <ContentContainer>
+        <CSCommonForm<UpdateUserDto>
+          key={user?.id}
+          defaultValues={defaultFormValues}
+          validationSchema={updateUserSchema}
+          onSubmit={onSubmit}
+        >
+          <ProfileHeaderWrapper>
+            <CSCommonForm.InputFile
+              defaultImage={DefaultImage}
+              actualImages={avatar}
+              onRemove={onRemoveAvatar}
+              name="picture"
+              label="Update Avatar"
+            />
+            <UserInfo>
+              <h2>
+                {user?.firstName} {user?.lastName}
+              </h2>
+              <span>{user?.role && uppercaseFirstLetter(user.role)}</span>
+            </UserInfo>
+            <CSCommonForm.SubmitButton content="Save" />
+          </ProfileHeaderWrapper>
+
+          <Title>General Information</Title>
+          <ProfileSection>
+            <CSCommonForm.Input
+              label="First Name"
+              name="firstName"
+              error={updateErrors?.firstName}
+            />
+            <CSCommonForm.Input label="Last Name" name="lastName" error={updateErrors?.lastName} />
+            <CSCommonForm.Input label="Email" name="email" error={updateErrors?.email} />
+          </ProfileSection>
+
+          <Title>Change Password</Title>
+          <PasswordSection>
+            <CSCommonForm.Input
+              label="Old Password"
+              name="oldPassword"
+              isSecured
+              error={updateErrors?.oldPassword}
+            />
+            <CSCommonForm.Input
+              label="New Password"
+              name="newPassword"
+              isSecured
+              error={updateErrors?.newPassword}
+            />
+          </PasswordSection>
+        </CSCommonForm>
+      </ContentContainer>
+    </ProfileContainer>
+  );
 });
 
 const ProfileContainer = styled.div`

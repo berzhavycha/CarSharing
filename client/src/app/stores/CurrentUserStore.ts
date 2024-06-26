@@ -3,12 +3,12 @@ import { flow, Instance, types as t } from 'mobx-state-tree';
 import { axiosInstance } from '@/api';
 import { Env } from '@/core';
 import {
+  errorHandler,
   signInFieldMappings,
   signUpFieldMappings,
   transformUserResponse,
   UNEXPECTED_ERROR_MESSAGE,
   updateUserFieldMappings,
-  errorHandler
 } from '@/helpers';
 import {
   AuthenticatedUser,
@@ -92,7 +92,9 @@ export const CurrentUserStore = t
     }),
     removeAvatar: flow(function* () {
       try {
-        const { data } = yield axiosInstance.patch(`${Env.API_BASE_URL}/users/${self.user?.id}/avatar`);
+        const { data } = yield axiosInstance.patch(
+          `${Env.API_BASE_URL}/users/${self.user?.id}/avatar`,
+        );
         self.user = transformUserResponse(data);
       } catch (error) {
         self.updateErrors = errorHandler<UpdateUserDto>(error, updateUserFieldMappings);

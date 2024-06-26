@@ -1,8 +1,9 @@
 import { forwardRef } from 'react';
 import styled from 'styled-components';
-import { CSCommonErrorMessage } from '../cs-common-error-message';
+
 import { CSCommonCheckIcon } from '../cs-common-check-icon';
 import { CSCommonErrorIcon } from '../cs-common-error-icon';
+import { CSCommonErrorMessage } from '../cs-common-error-message';
 
 export interface TextAreasProps extends React.InputHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
@@ -20,7 +21,8 @@ export const CSCommonTextArea = forwardRef<HTMLTextAreaElement, TextAreasProps>(
           placeholder={placeholder || `Enter ${label?.toLowerCase()}`}
           {...props}
         />
-        {formSubmitted && (!error ? <CSCommonCheckIcon right={-25} /> : <CSCommonErrorIcon right={-25} />)}
+        {formSubmitted &&
+          (!error ? <CSCommonCheckIcon right={-25} /> : <CSCommonErrorIcon right={-25} />)}
         <CSCommonErrorMessage>{error}</CSCommonErrorMessage>
       </TextGroup>
     );

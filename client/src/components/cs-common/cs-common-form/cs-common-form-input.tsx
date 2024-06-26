@@ -6,30 +6,30 @@ import { CSCommonInputField, InputProps } from '@/components/cs-common';
 import { useCommonForm } from './cs-common-form';
 
 type Props = Omit<InputProps, 'name'> & {
-    name: string;
+  name: string;
 };
 
 export const CSCommonFormInput: FC<Props> = ({ name, label, error, ...props }) => {
-    const {
-        register,
-        formState: { errors, isSubmitted },
-    } = useCommonForm().formHandle;
+  const {
+    register,
+    formState: { errors, isSubmitted },
+  } = useCommonForm().formHandle;
 
-    const errorMessage = errors[name]?.message as string;
-    const errorText = errorMessage || error;
+  const errorMessage = errors[name]?.message as string;
+  const errorText = errorMessage || error;
 
-    return (
-        <FormBlock>
-            <CSCommonInputField
-                {...props}
-                {...register(name)}
-                label={label}
-                error={errorText}
-                formSubmitted={isSubmitted}
-                autoComplete="off"
-            />
-        </FormBlock>
-    );
+  return (
+    <FormBlock>
+      <CSCommonInputField
+        {...props}
+        {...register(name)}
+        label={label}
+        error={errorText}
+        formSubmitted={isSubmitted}
+        autoComplete="off"
+      />
+    </FormBlock>
+  );
 };
 
 export const FormBlock = styled.div`

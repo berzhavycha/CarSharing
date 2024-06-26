@@ -3,62 +3,58 @@ import styled from 'styled-components';
 
 import DefaultImage from '../../../../../public/Car.png';
 
-
 const bookings = [
-    {
-        id: '#5D869F5L2',
-        customerName: 'Mason Wilson',
-        route: 'San Diego - Dallas',
-        dateTime: '15 Sept, 8:30AM',
-        status: 'Confirmed'
-    },
-    // ... other booking objects
+  {
+    id: '#5D869F5L2',
+    customerName: 'Mason Wilson',
+    route: 'San Diego - Dallas',
+    dateTime: '15 Sept, 8:30AM',
+    status: 'Confirmed',
+  },
+  // ... other booking objects
 ];
 
-
-
 export const CSDashboardCarReport: FC = () => {
-    return (
-        <CarsContainer>
-            <ContentContainer>
-                <Table>
-                    <thead>
-                        <tr>
-                            <TableHeader>No.</TableHeader>
-                            <TableHeader>Image</TableHeader>
-                            <TableHeader>Customer Name</TableHeader>
-                            <TableHeader>Pick-up & Drop-off</TableHeader>
-                            <TableHeader>Date & Time</TableHeader>
-                            <TableHeader>Status</TableHeader>
-                            <TableHeader>Actions</TableHeader>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {bookings.map((booking, index) => (
-                            <TableRow key={booking.id}>
-                                <TableCell>{index + 1}</TableCell>
-                                <TableCell><img src={DefaultImage} /></TableCell>
-                                <TableCell>{booking.customerName}</TableCell>
-                                <TableCell>{booking.route}</TableCell>
-                                <TableCell>{booking.dateTime}</TableCell>
-                                <TableCell>
-                                    <StatusBadge status={booking.status}>
-                                        {booking.status}
-                                    </StatusBadge>
-                                </TableCell>
-                                <TableCell>
-                                    <Button>Details</Button>
-                                    <Button>Assign</Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </tbody>
-                </Table>
-            </ContentContainer>
-        </CarsContainer>
-    );
+  return (
+    <CarsContainer>
+      <ContentContainer>
+        <Table>
+          <thead>
+            <tr>
+              <TableHeader>No.</TableHeader>
+              <TableHeader>Image</TableHeader>
+              <TableHeader>Customer Name</TableHeader>
+              <TableHeader>Pick-up & Drop-off</TableHeader>
+              <TableHeader>Date & Time</TableHeader>
+              <TableHeader>Status</TableHeader>
+              <TableHeader>Actions</TableHeader>
+            </tr>
+          </thead>
+          <tbody>
+            {bookings.map((booking, index) => (
+              <TableRow key={booking.id}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>
+                  <img src={DefaultImage} />
+                </TableCell>
+                <TableCell>{booking.customerName}</TableCell>
+                <TableCell>{booking.route}</TableCell>
+                <TableCell>{booking.dateTime}</TableCell>
+                <TableCell>
+                  <StatusBadge status={booking.status}>{booking.status}</StatusBadge>
+                </TableCell>
+                <TableCell>
+                  <Button>Details</Button>
+                  <Button>Assign</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </tbody>
+        </Table>
+      </ContentContainer>
+    </CarsContainer>
+  );
 };
-
 
 const CarsContainer = styled.div`
   width: 100%;
@@ -110,9 +106,12 @@ const StatusBadge = styled.span`
   font-size: 12px;
   font-weight: bold;
   color: white;
-  background-color: ${props =>
-        props.status === 'Confirmed' ? '#6c757d' :
-            props.status === 'Cancelled' ? '#dc3545' : '#007bff'};
+  background-color: ${(props) =>
+    props.status === 'Confirmed'
+      ? '#6c757d'
+      : props.status === 'Cancelled'
+        ? '#dc3545'
+        : '#007bff'};
 `;
 
 const Button = styled.button`

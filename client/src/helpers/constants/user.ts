@@ -6,5 +6,5 @@ export const updateUserFieldMappings: Record<string, keyof UpdateUserDto> = {
   email: 'email',
   'old password': 'oldPassword',
   'new password': 'newPassword',
-  'image': 'picture'
+  image: 'picture',
 };

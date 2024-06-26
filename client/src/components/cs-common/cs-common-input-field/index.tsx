@@ -1,9 +1,10 @@
 import { forwardRef, useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import styled from 'styled-components';
-import { CSCommonErrorMessage } from '../cs-common-error-message';
+
 import { CSCommonCheckIcon } from '../cs-common-check-icon';
 import { CSCommonErrorIcon } from '../cs-common-error-icon';
+import { CSCommonErrorMessage } from '../cs-common-error-message';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -36,7 +37,8 @@ export const CSCommonInputField = forwardRef<HTMLInputElement, InputProps>(
             {isPasswordShown ? <FaEyeSlash /> : <FaEye />}
           </TogglePasswordButton>
         )}
-        {formSubmitted && (!error ? <CSCommonCheckIcon right={-25} /> : <CSCommonErrorIcon right={-25} />)}
+        {formSubmitted &&
+          (!error ? <CSCommonCheckIcon right={-25} /> : <CSCommonErrorIcon right={-25} />)}
         <CSCommonErrorMessage>{error}</CSCommonErrorMessage>
       </InputGroup>
     );
