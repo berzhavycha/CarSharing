@@ -155,7 +155,7 @@ describe('UsersService', () => {
       expect(result).toEqual(mockUser);
       expect(usersRepository.findOne).toHaveBeenCalledWith({
         where: { id: mockUser.id },
-        relations: ['role'],
+        relations: ['role', 'avatar'],
       });
     });
 
@@ -170,7 +170,7 @@ describe('UsersService', () => {
 
       expect(usersRepository.findOne).toHaveBeenCalledWith({
         where: { id: nonExistingId },
-        relations: ['role'],
+        relations: ['role', 'avatar'],
       });
     });
   });
@@ -222,6 +222,7 @@ describe('UsersService', () => {
       const updatedUser = {
         ...mockUser,
         avatarId: mockLocalFile.id,
+        avatar: mockLocalFile,
         ...updateUserDtoMock,
       } as User;
 

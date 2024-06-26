@@ -53,6 +53,8 @@ describe('OriginalCarsService', () => {
     it('should create an original car', async () => {
       const createdCar = {
         id: 'car-id',
+        pictures: [],
+        ...mockOriginalCar,
         ...createCarDtoMock,
       } as OriginalCar;
 
@@ -74,6 +76,7 @@ describe('OriginalCarsService', () => {
     it('should create an original car within a transaction', async () => {
       const createdCar = {
         id: 'car-id',
+        ...mockOriginalCar,
         ...createCarDtoMock,
       } as OriginalCar;
 

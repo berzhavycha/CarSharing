@@ -71,7 +71,7 @@ describe('UsersController', () => {
       expect(usersService.updateUser).toHaveBeenCalledWith(
         mockUserId,
         mockUpdateUserDto,
-        { filename: undefined, mimetype: undefined, path: undefined },
+        null
       );
     });
 
