@@ -7,14 +7,14 @@ import '@fontsource/plus-jakarta-sans/700.css';
 import '@fontsource/plus-jakarta-sans/800.css';
 import { RouterProvider } from 'react-router-dom';
 
-import { StoreProvider } from './context';
+import { CSStoreProvider } from './context';
 import { router } from './router';
 
 function App(): JSX.Element {
   return (
-    <StoreProvider>
+    <CSStoreProvider>
       <RouterProvider router={router} />
-    </StoreProvider>
+    </CSStoreProvider>
   );
 }
 
