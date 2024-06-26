@@ -1,1 +1,1 @@
-export * from './addNewCar'
+export * from './add-new-car'

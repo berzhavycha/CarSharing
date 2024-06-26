@@ -1,24 +1,23 @@
-import {
-  IsEnum,
-  IsInt,
-  IsNumber,
-  IsString,
-  Length,
-} from 'class-validator';
-
+import { Transform } from 'class-transformer';
+import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
 import { CAR_FIELD_MEDIUM_LENGTH, CarStatus } from '@/helpers';
 
 export class CreateCarDto {
+  @IsNotEmpty()
+  pictures: Express.Multer.File[]
+  
   @IsString()
   model: string;
 
   @IsInt()
+  @Transform(({ value }) => parseInt(value, 10))
   year: number;
 
   @IsString()
   description: string;
 
   @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
   pricePerHour: number;
 
   @IsString()
@@ -29,6 +28,7 @@ export class CreateCarDto {
   status: CarStatus;
 
   @IsInt()
+  @Transform(({ value }) => parseInt(value, 10))
   capacity: number;
 
   @IsString()
@@ -40,5 +40,6 @@ export class CreateCarDto {
   steering: string;
 
   @IsNumber()
+  @Transform(({ value }) => parseFloat(value))
   fuelCapacity: number;
 }

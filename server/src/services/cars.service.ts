@@ -35,7 +35,7 @@ export class CarsService {
     fileData: LocalFileDto[],
   ): Promise<Car> {
     const carPictures = await Promise.all(
-      fileData?.map((file) => this.localFilesService.saveLocalFileData(file)),
+      fileData.map((file) => this.localFilesService.saveLocalFileData(file)),
     );
 
     const car = this.carsRepository.create({
