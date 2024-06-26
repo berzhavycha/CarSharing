@@ -38,7 +38,6 @@ export class CarsController {
     @Body() createCarDto: CreateCarDto,
     @UploadedFiles() pictures: Express.Multer.File[],
   ): Promise<Car> {
-    console.log(createCarDto)
     return this.carsService.createCar(createCarDto, pictures);
   }
 
