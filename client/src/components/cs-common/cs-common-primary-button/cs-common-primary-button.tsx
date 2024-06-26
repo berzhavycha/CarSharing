@@ -2,17 +2,17 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 type Props = {
-  type?: 'button' | 'submit' | 'reset';
-  onClick?: () => Promise<void> | void;
-  content: string;
+    type?: 'button' | 'submit' | 'reset';
+    onClick?: () => Promise<void> | void;
+    content: string;
 };
 
 export const CSCommonPrimaryButton: FC<Props> = ({ type, onClick, content }) => {
-  return (
-    <Button type={type} onClick={onClick}>
-      {content}
-    </Button>
-  );
+    return (
+        <Button type={type} onClick={onClick}>
+            {content}
+        </Button>
+    );
 };
 
 const Button = styled.button`
