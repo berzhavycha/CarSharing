@@ -15,4 +15,5 @@ export const mockOriginalCar = {
   steering: 'Left-Hand',
   updatedAt: new Date(),
   createdAt: new Date(),
+  pictures: []
 } as OriginalCar;

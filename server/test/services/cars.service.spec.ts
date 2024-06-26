@@ -11,11 +11,12 @@ import {
   CarStatus,
   RentalStatus,
 } from '@/helpers';
-import { CarsService } from '@/services';
+import { CarsService, LocalFilesService } from '@/services';
 
 import {
   createCarDtoMock,
   mockCar,
+  mockLocalFilesService,
   mockQueryBuilder,
   mockRental,
   repositoryMock,
@@ -24,6 +25,7 @@ import {
 jest.mock('@/helpers/utils/applySearchAndPagination', () => ({
   applySearchAndPagination: jest.fn(),
 }));
+
 
 describe('CarsService', () => {
   let carsService: CarsService;
@@ -36,6 +38,10 @@ describe('CarsService', () => {
         {
           provide: getRepositoryToken(Car),
           useValue: repositoryMock,
+        },
+        {
+          provide: LocalFilesService,
+          useValue: mockLocalFilesService,
         },
       ],
     }).compile();
@@ -56,6 +62,7 @@ describe('CarsService', () => {
     it('should create a car', async () => {
       const createdCar = {
         id: 'car-id',
+        ...mockCar,
         ...createCarDtoMock,
       } as Car;
 
@@ -64,6 +71,7 @@ describe('CarsService', () => {
 
       const result = await carsService.createCar(
         createCarDtoMock as CreateCarDto,
+        []
       );
 
       expect(result).toBe(createdCar);
@@ -188,7 +196,7 @@ describe('CarsService', () => {
       expect(result).toEqual(mockCar);
       expect(carsRepository.findOne).toHaveBeenCalledWith({
         where: { id: mockCar.id },
-        relations: ['rentals'],
+        relations: ['rentals', 'local_file'],
       });
     });
 
@@ -203,7 +211,7 @@ describe('CarsService', () => {
 
       expect(carsRepository.findOne).toHaveBeenCalledWith({
         where: { id: nonExistingId },
-        relations: ['rentals'],
+        relations: ['rentals', 'local_file'],
       });
     });
   });

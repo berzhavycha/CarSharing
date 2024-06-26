@@ -7,6 +7,12 @@ import { CarStatus } from '@/helpers';
 import { CarsService } from '@/services';
 
 import { createCarDtoMock, mockCar, mockCarsService } from '../mocks';
+import { ConfigService } from '@nestjs/config';
+
+jest.mock('@nestjs/config');
+const mockConfigService = {
+  get: jest.fn(),
+};
 
 describe('CarsController', () => {
   let carsService: CarsService;
@@ -19,6 +25,10 @@ describe('CarsController', () => {
         {
           provide: CarsService,
           useValue: mockCarsService,
+        },
+        {
+          provide: ConfigService,
+          useValue: mockConfigService,
         },
       ],
     }).compile();
@@ -39,16 +49,17 @@ describe('CarsController', () => {
     it('should create a new car', async () => {
       const createdCar = {
         id: 'car-id',
+        ...mockCar,
         ...createCarDtoMock,
       } as Car;
 
       jest.spyOn(carsService, 'createCar').mockResolvedValue(createdCar);
 
       const dto = { ...createCarDtoMock, status: CarStatus.AVAILABLE };
-      const result = await carsController.create(dto);
+      const result = await carsController.create(dto, []);
 
       expect(result).toBe(createdCar);
-      expect(carsService.createCar).toHaveBeenCalledWith(dto);
+      expect(carsService.createCar).toHaveBeenCalledWith(dto, []);
     });
   });
 
@@ -129,6 +140,7 @@ describe('CarsController', () => {
       expect(carsService.updateCar).toHaveBeenCalledWith(
         carId,
         updateCarDtoMock,
+        []
       );
     });
   });

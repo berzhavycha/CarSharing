@@ -6,7 +6,7 @@ import { LocalFile } from '@/entities';
 import { CreateCarDto } from '../cars';
 
 export class CreateOriginalCarDto extends OmitType(CreateCarDto, [
-  'status',
+  'status', 
 ]) {
   @IsNotEmpty()
   pictures: LocalFile[];
