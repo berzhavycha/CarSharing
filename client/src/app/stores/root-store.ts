@@ -1,6 +1,6 @@
 import { Instance, t } from 'mobx-state-tree';
 
-import { CurrentUserStore } from './CurrentUserStore';
+import { CurrentUserStore } from './current-user-store';
 
 const RootStore = t.model('RootStore', {
   currentUserStore: CurrentUserStore,

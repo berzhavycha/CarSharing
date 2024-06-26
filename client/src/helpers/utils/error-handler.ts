@@ -4,7 +4,7 @@ import { FieldErrorsState } from '@/types';
 
 import { UNEXPECTED_ERROR_MESSAGE } from '../constants';
 
-import { pickErrorMessages } from './pickErrorMessages';
+import { pickErrorMessages } from './pick-error-messages';
 
 export const errorHandler = <T extends object>(
   error: unknown,
