@@ -1,15 +1,14 @@
-import { AxiosError } from 'axios';
 import { flow, Instance, types as t } from 'mobx-state-tree';
 
 import { axiosInstance } from '@/api';
 import { Env } from '@/core';
 import {
-  pickErrorMessages,
   signInFieldMappings,
   signUpFieldMappings,
   transformUserResponse,
   UNEXPECTED_ERROR_MESSAGE,
   updateUserFieldMappings,
+  errorHandler
 } from '@/helpers';
 import {
   AuthenticatedUser,
@@ -44,14 +43,7 @@ export const CurrentUserStore = t
         const { data } = yield axiosInstance.post(`${Env.API_BASE_URL}/auth/sign-up`, userDto);
         self.user = User.create(transformUserResponse(data));
       } catch (error) {
-        if (error instanceof AxiosError) {
-          self.signUpErrors = pickErrorMessages<SignUpUserDto>(
-            [error.response?.data.message],
-            signUpFieldMappings,
-          );
-        } else {
-          self.signUpErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
-        }
+        self.signUpErrors = errorHandler<SignUpUserDto>(error, signUpFieldMappings);
       }
     }),
     signIn: flow(function* (userDto: SignInUserDto) {
@@ -60,14 +52,7 @@ export const CurrentUserStore = t
         const { data } = yield axiosInstance.post(`${Env.API_BASE_URL}/auth/sign-in`, userDto);
         self.user = User.create(transformUserResponse(data));
       } catch (error) {
-        if (error instanceof AxiosError) {
-          self.signInErrors = pickErrorMessages<SignInUserDto>(
-            [error.response?.data.message],
-            signInFieldMappings,
-          );
-        } else {
-          self.signInErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
-        }
+        self.signInErrors = errorHandler<SignInUserDto>(error, signInFieldMappings);
       }
     }),
     signOut: flow(function* () {
@@ -94,14 +79,7 @@ export const CurrentUserStore = t
 
         self.user = transformUserResponse(data);
       } catch (error) {
-        if (error instanceof AxiosError) {
-          self.updateErrors = pickErrorMessages<UpdateUserDto>(
-            [error.response?.data.message],
-            updateUserFieldMappings,
-          );
-        } else {
-          self.updateErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
-        }
+        self.updateErrors = errorHandler<UpdateUserDto>(error, updateUserFieldMappings);
       }
     }),
     fetchCurrentUser: flow(function* () {
@@ -116,17 +94,8 @@ export const CurrentUserStore = t
       try {
         const { data } = yield axiosInstance.patch(`${Env.API_BASE_URL}/users/${self.user?.id}/avatar`);
         self.user = transformUserResponse(data);
-        console.log(data)
       } catch (error) {
-        console.log(error)
-        if (error instanceof AxiosError) {
-          self.updateErrors = pickErrorMessages<UpdateUserDto>(
-            [error.response?.data.message],
-            updateUserFieldMappings,
-          );
-        } else {
-          self.updateErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
-        }
+        self.updateErrors = errorHandler<UpdateUserDto>(error, updateUserFieldMappings);
       }
     }),
   }));
