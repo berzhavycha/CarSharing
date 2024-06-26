@@ -61,7 +61,7 @@ const PictureWrapper = styled.div<PictureWrapperProps>`
   img {
     width: ${(props): string => `${props.$width}`}px;
     height: ${(props): string => `${props.$height}`}px;
-    object-fit: cover;
+    object-fit: contain;
   }
 `;
 

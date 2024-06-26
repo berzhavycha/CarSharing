@@ -1,7 +1,6 @@
 import {
   IsEnum,
   IsInt,
-  IsNotEmpty,
   IsNumber,
   IsString,
   Length,
@@ -10,9 +9,6 @@ import {
 import { CAR_FIELD_MEDIUM_LENGTH, CarStatus } from '@/helpers';
 
 export class CreateCarDto {
-  @IsNotEmpty()
-  pictures: Express.Multer.File[];
-
   @IsString()
   model: string;
 
