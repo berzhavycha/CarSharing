@@ -8,7 +8,7 @@ import {
   Patch,
   Post,
   Query,
-  UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -32,13 +32,14 @@ export class CarsController {
       path: '/cars',
       fileFilter: defaultFileFilter,
       limits: defaultLocalFileLimits,
-    }),
+    })
   )
   async create(
     @Body() createCarDto: CreateCarDto,
-    @UploadedFile() files: Express.Multer.File[],
+    @UploadedFiles() pictures: Express.Multer.File[],
   ): Promise<Car> {
-    return this.carsService.createCar(createCarDto, files);
+    console.log(createCarDto)
+    return this.carsService.createCar(createCarDto, pictures);
   }
 
   @Get()
@@ -72,7 +73,7 @@ export class CarsController {
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateCarDto: UpdateCarDto,
-    @UploadedFile() files?: Express.Multer.File[],
+    @UploadedFiles() files?: Express.Multer.File[],
   ): Promise<Car> {
     const uploadedFiles =
       files?.map((file) => ({

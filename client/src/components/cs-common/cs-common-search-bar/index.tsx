@@ -31,7 +31,7 @@ const SearchContainer = styled.div`
   background: none;
   padding: 5px 10px 5px 15px;
   border-radius: 35px;
-  width: 500px;
+  width: 400px;
   border: var(--default-border);
 `;
 

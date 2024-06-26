@@ -7,7 +7,6 @@ import { CreateCarDto } from '../cars';
 
 export class CreateOriginalCarDto extends OmitType(CreateCarDto, [
   'status',
-  'pictures',
 ]) {
   @IsNotEmpty()
   pictures: LocalFile[];

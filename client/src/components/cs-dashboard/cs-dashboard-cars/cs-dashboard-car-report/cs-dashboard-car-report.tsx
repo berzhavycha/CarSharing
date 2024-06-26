@@ -2,6 +2,8 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import DefaultImage from '../../../../../public/Car.png';
+import { CSCommonPrimaryButton, CSCommonSearchBar } from '@/components/cs-common';
+import { useNavigate } from 'react-router-dom';
 
 const bookings = [
   {
@@ -15,17 +17,29 @@ const bookings = [
 ];
 
 export const CSDashboardCarReport: FC = () => {
+  const navigate = useNavigate()
+
+  const onAddBtnClick = (): void => navigate('/dashboard/add-car')
+
   return (
     <CarsContainer>
       <ContentContainer>
+        <Header>
+          <h3>Cars</h3>
+          <CSCommonSearchBar search={''} onSearchChange={function (text: string): void {
+            throw new Error('Function not implemented.');
+          }} />
+          <CSCommonPrimaryButton onClick={onAddBtnClick} content='Add Car' />
+        </Header>
         <Table>
           <thead>
             <tr>
               <TableHeader>No.</TableHeader>
               <TableHeader>Image</TableHeader>
-              <TableHeader>Customer Name</TableHeader>
-              <TableHeader>Pick-up & Drop-off</TableHeader>
-              <TableHeader>Date & Time</TableHeader>
+              <TableHeader>Model</TableHeader>
+              <TableHeader>Year</TableHeader>
+              <TableHeader>Price / Hour</TableHeader>
+              <TableHeader>Type</TableHeader>
               <TableHeader>Status</TableHeader>
               <TableHeader>Actions</TableHeader>
             </tr>
@@ -40,6 +54,9 @@ export const CSDashboardCarReport: FC = () => {
                 <TableCell>{booking.customerName}</TableCell>
                 <TableCell>{booking.route}</TableCell>
                 <TableCell>{booking.dateTime}</TableCell>
+                <TableCell>
+                  <StatusBadge status={booking.status}>{booking.status}</StatusBadge>
+                </TableCell>
                 <TableCell>
                   <StatusBadge status={booking.status}>{booking.status}</StatusBadge>
                 </TableCell>
@@ -59,6 +76,14 @@ export const CSDashboardCarReport: FC = () => {
 const CarsContainer = styled.div`
   width: 100%;
   max-height: 100vh;
+`;
+
+const Header = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20px;
 `;
 
 const ContentContainer = styled.div`
@@ -93,9 +118,9 @@ const TableCell = styled.td`
   border-bottom: 1px solid #dee2e6;
 
   img {
-    width: 50px;
+    width: 80px;
     height: 50px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 50%;
   }
 `;

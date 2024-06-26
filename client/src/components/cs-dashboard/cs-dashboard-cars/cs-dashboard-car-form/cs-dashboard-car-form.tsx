@@ -10,13 +10,18 @@ import {
   CarTypeSelect,
   createCarSchema,
 } from '@/helpers';
-import { CarDto } from '@/types';
+import { Car, CarDto, FieldErrorsState } from '@/types';
 
 import DefaultImage from '../../../../../public/car-upload.png';
 
-export const CSDashboardCarForm: FC = observer(() => {
-  const onSubmit = (car: CarDto): void => {
-    console.log(car);
+type Props = {
+  onFormSubmit: (car: CarDto) => Promise<{ car: Car | null, errors: FieldErrorsState<CarDto> | null }>
+}
+
+export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
+  const onSubmit = async (carDto: CarDto): Promise<void> => {
+    const { car, errors } = await onFormSubmit(carDto)
+    console.log(car, errors)
   };
 
   return (
