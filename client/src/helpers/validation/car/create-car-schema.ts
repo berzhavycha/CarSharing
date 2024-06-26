@@ -4,7 +4,7 @@ import { ONE_MB } from '@/helpers/constants';
 
 export const createCarSchema = z.object({
   pictures: z
-    .custom<FileList>()
+    .custom<File[]>()
     .transform((fileList) => {
       const filesArray = Array.from(fileList).slice(0, 3);
       return filesArray.length > 0 ? filesArray : null;
