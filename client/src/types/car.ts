@@ -1,15 +1,15 @@
 export type CarDto = {
   pictures: File[] | null;
   model: string;
-  year: number;
+  year: number | string;
   description: string;
-  pricePerHour: number;
+  pricePerHour: number | string;
   type: string;
   status: string;
-  capacity: number;
+  capacity: number | string;
   fuelType: string;
   steering: string;
-  fuelCapacity: number;
+  fuelCapacity: number | string;
 };
 
 export type Car = CarDto & {

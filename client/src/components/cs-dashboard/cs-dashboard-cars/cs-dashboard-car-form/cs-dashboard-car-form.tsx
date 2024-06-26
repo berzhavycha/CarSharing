@@ -47,7 +47,7 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
             />
             <CSCommonForm.Input label="Year" name="year" type="number" />
 
-            <CSCommonForm.Input label="Price / Hour" name="pricePerHour" type="number" />
+            <CSCommonForm.Input label="Price / Hour" name="pricePerHour" type="text" />
             <CSCommonForm.Select label="Status" name="status" options={CarStatusSelect} />
           </Section>
 
