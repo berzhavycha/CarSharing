@@ -25,4 +25,9 @@ export class LocalFilesService {
     }
     return file;
   }
+
+  async removeFile(id: string): Promise<void> {
+    const file = await this.findById(id);
+    await this.localFilesRepository.remove(file);
+  }
 }

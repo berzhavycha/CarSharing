@@ -12,7 +12,7 @@ import DefaultImage from '../../../../../public/avatar.webp';
 
 export const ProfileSettingsForm: FC = observer(() => {
   const {
-    currentUserStore: { user, updateErrors, updateUser },
+    currentUserStore: { user, updateErrors, updateUser, removeAvatar },
   } = useStore();
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
@@ -25,7 +25,9 @@ export const ProfileSettingsForm: FC = observer(() => {
     await updateUser(userDtoWithoutEmptyPasswords);
   };
 
-  const avatar = user?.avatarId ? `${Env.API_BASE_URL}/local-files/${user.avatarId}` : DefaultImage;
+  const onRemoveAvatar = async (): Promise<void> => await removeAvatar()
+
+  const avatar = user?.avatarId ? [`${Env.API_BASE_URL}/local-files/${user.avatarId}`] : undefined
   const defaultFormValues = {
     firstName: user?.firstName,
     lastName: user?.lastName,
@@ -43,8 +45,9 @@ export const ProfileSettingsForm: FC = observer(() => {
         >
           <ProfileHeaderWrapper>
             <CustomForm.InputFile
-              circled
-              defaultImage={avatar}
+              defaultImage={DefaultImage}
+              actualImages={avatar}
+              onRemove={onRemoveAvatar}
               name="picture"
               label="Update Avatar"
             />

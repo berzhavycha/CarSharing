@@ -30,7 +30,7 @@ export class UsersService {
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
     private localFilesService: LocalFilesService,
-  ) {}
+  ) { }
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -78,7 +78,7 @@ export class UsersService {
   async findById(id: string): Promise<User> {
     const user = await this.usersRepository.findOne({
       where: { id },
-      relations: ['role'],
+      relations: ['role', 'avatar'],
     });
 
     if (!user) {
@@ -124,6 +124,18 @@ export class UsersService {
     }
 
     Object.assign(user, updateUserDto);
+
+    return this.usersRepository.save(user);
+  }
+
+  async removeAvatar(id: string): Promise<User> {
+    const user = await this.findById(id);
+
+    if (user.avatar) {
+      await this.localFilesService.removeFile(user.avatar.id);
+      user.avatar = null;
+      user.avatarId = null;
+    }
 
     return this.usersRepository.save(user);
   }

@@ -8,6 +8,8 @@ import { useCustomForm } from '..';
 type Props = Omit<InputProps, 'name'> & {
   name: string;
   defaultImage: string;
+  actualImages?: string[];
+  onRemove?: (image: string) => Promise<void> | void;
   circled?: boolean;
   width?: number;
   height?: number;
@@ -16,8 +18,10 @@ type Props = Omit<InputProps, 'name'> & {
 
 export const InputImage: FC<Props> = ({
   defaultImage,
+  actualImages,
   label,
   circled,
+  onRemove,
   name,
   error,
   width = 100,
@@ -34,14 +38,16 @@ export const InputImage: FC<Props> = ({
   const errorText = errorMessage || error;
 
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
-  const [previews, setPreviews] = useState<string[]>([defaultImage]);
+  const [previews, setPreviews] = useState<string[]>(() => (
+    actualImages && actualImages?.length > 0 ? [...actualImages] : [defaultImage]
+  ));
 
   const { ref: registerRef, onChange, ...rest } = register(name);
 
   const handleUploadedFiles = (event: ChangeEvent<HTMLInputElement>): void => {
     const files = Array.from(event.target.files || []);
     const previewUrls = files.map((file) => URL.createObjectURL(file));
-    setPreviews(previewUrls);
+    setPreviews(previewUrls.length > 0 ? previewUrls : [defaultImage]);
   };
 
   const onUpload = (): void => {
@@ -53,12 +59,34 @@ export const InputImage: FC<Props> = ({
     handleUploadedFiles(e);
   };
 
+  const removeImage = (index: number): void => {
+    setPreviews((prevPreviews) => {
+      const updatedPreviews = prevPreviews.filter((_, i) => i !== index);
+      return updatedPreviews.length > 0 ? updatedPreviews : [defaultImage];
+    });
+  };
+
   return (
     <InputImageContainer>
-      <PicturesContainer onClick={onUpload}>
+      <PicturesContainer>
         {previews.map((preview, index) => (
-          <PictureWrapper key={index} $circled={circled} $width={width} $height={height}>
+          <PictureWrapper onClick={onUpload} key={index} $circled={circled} $width={width} $height={height}>
             <img src={preview} alt={`${name}-${index}`} />
+            {preview !== defaultImage && (
+              <RemoveButton
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeImage(index);
+                  console.log(preview)
+                  if (onRemove) {
+                    onRemove(preview)
+                  }
+                }}
+              >
+                &times;
+              </RemoveButton>
+            )}
           </PictureWrapper>
         ))}
       </PicturesContainer>
@@ -123,6 +151,22 @@ const PictureWrapper = styled.div<PictureWrapperProps>`
   }
 `;
 
+const RemoveButton = styled.button`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+
 const UpdatePicture = styled.button`
   width: 100%;
   position: relative;
@@ -135,3 +179,4 @@ const UpdatePicture = styled.button`
   margin-top: 10px;
   text-align: center;
 `;
+
