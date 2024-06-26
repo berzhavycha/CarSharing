@@ -112,6 +112,23 @@ export const CurrentUserStore = t
         self.user = null;
       }
     }),
+    removeAvatar: flow(function* () {
+      try {
+        const { data } = yield axiosInstance.patch(`${Env.API_BASE_URL}/users/${self.user?.id}/avatar`);
+        self.user = transformUserResponse(data);
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+        if (error instanceof AxiosError) {
+          self.updateErrors = pickErrorMessages<UpdateUserDto>(
+            [error.response?.data.message],
+            updateUserFieldMappings,
+          );
+        } else {
+          self.updateErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
+        }
+      }
+    }),
   }));
 
 export type CurrentUserStoreType = Instance<typeof CurrentUserStore>;

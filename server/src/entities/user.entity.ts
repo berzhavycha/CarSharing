@@ -27,12 +27,6 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @JoinColumn({ name: 'avatar_id' })
-  @OneToOne(() => LocalFile, {
-    nullable: true,
-  })
-  avatar?: LocalFile;
-
   @Column({ nullable: true })
   avatarId?: string;
 
@@ -84,4 +78,13 @@ export class User {
 
   @OneToMany(() => Transaction, (transaction) => transaction.user)
   transactions: Transaction[];
+
+  @JoinColumn({ name: 'avatar_id' })
+  @OneToOne(() => LocalFile, {
+    nullable: true,
+    cascade: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  avatar?: LocalFile;
 }
