@@ -7,45 +7,45 @@ import { CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
 import { CarFeature } from '../cs-car-feature';
 
 type CarCardProps = {
-  model: string;
-  type: string;
-  fuelCapacity: number;
-  transmission: string;
-  capacity: number;
-  pricePerHour: number;
-  imageUrl: string;
+    model: string;
+    type: string;
+    fuelCapacity: number;
+    transmission: string;
+    capacity: number;
+    pricePerHour: number;
+    imageUrl: string;
 };
 
 export const CarCard: FC<CarCardProps> = ({
-  model,
-  type,
-  fuelCapacity,
-  transmission,
-  capacity,
-  pricePerHour,
-  imageUrl,
+    model,
+    type,
+    fuelCapacity,
+    transmission,
+    capacity,
+    pricePerHour,
+    imageUrl,
 }) => {
-  return (
-    <CardWrapper>
-      <Header>
-        <Title>{model}</Title>
-        <Type>{type}</Type>
-      </Header>
-      <CarImageWrapper>
-        <ShadowImage src="../../../../public/shadow.png" alt="" />
-        <CarImage src={imageUrl} alt={model} />
-      </CarImageWrapper>
-      <Features>
-        <CarFeature icon={<FaGasPump />} text={`${fuelCapacity}L`} />
-        <CarFeature icon={<FaCog />} text={transmission} />
-        <CarFeature icon={<FaUsers />} text={`${capacity} People`} />
-      </Features>
-      <Footer>
-        <CSCommonPrice amount={pricePerHour} metric="hours" />
-        <CSCommonPrimaryButton content="Rent Now" onClick={() => console.log('rent')} />
-      </Footer>
-    </CardWrapper>
-  );
+    return (
+        <CardWrapper>
+            <Header>
+                <Title>{model}</Title>
+                <Type>{type}</Type>
+            </Header>
+            <CarImageWrapper>
+                <ShadowImage src="../../../../public/shadow.png" alt="" />
+                <CarImage src={imageUrl} alt={model} />
+            </CarImageWrapper>
+            <Features>
+                <CarFeature icon={<FaGasPump />} text={`${fuelCapacity}L`} />
+                <CarFeature icon={<FaCog />} text={transmission} />
+                <CarFeature icon={<FaUsers />} text={`${capacity} People`} />
+            </Features>
+            <Footer>
+                <CSCommonPrice amount={pricePerHour} metric="hours" />
+                <CSCommonPrimaryButton content="Rent Now" onClick={() => console.log('rent')} />
+            </Footer>
+        </CardWrapper>
+    );
 };
 
 const CardWrapper = styled.div`
