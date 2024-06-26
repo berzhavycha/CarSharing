@@ -1,1 +1,1 @@
-export * from './StoreProvider';
+export * from './cs-store-provider';
