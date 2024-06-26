@@ -1,9 +1,9 @@
-import { ChangeEvent, FC, useRef, useState } from 'react';
+import { ChangeEvent, FC, useRef } from 'react';
 import styled from 'styled-components';
-
 import { CSCommonErrorMessage, InputProps } from '@/components/cs-common';
-
 import { useCommonForm } from './cs-common-form';
+import { useImagePreviews } from './hooks';
+import { CSCommonFormImagePreview } from './cs-common-form-image-preview';
 
 type Props = Omit<InputProps, 'name'> & {
   name: string;
@@ -29,26 +29,15 @@ export const CSCommonFormInputImage: FC<Props> = ({
   multiple = false,
   ...props
 }) => {
-  const {
-    register,
-    formState: { errors },
-  } = useCommonForm().formHandle;
-
-  const errorMessage = errors[name]?.message as string;
-  const errorText = errorMessage || error;
+  const { register, formState: { errors } } = useCommonForm().formHandle;
 
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
-  const [previews, setPreviews] = useState<string[]>(() =>
-    actualImages && actualImages?.length > 0 ? [...actualImages] : [defaultImage],
-  );
+  const { previews, handleUploadedFiles, removeImage } = useImagePreviews(defaultImage, actualImages);
 
   const { ref: registerRef, onChange, ...rest } = register(name);
 
-  const handleUploadedFiles = (event: ChangeEvent<HTMLInputElement>): void => {
-    const files = Array.from(event.target.files || []);
-    const previewUrls = files.map((file) => URL.createObjectURL(file));
-    setPreviews(previewUrls.length > 0 ? previewUrls : [defaultImage]);
-  };
+  const errorMessage = errors[name]?.message as string;
+  const errorText = errorMessage || error;
 
   const onUpload = (): void => {
     hiddenInputRef.current?.click();
@@ -59,41 +48,28 @@ export const CSCommonFormInputImage: FC<Props> = ({
     handleUploadedFiles(e);
   };
 
-  const removeImage = (index: number): void => {
-    setPreviews((prevPreviews) => {
-      const updatedPreviews = prevPreviews.filter((_, i) => i !== index);
-      return updatedPreviews.length > 0 ? updatedPreviews : [defaultImage];
-    });
-  };
+  const onRemoveImage = (preview: string, index: number): void => {
+    removeImage(index);
+    if (onRemove && actualImages?.length) {
+      onRemove(preview);
+    }
+  }
 
   return (
     <InputImageContainer>
       <PicturesContainer>
         {previews.map((preview, index) => (
-          <PictureWrapper
-            onClick={onUpload}
+          <CSCommonFormImagePreview
             key={index}
-            $circled={circled}
-            $width={width}
-            $height={height}
-          >
-            <img src={preview} alt={`${name}-${index}`} />
-            {preview !== defaultImage && (
-              <RemoveButton
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeImage(index);
-                  console.log(preview);
-                  if (onRemove) {
-                    onRemove(preview);
-                  }
-                }}
-              >
-                &times;
-              </RemoveButton>
-            )}
-          </PictureWrapper>
+            src={preview}
+            alt={`${name}-${index}`}
+            circled={circled}
+            width={width}
+            height={height}
+            onClick={onUpload}
+            onRemove={() => onRemoveImage(preview, index)}
+            isRemovable={preview !== defaultImage}
+          />
         ))}
       </PicturesContainer>
       <UpdatePicture type="button" onClick={onUpload}>
@@ -118,12 +94,6 @@ export const CSCommonFormInputImage: FC<Props> = ({
   );
 };
 
-type PictureWrapperProps = {
-  $circled?: boolean;
-  $width?: number;
-  $height?: number;
-};
-
 const InputImageContainer = styled.div`
   position: relative;
 `;
@@ -139,38 +109,6 @@ const PicturesContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-`;
-
-const PictureWrapper = styled.div<PictureWrapperProps>`
-  position: relative;
-  border: var(--default-border);
-  border-radius: ${(props): string => `${props.$circled ? '50%' : '10%'}`};
-  overflow: hidden;
-  background: none;
-  outline: none;
-  cursor: pointer;
-
-  img {
-    width: ${(props): string => `${props.$width}`}px;
-    height: ${(props): string => `${props.$height}`}px;
-    object-fit: cover;
-  }
-`;
-
-const RemoveButton = styled.button`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
 `;
 
 const UpdatePicture = styled.button`
