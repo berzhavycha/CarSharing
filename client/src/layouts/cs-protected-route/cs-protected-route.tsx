@@ -1,13 +1,28 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 type Props = PropsWithChildren & {
-  isAllowed: boolean;
-  redirectPath: string;
+  isAllowed: () => Promise<boolean>;
+  redirectPath?: string;
 };
 
 export const CSProtectedRoute: FC<Props> = ({ children, isAllowed, redirectPath = '/sign-in' }) => {
-  if (!isAllowed) {
+  const [allowed, setAllowed] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkPermission = async (): Promise<void> => {
+      const result = await isAllowed();
+      setAllowed(result);
+    };
+
+    checkPermission();
+  }, [isAllowed]);
+
+  if (allowed === null) {
+    return <div>Loading...</div>; 
+  }
+
+  if (!allowed) {
     return <Navigate to={redirectPath} replace />;
   }
 
