@@ -48,7 +48,7 @@ export const CSDashboardCarReport: FC = () => {
         <CarTable cars={cars} onDetailsBtnClick={onDetailsBtnClick} onSortChange={onSortChange} />
         <Pagination
           totalPages={totalPages}
-          currentPage={Number(searchParams.get('page')) || 1}
+          currentPage={Number(searchParams.get('page')) || +DEFAULT_PAGINATION_PAGE}
           onPageChange={onPageChange}
         />
       </ContentContainer>
