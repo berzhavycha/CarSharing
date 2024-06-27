@@ -1,5 +1,5 @@
-import { FaExclamationCircle, FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
-import styled, { css } from "styled-components";
+import { FaCheckCircle, FaExclamationCircle, FaExclamationTriangle } from 'react-icons/fa';
+import styled, { css } from 'styled-components';
 
 const iconStyles = css`
   font-size: 24px;
@@ -7,16 +7,16 @@ const iconStyles = css`
 `;
 
 export const iconMap = {
-    error: styled(FaExclamationCircle)`
-        ${iconStyles}
-        color: var(--maintained-text);
-    `,
-    confirm: styled(FaCheckCircle)`
-        ${iconStyles}
-        color: var(--available-text);
-    `,
-    warning: styled(FaExclamationTriangle)`
-        ${iconStyles}
-        color: var(--booked-text);
-    `
+  error: styled(FaExclamationCircle)`
+    ${iconStyles}
+    color: var(--maintained-text);
+  `,
+  confirm: styled(FaCheckCircle)`
+    ${iconStyles}
+    color: var(--available-text);
+  `,
+  warning: styled(FaExclamationTriangle)`
+    ${iconStyles}
+    color: var(--booked-text);
+  `,
 };

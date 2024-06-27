@@ -26,7 +26,6 @@ jest.mock('@/helpers/utils/applySearchAndPagination', () => ({
   applySearchAndPagination: jest.fn(),
 }));
 
-
 describe('CarsService', () => {
   let carsService: CarsService;
   let carsRepository: Repository<Car>;
@@ -71,7 +70,7 @@ describe('CarsService', () => {
 
       const result = await carsService.createCar(
         createCarDtoMock as CreateCarDto,
-        []
+        [],
       );
 
       expect(result).toBe(createdCar);

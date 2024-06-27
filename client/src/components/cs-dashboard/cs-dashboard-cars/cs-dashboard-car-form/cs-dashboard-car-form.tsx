@@ -24,14 +24,14 @@ type Props = {
 export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
   const location = useLocation();
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
-  const [errors, setErrors] = useState<FieldErrorsState<CarDto> | null>(null)
+  const [errors, setErrors] = useState<FieldErrorsState<CarDto> | null>(null);
 
   const onSubmit = async (carDto: CarDto): Promise<void> => {
     const { car, errors } = await onFormSubmit(carDto);
     if (car) {
       setModalVisible(true);
     }
-    setErrors(errors)
+    setErrors(errors);
   };
 
   const handleCloseModal = (): void => setModalVisible(false);
@@ -57,25 +57,55 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
 
           <Title>General Information</Title>
           <Section>
-            <CSCommonForm.Input
-              label="Model Name"
-              name="model"
-              error={errors?.model}
-            />
+            <CSCommonForm.Input label="Model Name" name="model" error={errors?.model} />
             <CSCommonForm.Input label="Year" name="year" type="number" error={errors?.year} />
-            <CSCommonForm.Input label="Price / Hour" name="pricePerHour" type="text" error={errors?.pricePerHour} />
+            <CSCommonForm.Input
+              label="Price / Hour"
+              name="pricePerHour"
+              type="text"
+              error={errors?.pricePerHour}
+            />
             <CSCommonForm.Select label="Status" name="status" options={CarStatusSelect} />
           </Section>
 
-          <CSCommonForm.TextArea label="Description" name="description" error={errors?.description} />
+          <CSCommonForm.TextArea
+            label="Description"
+            name="description"
+            error={errors?.description}
+          />
 
           <Title>Characteristics</Title>
           <Section>
-            <CSCommonForm.Select label="Type" name="type" options={CarTypeSelect} error={errors?.type} />
-            <CSCommonForm.Input label="Capacity" name="capacity" type="number" error={errors?.capacity} />
-            <CSCommonForm.Select label="Fuel Type" name="fuelType" options={CarFuelTypeSelect} error={errors?.fuelType} />
-            <CSCommonForm.Input label="Fuel Capacity" name="fuelCapacity" type="number" error={errors?.fuelCapacity} />
-            <CSCommonForm.Select label="Steering" name="steering" options={CarSteeringTypeSelect} error={errors?.steering} />
+            <CSCommonForm.Select
+              label="Type"
+              name="type"
+              options={CarTypeSelect}
+              error={errors?.type}
+            />
+            <CSCommonForm.Input
+              label="Capacity"
+              name="capacity"
+              type="number"
+              error={errors?.capacity}
+            />
+            <CSCommonForm.Select
+              label="Fuel Type"
+              name="fuelType"
+              options={CarFuelTypeSelect}
+              error={errors?.fuelType}
+            />
+            <CSCommonForm.Input
+              label="Fuel Capacity"
+              name="fuelCapacity"
+              type="number"
+              error={errors?.fuelCapacity}
+            />
+            <CSCommonForm.Select
+              label="Steering"
+              name="steering"
+              options={CarSteeringTypeSelect}
+              error={errors?.steering}
+            />
           </Section>
         </CSCommonForm>
       </ContentContainer>

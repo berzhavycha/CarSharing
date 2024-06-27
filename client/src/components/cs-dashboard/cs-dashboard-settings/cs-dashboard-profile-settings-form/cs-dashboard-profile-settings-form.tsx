@@ -14,9 +14,9 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
   const {
     currentUserStore: { user, updateErrors, updateUser, removeAvatar },
   } = useStore();
-  const [isAvatarRemoving, setIsAvatarRemoving] = useState<boolean>(false)
-  const [isUpdateSuccessful, setIsUpdateSuccessful] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [isAvatarRemoving, setIsAvatarRemoving] = useState<boolean>(false);
+  const [isUpdateSuccessful, setIsUpdateSuccessful] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
     const userDtoWithoutEmptyPasswords = Object.fromEntries(
@@ -34,18 +34,17 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
   const onRemoveAvatar = (): void => setIsAvatarRemoving(true);
   const handleRemoveAvatar = async (): Promise<void> => {
     try {
-      await removeAvatar()
+      await removeAvatar();
     } catch (error) {
-      setErrorMessage(UNEXPECTED_ERROR_MESSAGE)
+      setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
     } finally {
-      setIsAvatarRemoving(false)
+      setIsAvatarRemoving(false);
     }
-  }
+  };
 
-  const onCloseConfirmWindow = (): void => setIsAvatarRemoving(false)
-  const onCloseErrorWindow = (): void => setErrorMessage(null)
+  const onCloseConfirmWindow = (): void => setIsAvatarRemoving(false);
+  const onCloseErrorWindow = (): void => setErrorMessage(null);
   const handleCloseModal = (): void => setIsUpdateSuccessful(false);
-
 
   const avatar = user?.avatarId ? [`${Env.API_BASE_URL}/local-files/${user.avatarId}`] : undefined;
   const defaultFormValues = {
@@ -88,7 +87,11 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
                 name="firstName"
                 error={updateErrors?.firstName}
               />
-              <CSCommonForm.Input label="Last Name" name="lastName" error={updateErrors?.lastName} />
+              <CSCommonForm.Input
+                label="Last Name"
+                name="lastName"
+                error={updateErrors?.lastName}
+              />
               <CSCommonForm.Input label="Email" name="email" error={updateErrors?.email} />
             </ProfileSection>
 

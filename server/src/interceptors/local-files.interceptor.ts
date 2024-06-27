@@ -21,8 +21,12 @@ export function LocalFilesInterceptor(
     filesInterceptor: NestInterceptor;
 
     constructor(private readonly configService: ConfigService) {
-      const filesDestination = this.configService.get('UPLOADED_FILES_DESTINATION');
-      const destination = options.path ? `${filesDestination}${options.path}` : filesDestination;
+      const filesDestination = this.configService.get(
+        'UPLOADED_FILES_DESTINATION',
+      );
+      const destination = options.path
+        ? `${filesDestination}${options.path}`
+        : filesDestination;
 
       const multerOptions = {
         storage: diskStorage({

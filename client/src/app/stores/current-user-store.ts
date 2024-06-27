@@ -41,7 +41,7 @@ export const CurrentUserStore = t
         const response = yield signUp(userDto);
         handleUserResponse<SignUpUserDto>(
           response,
-          (user) => self.user = User.create(user),
+          (user) => (self.user = User.create(user)),
           (errors) => (self.signUpErrors = errors),
         );
       } catch (error) {
@@ -55,7 +55,7 @@ export const CurrentUserStore = t
         const response = yield signIn(userDto);
         handleUserResponse<SignInUserDto>(
           response,
-          (user) => self.user = User.create(user),
+          (user) => (self.user = User.create(user)),
           (errors) => (self.signInErrors = errors),
         );
       } catch (error) {
@@ -98,7 +98,7 @@ export const CurrentUserStore = t
         handleUserResponse(
           response,
           (user) => (self.user = user),
-          () => { },
+          () => {},
         );
       } catch (error) {
         self.user = null;
@@ -110,7 +110,7 @@ export const CurrentUserStore = t
         handleUserResponse<{ picture: string }>(
           response,
           (user) => (self.user = user),
-          () => { },
+          () => {},
         );
       }
     }),

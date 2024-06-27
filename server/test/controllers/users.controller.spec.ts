@@ -71,7 +71,7 @@ describe('UsersController', () => {
       expect(usersService.updateUser).toHaveBeenCalledWith(
         mockUserId,
         mockUpdateUserDto,
-        null
+        null,
       );
     });
 

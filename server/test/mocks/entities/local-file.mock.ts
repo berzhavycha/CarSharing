@@ -1,4 +1,4 @@
-import { Car, OriginalCar } from "@/entities";
+import { Car, OriginalCar } from '@/entities';
 
 export const mockLocalFile = {
   id: 'av-id',
@@ -6,5 +6,5 @@ export const mockLocalFile = {
   path: 'some/path',
   mimetype: 'image/jpeg',
   car: new Car(),
-  originalCar: new OriginalCar()
+  originalCar: new OriginalCar(),
 };

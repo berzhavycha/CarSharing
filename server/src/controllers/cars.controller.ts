@@ -16,13 +16,18 @@ import {
 import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { Car } from '@/entities';
 import { JwtAuthGuard, RoleGuard } from '@/guards';
-import { defaultFileFilter, defaultLocalFileLimits, MAX_CAR_PICTURES, Roles } from '@/helpers';
+import {
+  defaultFileFilter,
+  defaultLocalFileLimits,
+  MAX_CAR_PICTURES,
+  Roles,
+} from '@/helpers';
 import { LocalFilesInterceptor } from '@/interceptors';
 import { CarsService } from '@/services';
 
 @Controller('cars')
 export class CarsController {
-  constructor(private readonly carsService: CarsService) { }
+  constructor(private readonly carsService: CarsService) {}
 
   @Post()
   @UseGuards(RoleGuard(Roles.ADMIN))
@@ -33,7 +38,7 @@ export class CarsController {
       path: '/cars',
       fileFilter: defaultFileFilter,
       limits: defaultLocalFileLimits,
-    })
+    }),
   )
   async create(
     @Body() createCarDto: CreateCarDto,
@@ -50,7 +55,9 @@ export class CarsController {
 
   @Get('/available')
   @UseGuards(JwtAuthGuard)
-  async findAllAvailable(@Query() listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
+  async findAllAvailable(
+    @Query() listCarsDto: QueryCarsDto,
+  ): Promise<[Car[], number]> {
     return this.carsService.findAllAvailable(listCarsDto);
   }
 

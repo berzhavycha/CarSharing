@@ -1,11 +1,19 @@
 import { Transform } from 'class-transformer';
-import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Length,
+} from 'class-validator';
+
 import { CAR_FIELD_MEDIUM_LENGTH, CarStatus } from '@/helpers';
 
 export class CreateCarDto {
   @IsNotEmpty()
-  pictures: Express.Multer.File[]
-  
+  pictures: Express.Multer.File[];
+
   @IsString()
   model: string;
 

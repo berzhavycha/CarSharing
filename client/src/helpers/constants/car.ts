@@ -69,22 +69,21 @@ export const CarSteeringTypeSelect: Option[] = [
   { label: 'Drive-by-wire Steering', value: CarSteeringType.DRIVE_BY_WIRE },
 ];
 
-
 export const addCarFieldMappings: Record<string, keyof CarDto> = {
-  'pictures': 'pictures',
-  'year': 'year',
-  'capacity': 'capacity',
+  pictures: 'pictures',
+  year: 'year',
+  capacity: 'capacity',
   'fuel capacity': 'fuelCapacity',
   'fuel type': 'fuelType',
-  'status': 'status',
-  'steering': 'steering',
-  'model': 'model',
+  status: 'status',
+  steering: 'steering',
+  model: 'model',
   'price / hour': 'pricePerHour',
-  'description': 'description',
+  description: 'description',
 };
 
 export const removeCarMapping: Record<string, keyof Car> = {
-  'rented': 'status'
-}
+  rented: 'status',
+};
 
-export const FAILED_REMOVE_CAR = "Failed to remove the car. Please try again."
+export const FAILED_REMOVE_CAR = 'Failed to remove the car. Please try again.';
