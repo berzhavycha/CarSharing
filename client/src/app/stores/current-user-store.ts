@@ -39,7 +39,7 @@ export const CurrentUserStore = t
 
       try {
         const response = yield signUp(userDto);
-        handleUserResponse(
+        handleUserResponse<SignUpUserDto>(
           response,
           (user) => self.user = User.create(user),
           (errors) => (self.signUpErrors = errors),
@@ -53,7 +53,7 @@ export const CurrentUserStore = t
 
       try {
         const response = yield signIn(userDto);
-        handleUserResponse(
+        handleUserResponse<SignInUserDto>(
           response,
           (user) => self.user = User.create(user),
           (errors) => (self.signInErrors = errors),
@@ -82,7 +82,7 @@ export const CurrentUserStore = t
       try {
         if (self.user) {
           const response = yield updateUser(self.user?.id, userDto);
-          handleUserResponse(
+          handleUserResponse<UpdateUserDto>(
             response,
             (user) => (self.user = user),
             (errors) => (self.updateErrors = errors),
@@ -98,26 +98,20 @@ export const CurrentUserStore = t
         handleUserResponse(
           response,
           (user) => (self.user = user),
-          () => {},
+          () => { },
         );
       } catch (error) {
         self.user = null;
       }
     }),
     removeAvatar: flow(function* () {
-      try {
-        if (self.user) {
-          const response = yield removeAvatar(self.user.id);
-          handleUserResponse(
-            response,
-            (user) => (self.user = user),
-            (errors) => {
-              self.updateErrors = errors;
-            },
-          );
-        }
-      } catch (error) {
-        self.updateErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
+      if (self.user) {
+        const response = yield removeAvatar(self.user.id);
+        handleUserResponse<{ picture: string }>(
+          response,
+          (user) => (self.user = user),
+          () => { },
+        );
       }
     }),
   }));

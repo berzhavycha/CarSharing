@@ -16,18 +16,19 @@ import {
 import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { Car } from '@/entities';
 import { JwtAuthGuard, RoleGuard } from '@/guards';
-import { defaultFileFilter, defaultLocalFileLimits, Roles } from '@/helpers';
+import { defaultFileFilter, defaultLocalFileLimits, MAX_CAR_PICTURES, Roles } from '@/helpers';
 import { LocalFilesInterceptor } from '@/interceptors';
 import { CarsService } from '@/services';
 
 @Controller('cars')
 export class CarsController {
-  constructor(private readonly carsService: CarsService) {}
+  constructor(private readonly carsService: CarsService) { }
 
   @Post()
   @UseGuards(RoleGuard(Roles.ADMIN))
   @UseInterceptors(
     LocalFilesInterceptor({
+      maxCount: MAX_CAR_PICTURES,
       fieldName: 'pictures',
       path: '/cars',
       fileFilter: defaultFileFilter,
@@ -63,7 +64,8 @@ export class CarsController {
   @UseGuards(RoleGuard(Roles.ADMIN))
   @UseInterceptors(
     LocalFilesInterceptor({
-      fieldName: 'picture',
+      maxCount: MAX_CAR_PICTURES,
+      fieldName: 'pictures',
       path: '/cars',
       fileFilter: defaultFileFilter,
       limits: defaultLocalFileLimits,
