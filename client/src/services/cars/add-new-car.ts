@@ -1,18 +1,18 @@
 import { axiosInstance } from '@/api';
 import { Env } from '@/core';
+import { addCarFieldMappings, errorHandler } from '@/helpers';
 import { Car, CarDto, FieldErrorsState } from '@/types';
 
 type ServiceReturn = {
-  car: Car | null;
-  errors: FieldErrorsState<CarDto> | null;
+  car?: Car;
+  errors?: FieldErrorsState<CarDto>;
 };
 
 export const addNewCar = async (car: CarDto): Promise<ServiceReturn> => {
   try {
     const formData = new FormData();
 
-    Object.keys(car).forEach((key) => {
-      const value = car[key as keyof CarDto];
+    Object.entries(car).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         formData.append(key, value.toString());
       }
@@ -28,14 +28,8 @@ export const addNewCar = async (car: CarDto): Promise<ServiceReturn> => {
       },
     });
 
-    return {
-      car: data,
-      errors: null,
-    };
+    return { car: data, };
   } catch (error) {
-    return {
-      car: null,
-      errors: null,
-    };
+    return { errors: errorHandler<CarDto>(error, addCarFieldMappings) }
   }
 };

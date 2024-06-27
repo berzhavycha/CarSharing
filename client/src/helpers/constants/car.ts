@@ -1,4 +1,5 @@
 import { Option } from '@/components';
+import { CarDto } from '@/types';
 
 export enum CarStatus {
   AVAILABLE = 'available',
@@ -67,3 +68,17 @@ export const CarSteeringTypeSelect: Option[] = [
   { label: 'Manual Steering', value: CarSteeringType.MANUAL },
   { label: 'Drive-by-wire Steering', value: CarSteeringType.DRIVE_BY_WIRE },
 ];
+
+
+export const addCarFieldMappings: Record<string, keyof CarDto> = {
+  'pictures': 'pictures',
+  'year': 'year',
+  'capacity': 'capacity',
+  'fuel capacity': 'fuelCapacity',
+  'fuel type': 'fuelType',
+  'status': 'status',
+  'steering': 'steering',
+  'model': 'model',
+  'price / hour': 'pricePerHour',
+  'description': 'description',
+};
