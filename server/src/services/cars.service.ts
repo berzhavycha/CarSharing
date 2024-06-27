@@ -77,7 +77,7 @@ export class CarsService {
   async findById(id: string): Promise<Car> {
     const car = await this.carsRepository.findOne({
       where: { id },
-      relations: ['rentals', 'local_file'],
+      relations: ['rentals', 'pictures'],
     });
 
     if (!car) {
@@ -97,6 +97,8 @@ export class CarsService {
     } = listCarsDto;
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
+
+    queryBuilder.leftJoinAndSelect('car.pictures', 'pictures');
 
     applySearchAndPagination(queryBuilder, {
       search,
@@ -125,6 +127,8 @@ export class CarsService {
     queryBuilder.where('car.status = :status', {
       status: CarStatus.AVAILABLE,
     });
+
+    queryBuilder.leftJoinAndSelect('car.pictures', 'pictures');
 
     applySearchAndPagination(queryBuilder, {
       search,

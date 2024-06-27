@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import { uppercaseFirstLetter } from '@/helpers';
 import { Car } from '@/types';
 
-import DefaultImage from '../../../../../public/Car.png';
 import { Table, TableCell, TableHeader, TableRow } from '@/components/cs-common';
+import { Env } from '@/core';
 
 type CarTableProps = {
   cars: Car[];
@@ -33,7 +33,7 @@ export const CarTable: FC<CarTableProps> = ({ cars, onDetailsBtnClick, onSortCha
           <TableRow key={car.id}>
             <TableCell>{index + 1}</TableCell>
             <TableCell>
-              <img src={DefaultImage} alt="Car Image" />
+              <img src={`${Env.API_BASE_URL}/local-files/${car.pictures[0]?.id}`} alt="Car Image" />
             </TableCell>
             <TableCell>{car.model}</TableCell>
             <TableCell>{car.year}</TableCell>
