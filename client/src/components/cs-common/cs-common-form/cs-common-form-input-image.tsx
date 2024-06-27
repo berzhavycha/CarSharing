@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useRef } from 'react';
+import { ChangeEvent, FC, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import { CSCommonErrorMessage, InputProps } from '@/components/cs-common';
@@ -33,14 +33,18 @@ export const CSCommonFormInputImage: FC<Props> = ({
 }) => {
   const {
     register,
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
   } = useCommonForm().formHandle;
 
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
-  const { previews, handleUploadedFiles, removeImage } = useImagePreviews(
+  const { previews, handleUploadedFiles, removeImage, resetPreviews } = useImagePreviews(
     defaultImage,
     actualImages,
   );
+
+  useEffect(() => {
+    resetPreviews()
+  }, [isSubmitSuccessful])
 
   const { ref: registerRef, onChange, ...rest } = register(name);
 

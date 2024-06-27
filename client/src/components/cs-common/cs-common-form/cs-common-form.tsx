@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BaseSyntheticEvent, createContext, PropsWithChildren, useContext } from 'react';
+import { BaseSyntheticEvent, createContext, PropsWithChildren, useContext, useEffect } from 'react';
 import { DefaultValues, FieldValues, useForm, UseFormReturn } from 'react-hook-form';
 import { ZodSchema } from 'zod';
 
@@ -52,6 +52,10 @@ export const CSCommonForm = <TEntity extends FieldValues>({
     e?.preventDefault();
     onSubmit(data);
   };
+  
+  useEffect(() => {
+    formHandle.reset();
+  }, [formHandle.formState.isSubmitSuccessful])
 
   const onFormSubmit = formHandle.handleSubmit(submitHandler);
 
