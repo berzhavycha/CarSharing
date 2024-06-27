@@ -93,7 +93,7 @@ export class CarsService {
       page,
       limit,
       order,
-      sort,
+      sort
     } = listCarsDto;
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
