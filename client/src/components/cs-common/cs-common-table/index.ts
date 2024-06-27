@@ -1,1 +1,1 @@
-export * from './cs-common-table'
+export * from './cs-common-table';

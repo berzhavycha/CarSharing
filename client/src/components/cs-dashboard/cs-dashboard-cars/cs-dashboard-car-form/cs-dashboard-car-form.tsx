@@ -72,7 +72,7 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
           </Section>
         </CSCommonForm>
       </ContentContainer>
-    </FormContainer >
+    </FormContainer>
   );
 });
 

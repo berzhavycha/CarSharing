@@ -10,6 +10,6 @@ export * from './cs-common-search-bar';
 export * from './cs-common-select-field';
 export * from './cs-common-textarea';
 export * from './cs-common-pagination';
-export * from './cs-common-table'
-export * from './cs-common-spinner'
-export * from './cs-common-error'
+export * from './cs-common-table';
+export * from './cs-common-spinner';
+export * from './cs-common-error';

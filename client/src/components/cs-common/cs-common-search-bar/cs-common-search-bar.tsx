@@ -15,12 +15,7 @@ export const CSCommonSearchBar: FC<Props> = ({ search, onSearchChange, ...props 
   return (
     <SearchContainer>
       <SearchIcon />
-      <SearchInput
-        type="text"
-        value={search}
-        onChange={handleChange}
-        {...props}
-      />
+      <SearchInput type="text" value={search} onChange={handleChange} {...props} />
     </SearchContainer>
   );
 };
