@@ -1,15 +1,7 @@
 import { flow, Instance, types as t } from 'mobx-state-tree';
 
-import { axiosInstance } from '@/api';
-import { Env } from '@/core';
-import {
-  errorHandler,
-  signInFieldMappings,
-  signUpFieldMappings,
-  transformUserResponse,
-  UNEXPECTED_ERROR_MESSAGE,
-  updateUserFieldMappings,
-} from '@/helpers';
+import { handleUserResponse, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
+import { fetchCurrentUser, removeAvatar, signIn, signOut, signUp, updateUser } from '@/services';
 import {
   AuthenticatedUser,
   FieldErrorsState,
@@ -17,6 +9,11 @@ import {
   SignUpUserDto,
   UpdateUserDto,
 } from '@/types';
+
+export type ServiceUserResponse<T extends object> = {
+  user?: AuthenticatedUser;
+  errors?: FieldErrorsState<T>;
+};
 
 export const User = t.model('User', {
   id: t.string,
@@ -38,66 +35,89 @@ export const CurrentUserStore = t
   })
   .actions((self) => ({
     signUp: flow(function* (userDto: SignUpUserDto) {
+      self.signUpErrors = null;
+
       try {
-        self.signUpErrors = null;
-        const { data } = yield axiosInstance.post(`${Env.API_BASE_URL}/auth/sign-up`, userDto);
-        self.user = User.create(transformUserResponse(data));
+        const response = yield signUp(userDto);
+        handleUserResponse(
+          response,
+          (user) => User.create(user),
+          (errors) => (self.signUpErrors = errors),
+        );
       } catch (error) {
-        self.signUpErrors = errorHandler<SignUpUserDto>(error, signUpFieldMappings);
+        self.signUpErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
       }
     }),
     signIn: flow(function* (userDto: SignInUserDto) {
+      self.signInErrors = null;
+
       try {
-        self.signInErrors = null;
-        const { data } = yield axiosInstance.post(`${Env.API_BASE_URL}/auth/sign-in`, userDto);
-        self.user = User.create(transformUserResponse(data));
+        const response = yield signIn(userDto);
+        handleUserResponse(
+          response,
+          (user) => User.create(user),
+          (errors) => (self.signInErrors = errors),
+        );
       } catch (error) {
-        self.signInErrors = errorHandler<SignInUserDto>(error, signInFieldMappings);
+        self.signInErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
       }
     }),
     signOut: flow(function* () {
+      self.signOutErrors = null;
+
       try {
-        yield axiosInstance.post(`${Env.API_BASE_URL}/auth/sign-out`);
-        self.user = null;
-        self.signOutErrors = null;
+        const response = yield signOut();
+        handleUserResponse(
+          response,
+          () => (self.user = null),
+          (errors) => (self.signOutErrors = errors),
+        );
       } catch (error) {
         self.signOutErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
       }
     }),
     updateUser: flow(function* (userDto: UpdateUserDto) {
-      try {
-        self.updateErrors = null;
-        const { data } = yield axiosInstance.patch(
-          `${Env.API_BASE_URL}/users/${self.user?.id}`,
-          userDto,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          },
-        );
+      self.updateErrors = null;
 
-        self.user = transformUserResponse(data);
+      try {
+        if (self.user) {
+          const response = yield updateUser(self.user?.id, userDto);
+          handleUserResponse(
+            response,
+            (user) => (self.user = user),
+            (errors) => (self.updateErrors = errors),
+          );
+        }
       } catch (error) {
-        self.updateErrors = errorHandler<UpdateUserDto>(error, updateUserFieldMappings);
+        self.updateErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
       }
     }),
     fetchCurrentUser: flow(function* () {
       try {
-        const { data } = yield axiosInstance.get(`${Env.API_BASE_URL}/auth/current-user`);
-        self.user = transformUserResponse(data);
+        const response = yield fetchCurrentUser();
+        handleUserResponse(
+          response,
+          (user) => (self.user = user),
+          () => {},
+        );
       } catch (error) {
         self.user = null;
       }
     }),
     removeAvatar: flow(function* () {
       try {
-        const { data } = yield axiosInstance.patch(
-          `${Env.API_BASE_URL}/users/${self.user?.id}/avatar`,
-        );
-        self.user = transformUserResponse(data);
+        if (self.user) {
+          const response = yield removeAvatar(self.user.id);
+          handleUserResponse(
+            response,
+            (user) => (self.user = user),
+            (errors) => {
+              self.updateErrors = errors;
+            },
+          );
+        }
       } catch (error) {
-        self.updateErrors = errorHandler<UpdateUserDto>(error, updateUserFieldMappings);
+        self.updateErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
       }
     }),
   }));

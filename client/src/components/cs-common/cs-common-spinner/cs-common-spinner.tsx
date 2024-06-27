@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import styled, { keyframes } from 'styled-components';
 
-
 export const CSCommonSpinner: FC = () => {
   return (
     <SpinnerContainer>
@@ -9,7 +8,6 @@ export const CSCommonSpinner: FC = () => {
     </SpinnerContainer>
   );
 };
-
 
 const spinAnimation = keyframes`
   from {
@@ -24,9 +22,9 @@ const SpinnerContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%; 
-  height: 100vh; 
-  background-color: white; 
+  width: 100%;
+  height: 100vh;
+  background-color: white;
 `;
 
 const Spinner = styled.div`

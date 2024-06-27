@@ -1,17 +1,16 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { uppercaseFirstLetter } from '@/helpers';
-import { Car } from '@/types';
-
 import { Table, TableCell, TableHeader, TableRow } from '@/components/cs-common';
 import { Env } from '@/core';
+import { uppercaseFirstLetter } from '@/helpers';
+import { Car } from '@/types';
 
 type CarTableProps = {
   cars: Car[];
   onDetailsBtnClick: (car: Car) => void;
   onSortChange: (sort: string) => void;
-}
+};
 
 export const CarTable: FC<CarTableProps> = ({ cars, onDetailsBtnClick, onSortChange }) => {
   return (
@@ -20,11 +19,21 @@ export const CarTable: FC<CarTableProps> = ({ cars, onDetailsBtnClick, onSortCha
         <tr>
           <TableHeader style={{ width: '5%' }}>No.</TableHeader>
           <TableHeader style={{ width: '10%' }}>Image</TableHeader>
-          <TableHeader style={{ width: '15%' }} onClick={() => onSortChange('model')}>Model</TableHeader>
-          <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('year')}>Year</TableHeader>
-          <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('pricePerHour')}>Price / Hour</TableHeader>
-          <TableHeader style={{ width: '8%' }} onClick={() => onSortChange('type')}>Type</TableHeader>
-          <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('status')}>Status</TableHeader>
+          <TableHeader style={{ width: '15%' }} onClick={() => onSortChange('model')}>
+            Model
+          </TableHeader>
+          <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('year')}>
+            Year
+          </TableHeader>
+          <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('pricePerHour')}>
+            Price / Hour
+          </TableHeader>
+          <TableHeader style={{ width: '8%' }} onClick={() => onSortChange('type')}>
+            Type
+          </TableHeader>
+          <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('status')}>
+            Status
+          </TableHeader>
           <TableHeader style={{ width: '15%' }}>Actions</TableHeader>
         </tr>
       </thead>
@@ -53,8 +62,6 @@ export const CarTable: FC<CarTableProps> = ({ cars, onDetailsBtnClick, onSortCha
   );
 };
 
-
-
 const StatusBadge = styled.div<{ $status: string }>`
   width: 100%;
   display: inline-block;
@@ -75,7 +82,7 @@ const StatusBadge = styled.div<{ $status: string }>`
         return 'var(--default-text)';
     }
   }};
-  
+
   background-color: ${(props): string => {
     switch (props.$status) {
       case 'available':
@@ -88,19 +95,20 @@ const StatusBadge = styled.div<{ $status: string }>`
         return 'var(--default-bg)';
     }
   }};
-  
-  border: 2px solid ${(props): string => {
-    switch (props.$status) {
-      case 'available':
-        return 'var(--available-border)';
-      case 'booked':
-        return 'var(--booked-border)';
-      case 'maintained':
-        return 'var(--maintained-border)';
-      default:
-        return 'var(--default-border)';
-    }
-  }};
+
+  border: 2px solid
+    ${(props): string => {
+      switch (props.$status) {
+        case 'available':
+          return 'var(--available-border)';
+        case 'booked':
+          return 'var(--booked-border)';
+        case 'maintained':
+          return 'var(--maintained-border)';
+        default:
+          return 'var(--default-border)';
+      }
+    }};
 `;
 
 const DetailsButton = styled.button`

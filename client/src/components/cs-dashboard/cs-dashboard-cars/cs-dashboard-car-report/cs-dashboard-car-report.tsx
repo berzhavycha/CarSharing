@@ -2,7 +2,13 @@ import { FC, Suspense } from 'react';
 import { Await, useLoaderData, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { CSCommonError, CSCommonPrimaryButton, CSCommonSearchBar, CSCommonSpinner, Pagination } from '@/components/cs-common';
+import {
+  CSCommonError,
+  CSCommonPrimaryButton,
+  CSCommonSearchBar,
+  CSCommonSpinner,
+  Pagination,
+} from '@/components/cs-common';
 import { Env } from '@/core';
 import { DEFAULT_PAGINATION_PAGE, OrderOptions, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { useSearchParamsWithDefaults } from '@/hooks';
@@ -42,22 +48,27 @@ export const CSDashboardCarReport: FC = () => {
           <CSCommonSearchBar
             search={searchParams.get('search') ?? ''}
             onSearchChange={onSearchChange}
-            placeholder='Search by model name'
+            placeholder="Search by model name"
           />
           <CSCommonPrimaryButton onClick={onAddBtnClick} content="Add Car" />
         </Header>
-        <Suspense
-          fallback={<CSCommonSpinner />}
-        >
+        <Suspense fallback={<CSCommonSpinner />}>
           <Await
             resolve={data.data}
             errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
           >
             {(data) => (
               <>
-                <CarTable cars={data.cars} onDetailsBtnClick={onDetailsBtnClick} onSortChange={onSortChange} />
+                <CarTable
+                  cars={data.cars}
+                  onDetailsBtnClick={onDetailsBtnClick}
+                  onSortChange={onSortChange}
+                />
                 <Pagination
-                  totalPages={Math.ceil(data.total / (Number(searchParams.get('limit') ?? Env.ADMIN_CARS_PAGINATION_LIMIT)))}
+                  totalPages={Math.ceil(
+                    data.total /
+                      Number(searchParams.get('limit') ?? Env.ADMIN_CARS_PAGINATION_LIMIT),
+                  )}
                   currentPage={Number(searchParams.get('page')) || +DEFAULT_PAGINATION_PAGE}
                   onPageChange={onPageChange}
                 />

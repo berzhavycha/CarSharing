@@ -46,6 +46,6 @@ export const carsLoader = async ({
 
   return defer({
     data,
-    promise: new Promise(resolve => setTimeout(resolve, 2000))
+    promise: new Promise((resolve) => setTimeout(resolve, 2000)),
   });
 };

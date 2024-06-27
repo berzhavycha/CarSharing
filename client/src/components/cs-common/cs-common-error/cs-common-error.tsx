@@ -1,20 +1,20 @@
-import { FC } from "react";
-import { FaExclamationCircle } from "react-icons/fa";
-import styled from "styled-components";
+import { FC } from 'react';
+import { FaExclamationCircle } from 'react-icons/fa';
+import styled from 'styled-components';
 
 type Props = {
-    errorMessage: string;
-}
+  errorMessage: string;
+};
 
 export const CSCommonError: FC<Props> = ({ errorMessage }) => {
-    return (
-        <ErrorContainer>
-            <ErrorIcon>
-                <FaExclamationCircle />
-            </ErrorIcon>
-            <span>{errorMessage}</span>
-        </ErrorContainer>
-    );
+  return (
+    <ErrorContainer>
+      <ErrorIcon>
+        <FaExclamationCircle />
+      </ErrorIcon>
+      <span>{errorMessage}</span>
+    </ErrorContainer>
+  );
 };
 
 const ErrorContainer = styled.div`
