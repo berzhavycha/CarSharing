@@ -13,21 +13,30 @@ import {
 import { Car, CarDto, FieldErrorsState } from '@/types';
 
 import DefaultImage from '../../../../../public/car-upload.png';
+import { useLocation } from 'react-router-dom';
 
 type Props = {
   onFormSubmit: (car: CarDto) => Promise<{ car: Car | null, errors: FieldErrorsState<CarDto> | null }>
 }
 
 export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
+  const location = useLocation();
+
   const onSubmit = async (carDto: CarDto): Promise<void> => {
     const { car, errors } = await onFormSubmit(carDto)
     console.log(car, errors)
   };
 
+  console.log(location.state.car)
+
   return (
     <FormContainer>
       <ContentContainer>
-        <CSCommonForm<CarDto> validationSchema={createCarSchema} onSubmit={onSubmit}>
+        <CSCommonForm<CarDto>
+          validationSchema={createCarSchema}
+          onSubmit={onSubmit}
+          defaultValues={location.state.car}
+        >
           <CarHeaderWrapper>
             <CSCommonForm.InputFile
               label="Upload Car Image"
