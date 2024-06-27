@@ -1,10 +1,10 @@
-import { FC } from 'react';
-import { useLoaderData, useNavigate } from 'react-router-dom';
+import { FC, Suspense } from 'react';
+import { Await, useLoaderData, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { CSCommonPrimaryButton, CSCommonSearchBar, Pagination } from '@/components/cs-common';
+import { CSCommonError, CSCommonPrimaryButton, CSCommonSearchBar, CSCommonSpinner, Pagination } from '@/components/cs-common';
 import { Env } from '@/core';
-import { DEFAULT_PAGINATION_PAGE, OrderOptions } from '@/helpers';
+import { DEFAULT_PAGINATION_PAGE, OrderOptions, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { useSearchParamsWithDefaults } from '@/hooks';
 import { Car } from '@/types';
 
@@ -21,7 +21,7 @@ const defaultSearchParams = {
 
 export const CSDashboardCarReport: FC = () => {
   const navigate = useNavigate();
-  const { cars, totalPages } = useLoaderData() as LoaderData;
+  const data = useLoaderData() as { data: LoaderData };
   const { searchParams, setParams } = useSearchParamsWithDefaults(defaultSearchParams);
 
   const onDetailsBtnClick = (car: Car): void => navigate('/dashboard/edit-car', { state: { car } });
@@ -46,12 +46,25 @@ export const CSDashboardCarReport: FC = () => {
           />
           <CSCommonPrimaryButton onClick={onAddBtnClick} content="Add Car" />
         </Header>
-        <CarTable cars={cars} onDetailsBtnClick={onDetailsBtnClick} onSortChange={onSortChange} />
-        <Pagination
-          totalPages={totalPages}
-          currentPage={Number(searchParams.get('page')) || +DEFAULT_PAGINATION_PAGE}
-          onPageChange={onPageChange}
-        />
+        <Suspense
+          fallback={<CSCommonSpinner />}
+        >
+          <Await
+            resolve={data.data}
+            errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
+          >
+            {(data) => (
+              <>
+                <CarTable cars={data.cars} onDetailsBtnClick={onDetailsBtnClick} onSortChange={onSortChange} />
+                <Pagination
+                  totalPages={Math.ceil(data.total / (Number(searchParams.get('limit') ?? Env.ADMIN_CARS_PAGINATION_LIMIT)))}
+                  currentPage={Number(searchParams.get('page')) || +DEFAULT_PAGINATION_PAGE}
+                  onPageChange={onPageChange}
+                />
+              </>
+            )}
+          </Await>
+        </Suspense>
       </ContentContainer>
     </CarsContainer>
   );

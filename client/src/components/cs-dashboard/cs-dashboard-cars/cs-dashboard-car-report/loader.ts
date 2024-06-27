@@ -1,4 +1,4 @@
-import { createSearchParams, LoaderFunctionArgs, redirect } from 'react-router-dom';
+import { createSearchParams, defer, LoaderFunctionArgs, redirect } from 'react-router-dom';
 
 import { Env } from '@/core';
 import { DEFAULT_PAGINATION_ORDER, DEFAULT_PAGINATION_PAGE, OrderOptions } from '@/helpers';
@@ -12,7 +12,7 @@ export type LoaderData = {
 
 export const carsLoader = async ({
   request,
-}: LoaderFunctionArgs): Promise<Response | LoaderData> => {
+}: LoaderFunctionArgs): Promise<Response | ReturnType<typeof defer>> => {
   const url = new URL(request.url);
   const page = url.searchParams.get('page') || DEFAULT_PAGINATION_PAGE;
   const limit = url.searchParams.get('limit') || Env.ADMIN_CARS_PAGINATION_LIMIT;
@@ -42,10 +42,10 @@ export const carsLoader = async ({
     order,
   };
 
-  const data = await fetchCars(queryCarsDto);
+  const data = fetchCars(queryCarsDto);
 
-  return {
-    cars: data.cars,
-    totalPages: Math.ceil(data.total / Number(limit)),
-  };
+  return defer({
+    data,
+    promise: new Promise(resolve => setTimeout(resolve, 2000))
+  });
 };
