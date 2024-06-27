@@ -43,13 +43,13 @@ export class CarsController {
 
   @Get()
   @UseGuards(RoleGuard(Roles.ADMIN))
-  async findAll(@Query() listCarsDto: QueryCarsDto): Promise<Car[]> {
+  async findAll(@Query() listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
     return this.carsService.findAll(listCarsDto);
   }
 
   @Get('/available')
   @UseGuards(JwtAuthGuard)
-  async findAllAvailable(@Query() listCarsDto: QueryCarsDto): Promise<Car[]> {
+  async findAllAvailable(@Query() listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
     return this.carsService.findAllAvailable(listCarsDto);
   }
 
