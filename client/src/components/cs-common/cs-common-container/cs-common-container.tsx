@@ -8,5 +8,5 @@ const ContainerSection = styled.div`
 `;
 
 export const CSCommonContainer: FC<PropsWithChildren> = ({ children }) => {
-    return <ContainerSection>{children}</ContainerSection>;
+  return <ContainerSection>{children}</ContainerSection>;
 };

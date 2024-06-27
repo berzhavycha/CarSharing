@@ -5,34 +5,34 @@ import { CSCommonErrorMessage } from '../cs-common-error-message';
 import { Label } from '../cs-common-input-field';
 
 export type Option = {
-    value: string;
-    label: string;
+  value: string;
+  label: string;
 };
 
 export interface SelectProps extends React.InputHTMLAttributes<HTMLSelectElement> {
-    label?: string;
-    error?: string;
-    isSecured?: boolean;
-    formSubmitted?: boolean;
-    options: Option[];
+  label?: string;
+  error?: string;
+  isSecured?: boolean;
+  formSubmitted?: boolean;
+  options: Option[];
 }
 
 export const CSCommonSelectField: FC<SelectProps> = forwardRef<HTMLSelectElement, SelectProps>(
-    ({ label, options, error, ...props }, ref) => {
-        return (
-            <>
-                <Label>{label}</Label>
-                <SelectElement ref={ref} {...props}>
-                    {options.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </SelectElement>
-                <CSCommonErrorMessage>{error}</CSCommonErrorMessage>
-            </>
-        );
-    },
+  ({ label, options, error, ...props }, ref) => {
+    return (
+      <>
+        <Label>{label}</Label>
+        <SelectElement ref={ref} {...props}>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </SelectElement>
+        <CSCommonErrorMessage>{error}</CSCommonErrorMessage>
+      </>
+    );
+  },
 );
 
 const SelectElement = styled.select`

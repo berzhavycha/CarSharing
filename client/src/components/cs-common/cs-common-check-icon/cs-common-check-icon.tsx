@@ -3,19 +3,19 @@ import { FaCheckCircle } from 'react-icons/fa';
 import styled from 'styled-components';
 
 type Props = {
-    right?: number;
+  right?: number;
 };
 
 export const CSCommonCheckIcon: FC<Props> = ({ right }) => {
-    return (
-        <CheckIconWrapper $right={right}>
-            <FaCheckCircle />
-        </CheckIconWrapper>
-    );
+  return (
+    <CheckIconWrapper $right={right}>
+      <FaCheckCircle />
+    </CheckIconWrapper>
+  );
 };
 
 type IconProps = {
-    $right?: number;
+  $right?: number;
 };
 
 export const CheckIconWrapper = styled.span<IconProps>`

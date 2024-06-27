@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 type StatusBadgeProps = {
-    status: string;
+  status: string;
 };
 
 export const StatusBadge = styled.div<StatusBadgeProps>`
@@ -12,11 +12,7 @@ export const StatusBadge = styled.div<StatusBadgeProps>`
   font-size: 12px;
   font-weight: bold;
   text-align: center;
-  color: ${(props): string =>
-        props.status === 'available' ? '#28a745' : '#dc3545'};
-  background-color: ${(props): string =>
-        props.status === 'available' ? '#d4edda' : '#f8d7da'};
-  border: 2px solid ${(props): string =>
-        props.status === 'available' ? '#c3e6cb' : '#f5c6cb'};
+  color: ${(props): string => (props.status === 'available' ? '#28a745' : '#dc3545')};
+  background-color: ${(props): string => (props.status === 'available' ? '#d4edda' : '#f8d7da')};
+  border: 2px solid ${(props): string => (props.status === 'available' ? '#c3e6cb' : '#f5c6cb')};
 `;
-

@@ -22,7 +22,7 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
       }),
     );
 
-    console.log(userDtoWithoutEmptyPasswords)
+    console.log(userDtoWithoutEmptyPasswords);
     await updateUser(userDtoWithoutEmptyPasswords);
   };
 

@@ -1,1 +1,1 @@
-export * from './cs-common-primary-button'
+export * from './cs-common-primary-button';

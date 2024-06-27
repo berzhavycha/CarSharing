@@ -1,1 +1,1 @@
-export * from './cs-common-search-bar'
+export * from './cs-common-search-bar';

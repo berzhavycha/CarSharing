@@ -1,1 +1,1 @@
-export * from './cs-common-check-icon'
+export * from './cs-common-check-icon';

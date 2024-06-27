@@ -6,27 +6,27 @@ import { CSCommonErrorIcon } from '../cs-common-error-icon';
 import { CSCommonErrorMessage } from '../cs-common-error-message';
 
 export interface TextAreasProps extends React.InputHTMLAttributes<HTMLTextAreaElement> {
-    label?: string;
-    error?: string;
-    formSubmitted?: boolean;
+  label?: string;
+  error?: string;
+  formSubmitted?: boolean;
 }
 
 export const CSCommonTextArea = forwardRef<HTMLTextAreaElement, TextAreasProps>(
-    ({ placeholder, label, error, formSubmitted, ...props }, ref) => {
-        return (
-            <TextGroup>
-                <Label>{label}</Label>
-                <TextArea
-                    ref={ref}
-                    placeholder={placeholder || `Enter ${label?.toLowerCase()}`}
-                    {...props}
-                />
-                {formSubmitted &&
-                    (!error ? <CSCommonCheckIcon right={-25} /> : <CSCommonErrorIcon right={-25} />)}
-                <CSCommonErrorMessage>{error}</CSCommonErrorMessage>
-            </TextGroup>
-        );
-    },
+  ({ placeholder, label, error, formSubmitted, ...props }, ref) => {
+    return (
+      <TextGroup>
+        <Label>{label}</Label>
+        <TextArea
+          ref={ref}
+          placeholder={placeholder || `Enter ${label?.toLowerCase()}`}
+          {...props}
+        />
+        {formSubmitted &&
+          (!error ? <CSCommonCheckIcon right={-25} /> : <CSCommonErrorIcon right={-25} />)}
+        <CSCommonErrorMessage>{error}</CSCommonErrorMessage>
+      </TextGroup>
+    );
+  },
 );
 CSCommonTextArea.displayName = 'CSCommonTextArea';
 

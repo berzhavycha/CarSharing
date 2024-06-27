@@ -1,5 +1,5 @@
-import { LocalFile } from "./local-files";
-import { PaginationDto } from "./pagination";
+import { LocalFile } from './local-files';
+import { PaginationDto } from './pagination';
 
 export type CarDto = {
   pictures: File[] | null;
@@ -17,10 +17,9 @@ export type CarDto = {
 
 export type Car = CarDto & {
   id: string;
-  pictures: LocalFile[]
+  pictures: LocalFile[];
 };
 
-
 export type QueryCarsDto = PaginationDto & {
-  search?: string
-}
+  search?: string;
+};

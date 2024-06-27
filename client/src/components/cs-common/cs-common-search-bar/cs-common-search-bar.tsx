@@ -3,26 +3,26 @@ import { FaSearch } from 'react-icons/fa';
 import styled from 'styled-components';
 
 type Props = {
-    search: string;
-    onSearchChange: (text: string) => void;
+  search: string;
+  onSearchChange: (text: string) => void;
 };
 
 export const CSCommonSearchBar: FC<Props> = ({ search, onSearchChange }) => {
-    const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
-        onSearchChange(e.target.value);
-    };
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    onSearchChange(e.target.value);
+  };
 
-    return (
-        <SearchContainer>
-            <SearchIcon />
-            <SearchInput
-                type="text"
-                value={search}
-                onChange={handleChange}
-                placeholder="Search something here"
-            />
-        </SearchContainer>
-    );
+  return (
+    <SearchContainer>
+      <SearchIcon />
+      <SearchInput
+        type="text"
+        value={search}
+        onChange={handleChange}
+        placeholder="Search something here"
+      />
+    </SearchContainer>
+  );
 };
 
 const SearchContainer = styled.div`

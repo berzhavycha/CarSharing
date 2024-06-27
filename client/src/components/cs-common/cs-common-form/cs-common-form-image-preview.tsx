@@ -2,51 +2,46 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 type PictureWrapperProps = {
-    $circled?: boolean;
-    $width?: number;
-    $height?: number;
+  $circled?: boolean;
+  $width?: number;
+  $height?: number;
 };
 
 type ImagePreviewProps = {
-    src: string;
-    alt: string;
-    circled?: boolean;
-    width?: number;
-    height?: number;
-    onRemove?: () => void;
-    onClick?: () => void;
-    isRemovable?: boolean;
+  src: string;
+  alt: string;
+  circled?: boolean;
+  width?: number;
+  height?: number;
+  onRemove?: () => void;
+  onClick?: () => void;
+  isRemovable?: boolean;
 };
 
 export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
-    src,
-    alt,
-    circled,
-    width,
-    height,
-    onRemove,
-    onClick,
-    isRemovable = true,
+  src,
+  alt,
+  circled,
+  width,
+  height,
+  onRemove,
+  onClick,
+  isRemovable = true,
 }) => (
-    <PictureWrapper
-        onClick={onClick}
-        $circled={circled}
-        $width={width}
-        $height={height}
-    >
-        <img src={src} alt={alt} />
-        {isRemovable && (
-            <RemoveButton
-                type="button"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onRemove?.();
-                }}
-            >
-                &times;
-            </RemoveButton>
-        )}
-    </PictureWrapper>
+  <PictureWrapper onClick={onClick} $circled={circled} $width={width} $height={height}>
+    <img src={src} alt={alt} />
+    {isRemovable && (
+      <RemoveButton
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove?.();
+        }}
+      >
+        &times;
+      </RemoveButton>
+    )}
+  </PictureWrapper>
 );
 
 const PictureWrapper = styled.div<PictureWrapperProps>`
@@ -80,4 +75,3 @@ const RemoveButton = styled.button`
   justify-content: center;
   cursor: pointer;
 `;
-
