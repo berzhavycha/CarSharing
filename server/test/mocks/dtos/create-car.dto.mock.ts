@@ -1,4 +1,4 @@
-import { CarStatus } from "@/helpers";
+import { CarStatus } from '@/helpers';
 
 export const createCarDtoMock = {
   imageUrl: 'image-url',
@@ -12,5 +12,5 @@ export const createCarDtoMock = {
   capacity: 50,
   steering: 'Left-Hand',
   pictures: [],
-  status: CarStatus.AVAILABLE
+  status: CarStatus.AVAILABLE,
 };

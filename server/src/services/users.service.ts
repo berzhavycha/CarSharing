@@ -30,7 +30,7 @@ export class UsersService {
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
     private localFilesService: LocalFilesService,
-  ) { }
+  ) {}
 
   async createUser(userData: {
     userDetails: SafeUser;

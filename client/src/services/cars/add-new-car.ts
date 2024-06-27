@@ -28,8 +28,8 @@ export const addNewCar = async (car: CarDto): Promise<ServiceReturn> => {
       },
     });
 
-    return { car: data, };
+    return { car: data };
   } catch (error) {
-    return { errors: errorHandler<CarDto>(error, addCarFieldMappings) }
+    return { errors: errorHandler<CarDto>(error, addCarFieldMappings) };
   }
 };

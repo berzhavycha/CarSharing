@@ -27,7 +27,7 @@ export class CarsService {
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
     private localFilesService: LocalFilesService,
-  ) { }
+  ) {}
 
   async createCar(
     createCarDto: CreateCarDto,
@@ -87,13 +87,7 @@ export class CarsService {
   }
 
   async findAll(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
-    const {
-      search,
-      page,
-      limit,
-      order,
-      sort
-    } = listCarsDto;
+    const { search, page, limit, order, sort } = listCarsDto;
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
@@ -113,13 +107,7 @@ export class CarsService {
   }
 
   async findAllAvailable(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
-    const {
-      search,
-      page,
-      limit,
-      order,
-      sort,
-    } = listCarsDto;
+    const { search, page, limit, order, sort } = listCarsDto;
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
 

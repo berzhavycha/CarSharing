@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CarsController } from '@/controllers';
@@ -7,7 +8,6 @@ import { CarStatus } from '@/helpers';
 import { CarsService } from '@/services';
 
 import { createCarDtoMock, mockCar, mockCarsService } from '../mocks';
-import { ConfigService } from '@nestjs/config';
 
 jest.mock('@nestjs/config');
 const mockConfigService = {
@@ -140,7 +140,7 @@ describe('CarsController', () => {
       expect(carsService.updateCar).toHaveBeenCalledWith(
         carId,
         updateCarDtoMock,
-        []
+        [],
       );
     });
   });

@@ -47,4 +47,4 @@ export enum CarStatus {
 export const CAR_DEFAULT_ORDER_COLUMN = 'pricePerHour';
 export const CAR_DEFAULT_SEARCH_COLUMN = 'model';
 
-export const MAX_CAR_PICTURES = 3
+export const MAX_CAR_PICTURES = 3;

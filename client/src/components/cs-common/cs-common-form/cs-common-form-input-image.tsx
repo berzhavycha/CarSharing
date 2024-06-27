@@ -43,8 +43,8 @@ export const CSCommonFormInputImage: FC<Props> = ({
   );
 
   useEffect(() => {
-    resetPreviews()
-  }, [isSubmitSuccessful, actualImages])
+    resetPreviews();
+  }, [isSubmitSuccessful, actualImages]);
 
   const { ref: registerRef, onChange, ...rest } = register(name);
 

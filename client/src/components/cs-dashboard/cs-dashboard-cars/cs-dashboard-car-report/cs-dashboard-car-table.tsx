@@ -1,10 +1,11 @@
 import { FC, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { CSCommonModal, Table, TableHeader } from '@/components/cs-common';
 import { Car } from '@/types';
-import { useNavigate } from 'react-router-dom';
-import { useCarRemoval } from './hooks';
+
 import { CSDashboardCarTableRow } from './cs-dashboard-car-table-row';
+import { useCarRemoval } from './hooks';
 
 type CarTableProps = {
   cars: Car[];
@@ -26,11 +27,11 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
   const onDetailsBtnClick = (car: Car): void => navigate('/dashboard/edit-car', { state: { car } });
 
   useEffect(() => {
-    setCarList(cars)
+    setCarList(cars);
   }, [cars]);
 
-  const onCloseConfirmWindow = (): void => setCarToRemove(null)
-  const onCloseErrorWindow = (): void => setErrorMessage(null)
+  const onCloseConfirmWindow = (): void => setCarToRemove(null);
+  const onCloseErrorWindow = (): void => setErrorMessage(null);
 
   return (
     <>
@@ -92,4 +93,3 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
     </>
   );
 };
-

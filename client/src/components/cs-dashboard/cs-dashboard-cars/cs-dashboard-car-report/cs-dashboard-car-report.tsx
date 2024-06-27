@@ -57,14 +57,11 @@ export const CSDashboardCarReport: FC = () => {
           >
             {(data) => (
               <>
-                <CSDashboardCarTable
-                  cars={data.cars}
-                  onSortChange={onSortChange}
-                />
+                <CSDashboardCarTable cars={data.cars} onSortChange={onSortChange} />
                 <Pagination
                   totalPages={Math.ceil(
                     data.total /
-                    Number(searchParams.get('limit') ?? Env.ADMIN_CARS_PAGINATION_LIMIT),
+                      Number(searchParams.get('limit') ?? Env.ADMIN_CARS_PAGINATION_LIMIT),
                   )}
                   currentPage={Number(searchParams.get('page')) || +DEFAULT_PAGINATION_PAGE}
                   onPageChange={onPageChange}
