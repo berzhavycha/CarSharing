@@ -29,7 +29,7 @@ export const Pagination: FC<PaginationProps> = ({ totalPages, currentPage, onPag
                 <FaChevronLeft />
             </IconButton>
             {pages.map((page) => (
-                <PageButton key={page} active={currentPage === page} onClick={() => onPageChange(page)}>
+                <PageButton key={page} $active={currentPage === page} onClick={() => onPageChange(page)}>
                     {page}
                 </PageButton>
             ))}
@@ -46,20 +46,20 @@ const PaginationContainer = styled.div`
   margin-top: 20px;
 `;
 
-const PageButton = styled.button<{ active?: boolean }>`
+const PageButton = styled.button<{ $active?: boolean }>`
   padding: 8px 16px;
   margin: 0 5px;
   border: none;
   border-radius: 4px;
-  background-color: ${({ active }): string => (active ? '#007bff' : '#cadbf5')};
-  color: ${({ active }): string => (active ? 'white' : 'black')};
+  background-color: ${({ $active }): string => ($active ? '#007bff' : '#cadbf5')};
+  color: ${({ $active }): string => ($active ? 'white' : 'black')};
   cursor: pointer;
-  box-shadow: ${({ active }): string => (active ? '0 4px 8px rgba(0, 123, 255, 0.2)' : '0 2px 4px rgba(0, 0, 0, 0.1)')};
+  box-shadow: ${({ $active }): string => ($active ? '0 4px 8px rgba(0, 123, 255, 0.2)' : '0 2px 4px rgba(0, 0, 0, 0.1)')};
   transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
 
   &:hover {
-    background-color: ${({ active }): string => (active ? 'var(--main-blue)' : '#cadbf5')};
-    box-shadow: ${({ active }): string => (active ? '0 6px 12px rgba(0, 123, 255, 0.3)' : '0 4px 8px rgba(0, 0, 0, 0.2)')};
+    background-color: ${({ $active }): string => ($active ? 'var(--main-blue)' : '#cadbf5')};
+    box-shadow: ${({ $active }): string => ($active ? '0 6px 12px rgba(0, 123, 255, 0.3)' : '0 4px 8px rgba(0, 0, 0, 0.2)')};
     transform: translateY(-2px);
   }
 
