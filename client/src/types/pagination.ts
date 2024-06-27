@@ -6,3 +6,4 @@ export type PaginationDto = {
 }
 
 export type Order = 'ASC' | 'DESC';
+

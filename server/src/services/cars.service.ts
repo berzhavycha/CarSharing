@@ -28,7 +28,7 @@ export class CarsService {
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
     private localFilesService: LocalFilesService,
-  ) {}
+  ) { }
 
   async createCar(
     createCarDto: CreateCarDto,
@@ -87,13 +87,13 @@ export class CarsService {
     return car;
   }
 
-  async findAll(listCarsDto: QueryCarsDto): Promise<Car[]> {
+  async findAll(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
     const {
       search,
-      page = DEFAULT_PAGINATION_PAGE,
-      limit = DEFAULT_PAGINATION_LIMIT,
-      order = DEFAULT_ORDER,
-      sort = CAR_DEFAULT_ORDER_COLUMN,
+      page,
+      limit,
+      order,
+      sort,
     } = listCarsDto;
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
@@ -101,23 +101,23 @@ export class CarsService {
     applySearchAndPagination(queryBuilder, {
       search,
       searchColumn: CAR_DEFAULT_SEARCH_COLUMN,
+      page: page || DEFAULT_PAGINATION_PAGE,
+      limit: limit || DEFAULT_PAGINATION_LIMIT,
+      order: order || DEFAULT_ORDER,
+      sort: sort || CAR_DEFAULT_ORDER_COLUMN,
+      entityAlias: 'car',
+    });
+
+    return queryBuilder.getManyAndCount();
+  }
+
+  async findAllAvailable(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
+    const {
+      search,
       page,
       limit,
       order,
       sort,
-      entityAlias: 'car',
-    });
-
-    return queryBuilder.getMany();
-  }
-
-  async findAllAvailable(listCarsDto: QueryCarsDto): Promise<Car[]> {
-    const {
-      search,
-      page = DEFAULT_PAGINATION_PAGE,
-      limit = DEFAULT_PAGINATION_LIMIT,
-      order = DEFAULT_ORDER,
-      sort = CAR_DEFAULT_ORDER_COLUMN,
     } = listCarsDto;
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
@@ -128,13 +128,14 @@ export class CarsService {
 
     applySearchAndPagination(queryBuilder, {
       search,
-      page,
-      limit,
-      order,
-      sort,
+      searchColumn: CAR_DEFAULT_SEARCH_COLUMN,
+      page: page || DEFAULT_PAGINATION_PAGE,
+      limit: limit || DEFAULT_PAGINATION_LIMIT,
+      order: order || DEFAULT_ORDER,
+      sort: sort || CAR_DEFAULT_ORDER_COLUMN,
       entityAlias: 'car',
     });
 
-    return queryBuilder.getMany();
+    return queryBuilder.getManyAndCount();
   }
 }
