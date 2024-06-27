@@ -7,7 +7,7 @@ import { Car } from '@/types';
 import DefaultImage from '../../../../../public/Car.png';
 import { Table, TableCell, TableHeader, TableRow } from '@/components/cs-common';
 
-interface CarTableProps {
+type CarTableProps = {
   cars: Car[];
   onDetailsBtnClick: (car: Car) => void;
   onSortChange: (sort: string) => void;
@@ -40,7 +40,7 @@ export const CarTable: FC<CarTableProps> = ({ cars, onDetailsBtnClick, onSortCha
             <TableCell>$ {car.pricePerHour}</TableCell>
             <TableCell>{car.type}</TableCell>
             <TableCell>
-              <StatusBadge status={car.status}>{uppercaseFirstLetter(car.status)}</StatusBadge>
+              <StatusBadge $status={car.status}>{uppercaseFirstLetter(car.status)}</StatusBadge>
             </TableCell>
             <TableCell>
               <Button onClick={() => onDetailsBtnClick(car)}>Details</Button>
@@ -55,7 +55,7 @@ export const CarTable: FC<CarTableProps> = ({ cars, onDetailsBtnClick, onSortCha
 
 
 
-const StatusBadge = styled.div<{ status: string }>`
+const StatusBadge = styled.div<{ $status: string }>`
   width: 100%;
   display: inline-block;
   padding: 6px 10px;
@@ -64,7 +64,7 @@ const StatusBadge = styled.div<{ status: string }>`
   font-weight: bold;
   text-align: center;
   color: ${(props): string => {
-    switch (props.status) {
+    switch (props.$status) {
       case 'available':
         return 'var(--available-text)';
       case 'booked':
@@ -77,7 +77,7 @@ const StatusBadge = styled.div<{ status: string }>`
   }};
   
   background-color: ${(props): string => {
-    switch (props.status) {
+    switch (props.$status) {
       case 'available':
         return 'var(--available-bg)';
       case 'booked':
@@ -90,7 +90,7 @@ const StatusBadge = styled.div<{ status: string }>`
   }};
   
   border: 2px solid ${(props): string => {
-    switch (props.status) {
+    switch (props.$status) {
       case 'available':
         return 'var(--available-border)';
       case 'booked':

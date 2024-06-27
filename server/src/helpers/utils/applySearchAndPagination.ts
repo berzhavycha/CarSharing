@@ -17,8 +17,6 @@ export function applySearchAndPagination<T>(
   const { search, searchColumn, page, limit, order, sort, entityAlias } =
     options;
 
-  console.log(options)
-
   if (search && searchColumn) {
     queryBuilder.andWhere(
       `LOWER(${entityAlias}.${searchColumn}) LIKE LOWER(:search)`,
