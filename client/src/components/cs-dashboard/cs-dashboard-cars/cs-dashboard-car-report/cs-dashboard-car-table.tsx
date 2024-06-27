@@ -18,14 +18,14 @@ export const CarTable: FC<CarTableProps> = ({ cars, onDetailsBtnClick, onSortCha
     <Table>
       <thead>
         <tr>
-          <TableHeader>No.</TableHeader>
-          <TableHeader>Image</TableHeader>
-          <TableHeader onClick={() => onSortChange('model')}>Model</TableHeader>
-          <TableHeader onClick={() => onSortChange('year')}>Year</TableHeader>
-          <TableHeader onClick={() => onSortChange('pricePerHour')}>Price / Hour</TableHeader>
-          <TableHeader onClick={() => onSortChange('type')}>Type</TableHeader>
-          <TableHeader onClick={() => onSortChange('status')}>Status</TableHeader>
-          <TableHeader>Actions</TableHeader>
+          <TableHeader style={{ width: '5%' }}>No.</TableHeader>
+          <TableHeader style={{ width: '10%' }}>Image</TableHeader>
+          <TableHeader style={{ width: '15%' }} onClick={() => onSortChange('model')}>Model</TableHeader>
+          <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('year')}>Year</TableHeader>
+          <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('pricePerHour')}>Price / Hour</TableHeader>
+          <TableHeader style={{ width: '8%' }} onClick={() => onSortChange('type')}>Type</TableHeader>
+          <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('status')}>Status</TableHeader>
+          <TableHeader style={{ width: '15%' }}>Actions</TableHeader>
         </tr>
       </thead>
       <tbody>
@@ -43,8 +43,8 @@ export const CarTable: FC<CarTableProps> = ({ cars, onDetailsBtnClick, onSortCha
               <StatusBadge $status={car.status}>{uppercaseFirstLetter(car.status)}</StatusBadge>
             </TableCell>
             <TableCell>
-              <Button onClick={() => onDetailsBtnClick(car)}>Details</Button>
-              <Button>Remove</Button>
+              <DetailsButton onClick={() => onDetailsBtnClick(car)}>Details</DetailsButton>
+              <RemoveButton>Remove</RemoveButton>
             </TableCell>
           </TableRow>
         ))}
@@ -103,7 +103,7 @@ const StatusBadge = styled.div<{ $status: string }>`
   }};
 `;
 
-const Button = styled.button`
+const DetailsButton = styled.button`
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
@@ -111,8 +111,24 @@ const Button = styled.button`
   color: white;
   cursor: pointer;
   margin-right: 5px;
+  transition: var(--default-transition);
 
   &:hover {
     background-color: var(--dark-blue);
+  }
+`;
+
+const RemoveButton = styled.button`
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--maintained-text);
+  color: white;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: var(--default-transition);
+
+  &:hover {
+    background-color: #aa2633;
   }
 `;
