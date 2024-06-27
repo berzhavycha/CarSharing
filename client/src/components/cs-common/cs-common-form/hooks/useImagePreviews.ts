@@ -4,6 +4,7 @@ type HookReturn = {
   previews: string[];
   handleUploadedFiles: (event: ChangeEvent<HTMLInputElement>) => void;
   removeImage: (index: number) => void;
+  resetPreviews: () => void
 };
 
 export const useImagePreviews = (defaultImage: string, actualImages?: string[]): HookReturn => {
@@ -24,5 +25,7 @@ export const useImagePreviews = (defaultImage: string, actualImages?: string[]):
     });
   };
 
-  return { previews, handleUploadedFiles, removeImage };
+  const resetPreviews = (): void => setPreviews([defaultImage])
+
+  return { previews, handleUploadedFiles, removeImage, resetPreviews };
 };
