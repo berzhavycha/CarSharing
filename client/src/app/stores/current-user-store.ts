@@ -41,7 +41,7 @@ export const CurrentUserStore = t
         const response = yield signUp(userDto);
         handleUserResponse(
           response,
-          (user) => User.create(user),
+          (user) => self.user = User.create(user),
           (errors) => (self.signUpErrors = errors),
         );
       } catch (error) {
@@ -55,7 +55,7 @@ export const CurrentUserStore = t
         const response = yield signIn(userDto);
         handleUserResponse(
           response,
-          (user) => User.create(user),
+          (user) => self.user = User.create(user),
           (errors) => (self.signInErrors = errors),
         );
       } catch (error) {
