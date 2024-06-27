@@ -1,13 +1,13 @@
-import { ChangeEvent, FC } from 'react';
+import { ChangeEvent, FC, InputHTMLAttributes } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import styled from 'styled-components';
 
-type Props = {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
   search: string;
   onSearchChange: (text: string) => void;
-};
+}
 
-export const CSCommonSearchBar: FC<Props> = ({ search, onSearchChange }) => {
+export const CSCommonSearchBar: FC<Props> = ({ search, onSearchChange, ...props }) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     onSearchChange(e.target.value);
   };
@@ -19,7 +19,7 @@ export const CSCommonSearchBar: FC<Props> = ({ search, onSearchChange }) => {
         type="text"
         value={search}
         onChange={handleChange}
-        placeholder="Search something here"
+        {...props}
       />
     </SearchContainer>
   );
