@@ -12,7 +12,6 @@ import {
 import { Env } from '@/core';
 import { DEFAULT_PAGINATION_PAGE, OrderOptions, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { useSearchParamsWithDefaults } from '@/hooks';
-import { Car } from '@/types';
 
 import { CarTable } from './cs-dashboard-car-table';
 import { LoaderData } from './loader';
@@ -30,7 +29,6 @@ export const CSDashboardCarReport: FC = () => {
   const data = useLoaderData() as { data: LoaderData };
   const { searchParams, setParams } = useSearchParamsWithDefaults(defaultSearchParams);
 
-  const onDetailsBtnClick = (car: Car): void => navigate('/dashboard/edit-car', { state: { car } });
   const onAddBtnClick = (): void => navigate('/dashboard/add-car');
   const onPageChange = (newPage: number): void => setParams({ page: String(newPage) });
   const onSearchChange = (search: string): void => setParams({ search, page: '1' });
@@ -61,13 +59,12 @@ export const CSDashboardCarReport: FC = () => {
               <>
                 <CarTable
                   cars={data.cars}
-                  onDetailsBtnClick={onDetailsBtnClick}
                   onSortChange={onSortChange}
                 />
                 <Pagination
                   totalPages={Math.ceil(
                     data.total /
-                      Number(searchParams.get('limit') ?? Env.ADMIN_CARS_PAGINATION_LIMIT),
+                    Number(searchParams.get('limit') ?? Env.ADMIN_CARS_PAGINATION_LIMIT),
                   )}
                   currentPage={Number(searchParams.get('page')) || +DEFAULT_PAGINATION_PAGE}
                   onPageChange={onPageChange}
