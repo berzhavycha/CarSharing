@@ -11,3 +11,4 @@ export * from './cs-common-select-field';
 export * from './cs-common-textarea';
 export * from './cs-common-status-badge';
 export * from './cs-common-pagination';
+export * from './cs-common-table'
