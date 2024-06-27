@@ -19,6 +19,7 @@ import {
   CarFuelType,
   CarStatus,
   DecimalColumnTransformer,
+  IntColumnTransformer,
 } from '@/helpers';
 
 import { LocalFile } from './local-file.entity';
@@ -36,7 +37,7 @@ export class Car {
   @Index()
   model: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', transformer: new IntColumnTransformer() })
   year: number;
 
   @Column({ type: 'text' })
@@ -60,7 +61,7 @@ export class Car {
   })
   status: CarStatus;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', transformer: new IntColumnTransformer() })
   capacity: number;
 
   @Column({
