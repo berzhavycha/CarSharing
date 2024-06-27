@@ -17,7 +17,6 @@ import {
   DEFAULT_ORDER,
   DEFAULT_PAGINATION_LIMIT,
   DEFAULT_PAGINATION_PAGE,
-  RentalStatus,
 } from '@/helpers';
 
 import { LocalFilesService } from './local-files.service';
@@ -67,7 +66,7 @@ export class CarsService {
   async removeCar(id: string): Promise<void> {
     const car = await this.findById(id);
 
-    if (car.rentals.some((rental) => rental.status === RentalStatus.ACTIVE)) {
+    if (car.status === CarStatus.BOOKED) {
       throw new BadRequestException(carErrorMessages.CAR_CANNOT_BE_DELETED);
     }
 

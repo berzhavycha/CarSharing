@@ -1,5 +1,5 @@
 import { Option } from '@/components';
-import { CarDto } from '@/types';
+import { Car, CarDto } from '@/types';
 
 export enum CarStatus {
   AVAILABLE = 'available',
@@ -82,3 +82,9 @@ export const addCarFieldMappings: Record<string, keyof CarDto> = {
   'price / hour': 'pricePerHour',
   'description': 'description',
 };
+
+export const removeCarMapping: Record<string, keyof Car> = {
+  'rented': 'status'
+}
+
+export const FAILED_REMOVE_CAR = "Failed to remove the car. Please try again."

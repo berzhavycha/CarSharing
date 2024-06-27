@@ -1,6 +1,7 @@
 import { FC, MouseEvent } from 'react';
 import styled from 'styled-components';
 import { iconMap } from './icon-map';
+import { FaTimes } from 'react-icons/fa';
 
 type ModalProps = {
     type: 'error' | 'confirm' | 'warning';
@@ -24,8 +25,10 @@ export const CSCommonModal: FC<ModalProps> = ({ type, title, message, onClose, o
         <ModalOverlay onClick={handleOverlayClick}>
             <ModalContainer>
                 <ModalHeader>
-                    {Icon && <Icon />}
-                    <ModalTitle>{title}</ModalTitle>
+                    <ModalTitle>{Icon && <Icon />} {title}</ModalTitle>
+                    <CloseButton onClick={onClose}>
+                        <FaTimes />
+                    </CloseButton>
                 </ModalHeader>
                 <ModalMessage>{message}</ModalMessage>
                 <ModalActions>
@@ -55,7 +58,7 @@ const ModalContainer = styled.div`
     border-radius: 8px;
     padding: 20px;
     box-shadow: var(--default-box-shadow);
-    width: 400px;
+    width: 500px;
     max-width: 90%;
     text-align: center;
     position: relative;
@@ -64,12 +67,26 @@ const ModalContainer = styled.div`
 const ModalHeader = styled.div`
     display: flex;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 15px;
 `;
 
 const ModalTitle = styled.h2`
+    display: flex;
     font-size: 20px;
     margin: 0;
+`;
+
+const CloseButton = styled.button`
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--light-dark);
+
+    &:hover {
+        color: var(--dark);
+    }
 `;
 
 const ModalMessage = styled.p`
