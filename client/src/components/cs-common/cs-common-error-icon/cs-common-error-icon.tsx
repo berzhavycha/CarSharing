@@ -3,19 +3,19 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import styled from 'styled-components';
 
 type Props = {
-    right?: number;
+  right?: number;
 };
 
 export const CSCommonErrorIcon: FC<Props> = ({ right }) => {
-    return (
-        <ErrorIconWrapper $right={right}>
-            <FaExclamationCircle />
-        </ErrorIconWrapper>
-    );
+  return (
+    <ErrorIconWrapper $right={right}>
+      <FaExclamationCircle />
+    </ErrorIconWrapper>
+  );
 };
 
 type IconProps = {
-    $right?: number;
+  $right?: number;
 };
 
 export const ErrorIconWrapper = styled.span<IconProps>`

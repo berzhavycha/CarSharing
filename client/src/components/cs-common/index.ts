@@ -9,4 +9,5 @@ export * from './cs-common-primary-button';
 export * from './cs-common-search-bar';
 export * from './cs-common-select-field';
 export * from './cs-common-textarea';
-export * from './cs-common-status-badge'
+export * from './cs-common-status-badge';
+export * from './cs-common-pagination';

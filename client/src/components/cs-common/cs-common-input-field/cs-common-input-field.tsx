@@ -7,42 +7,42 @@ import { CSCommonErrorIcon } from '../cs-common-error-icon';
 import { CSCommonErrorMessage } from '../cs-common-error-message';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    label?: string;
-    error?: string;
-    isSecured?: boolean;
-    formSubmitted?: boolean;
+  label?: string;
+  error?: string;
+  isSecured?: boolean;
+  formSubmitted?: boolean;
 }
 
 export const CSCommonInputField = forwardRef<HTMLInputElement, InputProps>(
-    ({ placeholder, label, error, isSecured, formSubmitted, ...props }, ref) => {
-        const [isPasswordShown, setIsPasswordShown] = useState<boolean>(Boolean(isSecured));
+  ({ placeholder, label, error, isSecured, formSubmitted, ...props }, ref) => {
+    const [isPasswordShown, setIsPasswordShown] = useState<boolean>(Boolean(isSecured));
 
-        const togglePasswordVisibility = (): void => {
-            setIsPasswordShown((prevIsPasswordShown) => !prevIsPasswordShown);
-        };
+    const togglePasswordVisibility = (): void => {
+      setIsPasswordShown((prevIsPasswordShown) => !prevIsPasswordShown);
+    };
 
-        const inputType = isPasswordShown ? 'password' : 'text';
+    const inputType = isPasswordShown ? 'password' : 'text';
 
-        return (
-            <InputGroup>
-                <Label>{label}</Label>
-                <Input
-                    ref={ref}
-                    type={inputType}
-                    placeholder={placeholder || `Enter ${label?.toLowerCase()}`}
-                    {...props}
-                />
-                {isSecured && (
-                    <TogglePasswordButton tabIndex={-1} type="button" onClick={togglePasswordVisibility}>
-                        {isPasswordShown ? <FaEyeSlash /> : <FaEye />}
-                    </TogglePasswordButton>
-                )}
-                {formSubmitted &&
-                    (!error ? <CSCommonCheckIcon right={-25} /> : <CSCommonErrorIcon right={-25} />)}
-                <CSCommonErrorMessage>{error}</CSCommonErrorMessage>
-            </InputGroup>
-        );
-    },
+    return (
+      <InputGroup>
+        <Label>{label}</Label>
+        <Input
+          ref={ref}
+          type={inputType}
+          placeholder={placeholder || `Enter ${label?.toLowerCase()}`}
+          {...props}
+        />
+        {isSecured && (
+          <TogglePasswordButton tabIndex={-1} type="button" onClick={togglePasswordVisibility}>
+            {isPasswordShown ? <FaEyeSlash /> : <FaEye />}
+          </TogglePasswordButton>
+        )}
+        {formSubmitted &&
+          (!error ? <CSCommonCheckIcon right={-25} /> : <CSCommonErrorIcon right={-25} />)}
+        <CSCommonErrorMessage>{error}</CSCommonErrorMessage>
+      </InputGroup>
+    );
+  },
 );
 CSCommonInputField.displayName = 'CSCommonInputField';
 

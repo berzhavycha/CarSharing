@@ -2,16 +2,16 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 type Props = {
-    amount: number;
-    metric: 'days' | 'hours';
+  amount: number;
+  metric: 'days' | 'hours';
 };
 
 export const CSCommonPrice: FC<Props> = ({ amount, metric }) => {
-    return (
-        <PriceWrapper>
-            ${amount}.00<Metric> / {metric}</Metric>
-        </PriceWrapper>
-    );
+  return (
+    <PriceWrapper>
+      ${amount}.00<Metric> / {metric}</Metric>
+    </PriceWrapper>
+  );
 };
 
 const PriceWrapper = styled.span`

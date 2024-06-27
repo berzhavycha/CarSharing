@@ -1,1 +1,1 @@
-export * from './cs-common-price'
+export * from './cs-common-price';

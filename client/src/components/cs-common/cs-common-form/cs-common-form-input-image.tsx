@@ -1,9 +1,11 @@
 import { ChangeEvent, FC, useRef } from 'react';
 import styled from 'styled-components';
+
 import { CSCommonErrorMessage, InputProps } from '@/components/cs-common';
+
 import { useCommonForm } from './cs-common-form';
-import { useImagePreviews } from './hooks';
 import { CSCommonFormImagePreview } from './cs-common-form-image-preview';
+import { useImagePreviews } from './hooks';
 
 type Props = Omit<InputProps, 'name'> & {
   name: string;
@@ -29,10 +31,16 @@ export const CSCommonFormInputImage: FC<Props> = ({
   multiple = false,
   ...props
 }) => {
-  const { register, formState: { errors } } = useCommonForm().formHandle;
+  const {
+    register,
+    formState: { errors },
+  } = useCommonForm().formHandle;
 
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
-  const { previews, handleUploadedFiles, removeImage } = useImagePreviews(defaultImage, actualImages);
+  const { previews, handleUploadedFiles, removeImage } = useImagePreviews(
+    defaultImage,
+    actualImages,
+  );
 
   const { ref: registerRef, onChange, ...rest } = register(name);
 
@@ -53,7 +61,7 @@ export const CSCommonFormInputImage: FC<Props> = ({
     if (onRemove && actualImages?.length) {
       onRemove(preview);
     }
-  }
+  };
 
   return (
     <InputImageContainer>

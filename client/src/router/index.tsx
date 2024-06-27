@@ -1,10 +1,15 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom';
 
-import { CSDashboardCarForm, CSDashboardCarReport, CSDashboardProfileSettingsForm } from '@/components';
+import {
+  carsLoader,
+  CSDashboardCarForm,
+  CSDashboardCarReport,
+  CSDashboardProfileSettingsForm,
+} from '@/components';
+import { isAdmin, ONLY_ADMIN_PAGE_ERROR } from '@/helpers';
 import { CSDashboardSidebar, CSHeaderLayout, CSProtectedRoute } from '@/layouts';
 import { CSMainUserPage, CSSignInPage, CSSignUpPage } from '@/pages';
 import { addNewCar } from '@/services';
-import { isAdmin, ONLY_ADMIN_PAGE_ERROR } from '@/helpers';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -12,10 +17,12 @@ export const router = createBrowserRouter(
       <Route path="/" element={<CSHeaderLayout />}>
         <Route index element={<CSMainUserPage />} />
       </Route>
-      <Route element={<CSProtectedRoute isAllowed={isAdmin} errorMessage={ONLY_ADMIN_PAGE_ERROR} />}>
+      <Route
+        element={<CSProtectedRoute isAllowed={isAdmin} errorMessage={ONLY_ADMIN_PAGE_ERROR} />}
+      >
         <Route path="dashboard" element={<CSDashboardSidebar />}>
           <Route path="settings" element={<CSDashboardProfileSettingsForm />} />
-          <Route path="car-report" element={<CSDashboardCarReport />} />
+          <Route path="car-report" element={<CSDashboardCarReport />} loader={carsLoader} />
           <Route path="add-car" element={<CSDashboardCarForm onFormSubmit={addNewCar} />} />
           <Route path="edit-car" element={<CSDashboardCarForm onFormSubmit={addNewCar} />} />
         </Route>

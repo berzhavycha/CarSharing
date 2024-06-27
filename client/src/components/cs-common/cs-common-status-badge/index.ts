@@ -1,1 +1,1 @@
-export * from './cs-common-status-badge'
+export * from './cs-common-status-badge';
