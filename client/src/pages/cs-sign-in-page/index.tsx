@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonErrorMessage, CSCommonForm } from '@/components';
@@ -13,6 +13,8 @@ import { ErrorMessageWrapper, Span, Title } from '../cs-sign-up-page';
 export const CSSignInPage: FC = observer(() => {
   const { currentUserStore } = useStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const errorMessage = location.state?.errorMessage;
 
   const onSubmit = async (data: SignInUserDto): Promise<void> => {
     await currentUserStore.signIn(data);
@@ -31,7 +33,7 @@ export const CSSignInPage: FC = observer(() => {
       </Span>
       <ErrorMessageWrapper>
         <CSCommonErrorMessage>
-          {currentUserStore.signInErrors?.unexpectedError ?? ''}
+          {currentUserStore.signInErrors?.unexpectedError ?? errorMessage ?? ''}
         </CSCommonErrorMessage>
       </ErrorMessageWrapper>
       <CSCommonForm<SignInUserDto>

@@ -4,7 +4,7 @@ import { CSDashboardCarForm, CSDashboardCarReport, CSDashboardProfileSettingsFor
 import { CSDashboardSidebar, CSHeaderLayout, CSProtectedRoute } from '@/layouts';
 import { CSMainUserPage, CSSignInPage, CSSignUpPage } from '@/pages';
 import { addNewCar } from '@/services';
-import { isAdmin } from '@/helpers';
+import { isAdmin, ONLY_ADMIN_PAGE_ERROR } from '@/helpers';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -12,7 +12,7 @@ export const router = createBrowserRouter(
       <Route path="/" element={<CSHeaderLayout />}>
         <Route index element={<CSMainUserPage />} />
       </Route>
-      <Route element={<CSProtectedRoute isAllowed={isAdmin} />}>
+      <Route element={<CSProtectedRoute isAllowed={isAdmin} errorMessage={ONLY_ADMIN_PAGE_ERROR} />}>
         <Route path="dashboard" element={<CSDashboardSidebar />}>
           <Route path="settings" element={<CSDashboardProfileSettingsForm />} />
           <Route path="car-report" element={<CSDashboardCarReport />} />
