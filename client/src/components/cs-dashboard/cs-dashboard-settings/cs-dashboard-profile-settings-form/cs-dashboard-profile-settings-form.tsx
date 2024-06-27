@@ -15,6 +15,7 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
     currentUserStore: { user, updateErrors, updateUser, removeAvatar },
   } = useStore();
   const [isAvatarRemoving, setIsAvatarRemoving] = useState<boolean>(false)
+  const [isUpdateSuccessful, setIsUpdateSuccessful] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
@@ -25,6 +26,9 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
     );
 
     await updateUser(userDtoWithoutEmptyPasswords);
+    if (!updateErrors) {
+      setIsUpdateSuccessful(true);
+    }
   };
 
   const onRemoveAvatar = (): void => setIsAvatarRemoving(true);
@@ -40,6 +44,7 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
 
   const onCloseConfirmWindow = (): void => setIsAvatarRemoving(false)
   const onCloseErrorWindow = (): void => setErrorMessage(null)
+  const handleCloseModal = (): void => setIsUpdateSuccessful(false);
 
 
   const avatar = user?.avatarId ? [`${Env.API_BASE_URL}/local-files/${user.avatarId}`] : undefined;
@@ -123,6 +128,16 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
           title="Error"
           message={errorMessage}
           onClose={onCloseErrorWindow}
+        />
+      )}
+
+      {isUpdateSuccessful && (
+        <CSCommonModal
+          type="confirm"
+          title="Success"
+          message="Your account was successfully updated."
+          onClose={handleCloseModal}
+          onOk={handleCloseModal}
         />
       )}
     </>
