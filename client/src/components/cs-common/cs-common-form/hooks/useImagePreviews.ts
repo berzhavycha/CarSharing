@@ -25,7 +25,7 @@ export const useImagePreviews = (defaultImage: string, actualImages?: string[]):
     });
   };
 
-  const resetPreviews = (): void => setPreviews([defaultImage])
+  const resetPreviews = (): void => setPreviews(actualImages && actualImages.length > 0 ? [...actualImages] : [defaultImage])
 
   return { previews, handleUploadedFiles, removeImage, resetPreviews };
 };

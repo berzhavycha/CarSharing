@@ -13,7 +13,7 @@ import { Env } from '@/core';
 import { DEFAULT_PAGINATION_PAGE, OrderOptions, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { useSearchParamsWithDefaults } from '@/hooks';
 
-import { CarTable } from './cs-dashboard-car-table';
+import { CSDashboardCarTable } from './cs-dashboard-car-table';
 import { LoaderData } from './loader';
 
 const defaultSearchParams = {
@@ -57,7 +57,7 @@ export const CSDashboardCarReport: FC = () => {
           >
             {(data) => (
               <>
-                <CarTable
+                <CSDashboardCarTable
                   cars={data.cars}
                   onSortChange={onSortChange}
                 />

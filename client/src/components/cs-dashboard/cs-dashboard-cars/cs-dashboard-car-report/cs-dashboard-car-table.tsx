@@ -11,7 +11,7 @@ type CarTableProps = {
   onSortChange: (sort: string) => void;
 };
 
-export const CarTable: FC<CarTableProps> = ({ cars, onSortChange }) => {
+export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) => {
   const {
     carList,
     setCarList,

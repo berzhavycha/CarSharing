@@ -1,13 +1,13 @@
 import { Injectable, mixin, NestInterceptor, Type } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { diskStorage } from 'multer';
 import { Observable } from 'rxjs';
 
 interface LocalFilesInterceptorOptions {
   fieldName: string;
-  maxCount?: number;  
+  maxCount?: number;
   path?: string;
   fileFilter?: MulterOptions['fileFilter'];
   limits?: MulterOptions['limits'];
@@ -19,12 +19,12 @@ export function LocalFilesInterceptor(
   @Injectable()
   class Interceptor implements NestInterceptor {
     filesInterceptor: NestInterceptor;
-    constructor(configService: ConfigService) {
-      const filesDestination = configService.get('UPLOADED_FILES_DESTINATION');
 
-      const destination = `${filesDestination}${options.path}`;
+    constructor(private readonly configService: ConfigService) {
+      const filesDestination = this.configService.get('UPLOADED_FILES_DESTINATION');
+      const destination = options.path ? `${filesDestination}${options.path}` : filesDestination;
 
-      const multerOptions: MulterOptions = {
+      const multerOptions = {
         storage: diskStorage({
           destination,
         }),
@@ -32,12 +32,18 @@ export function LocalFilesInterceptor(
         limits: options.limits,
       };
 
-    
-      this.filesInterceptor = new (FilesInterceptor(
-        options.fieldName,
-        options.maxCount || 10,  
-        multerOptions,
-      ))();
+      if (options.maxCount && options.maxCount > 1) {
+        this.filesInterceptor = new (FilesInterceptor(
+          options.fieldName,
+          options.maxCount,
+          multerOptions,
+        ))();
+      } else {
+        this.filesInterceptor = new (FileInterceptor(
+          options.fieldName,
+          multerOptions,
+        ))();
+      }
     }
 
     intercept(
@@ -47,5 +53,6 @@ export function LocalFilesInterceptor(
       return this.filesInterceptor.intercept(...args);
     }
   }
+
   return mixin(Interceptor);
 }
