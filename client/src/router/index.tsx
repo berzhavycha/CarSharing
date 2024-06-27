@@ -17,6 +17,7 @@ export const router = createBrowserRouter(
           <Route path="settings" element={<CSDashboardProfileSettingsForm />} />
           <Route path="car-report" element={<CSDashboardCarReport />} />
           <Route path="add-car" element={<CSDashboardCarForm onFormSubmit={addNewCar} />} />
+          <Route path="edit-car" element={<CSDashboardCarForm onFormSubmit={addNewCar} />} />
         </Route>
       </Route>
       <Route path="sign-up" element={<CSSignUpPage />} />

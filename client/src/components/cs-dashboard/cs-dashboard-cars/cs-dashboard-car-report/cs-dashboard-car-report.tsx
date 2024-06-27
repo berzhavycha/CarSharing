@@ -1,25 +1,33 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
-
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import DefaultImage from '../../../../../public/Car.png';
 import { CSCommonPrimaryButton, CSCommonSearchBar } from '@/components/cs-common';
-import { useNavigate } from 'react-router-dom';
-
-const bookings = [
-  {
-    id: '#5D869F5L2',
-    customerName: 'Mason Wilson',
-    route: 'San Diego - Dallas',
-    dateTime: '15 Sept, 8:30AM',
-    status: 'Confirmed',
-  },
-  // ... other booking objects
-];
+import { Car } from '@/types';
+import { fetchCars } from '@/services/cars/fetch-cars';
+import { uppercaseFirstLetter } from '@/helpers';
 
 export const CSDashboardCarReport: FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [cars, setCars] = useState<Car[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const onAddBtnClick = (): void => navigate('/dashboard/add-car')
+  const fetchAndSetCars = async () => {
+    const page = searchParams.get('page') || 1;
+    const limit = searchParams.get('limit') || 10;
+
+    const queryCarsDto = { page: Number(page), limit: Number(limit) };
+    const data = await fetchCars(queryCarsDto);
+    setCars(data.cars);
+  };
+
+  useEffect(() => {
+    fetchAndSetCars();
+  }, [searchParams]);
+
+  const onDetailsBtnClick = (car: Car): void => navigate('/dashboard/edit-car', { state: { car } });
+  const onAddBtnClick = (): void => navigate('/dashboard/add-car');
+  const onPageChange = (newPage: number) => setSearchParams({ page: String(newPage) });
 
   return (
     <CarsContainer>
@@ -45,33 +53,39 @@ export const CSDashboardCarReport: FC = () => {
             </tr>
           </thead>
           <tbody>
-            {bookings.map((booking, index) => (
-              <TableRow key={booking.id}>
+            {cars.map((car, index) => (
+              <TableRow key={car.id}>
                 <TableCell>{index + 1}</TableCell>
+                <TableCell><img src={DefaultImage} /></TableCell>
+                <TableCell>{car.model}</TableCell>
+                <TableCell>{car.year}</TableCell>
+                <TableCell>$ {car.pricePerHour}</TableCell>
+                <TableCell>{car.type}</TableCell>
                 <TableCell>
-                  <img src={DefaultImage} />
-                </TableCell>
-                <TableCell>{booking.customerName}</TableCell>
-                <TableCell>{booking.route}</TableCell>
-                <TableCell>{booking.dateTime}</TableCell>
-                <TableCell>
-                  <StatusBadge status={booking.status}>{booking.status}</StatusBadge>
-                </TableCell>
-                <TableCell>
-                  <StatusBadge status={booking.status}>{booking.status}</StatusBadge>
+                  <StatusBadge status={car.status}>{uppercaseFirstLetter(car.status)}</StatusBadge>
                 </TableCell>
                 <TableCell>
-                  <Button>Details</Button>
-                  <Button>Assign</Button>
+                  <Button onClick={() => onDetailsBtnClick(car)}>Details</Button>
+                  <Button>Remove</Button>
                 </TableCell>
               </TableRow>
             ))}
           </tbody>
         </Table>
+        <Pagination>
+          <Button onClick={() => onPageChange(Math.max(1, Number(searchParams.get('page')) - 1))}>Previous</Button>
+          <Button onClick={() => onPageChange(Number(searchParams.get('page')) + 1)}>Next</Button>
+        </Pagination>
       </ContentContainer>
     </CarsContainer>
   );
 };
+
+const Pagination = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
 
 const CarsContainer = styled.div`
   width: 100%;
@@ -83,7 +97,7 @@ const Header = styled.div`
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 `;
 
 const ContentContainer = styled.div`
@@ -125,16 +139,29 @@ const TableCell = styled.td`
   }
 `;
 
-const StatusBadge = styled.span`
-  padding: 4px 8px;
-  border-radius: 12px;
+type StatusBadgeProps = {
+  status: string;
+}
+
+const StatusBadge = styled.div<StatusBadgeProps>`
+  width: 100%;
+  background: none;
+  text-align: center;
+  padding: 10px 8px;
+  border-radius: 5px;
   font-size: 12px;
   font-weight: bold;
-  color: white;
-  background-color: ${(props) =>
-    props.status === 'Confirmed'
+  border: 1px solid;
+  color: ${(props): string =>
+    props.status === 'available'
       ? '#6c757d'
-      : props.status === 'Cancelled'
+      : props.status === 'booked'
+        ? '#dc3545'
+        : '#007bff'};
+  border-color: ${(props): string =>
+    props.status === 'available'
+      ? '#6c757d'
+      : props.status === 'booked'
         ? '#dc3545'
         : '#007bff'};
 `;
