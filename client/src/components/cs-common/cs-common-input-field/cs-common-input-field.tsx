@@ -54,7 +54,7 @@ const TogglePasswordButton = styled.button`
   font-size: 16px;
   padding-right: 10px;
   position: absolute;
-  top: 50%;a
+  top: 50%;
   transform: translateY(-40%);
   right: 5px;
   color: #666;

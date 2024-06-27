@@ -95,16 +95,15 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
 
 const ProfileContainer = styled.div`
   width: 100%;
-  max-height: 100vh;
 `;
 
 const ContentContainer = styled.div`
+  max-height: calc(100vh - 40px);
   padding: 30px;
   background-color: white;
   margin: 20px;
   border-radius: 10px;
   box-shadow: var(--default-box-shadow);
-  height: 94%;
 `;
 
 const Title = styled.h3`
@@ -128,7 +127,7 @@ const PasswordSection = styled.div`
 const ProfileHeaderWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 `;
 
 const UserInfo = styled.div`
