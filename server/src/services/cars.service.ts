@@ -27,7 +27,7 @@ export class CarsService {
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
     private localFilesService: LocalFilesService,
-  ) {}
+  ) { }
 
   async createCar(
     createCarDto: CreateCarDto,
@@ -52,16 +52,22 @@ export class CarsService {
   ): Promise<Car> {
     const car = await this.findById(id);
 
-    if (fileData && fileData.length) {
-      const carPictures = await Promise.all(
-        fileData.map((file) => this.localFilesService.saveLocalFileData(file)),
-      );
-      Object.assign(car, { pictures: carPictures });
+    for (const existingPicture of car.pictures) {
+      await this.localFilesService.removeFile(existingPicture.id);
+      car.pictures = car.pictures.filter(item => item.id !== existingPicture.id)
     }
 
+    for (const newPicture of fileData) {
+      const newFile = await this.localFilesService.saveLocalFileData(newPicture)
+      car.pictures.push(newFile);
+    }
+
+    delete updateCarDto.pictures
     Object.assign(car, updateCarDto);
+
     return this.carsRepository.save(car);
   }
+
 
   async removeCar(id: string): Promise<void> {
     const car = await this.findById(id);

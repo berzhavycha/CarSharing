@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { FC, useState } from 'react';
+import { FC, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -10,6 +10,7 @@ import {
   CarSteeringTypeSelect,
   CarTypeSelect,
   createCarSchema,
+  getFileFromUrl,
 } from '@/helpers';
 import { Car, CarDto, FieldErrorsState, LocalFile } from '@/types';
 
@@ -27,17 +28,26 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const [errors, setErrors] = useState<FieldErrorsState<CarDto>>();
 
+  const handleCloseModal = (): void => setModalVisible(false);
+
+  const updateCarImages = location.state?.car
+    ? location.state?.car.pictures.map((item: LocalFile) => `${Env.API_BASE_URL}/local-files/${item.id}`)
+    : undefined;
+
+  const fetchDefaultValues = useCallback(async (): Promise<CarDto | void> => {
+    if (!location.state?.car) return
+    const pictures = await Promise.all(
+      location.state.car.pictures.map((file: LocalFile) => getFileFromUrl(`${Env.API_BASE_URL}/local-files/${file.id}`))
+    );
+    return { ...location.state.car, pictures };
+  }, [location.state?.car]);
+
   const onSubmit = async (carDto: CarDto): Promise<void> => {
-    console.log(carDto)
-    const { car, errors } = await onFormSubmit(carDto);
-    if (car) {
-      setModalVisible(true);
-    }
+    const dto = location.state?.car ? { ...carDto, id: location.state?.car.id } : carDto;
+    const { car, errors } = await onFormSubmit(dto);
+    if (car) setModalVisible(true);
     setErrors(errors);
   };
-
-  const handleCloseModal = (): void => setModalVisible(false);
-  const updateCarImages = location.state?.car ? location.state?.car.pictures.map((item: LocalFile) => `${Env.API_BASE_URL}/local-files/${item.id}`) : undefined
 
   return (
     <FormContainer>
@@ -45,7 +55,7 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
         <CSCommonForm<CarDto>
           validationSchema={createCarSchema}
           onSubmit={onSubmit}
-          defaultValues={location.state?.car}
+          defaultValues={fetchDefaultValues}
         >
           <CarHeaderWrapper>
             <CSCommonForm.InputFile
@@ -63,53 +73,19 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
           <Section>
             <CSCommonForm.Input label="Model Name" name="model" error={errors?.model} />
             <CSCommonForm.Input label="Year" name="year" type="number" error={errors?.year} />
-            <CSCommonForm.Input
-              label="Price / Hour"
-              name="pricePerHour"
-              type="text"
-              error={errors?.pricePerHour}
-            />
+            <CSCommonForm.Input label="Price / Hour" name="pricePerHour" type="text" error={errors?.pricePerHour} />
             <CSCommonForm.Select label="Status" name="status" options={CarStatusSelect} />
           </Section>
 
-          <CSCommonForm.TextArea
-            label="Description"
-            name="description"
-            error={errors?.description}
-          />
+          <CSCommonForm.TextArea label="Description" name="description" error={errors?.description} />
 
           <Title>Characteristics</Title>
           <Section>
-            <CSCommonForm.Select
-              label="Type"
-              name="type"
-              options={CarTypeSelect}
-              error={errors?.type}
-            />
-            <CSCommonForm.Input
-              label="Capacity"
-              name="capacity"
-              type="number"
-              error={errors?.capacity}
-            />
-            <CSCommonForm.Select
-              label="Fuel Type"
-              name="fuelType"
-              options={CarFuelTypeSelect}
-              error={errors?.fuelType}
-            />
-            <CSCommonForm.Input
-              label="Fuel Capacity"
-              name="fuelCapacity"
-              type="number"
-              error={errors?.fuelCapacity}
-            />
-            <CSCommonForm.Select
-              label="Steering"
-              name="steering"
-              options={CarSteeringTypeSelect}
-              error={errors?.steering}
-            />
+            <CSCommonForm.Select label="Type" name="type" options={CarTypeSelect} error={errors?.type} />
+            <CSCommonForm.Input label="Capacity" name="capacity" type="number" error={errors?.capacity} />
+            <CSCommonForm.Select label="Fuel Type" name="fuelType" options={CarFuelTypeSelect} error={errors?.fuelType} />
+            <CSCommonForm.Input label="Fuel Capacity" name="fuelCapacity" type="number" error={errors?.fuelCapacity} />
+            <CSCommonForm.Select label="Steering" name="steering" options={CarSteeringTypeSelect} error={errors?.steering} />
           </Section>
         </CSCommonForm>
       </ContentContainer>

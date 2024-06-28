@@ -35,7 +35,6 @@ export const CSCommonFormInputImage: FC<Props> = ({
     register,
     formState: { errors, isSubmitSuccessful },
   } = useCommonForm().formHandle;
-
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
   const { previews, handleUploadedFiles, removeImage, resetPreviews } = useImagePreviews(
     defaultImage,
