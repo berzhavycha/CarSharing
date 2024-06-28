@@ -27,7 +27,7 @@ import { CarsService } from '@/services';
 
 @Controller('cars')
 export class CarsController {
-  constructor(private readonly carsService: CarsService) { }
+  constructor(private readonly carsService: CarsService) {}
 
   @Post()
   @UseGuards(RoleGuard(Roles.ADMIN))
@@ -44,7 +44,7 @@ export class CarsController {
     @Body() createCarDto: CreateCarDto,
     @UploadedFiles() pictures: Express.Multer.File[],
   ): Promise<Car> {
-    return this.carsService.createCar(createCarDto, pictures)
+    return this.carsService.createCar(createCarDto, pictures);
   }
 
   @Get()
@@ -83,7 +83,7 @@ export class CarsController {
     @Body() updateCarDto: UpdateCarDto,
     @UploadedFiles() files?: Express.Multer.File[],
   ): Promise<Car> {
-    console.log(files)
+    console.log(files);
     const uploadedFiles =
       files?.map((file) => ({
         path: file.path,
