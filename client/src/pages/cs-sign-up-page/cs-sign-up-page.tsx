@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { FC, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonErrorMessage, CSCommonForm } from '@/components';
@@ -11,6 +11,8 @@ import { SignUpUserDto } from '@/types';
 export const CSSignUpPage: FC = observer(() => {
   const [userRole, setUserRole] = useState<string>('user');
   const [showSecretCodeInput, setShowSecretCodeInput] = useState<boolean>(false);
+  const location = useLocation()
+  const from = location.state?.from || '/';
 
   const navigate = useNavigate();
 
@@ -25,7 +27,7 @@ export const CSSignUpPage: FC = observer(() => {
   const onSubmit = async (data: SignUpUserDto): Promise<void> => {
     await currentUserStore.signUp(data);
     if (currentUserStore.user) {
-      const navigatePath = currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/';
+      const navigatePath = from || (currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/')
       navigate(navigatePath);
     }
   };
@@ -35,7 +37,7 @@ export const CSSignUpPage: FC = observer(() => {
       <Title>Register</Title>
       <Span>
         Already have an account?
-        <Link to="/sign-in">Login here</Link> instead
+        <Link to="/sign-in" state={{ from }}>Login here</Link> instead
       </Span>
       <ErrorMessageWrapper>
         <CSCommonErrorMessage>

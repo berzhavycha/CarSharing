@@ -30,7 +30,7 @@ export const CSSignInPage: FC = observer(() => {
       <Title>Login</Title>
       <Span>
         Don't Have an Account?
-        <Link to="/sign-up">Register here</Link> instead
+        <Link to="/sign-up" state={{ from }}>Register here</Link> instead
       </Span>
       <ErrorMessageWrapper>
         <CSCommonErrorMessage>
