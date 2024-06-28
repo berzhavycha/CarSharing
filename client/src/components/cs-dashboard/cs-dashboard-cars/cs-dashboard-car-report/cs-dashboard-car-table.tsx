@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { CSCommonModal, Table, TableHeader } from '@/components/cs-common';
+import { CSCommonModal, CSCommonNoData, Table, TableHeader } from '@/components/cs-common';
 import { Car } from '@/types';
 
 import { CSDashboardCarTableRow } from './cs-dashboard-car-table-row';
@@ -59,15 +59,23 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
           </tr>
         </thead>
         <tbody>
-          {carList.map((car, index) => (
-            <CSDashboardCarTableRow
-              key={car.id}
-              car={car}
-              index={index}
-              onDetailsClick={onDetailsBtnClick}
-              onRemoveClick={setCarToRemove}
-            />
-          ))}
+          {carList.length === 0 ? (
+            <tr>
+              <td colSpan={8}>
+                <CSCommonNoData message="No cars available" />
+              </td>
+            </tr>
+          ) : (
+            carList.map((car, index) => (
+              <CSDashboardCarTableRow
+                key={car.id}
+                car={car}
+                index={index}
+                onDetailsClick={onDetailsBtnClick}
+                onRemoveClick={setCarToRemove}
+              />
+            ))
+          )}
         </tbody>
       </Table>
 
