@@ -1,6 +1,7 @@
 import { z } from 'zod';
-import { ONE_MB } from '@/helpers/constants';
+
 import { Env } from '@/core';
+import { ONE_MB } from '@/helpers/constants';
 
 export const createCarSchema = z.object({
   pictures: z
