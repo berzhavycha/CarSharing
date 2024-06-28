@@ -55,19 +55,28 @@ export const CSDashboardCarReport: FC = () => {
             resolve={data.data}
             errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
           >
-            {(data) => (
-              <>
-                <CSDashboardCarTable cars={data.cars} onSortChange={onSortChange} />
-                <Pagination
-                  totalPages={Math.ceil(
-                    data.total /
-                      Number(searchParams.get('limit') ?? Env.ADMIN_CARS_PAGINATION_LIMIT),
+            {(data) => {
+              const totalPages = Math.ceil(
+                data.total /
+                Number(searchParams.get('limit') ?? Env.ADMIN_CARS_PAGINATION_LIMIT),
+              )
+
+              return (
+                <>
+                  <CSDashboardCarTable cars={data.cars} onSortChange={onSortChange} />
+                  {totalPages > 1 && (
+                    <Pagination
+                      totalPages={Math.ceil(
+                        data.total /
+                        Number(searchParams.get('limit') ?? Env.ADMIN_CARS_PAGINATION_LIMIT),
+                      )}
+                      currentPage={Number(searchParams.get('page')) || +DEFAULT_PAGINATION_PAGE}
+                      onPageChange={onPageChange}
+                    />
                   )}
-                  currentPage={Number(searchParams.get('page')) || +DEFAULT_PAGINATION_PAGE}
-                  onPageChange={onPageChange}
-                />
-              </>
-            )}
+                </>
+              )
+            }}
           </Await>
         </Suspense>
       </ContentContainer>
