@@ -9,7 +9,7 @@ import {
 import { isAdmin, ONLY_ADMIN_PAGE_ERROR } from '@/helpers';
 import { CSDashboardSidebar, CSHeaderLayout, CSProtectedRoute } from '@/layouts';
 import { CSMainUserPage, CSSignInPage, CSSignUpPage } from '@/pages';
-import { addNewCar } from '@/services';
+import { addNewCar, updateCar } from '@/services';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,7 +24,7 @@ export const router = createBrowserRouter(
           <Route path="settings" element={<CSDashboardProfileSettingsForm />} />
           <Route path="car-report" element={<CSDashboardCarReport />} loader={carsLoader} />
           <Route path="add-car" element={<CSDashboardCarForm onFormSubmit={addNewCar} />} />
-          <Route path="edit-car" element={<CSDashboardCarForm onFormSubmit={addNewCar} />} />
+          <Route path="edit-car" element={<CSDashboardCarForm onFormSubmit={updateCar} />} />
         </Route>
       </Route>
       <Route path="sign-up" element={<CSSignUpPage />} />

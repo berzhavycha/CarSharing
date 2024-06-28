@@ -15,6 +15,12 @@ const configSchema = z.object({
     .pipe(z.number().min(1))
     .transform((val) => String(val))
     .default('10'),
+  ALLOWED_CAR_IMAGES_AMOUNT: z.string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1))
+    .transform((val) => String(val))
+    .default('3'),
+
 });
 
 export type Config = z.infer<typeof configSchema>;

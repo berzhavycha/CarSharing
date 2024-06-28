@@ -15,7 +15,10 @@ export const useImagePreviews = (defaultImage: string, actualImages?: string[]):
   const handleUploadedFiles = (event: ChangeEvent<HTMLInputElement>): void => {
     const files = Array.from(event.target.files || []);
     const previewUrls = files.map((file) => URL.createObjectURL(file));
-    setPreviews(previewUrls.length > 0 ? previewUrls : [defaultImage]);
+    setPreviews((prevPreviews) => [
+      ...prevPreviews.filter((preview) => preview !== defaultImage), 
+      ...previewUrls,
+    ]);
   };
 
   const removeImage = (index: number): void => {
