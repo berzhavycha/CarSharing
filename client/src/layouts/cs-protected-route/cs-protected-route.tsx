@@ -1,6 +1,7 @@
-import { CSCommonSpinner } from '@/components';
 import { FC, PropsWithChildren, useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+
+import { CSCommonSpinner } from '@/components';
 
 type Props = PropsWithChildren & {
   isAllowed: () => Promise<boolean>;

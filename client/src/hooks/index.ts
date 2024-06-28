@@ -1,1 +1,1 @@
-export * from './useSearchParamsWithDefaults';
+export * from './use-search-params-with-defaults';

@@ -16,7 +16,7 @@ export const useImagePreviews = (defaultImage: string, actualImages?: string[]):
     const files = Array.from(event.target.files || []);
     const previewUrls = files.map((file) => URL.createObjectURL(file));
     setPreviews((prevPreviews) => [
-      ...prevPreviews.filter((preview) => preview !== defaultImage), 
+      ...prevPreviews.filter((preview) => preview !== defaultImage),
       ...previewUrls,
     ]);
   };

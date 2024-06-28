@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
 import { DEFAULT_PAGINATION_PAGE, FAILED_REMOVE_CAR } from '@/helpers';
+import { useSearchParamsWithDefaults } from '@/hooks';
 import { removeCar } from '@/services';
 import { Car } from '@/types';
-import { useSearchParamsWithDefaults } from '@/hooks';
 
 type HookReturn = {
   carList: Car[];
@@ -19,7 +19,7 @@ export const useCarRemoval = (initialCars: Car[]): HookReturn => {
   const [carList, setCarList] = useState<Car[]>(initialCars);
   const [carToRemove, setCarToRemove] = useState<Car | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { searchParams, setParams } = useSearchParamsWithDefaults()
+  const { searchParams, setParams } = useSearchParamsWithDefaults();
 
   const handleRemoveCar = async (): Promise<void> => {
     if (carToRemove) {
@@ -28,12 +28,12 @@ export const useCarRemoval = (initialCars: Car[]): HookReturn => {
         if (error) {
           setErrorMessage(error);
         } else {
-          const currentPage = +(searchParams.get('page') ?? DEFAULT_PAGINATION_PAGE)
+          const currentPage = +(searchParams.get('page') ?? DEFAULT_PAGINATION_PAGE);
           setCarList(carList.filter((car) => car.id !== carToRemove.id));
           if (carList.length === 1 && currentPage > 1) {
-            setParams({ page: `${currentPage - 1}` })
+            setParams({ page: `${currentPage - 1}` });
           } else {
-            setParams({ page: `${currentPage}` })
+            setParams({ page: `${currentPage}` });
           }
         }
       } catch (error) {

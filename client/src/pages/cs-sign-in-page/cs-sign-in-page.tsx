@@ -18,7 +18,6 @@ export const CSSignInPage: FC = observer(() => {
 
   const onSubmit = async (data: SignInUserDto): Promise<void> => {
     await currentUserStore.signIn(data);
-    console.log(currentUserStore.user);
     if (currentUserStore.user) {
       const navigatePath = currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/';
       navigate(navigatePath);
