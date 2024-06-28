@@ -11,22 +11,24 @@ import {
   CarTypeSelect,
   createCarSchema,
 } from '@/helpers';
-import { Car, CarDto, FieldErrorsState } from '@/types';
+import { Car, CarDto, FieldErrorsState, LocalFile } from '@/types';
 
 import DefaultImage from '../../../../../public/car-upload.png';
+import { Env } from '@/core';
 
 type Props = {
   onFormSubmit: (
     car: CarDto,
-  ) => Promise<{ car: Car | null; errors: FieldErrorsState<CarDto> | null }>;
+  ) => Promise<{ car?: Car; errors?: FieldErrorsState<CarDto> }>;
 };
 
 export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
   const location = useLocation();
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
-  const [errors, setErrors] = useState<FieldErrorsState<CarDto> | null>(null);
+  const [errors, setErrors] = useState<FieldErrorsState<CarDto>>();
 
   const onSubmit = async (carDto: CarDto): Promise<void> => {
+    console.log(carDto)
     const { car, errors } = await onFormSubmit(carDto);
     if (car) {
       setModalVisible(true);
@@ -35,6 +37,7 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
   };
 
   const handleCloseModal = (): void => setModalVisible(false);
+  const updateCarImages = location.state?.car ? location.state?.car.pictures.map((item: LocalFile) => `${Env.API_BASE_URL}/local-files/${item.id}`) : undefined
 
   return (
     <FormContainer>
@@ -48,6 +51,7 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
             <CSCommonForm.InputFile
               label="Upload Car Image"
               defaultImage={DefaultImage}
+              actualImages={updateCarImages}
               name="pictures"
               multiple
               error={errors?.pictures}
