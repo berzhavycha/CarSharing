@@ -15,11 +15,12 @@ export const CSSignInPage: FC = observer(() => {
   const navigate = useNavigate();
   const location = useLocation();
   const errorMessage = location.state?.errorMessage;
+  const from = location.state?.from || '/';
 
   const onSubmit = async (data: SignInUserDto): Promise<void> => {
     await currentUserStore.signIn(data);
     if (currentUserStore.user) {
-      const navigatePath = currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/';
+      const navigatePath = from || (currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/')
       navigate(navigatePath);
     }
   };
