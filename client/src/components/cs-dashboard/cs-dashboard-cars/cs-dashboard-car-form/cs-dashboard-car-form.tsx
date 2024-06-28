@@ -94,7 +94,7 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
         <CSCommonModal
           type="confirm"
           title="Success"
-          message="Your car was successfully added."
+          message={`Your car was successfully ${location.state?.car ? 'updated' : 'added'}.`}
           onClose={handleCloseModal}
           onOk={handleCloseModal}
         />

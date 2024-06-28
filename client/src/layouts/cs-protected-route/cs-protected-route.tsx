@@ -1,3 +1,4 @@
+import { CSCommonSpinner } from '@/components';
 import { FC, PropsWithChildren, useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
@@ -25,7 +26,7 @@ export const CSProtectedRoute: FC<Props> = ({
   }, [isAllowed]);
 
   if (allowed === null) {
-    return <div>Loading...</div>;
+    return <CSCommonSpinner />;
   }
 
   if (!allowed) {
