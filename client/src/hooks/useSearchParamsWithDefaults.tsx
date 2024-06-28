@@ -6,7 +6,7 @@ type HookReturn = {
   redirectToDefaultParams: () => void;
 };
 
-export const useSearchParamsWithDefaults = (defaultParams: Record<string, string>): HookReturn => {
+export const useSearchParamsWithDefaults = (defaultParams?: Record<string, string>): HookReturn => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -16,8 +16,10 @@ export const useSearchParamsWithDefaults = (defaultParams: Record<string, string
   };
 
   const redirectToDefaultParams = (): void => {
-    const newSearchParams = createSearchParams(defaultParams);
-    navigate(`?${newSearchParams}`);
+    if (defaultParams) {
+      const newSearchParams = createSearchParams(defaultParams);
+      navigate(`?${newSearchParams}`);
+    }
   };
 
   return { searchParams, setParams, redirectToDefaultParams };
