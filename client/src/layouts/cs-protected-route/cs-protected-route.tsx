@@ -31,7 +31,7 @@ export const CSProtectedRoute: FC<Props> = ({
   }
 
   if (!allowed) {
-    return <Navigate to={redirectPath} replace state={{ errorMessage }} />;
+    return <Navigate to={redirectPath} replace state={{ errorMessage, from: location.pathname }} />;
   }
 
   return children ? children : <Outlet />;
