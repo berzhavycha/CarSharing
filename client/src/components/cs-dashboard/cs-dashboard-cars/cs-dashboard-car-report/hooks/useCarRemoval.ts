@@ -29,10 +29,12 @@ export const useCarRemoval = (initialCars: Car[]): HookReturn => {
           setErrorMessage(error);
         } else {
           const currentPage = +(searchParams.get('page') ?? DEFAULT_PAGINATION_PAGE)
+          setCarList(carList.filter((car) => car.id !== carToRemove.id));
           if (carList.length === 1 && currentPage > 1) {
             setParams({ page: `${currentPage - 1}` })
+          } else {
+            setParams({ page: `${currentPage}` })
           }
-          setCarList(carList.filter((car) => car.id !== carToRemove.id));
         }
       } catch (error) {
         setErrorMessage(FAILED_REMOVE_CAR);
