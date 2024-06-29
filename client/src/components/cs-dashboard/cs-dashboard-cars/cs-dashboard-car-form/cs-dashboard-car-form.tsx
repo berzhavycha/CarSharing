@@ -23,7 +23,8 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
   const location = useLocation();
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const [errors, setErrors] = useState<FieldErrorsState<CarDto>>();
-  const [existingImagesIds, setExistingImagesIds] = useState<string[]>(location.state?.car.pictures.map((item: LocalFile) => item.id))
+  const [existingImagesIds, setExistingImagesIds] = useState<string[]>(location.state?.car?.pictures.map((item: LocalFile) => item.id))
+  const [carDefaultValues, setCarDefaultValues] = useState<Car>(location.state?.car)
 
   const handleCloseModal = (): void => setModalVisible(false);
 
@@ -32,13 +33,18 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
   }
 
   useEffect(() => {
-    setExistingImagesIds(location.state?.car.pictures.map((item: LocalFile) => item.id))
-  }, [location.state?.car])
+    setExistingImagesIds(carDefaultValues?.pictures.map((item: LocalFile) => item.id))
+  }, [carDefaultValues])
 
   const onSubmit = async (carDto: CarDto): Promise<void> => {
     const dto = location.state?.car ? { ...carDto, id: location.state?.car.id, existingImagesIds } : carDto;
     const { car, errors } = await onFormSubmit(dto);
-    if (car) setModalVisible(true);
+    if (car) {
+      setModalVisible(true);
+      if (location.state?.car) {
+        setCarDefaultValues(car)
+      }
+    }
     setErrors(errors);
   };
 
@@ -48,7 +54,7 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
         <CSCommonForm<CarDto>
           validationSchema={createCarSchema(existingImagesIds)}
           onSubmit={onSubmit}
-          defaultValues={{ ...location.state?.car, pictures: [] }}
+          defaultValues={{ ...carDefaultValues, pictures: [] }}
         >
           <CarHeaderWrapper>
             <CSCommonForm.InputFile
