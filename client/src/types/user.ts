@@ -15,4 +15,5 @@ export type UpdateUserDto = Partial<{
   picture: false | File | null | FileList;
   newPassword: string;
   oldPassword: string;
+  existingImagesIds: string[]
 }>;
