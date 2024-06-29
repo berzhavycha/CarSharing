@@ -3,6 +3,7 @@ import { PaginationDto } from './pagination';
 
 export type CarDto = {
   id?: string;
+  existingImagesIds?: string[]
   pictures: File[] | null;
   model: string;
   year: number;
