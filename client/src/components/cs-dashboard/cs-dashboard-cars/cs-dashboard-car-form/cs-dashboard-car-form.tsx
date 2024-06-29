@@ -23,8 +23,8 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
   const location = useLocation();
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const [errors, setErrors] = useState<FieldErrorsState<CarDto>>();
-  const [existingImagesIds, setExistingImagesIds] = useState<string[]>(location.state?.car?.pictures.map((item: LocalFile) => item.id))
   const [carDefaultValues, setCarDefaultValues] = useState<Car>(location.state?.car)
+  const [existingImagesIds, setExistingImagesIds] = useState<string[]>(carDefaultValues.pictures.map((item: LocalFile) => item.id))
 
   const handleCloseModal = (): void => setModalVisible(false);
 
@@ -47,6 +47,8 @@ export const CSDashboardCarForm: FC<Props> = observer(({ onFormSubmit }) => {
     }
     setErrors(errors);
   };
+
+  console.log(existingImagesIds)
 
   return (
     <FormContainer>
