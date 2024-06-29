@@ -1,7 +1,7 @@
 import { flow, Instance, types as t } from 'mobx-state-tree';
 
 import { handleUserResponse, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
-import { fetchCurrentUser, removeAvatar, signIn, signOut, signUp, updateUser } from '@/services';
+import { fetchCurrentUser, signIn, signOut, signUp, updateUser } from '@/services';
 import {
   AuthenticatedUser,
   FieldErrorsState,
@@ -33,6 +33,11 @@ export const CurrentUserStore = t
     signOutErrors: t.optional(t.frozen<FieldErrorsState<AuthenticatedUser> | null>(), null),
     updateErrors: t.optional(t.frozen<FieldErrorsState<UpdateUserDto> | null>(), null),
   })
+  .views(self => ({
+    get existingImagesIds(): string[] {
+      return self.user?.avatarId ? [self.user?.avatarId] : []
+    },
+  }))
   .actions((self) => ({
     signUp: flow(function* (userDto: SignUpUserDto) {
       self.signUpErrors = null;
@@ -50,7 +55,6 @@ export const CurrentUserStore = t
     }),
     signIn: flow(function* (userDto: SignInUserDto) {
       self.signInErrors = null;
-
       try {
         const response = yield signIn(userDto);
         handleUserResponse<SignInUserDto>(
@@ -98,20 +102,10 @@ export const CurrentUserStore = t
         handleUserResponse(
           response,
           (user) => (self.user = user),
-          () => {},
+          () => { },
         );
       } catch (error) {
         self.user = null;
-      }
-    }),
-    removeAvatar: flow(function* () {
-      if (self.user) {
-        const response = yield removeAvatar(self.user.id);
-        handleUserResponse<{ picture: string }>(
-          response,
-          (user) => (self.user = user),
-          () => {},
-        );
       }
     }),
   }));

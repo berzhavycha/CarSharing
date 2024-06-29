@@ -30,7 +30,7 @@ export class UsersService {
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
     private localFilesService: LocalFilesService,
-  ) {}
+  ) { }
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -95,9 +95,10 @@ export class UsersService {
   ): Promise<User | null> {
     const user = await this.findById(id);
 
-    if (fileData) {
-      const avatar = await this.localFilesService.saveLocalFileData(fileData);
-      Object.assign(user, { avatar });
+    if ('existingImagesIds' in updateUserDto && !updateUserDto.existingImagesIds.length && user.avatar) {
+      await this.localFilesService.removeFile(user.avatar.id);
+      user.avatar = null
+      user.avatarId = null
     }
 
     if ('oldPassword' in updateUserDto && updateUserDto.oldPassword) {
@@ -115,6 +116,12 @@ export class UsersService {
       delete updateUserDto.newPassword;
     }
 
+    if (fileData) {
+      const avatar = await this.localFilesService.saveLocalFileData(fileData);
+      Object.assign(user, { avatar });
+    }
+
+
     if (updateUserDto.email) {
       const existingUserWithEmail = await this.findByEmail(updateUserDto.email);
 
@@ -128,17 +135,6 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async removeAvatar(id: string): Promise<User> {
-    const user = await this.findById(id);
-
-    if (user.avatar) {
-      await this.localFilesService.removeFile(user.avatar.id);
-      user.avatar = null;
-      user.avatarId = null;
-    }
-
-    return this.usersRepository.save(user);
-  }
 
   async updateUserBalance(
     options: {

@@ -9,7 +9,21 @@ export const updateUser = async (
   userDto: UpdateUserDto,
 ): Promise<ServiceUserResponse<UpdateUserDto>> => {
   try {
-    const { data } = await axiosInstance.patch(`${Env.API_BASE_URL}/users/${userId}`, userDto, {
+    const formData = new FormData()
+    Object.entries(userDto).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        formData.append(key, JSON.stringify(value));
+      }
+      else if (value !== undefined && value !== null) {
+        formData.append(key, value.toString());
+      }
+    });
+
+    if (userDto.picture) {
+      formData.append('picture', userDto.picture as Blob, 'dsv');
+    }
+
+    const { data } = await axiosInstance.patch(`${Env.API_BASE_URL}/users/${userId}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

@@ -23,7 +23,7 @@ import { UsersService } from '@/services';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
@@ -42,19 +42,13 @@ export class UsersController {
   ): Promise<User> {
     const uploadedFile = file
       ? {
-          path: file?.path,
-          filename: file?.originalname,
-          mimetype: file?.mimetype,
-        }
+        path: file?.path,
+        filename: file?.originalname,
+        mimetype: file?.mimetype,
+      }
       : null;
 
     return this.usersService.updateUser(id, updateUserDto, uploadedFile);
-  }
-
-  @Patch(':id/avatar')
-  @UseGuards(JwtAuthGuard)
-  async removeAvatar(@Param('id', ParseUUIDPipe) id: string): Promise<User> {
-    return this.usersService.removeAvatar(id);
   }
 
   @Patch(':id/top-up')

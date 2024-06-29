@@ -1,22 +1,25 @@
 import { observer } from 'mobx-react-lite';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { CSCommonForm, CSCommonModal } from '@/components/cs-common';
 import { useStore } from '@/context';
-import { Env } from '@/core';
-import { UNEXPECTED_ERROR_MESSAGE, updateUserSchema, uppercaseFirstLetter } from '@/helpers';
+import { updateUserSchema, uppercaseFirstLetter } from '@/helpers';
 import { UpdateUserDto } from '@/types';
 
 import DefaultImage from '../../../../../public/avatar.webp';
 
 export const CSDashboardProfileSettingsForm: FC = observer(() => {
   const {
-    currentUserStore: { user, updateErrors, updateUser, removeAvatar },
+    currentUserStore: { user, updateErrors, updateUser, existingImagesIds: viewImagesIds },
   } = useStore();
-  const [isAvatarRemoving, setIsAvatarRemoving] = useState<boolean>(false);
   const [isUpdateSuccessful, setIsUpdateSuccessful] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [existingImagesIds, setExistingImagesIds] = useState<string[]>(user?.avatarId ? [user?.avatarId] : [])
+
+  useEffect(() => {
+    setExistingImagesIds(viewImagesIds)
+  }, [viewImagesIds])
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
     const userDtoWithoutEmptyPasswords = Object.fromEntries(
@@ -25,33 +28,24 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
       }),
     );
 
-    await updateUser(userDtoWithoutEmptyPasswords);
+    await updateUser({ ...userDtoWithoutEmptyPasswords, existingImagesIds });
     if (!updateErrors) {
       setIsUpdateSuccessful(true);
     }
   };
 
-  const onRemoveAvatar = (): void => setIsAvatarRemoving(true);
-  const handleRemoveAvatar = async (): Promise<void> => {
-    try {
-      await removeAvatar();
-    } catch (error) {
-      setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
-    } finally {
-      setIsAvatarRemoving(false);
-    }
-  };
+  const onRemove = (removeId: string): void => {
+    setExistingImagesIds(ids => [...ids.filter(id => id !== removeId)])
+  }
 
-  const onCloseConfirmWindow = (): void => setIsAvatarRemoving(false);
   const onCloseErrorWindow = (): void => setErrorMessage(null);
   const handleCloseModal = (): void => setIsUpdateSuccessful(false);
 
-  const avatar = user?.avatarId ? [`${Env.API_BASE_URL}/local-files/${user.avatarId}`] : undefined;
-  const defaultFormValues = {
+  const defaultValues = {
     firstName: user?.firstName,
     lastName: user?.lastName,
     email: user?.email,
-  };
+  }
 
   return (
     <>
@@ -59,15 +53,15 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
         <ContentContainer>
           <CSCommonForm<UpdateUserDto>
             key={user?.id}
-            defaultValues={defaultFormValues}
+            defaultValues={defaultValues}
             validationSchema={updateUserSchema}
             onSubmit={onSubmit}
           >
             <ProfileHeaderWrapper>
               <CSCommonForm.InputFile
                 defaultImage={DefaultImage}
-                actualImages={avatar}
-                onRemove={onRemoveAvatar}
+                existingImageIds={existingImagesIds}
+                onRemove={onRemove}
                 name="picture"
                 label="Update Avatar"
               />
@@ -113,17 +107,6 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
           </CSCommonForm>
         </ContentContainer>
       </ProfileContainer>
-
-      {isAvatarRemoving && (
-        <CSCommonModal
-          type="warning"
-          title="Confirm Deletion"
-          message={`Are you sure you want to remove the avatar?`}
-          onClose={onCloseConfirmWindow}
-          onOk={handleRemoveAvatar}
-          onCancel={onCloseConfirmWindow}
-        />
-      )}
 
       {errorMessage && (
         <CSCommonModal
