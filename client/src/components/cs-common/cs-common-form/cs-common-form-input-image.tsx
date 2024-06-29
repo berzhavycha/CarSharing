@@ -5,13 +5,13 @@ import { CSCommonErrorMessage, InputProps } from '@/components/cs-common';
 
 import { useCommonForm } from './cs-common-form';
 import { CSCommonFormImagePreview } from './cs-common-form-image-preview';
-import { useImagePreviews } from './hooks';
+import { Preview, useImagePreviews } from './hooks';
 
 type Props = Omit<InputProps, 'name'> & {
   name: string;
   defaultImage: string;
-  actualImages?: string[];
-  onRemove?: (image: string) => Promise<void> | void;
+  existingImageIds?: string[];
+  onRemove?: (id: string) => Promise<void> | void;
   circled?: boolean;
   width?: number;
   height?: number;
@@ -20,7 +20,7 @@ type Props = Omit<InputProps, 'name'> & {
 
 export const CSCommonFormInputImage: FC<Props> = ({
   defaultImage,
-  actualImages,
+  existingImageIds,
   label,
   circled,
   onRemove,
@@ -36,14 +36,15 @@ export const CSCommonFormInputImage: FC<Props> = ({
     formState: { errors, isSubmitSuccessful },
   } = useCommonForm().formHandle;
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
+
   const { previews, handleUploadedFiles, removeImage, resetPreviews } = useImagePreviews(
     defaultImage,
-    actualImages,
+    existingImageIds,
   );
 
   useEffect(() => {
     resetPreviews();
-  }, [isSubmitSuccessful, actualImages]);
+  }, [isSubmitSuccessful, existingImageIds]);
 
   const { ref: registerRef, onChange, ...rest } = register(name);
 
@@ -59,10 +60,10 @@ export const CSCommonFormInputImage: FC<Props> = ({
     handleUploadedFiles(e);
   };
 
-  const onRemoveImage = (preview: string, index: number): void => {
+  const onRemoveImage = (preview: Preview, index: number): void => {
     removeImage(index);
-    if (onRemove && actualImages?.length) {
-      onRemove(preview);
+    if (onRemove && existingImageIds?.length && preview.id) {
+      onRemove(preview.id);
     }
   };
 
@@ -72,14 +73,14 @@ export const CSCommonFormInputImage: FC<Props> = ({
         {previews.map((preview, index) => (
           <CSCommonFormImagePreview
             key={index}
-            src={preview}
+            src={preview.url}
             alt={`${name}-${index}`}
             circled={circled}
             width={width}
             height={height}
             onClick={onUpload}
             onRemove={() => onRemoveImage(preview, index)}
-            isRemovable={preview !== defaultImage}
+            isRemovable={preview.url !== defaultImage}
           />
         ))}
       </PicturesContainer>
