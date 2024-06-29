@@ -24,7 +24,7 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
   } = useCarRemoval(cars);
 
   const navigate = useNavigate();
-  const onDetailsBtnClick = (car: Car): void => navigate('/dashboard/edit-car', { state: { car } });
+  const onDetailsBtnClick = (car: Car): void => navigate(`/dashboard/edit-car?carId=${car.id}`);
 
   useEffect(() => {
     setCarList(cars);

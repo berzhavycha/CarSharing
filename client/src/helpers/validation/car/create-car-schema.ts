@@ -3,7 +3,7 @@ import { ZodSchema, z } from 'zod';
 import { Env } from '@/core';
 import { ONE_MB } from '@/helpers/constants';
 
-export const createCarSchema = (existingImagesIds: string[]): ZodSchema => {
+export const createCarSchema = (existingImagesIds?: string[]): ZodSchema => {
   const picturesSchema = z
     .custom<File[]>()
     .transform((fileList) => {
