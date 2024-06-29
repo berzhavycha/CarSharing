@@ -73,6 +73,8 @@ export class CarsService {
       ...newCarPictures,
     ];
 
+    delete updateCarDto.pictures
+    delete updateCarDto.existingImagesIds
     Object.assign(car, updateCarDto);
 
     return this.carsRepository.save(car);

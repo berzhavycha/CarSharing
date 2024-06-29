@@ -54,8 +54,8 @@ export const CSCommonForm = <TEntity extends FieldValues>({
   };
 
   useEffect(() => {
-    formHandle.reset();
-  }, [formHandle.formState.isSubmitSuccessful]);
+    formHandle.reset(defaultValues);
+  }, [formHandle.formState.isSubmitSuccessful, defaultValues]);
 
   const onFormSubmit = formHandle.handleSubmit(submitHandler);
 

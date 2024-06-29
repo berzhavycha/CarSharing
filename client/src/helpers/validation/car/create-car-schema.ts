@@ -12,7 +12,7 @@ export const createCarSchema = (existingImagesIds: string[]): ZodSchema => {
     })
 
   return z.object({
-    pictures: existingImagesIds.length > 0
+    pictures: existingImagesIds && existingImagesIds.length > 0
       ? picturesSchema.optional()
       : picturesSchema.refine(
         (fileList) => {
