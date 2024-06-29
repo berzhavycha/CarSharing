@@ -13,7 +13,9 @@ export const updateCar = async (car: Partial<CarDto>): Promise<ServiceReturn> =>
     const formData = new FormData();
 
     Object.entries(car).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
+      if (Array.isArray(value)) {
+        formData.append(key, JSON.stringify(value));
+      }else if (value !== undefined && value !== null) {
         formData.append(key, value.toString());
       }
     });
