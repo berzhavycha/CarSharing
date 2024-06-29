@@ -14,7 +14,7 @@ import { DEFAULT_PAGINATION_PAGE, OrderOptions, UNEXPECTED_ERROR_MESSAGE } from 
 import { useSearchParamsWithDefaults } from '@/hooks';
 
 import { CSDashboardCarTable } from './cs-dashboard-car-table';
-import { LoaderData } from './loader';
+import { CarsLoaderData } from './loader';
 
 const defaultSearchParams = {
   page: DEFAULT_PAGINATION_PAGE,
@@ -26,7 +26,7 @@ const defaultSearchParams = {
 
 export const CSDashboardCarReport: FC = () => {
   const navigate = useNavigate();
-  const data = useLoaderData() as { data: LoaderData };
+  const data = useLoaderData() as { data: CarsLoaderData };
   const { searchParams, setParams } = useSearchParamsWithDefaults(defaultSearchParams);
 
   const onAddBtnClick = (): void => navigate('/dashboard/add-car');

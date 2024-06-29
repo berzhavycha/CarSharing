@@ -5,3 +5,4 @@ export * from './users';
 export * from './rentals';
 export * from './general';
 export * from './local-files';
+export * from './transactions'

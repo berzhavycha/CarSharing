@@ -7,3 +7,10 @@ export enum TransactionType {
   REFUND = 'refund',
   PENALTY = 'penalty',
 }
+
+export const TRANSACTION_DEFAULT_SORT_COLUMN = 'amount'
+
+export const TRANSACTION_DEFAULT_SEARCH_COLUMNS = [
+  'user.firstName',
+  'user.lastName',
+];

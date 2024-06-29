@@ -47,7 +47,7 @@ export class RentalsService {
       throw new BadRequestException(rentalsErrorMessages.CAR_NOT_AVAILABLE);
     }
 
-    const rentalCost = car.pricePerHour * rentCarDto.days;
+    const rentalCost = car.pricePerHour * rentCarDto.hours;
     if (user.balance < rentalCost) {
       throw new BadRequestException(rentalsErrorMessages.INSUFFICIENT_BALANCE);
     }
@@ -67,7 +67,7 @@ export class RentalsService {
         user,
         originalCar,
         status: RentalStatus.ACTIVE,
-        requestedHours: rentCarDto.days,
+        requestedHours: rentCarDto.hours,
         rentalStart: new Date(),
       });
 
