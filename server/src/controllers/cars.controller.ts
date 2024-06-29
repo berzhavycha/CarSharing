@@ -83,7 +83,6 @@ export class CarsController {
     @Body() updateCarDto: UpdateCarDto,
     @UploadedFiles() files?: Express.Multer.File[],
   ): Promise<Car> {
-    console.log(files);
     const uploadedFiles =
       files?.map((file) => ({
         path: file.path,
@@ -91,7 +90,6 @@ export class CarsController {
         mimetype: file.mimetype,
       })) || [];
 
-    console.log(updateCarDto)
     return this.carsService.updateCar(id, updateCarDto, uploadedFiles);
   }
 

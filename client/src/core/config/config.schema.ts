@@ -21,6 +21,11 @@ const configSchema = z.object({
     .pipe(z.number().min(1))
     .transform((val) => String(val))
     .default('3'),
+  ADMIN_TRANSACTIONS_PAGINATION_LIMIT: z.string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1))
+    .transform((val) => String(val))
+    .default('10'),
 });
 
 export type Config = z.infer<typeof configSchema>;

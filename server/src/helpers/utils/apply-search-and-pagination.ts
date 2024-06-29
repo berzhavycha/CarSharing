@@ -5,19 +5,28 @@ import { Order } from '@/types';
 export function applySearchAndPagination<T>(
   queryBuilder: SelectQueryBuilder<T>,
   options: {
-    search?: string;
-    searchColumn?: string;
     page: number;
     limit: number;
     order: Order;
     sort: string;
     entityAlias: string;
+    search?: string;
+    searchColumn?: string;
+    searchColumns?: string[];
   },
 ): SelectQueryBuilder<T> {
-  const { search, searchColumn, page, limit, order, sort, entityAlias } =
+  const { search, searchColumn, searchColumns, page, limit, order, sort, entityAlias } =
     options;
 
-  if (search && searchColumn) {
+  if (search && searchColumns && searchColumns.length > 0) {
+    const searchConditions = searchColumns.map(
+      (column) => `LOWER(${entityAlias}.${column}) LIKE LOWER(:search)`,
+    ).join(' OR ');
+
+    queryBuilder.andWhere(`(${searchConditions})`, {
+      search: `%${search}%`,
+    });
+  } else if (search && searchColumn) {
     queryBuilder.andWhere(
       `LOWER(${entityAlias}.${searchColumn}) LIKE LOWER(:search)`,
       {

@@ -5,7 +5,7 @@ import { DEFAULT_PAGINATION_ORDER, DEFAULT_PAGINATION_PAGE, OrderOptions } from 
 import { fetchCars } from '@/services';
 import { Car, Order } from '@/types';
 
-export type LoaderData = {
+export type CarsLoaderData = {
   cars: Car[];
   totalPages: number;
 };
