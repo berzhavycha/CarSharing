@@ -1,6 +1,6 @@
 import { axiosInstance } from '@/api';
 import { Env } from '@/core';
-import { addCarFieldMappings, errorHandler } from '@/helpers';
+import { addCarFieldMappings, createFormData, errorHandler } from '@/helpers';
 import { Car, CarDto, FieldErrorsState } from '@/types';
 
 type ServiceReturn = {
@@ -10,14 +10,8 @@ type ServiceReturn = {
 
 export const addNewCar = async (car: CarDto): Promise<ServiceReturn> => {
   try {
-    const formData = new FormData();
-
-    Object.entries(car).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        formData.append(key, value.toString());
-      }
-    });
-
+    const formData = createFormData(car)
+    
     car.pictures?.forEach((file) => {
       formData.append('pictures', file, file.name);
     });
