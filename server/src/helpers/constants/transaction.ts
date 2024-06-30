@@ -11,6 +11,6 @@ export enum TransactionType {
 export const TRANSACTION_DEFAULT_SORT_COLUMN = 'amount'
 
 export const TRANSACTION_DEFAULT_SEARCH_COLUMNS = [
-  'user.firstName',
-  'user.lastName',
+  'user.first_name',
+  'user.last_name',
 ];
