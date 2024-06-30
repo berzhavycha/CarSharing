@@ -20,19 +20,19 @@ export function applySearchAndPagination<T>(
 
   if (search && searchColumns && searchColumns.length > 0) {
     const searchConditions = searchColumns.map(
-      (column) => `LOWER(${entityAlias}.${column}) LIKE LOWER(:search)`,
+      (column) => {
+        const [table, field] = column.split('.');
+        return `LOWER("${table}"."${field}") LIKE LOWER(:search)`;
+      }
     ).join(' OR ');
 
     queryBuilder.andWhere(`(${searchConditions})`, {
       search: `%${search}%`,
     });
   } else if (search && searchColumn) {
-    queryBuilder.andWhere(
-      `LOWER(${entityAlias}.${searchColumn}) LIKE LOWER(:search)`,
-      {
-        search: `%${search}%`,
-      },
-    );
+    queryBuilder.andWhere(`LOWER(${entityAlias}.${searchColumn}) LIKE LOWER(:search)`, {
+      search: `%${search}%`,
+    })
   }
 
   const skip = (page - 1) * limit;
