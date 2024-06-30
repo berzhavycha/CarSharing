@@ -19,6 +19,6 @@ export const removeCar = async (carId: string): Promise<ServiceReturn> => {
       return { error: errorMessages[firstErrorKey as keyof Car] };
     }
 
-    return { error: '' };
+    return { error: errorMessages['unexpectedError'] };
   }
 };

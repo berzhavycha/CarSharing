@@ -14,4 +14,4 @@ export * from './cs-common-table';
 export * from './cs-common-spinner';
 export * from './cs-common-error';
 export * from './cs-common-modal';
-export * from './cs-common-no-data'
+export * from './cs-common-no-data';

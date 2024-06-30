@@ -7,11 +7,12 @@ import { CSCommonErrorMessage, CSCommonForm } from '@/components';
 import { useStore } from '@/context';
 import { AuthType, getUserSchema, Roles } from '@/helpers';
 import { SignUpUserDto } from '@/types';
+
 import { useUserRole } from './hooks';
 
 export const CSSignUpPage: FC = observer(() => {
-  const { userRole, handleUserTypeChange, showSecretCodeInput } = useUserRole()
-  const location = useLocation()
+  const { userRole, handleUserTypeChange, showSecretCodeInput } = useUserRole();
+  const location = useLocation();
   const from = location.state?.from || '/';
 
   const navigate = useNavigate();
@@ -21,7 +22,8 @@ export const CSSignUpPage: FC = observer(() => {
   const onSubmit = async (data: SignUpUserDto): Promise<void> => {
     await currentUserStore.signUp(data);
     if (currentUserStore.user) {
-      const navigatePath = from || (currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/')
+      const navigatePath =
+        from || (currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/');
       navigate(navigatePath);
     }
   };
@@ -31,7 +33,10 @@ export const CSSignUpPage: FC = observer(() => {
       <Title>Register</Title>
       <Span>
         Already have an account?
-        <Link to="/sign-in" state={{ from }}>Login here</Link> instead
+        <Link to="/sign-in" state={{ from }}>
+          Login here
+        </Link>{' '}
+        instead
       </Span>
       <ErrorMessageWrapper>
         <CSCommonErrorMessage>

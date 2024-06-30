@@ -1,3 +1,3 @@
 export type Rental = {
-    id: string
-}
+  id: string;
+};

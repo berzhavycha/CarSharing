@@ -9,12 +9,11 @@ export const updateUser = async (
   userDto: UpdateUserDto,
 ): Promise<ServiceUserResponse<UpdateUserDto>> => {
   try {
-    const formData = new FormData()
+    const formData = new FormData();
     Object.entries(userDto).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         formData.append(key, JSON.stringify(value));
-      }
-      else if (value !== undefined && value !== null) {
+      } else if (value !== undefined && value !== null) {
         formData.append(key, value.toString());
       }
     });

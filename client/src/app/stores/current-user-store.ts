@@ -33,9 +33,9 @@ export const CurrentUserStore = t
     signOutErrors: t.optional(t.frozen<FieldErrorsState<AuthenticatedUser> | null>(), null),
     updateErrors: t.optional(t.frozen<FieldErrorsState<UpdateUserDto> | null>(), null),
   })
-  .views(self => ({
+  .views((self) => ({
     get existingImagesIds(): string[] {
-      return self.user?.avatarId ? [self.user?.avatarId] : []
+      return self.user?.avatarId ? [self.user?.avatarId] : [];
     },
   }))
   .actions((self) => ({
@@ -102,7 +102,7 @@ export const CurrentUserStore = t
         handleUserResponse(
           response,
           (user) => (self.user = user),
-          () => { },
+          () => {},
         );
       } catch (error) {
         self.user = null;

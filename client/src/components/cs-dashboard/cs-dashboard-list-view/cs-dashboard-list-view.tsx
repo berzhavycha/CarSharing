@@ -1,77 +1,77 @@
-import { Suspense, ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { Await, useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
-    CSCommonError,
-    CSCommonSearchBar,
-    CSCommonSpinner,
-    Pagination,
+  CSCommonError,
+  CSCommonSearchBar,
+  CSCommonSpinner,
+  Pagination,
 } from '@/components/cs-common';
-import { DEFAULT_PAGINATION_PAGE, UNEXPECTED_ERROR_MESSAGE, defaultSearchParams } from '@/helpers';
+import { DEFAULT_PAGINATION_PAGE, defaultSearchParams, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { usePagination, useSearchParamsWithDefaults } from '@/hooks';
 
 type Props<T> = {
-    title: string;
-    searchPlaceholder: string;
-    defaultSearchParams: typeof defaultSearchParams;
-    paginationLimit: string;
-    renderTable: (data: T, onSortChange: (sort: string) => void) => ReactNode;
-    extraHeaderContent?: ReactNode;
-}
+  title: string;
+  searchPlaceholder: string;
+  defaultSearchParams: typeof defaultSearchParams;
+  paginationLimit: string;
+  renderTable: (data: T, onSortChange: (sort: string) => void) => ReactNode;
+  extraHeaderContent?: ReactNode;
+};
 
 export const CSDashboardListView = <T,>({
-    title,
-    searchPlaceholder,
-    defaultSearchParams,
-    paginationLimit,
-    renderTable,
-    extraHeaderContent,
+  title,
+  searchPlaceholder,
+  defaultSearchParams,
+  paginationLimit,
+  renderTable,
+  extraHeaderContent,
 }: Props<T>): JSX.Element => {
-    const data = useLoaderData() as { data: T };
-    const { searchParams } = useSearchParamsWithDefaults(defaultSearchParams);
-    const { onPageChange, onSearchChange, onSortChange } = usePagination(defaultSearchParams);
+  const data = useLoaderData() as { data: T };
+  const { searchParams } = useSearchParamsWithDefaults(defaultSearchParams);
+  const { onPageChange, onSearchChange, onSortChange } = usePagination(defaultSearchParams);
 
-    return (
-        <ListViewContainer>
-            <ContentContainer>
-                <Header>
-                    <h3>{title}</h3>
-                    <CSCommonSearchBar
-                        search={searchParams.get('search') ?? ''}
-                        onSearchChange={onSearchChange}
-                        placeholder={searchPlaceholder}
+  return (
+    <ListViewContainer>
+      <ContentContainer>
+        <Header>
+          <h3>{title}</h3>
+          <CSCommonSearchBar
+            search={searchParams.get('search') ?? ''}
+            onSearchChange={onSearchChange}
+            placeholder={searchPlaceholder}
+          />
+          {extraHeaderContent}
+        </Header>
+        <Suspense fallback={<CSCommonSpinner />}>
+          <Await
+            resolve={data.data}
+            errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
+          >
+            {(resolvedData) => {
+              const totalPages = Math.ceil(
+                resolvedData.total / Number(searchParams.get('limit') ?? paginationLimit),
+              );
+
+              return (
+                <>
+                  {renderTable(resolvedData, onSortChange)}
+                  {totalPages > 1 && (
+                    <Pagination
+                      totalPages={totalPages}
+                      currentPage={Number(searchParams.get('page')) || +DEFAULT_PAGINATION_PAGE}
+                      onPageChange={onPageChange}
                     />
-                    {extraHeaderContent}
-                </Header>
-                <Suspense fallback={<CSCommonSpinner />}>
-                    <Await
-                        resolve={data.data}
-                        errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
-                    >
-                        {(resolvedData) => {
-                            const totalPages = Math.ceil(
-                                resolvedData.total / Number(searchParams.get('limit') ?? paginationLimit)
-                            );
-
-                            return (
-                                <>
-                                    {renderTable(resolvedData, onSortChange)}
-                                    {totalPages > 1 && (
-                                        <Pagination
-                                            totalPages={totalPages}
-                                            currentPage={Number(searchParams.get('page')) || +DEFAULT_PAGINATION_PAGE}
-                                            onPageChange={onPageChange}
-                                        />
-                                    )}
-                                </>
-                            );
-                        }}
-                    </Await>
-                </Suspense>
-            </ContentContainer>
-        </ListViewContainer>
-    );
+                  )}
+                </>
+              );
+            }}
+          </Await>
+        </Suspense>
+      </ContentContainer>
+    </ListViewContainer>
+  );
 };
 
 const ListViewContainer = styled.div`
