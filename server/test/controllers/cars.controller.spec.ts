@@ -53,6 +53,7 @@ describe('CarsController', () => {
         ...createCarDtoMock,
       } as Car;
 
+      jest.spyOn(mockConfigService, 'get').mockReturnValue('uploads');
       jest.spyOn(carsService, 'createCar').mockResolvedValue(createdCar);
 
       const dto = { ...createCarDtoMock, status: CarStatus.AVAILABLE };
@@ -132,6 +133,7 @@ describe('CarsController', () => {
         ...updateCarDtoMock,
       } as Car;
 
+      jest.spyOn(mockConfigService, 'get').mockReturnValue('uploads');
       jest.spyOn(carsService, 'updateCar').mockResolvedValue(updatedCar);
 
       const result = await carsController.update(carId, updateCarDtoMock);

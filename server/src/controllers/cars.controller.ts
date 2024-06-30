@@ -27,7 +27,7 @@ import { CarsService } from '@/services';
 
 @Controller('cars')
 export class CarsController {
-  constructor(private readonly carsService: CarsService) { }
+  constructor(private readonly carsService: CarsService) {}
 
   @Post()
   @UseGuards(RoleGuard(Roles.ADMIN))

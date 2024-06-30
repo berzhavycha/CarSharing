@@ -164,7 +164,9 @@ describe('OriginalCarsService', () => {
 
       (applySearchAndPagination as jest.Mock).mockReturnValue(mockQueryBuilder);
 
-      jest.spyOn(mockQueryBuilder, 'getManyAndCount').mockResolvedValue([[], 0])
+      jest
+        .spyOn(mockQueryBuilder, 'getManyAndCount')
+        .mockResolvedValue([[], 0]);
 
       const result = await originalCarsService.findAll(listCarsDto);
 
@@ -183,7 +185,7 @@ describe('OriginalCarsService', () => {
         }),
       );
       expect(mockQueryBuilder.getManyAndCount).toHaveBeenCalled();
-      expect(result).toEqual([[], 0])
+      expect(result).toEqual([[], 0]);
     });
   });
 });

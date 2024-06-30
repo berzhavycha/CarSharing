@@ -48,6 +48,10 @@ describe('UsersController', () => {
   });
 
   describe('updateUser', () => {
+    beforeEach(() => {
+      jest.spyOn(mockConfigService, 'get').mockReturnValue('uploads');
+    });
+
     it('should update user details', async () => {
       const mockUserId = mockUser.id;
       const mockUpdateUserDto: UpdateUserDto = {
