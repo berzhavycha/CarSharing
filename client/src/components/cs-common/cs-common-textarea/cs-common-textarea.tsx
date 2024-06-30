@@ -51,4 +51,5 @@ const TextArea = styled.textarea`
   outline: none;
   resize: none;
   min-height: 120px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 `;
