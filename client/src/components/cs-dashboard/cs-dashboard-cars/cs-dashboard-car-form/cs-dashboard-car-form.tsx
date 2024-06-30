@@ -22,9 +22,9 @@ type Props = {
 };
 
 export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }) => {
-  const { currentCar, existingImagesIds, setIsModalVisible, isModalVisible, onPreviewRemove, onSubmit, errors } = useCarForm(onFormSubmit, carDefaultValues)
+  const { currentCar, existingImagesIds, setIsSuccess, isSuccess, onPreviewRemove, onSubmit, errors } = useCarForm(onFormSubmit, carDefaultValues)
 
-  const handleCloseModal = (): void => setIsModalVisible(false);
+  const handleCloseModal = (): void => setIsSuccess(false);
 
   return (
     <FormContainer>
@@ -102,7 +102,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
         </CSCommonForm>
       </ContentContainer>
 
-      {isModalVisible && (
+      {isSuccess && (
         <CSCommonModal
           type="confirm"
           title="Success"

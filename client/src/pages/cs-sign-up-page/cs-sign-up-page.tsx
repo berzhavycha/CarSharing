@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -7,22 +7,16 @@ import { CSCommonErrorMessage, CSCommonForm } from '@/components';
 import { useStore } from '@/context';
 import { AuthType, getUserSchema, Roles } from '@/helpers';
 import { SignUpUserDto } from '@/types';
+import { useUserRole } from './hooks';
 
 export const CSSignUpPage: FC = observer(() => {
-  const [userRole, setUserRole] = useState<string>('user');
-  const [showSecretCodeInput, setShowSecretCodeInput] = useState<boolean>(false);
+  const { userRole, handleUserTypeChange, showSecretCodeInput } = useUserRole()
   const location = useLocation()
   const from = location.state?.from || '/';
 
   const navigate = useNavigate();
 
   const { currentUserStore } = useStore();
-
-  const handleUserTypeChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-    const selectedRole = event.target.value;
-    setUserRole(selectedRole);
-    setShowSecretCodeInput(selectedRole === Roles.ADMIN);
-  };
 
   const onSubmit = async (data: SignUpUserDto): Promise<void> => {
     await currentUserStore.signUp(data);

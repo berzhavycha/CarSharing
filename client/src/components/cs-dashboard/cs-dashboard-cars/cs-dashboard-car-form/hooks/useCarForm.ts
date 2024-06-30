@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { onCarSubmit } from "../cs-dashboard-car-form";
 
 type HookReturn = {
-    isModalVisible: boolean;
-    setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    isSuccess: boolean;
+    setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>;
     errors: FieldErrorsState<CarDto> | undefined;
     onPreviewRemove: (removeId: string) => void;
     onSubmit: (carDto: CarDto) => Promise<void>;
@@ -13,7 +13,7 @@ type HookReturn = {
 }
 
 export const useCarForm = (onFormSubmit: onCarSubmit, carDefaultValues?: Car): HookReturn => {
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [isSuccess, setIsSuccess] = useState<boolean>(false);
     const [errors, setErrors] = useState<FieldErrorsState<CarDto>>();
     const [currentCar, setCurrentCar] = useState<Car | undefined>(carDefaultValues)
     const [existingImagesIds, setExistingImagesIds] = useState<string[]>(carDefaultValues ? carDefaultValues.pictures.map((item: LocalFile) => item.id) : [])
@@ -30,7 +30,7 @@ export const useCarForm = (onFormSubmit: onCarSubmit, carDefaultValues?: Car): H
         const dto = currentCar ? { ...carDto, id: currentCar.id, existingImagesIds } : carDto;
         const { car, errors } = await onFormSubmit(dto);
         if (car) {
-            setIsModalVisible(true);
+            setIsSuccess(true);
             if (carDefaultValues) {
                 setExistingImagesIds(car.pictures.map((item: LocalFile) => item.id))
                 setCurrentCar(car)
@@ -42,8 +42,8 @@ export const useCarForm = (onFormSubmit: onCarSubmit, carDefaultValues?: Car): H
 
     return {
         currentCar,
-        isModalVisible,
-        setIsModalVisible,
+        isSuccess,
+        setIsSuccess,
         errors,
         onPreviewRemove,
         onSubmit,
