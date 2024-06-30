@@ -22,7 +22,7 @@ import {
   mockUsersService,
 } from '../mocks';
 
-jest.mock('@/helpers/utils/hashValue', () => ({
+jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
   hashValue: jest.fn(),
 }));
 

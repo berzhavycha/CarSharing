@@ -38,7 +38,7 @@ describe('RentalsController', () => {
     it('should create a new rental', async () => {
       const rentCarDto: RentCarDto = {
         carId: 'car-id-1',
-        days: 2,
+        hours: 2,
         pickUpLocation: 'London',
         dropOffLocation: 'London',
       };

@@ -84,7 +84,7 @@ describe('RentalsService', () => {
     it('should throw BadRequestException if user already has an active rental', async () => {
       const rentCarDto: RentCarDto = {
         carId: 'car-id-1',
-        days: 2,
+        hours: 2,
         pickUpLocation: 'London',
         dropOffLocation: 'London',
       };
@@ -109,7 +109,7 @@ describe('RentalsService', () => {
     it('should throw BadRequestException if the car is not available', async () => {
       const rentCarDto: RentCarDto = {
         carId: 'car-id-1',
-        days: 2,
+        hours: 2,
         pickUpLocation: 'London',
         dropOffLocation: 'London',
       };
@@ -127,7 +127,7 @@ describe('RentalsService', () => {
     it('should throw BadRequestException if the user has insufficient balance', async () => {
       const rentCarDto: RentCarDto = {
         carId: 'car-id-1',
-        days: 2,
+        hours: 2,
         pickUpLocation: 'London',
         dropOffLocation: 'London',
       };
@@ -152,7 +152,7 @@ describe('RentalsService', () => {
     it('should throw BadRequestException if the car is not available', async () => {
       const rentCarDto: RentCarDto = {
         carId: 'car-id-1',
-        days: 2,
+        hours: 2,
         pickUpLocation: 'London',
         dropOffLocation: 'London',
       };
@@ -177,7 +177,7 @@ describe('RentalsService', () => {
     it('should create a rental successfully', async () => {
       const rentCarDto: RentCarDto = {
         carId: 'car-id-1',
-        days: 2,
+        hours: 2,
         pickUpLocation: 'London',
         dropOffLocation: 'London',
       };
