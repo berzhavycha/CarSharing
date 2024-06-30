@@ -1,5 +1,6 @@
-import { Env } from '@/core';
 import { ChangeEvent, useState } from 'react';
+
+import { Env } from '@/core';
 
 type HookReturn = {
   previews: Preview[];
@@ -11,12 +12,19 @@ type HookReturn = {
 export type Preview = {
   id?: string;
   url: string;
-}
+};
 
-export const useImagePreviews = (defaultImage: string, actualImages?: string[], multiple?: boolean): HookReturn => {
+export const useImagePreviews = (
+  defaultImage: string,
+  actualImages?: string[],
+  multiple?: boolean,
+): HookReturn => {
   const [previews, setPreviews] = useState<Preview[]>(() => {
     if (actualImages && actualImages.length > 0) {
-      return actualImages.map(img => ({ id: img, url: `${Env.API_BASE_URL}/local-files/${img}` }));
+      return actualImages.map((img) => ({
+        id: img,
+        url: `${Env.API_BASE_URL}/local-files/${img}`,
+      }));
     }
     return [{ url: defaultImage }];
   });
@@ -29,9 +37,9 @@ export const useImagePreviews = (defaultImage: string, actualImages?: string[], 
         return [
           ...prevPreviews.filter((preview) => preview.url !== defaultImage),
           ...previewUrls.map((url) => ({ url })),
-        ]
+        ];
       } else {
-        return [...previewUrls.map((url) => ({ url }))]
+        return [...previewUrls.map((url) => ({ url }))];
       }
     });
   };
@@ -39,14 +47,17 @@ export const useImagePreviews = (defaultImage: string, actualImages?: string[], 
   const removeImage = (index: number): void => {
     setPreviews((prevPreviews) => {
       const updatedPreviews = prevPreviews.filter((_, i) => i !== index);
-      return updatedPreviews.length > 0 ? updatedPreviews : [{ id: 'default-id', url: defaultImage }];
+      return updatedPreviews.length > 0
+        ? updatedPreviews
+        : [{ id: 'default-id', url: defaultImage }];
     });
   };
 
   const resetPreviews = (): void => {
-    setPreviews(actualImages && actualImages.length > 0
-      ? actualImages.map(img => ({ id: img, url: `${Env.API_BASE_URL}/local-files/${img}` }))
-      : [{ url: defaultImage }]
+    setPreviews(
+      actualImages && actualImages.length > 0
+        ? actualImages.map((img) => ({ id: img, url: `${Env.API_BASE_URL}/local-files/${img}` }))
+        : [{ url: defaultImage }],
     );
   };
 

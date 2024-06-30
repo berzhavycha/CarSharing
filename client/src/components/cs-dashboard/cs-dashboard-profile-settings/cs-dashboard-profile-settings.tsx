@@ -8,10 +8,13 @@ import { updateUserSchema, uppercaseFirstLetter } from '@/helpers';
 import { UpdateUserDto } from '@/types';
 
 import DefaultImage from '../../../../public/avatar.webp';
+
 import { useProfileUpdate } from './hooks';
 
 export const CSDashboardProfileSettings: FC = observer(() => {
-  const { currentUserStore: { user, updateErrors, updateUser, existingImagesIds: viewImagesIds } } = useStore();
+  const {
+    currentUserStore: { user, updateErrors, updateUser, existingImagesIds: viewImagesIds },
+  } = useStore();
 
   const {
     isUpdateSuccessful,
@@ -25,7 +28,7 @@ export const CSDashboardProfileSettings: FC = observer(() => {
     firstName: user?.firstName,
     lastName: user?.lastName,
     email: user?.email,
-  }
+  };
 
   const handleCloseModal = (): void => setIsUpdateSuccessful(false);
 
@@ -46,7 +49,6 @@ export const CSDashboardProfileSettings: FC = observer(() => {
                 onRemove={onPreviewRemove}
                 name="picture"
                 label="Update Avatar"
-
               />
               <UserInfo>
                 <h2>

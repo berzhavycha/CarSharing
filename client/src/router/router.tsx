@@ -1,14 +1,14 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom';
 
 import {
+  carLoader,
   carsLoader,
+  CSDashboardCarEditForm,
   CSDashboardCarForm,
   CSDashboardCarReport,
   CSDashboardProfileSettings,
-  CSDashboardCarEditForm,
-  carLoader,
   CSDashboardTransactions,
-  transactionsLoader
+  transactionsLoader,
 } from '@/components';
 import { isAdmin, ONLY_ADMIN_PAGE_ERROR } from '@/helpers';
 import { CSDashboardSidebar, CSHeaderLayout, CSProtectedRoute } from '@/layouts';
@@ -26,7 +26,11 @@ export const router = createBrowserRouter(
       >
         <Route path="dashboard" element={<CSDashboardSidebar />}>
           <Route path="settings" element={<CSDashboardProfileSettings />} />
-          <Route path="transactions" element={<CSDashboardTransactions />} loader={transactionsLoader} />
+          <Route
+            path="transactions"
+            element={<CSDashboardTransactions />}
+            loader={transactionsLoader}
+          />
           <Route path="car-report" element={<CSDashboardCarReport />} loader={carsLoader} />
           <Route path="add-car" element={<CSDashboardCarForm onFormSubmit={addNewCar} />} />
           <Route path="edit-car" element={<CSDashboardCarEditForm />} loader={carLoader} />

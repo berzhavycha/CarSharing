@@ -1,1 +1,1 @@
-export * from './fetch-transactions'
+export * from './fetch-transactions';

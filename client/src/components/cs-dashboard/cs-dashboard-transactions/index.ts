@@ -1,2 +1,2 @@
-export * from './cs-dashboard-transactions'
-export * from './loader'
+export * from './cs-dashboard-transactions';
+export * from './loader';

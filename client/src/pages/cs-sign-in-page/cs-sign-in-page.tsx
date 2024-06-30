@@ -12,7 +12,7 @@ import { ErrorMessageWrapper, Span, Title } from '../cs-sign-up-page';
 
 export const CSSignInPage: FC = observer(() => {
   const { currentUserStore } = useStore();
-  
+
   const navigate = useNavigate();
   const location = useLocation();
   const errorMessage = location.state?.errorMessage;
@@ -21,7 +21,8 @@ export const CSSignInPage: FC = observer(() => {
   const onSubmit = async (data: SignInUserDto): Promise<void> => {
     await currentUserStore.signIn(data);
     if (currentUserStore.user) {
-      const navigatePath = from || (currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/')
+      const navigatePath =
+        from || (currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/');
       navigate(navigatePath);
     }
   };
@@ -31,7 +32,10 @@ export const CSSignInPage: FC = observer(() => {
       <Title>Login</Title>
       <Span>
         Don't Have an Account?
-        <Link to="/sign-up" state={{ from }}>Register here</Link> instead
+        <Link to="/sign-up" state={{ from }}>
+          Register here
+        </Link>{' '}
+        instead
       </Span>
       <ErrorMessageWrapper>
         <CSCommonErrorMessage>

@@ -1,20 +1,20 @@
-import styled from 'styled-components';
-import { FaRegSadCry } from 'react-icons/fa';
 import { FC } from 'react';
+import { FaRegSadCry } from 'react-icons/fa';
+import styled from 'styled-components';
 
 type Props = {
-    message?: string;
-}
+  message?: string;
+};
 
 export const CSCommonNoData: FC<Props> = ({ message = 'No Data Available' }) => {
-    return (
-        <NoDataWrapper>
-            <IconWrapper>
-                <FaRegSadCry />
-            </IconWrapper>
-            <Message>{message}</Message>
-        </NoDataWrapper>
-    );
+  return (
+    <NoDataWrapper>
+      <IconWrapper>
+        <FaRegSadCry />
+      </IconWrapper>
+      <Message>{message}</Message>
+    </NoDataWrapper>
+  );
 };
 
 const NoDataWrapper = styled.div`

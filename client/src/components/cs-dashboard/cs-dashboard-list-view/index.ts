@@ -1,1 +1,1 @@
-export * from './cs-dashboard-list-view'
+export * from './cs-dashboard-list-view';

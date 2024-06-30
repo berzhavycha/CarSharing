@@ -1,1 +1,1 @@
-export * from './cs-common-no-data'
+export * from './cs-common-no-data';

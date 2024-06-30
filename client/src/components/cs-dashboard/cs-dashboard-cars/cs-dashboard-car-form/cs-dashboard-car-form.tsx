@@ -12,9 +12,12 @@ import {
 import { Car, CarDto, FieldErrorsState } from '@/types';
 
 import DefaultImage from '../../../../../public/car-upload.png';
+
 import { useCarForm } from './hooks';
 
-export type onCarSubmit = (car: CarDto) => Promise<{ car?: Car; errors?: FieldErrorsState<CarDto> }>
+export type onCarSubmit = (
+  car: CarDto,
+) => Promise<{ car?: Car; errors?: FieldErrorsState<CarDto> }>;
 
 type Props = {
   onFormSubmit: onCarSubmit;
@@ -22,7 +25,15 @@ type Props = {
 };
 
 export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }) => {
-  const { currentCar, existingImagesIds, setIsSuccess, isSuccess, onPreviewRemove, onSubmit, errors } = useCarForm(onFormSubmit, carDefaultValues)
+  const {
+    currentCar,
+    existingImagesIds,
+    setIsSuccess,
+    isSuccess,
+    onPreviewRemove,
+    onSubmit,
+    errors,
+  } = useCarForm(onFormSubmit, carDefaultValues);
 
   const handleCloseModal = (): void => setIsSuccess(false);
 
@@ -57,7 +68,12 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
               type="text"
               error={errors?.pricePerHour}
             />
-            <CSCommonForm.Select label="Status" name="status" options={CarStatusSelect} />
+            <CSCommonForm.Select
+              label="Status"
+              name="status"
+              options={CarStatusSelect}
+              error={errors?.status}
+            />
           </Section>
 
           <CSCommonForm.TextArea
@@ -111,7 +127,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
           onOk={handleCloseModal}
         />
       )}
-    </FormContainer >
+    </FormContainer>
   );
 };
 
