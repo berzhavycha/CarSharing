@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 
 import { CSCommonForm, CSCommonModal } from '@/components/cs-common';
@@ -9,48 +9,22 @@ import {
   CarTypeSelect,
   createCarSchema,
 } from '@/helpers';
-import { Car, CarDto, FieldErrorsState, LocalFile } from '@/types';
+import { Car, CarDto, FieldErrorsState } from '@/types';
 
 import DefaultImage from '../../../../../public/car-upload.png';
+import { useCarForm } from './hooks';
+
+export type onCarSubmit = (car: CarDto) => Promise<{ car?: Car; errors?: FieldErrorsState<CarDto> }>
 
 type Props = {
-  onFormSubmit: (car: CarDto) => Promise<{ car?: Car; errors?: FieldErrorsState<CarDto> }>;
+  onFormSubmit: onCarSubmit;
   carDefaultValues?: Car;
 };
 
 export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }) => {
-  const [isModalVisible, setModalVisible] = useState<boolean>(false);
-  const [errors, setErrors] = useState<FieldErrorsState<CarDto>>();
-  const [currentCar, setCurrentCar] = useState<Car | undefined>(carDefaultValues)
-  const [existingImagesIds, setExistingImagesIds] = useState<string[]>(() => {
-    return carDefaultValues ? carDefaultValues.pictures.map((item: LocalFile) => item.id) : []
-  })
+  const { currentCar, existingImagesIds, setIsModalVisible, isModalVisible, onPreviewRemove, onSubmit, errors } = useCarForm(onFormSubmit, carDefaultValues)
 
-  const onImageRemove = (removeId: string): void => {
-    setExistingImagesIds(ids => [...ids.filter(id => id !== removeId)])
-  }
-
-  useEffect(() => {
-    setExistingImagesIds(() => {
-      return currentCar ? currentCar.pictures.map((item: LocalFile) => item.id) : []
-    })
-  }, [currentCar])
-
-  const handleCloseModal = (): void => setModalVisible(false);
-
-  const onSubmit = async (carDto: CarDto): Promise<void> => {
-    const dto = currentCar ? { ...carDto, id: currentCar.id, existingImagesIds } : carDto;
-    const { car, errors } = await onFormSubmit(dto);
-    if (car) {
-      setModalVisible(true);
-      if (carDefaultValues) {
-        setExistingImagesIds(car.pictures.map((item: LocalFile) => item.id))
-        setCurrentCar(car)
-      }
-    } else if (errors) {
-      setErrors(errors);
-    }
-  };
+  const handleCloseModal = (): void => setIsModalVisible(false);
 
   return (
     <FormContainer>
@@ -65,7 +39,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
               label="Upload Car Image"
               defaultImage={DefaultImage}
               existingImageIds={existingImagesIds}
-              onRemove={onImageRemove}
+              onRemove={onPreviewRemove}
               name="pictures"
               multiple
               error={errors?.pictures}
@@ -128,17 +102,15 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
         </CSCommonForm>
       </ContentContainer>
 
-      {
-        isModalVisible && (
-          <CSCommonModal
-            type="confirm"
-            title="Success"
-            message={`Your car was successfully ${carDefaultValues ? 'updated' : 'added'}.`}
-            onClose={handleCloseModal}
-            onOk={handleCloseModal}
-          />
-        )
-      }
+      {isModalVisible && (
+        <CSCommonModal
+          type="confirm"
+          title="Success"
+          message={`Your car was successfully ${carDefaultValues ? 'updated' : 'added'}.`}
+          onClose={handleCloseModal}
+          onOk={handleCloseModal}
+        />
+      )}
     </FormContainer >
   );
 };

@@ -8,7 +8,7 @@ import { updateUserSchema, uppercaseFirstLetter } from '@/helpers';
 import { UpdateUserDto } from '@/types';
 
 import DefaultImage from '../../../../public/avatar.webp';
-import { useProfileForm } from './hooks';
+import { useProfileUpdate } from './hooks';
 
 export const CSDashboardProfileSettings: FC = observer(() => {
   const { currentUserStore: { user, updateErrors, updateUser, existingImagesIds: viewImagesIds } } = useStore();
@@ -19,7 +19,7 @@ export const CSDashboardProfileSettings: FC = observer(() => {
     existingImagesIds,
     onSubmit,
     onPreviewRemove,
-  } = useProfileForm(updateUser, viewImagesIds, updateErrors);
+  } = useProfileUpdate(updateUser, viewImagesIds, updateErrors);
 
   const defaultValues = {
     firstName: user?.firstName,
