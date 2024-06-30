@@ -10,7 +10,7 @@ type HookReturn = {
     setExistingImagesIds: (ids: string[]) => void;
 }
 
-export const useProfileForm = (updateUser: (user: UpdateUserDto) => Promise<void>, viewImagesIds: string[], updateErrors: FieldErrorsState<UpdateUserDto> | null): HookReturn => {
+export const useProfileUpdate = (updateUser: (user: UpdateUserDto) => Promise<void>, viewImagesIds: string[], updateErrors: FieldErrorsState<UpdateUserDto> | null): HookReturn => {
     const [isUpdateSuccessful, setIsUpdateSuccessful] = useState<boolean>(false);
     const [existingImagesIds, setExistingImagesIds] = useState<string[]>([]);
     const [isSubmitted, setIsSubmitted] = useState(false)

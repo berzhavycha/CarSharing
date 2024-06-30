@@ -1,1 +1,1 @@
-export * from './useProfileForm'
+export * from './useProfileUpdate'
