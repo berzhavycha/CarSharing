@@ -8,7 +8,7 @@ export type Transaction = {
     type: TransactionType;
     user: AuthenticatedUser;
     rental: Rental
-    createdAt: Date;
+    createdAt: string;
 }
 
 export enum TransactionType {

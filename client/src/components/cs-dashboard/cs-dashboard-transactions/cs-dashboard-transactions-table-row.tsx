@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { TableCell, TableRow } from '@/components/cs-common';
-import { uppercaseFirstLetter } from '@/helpers';
+import { formatDate, uppercaseFirstLetter } from '@/helpers';
 import { Transaction } from '@/types';
 
 type Props = {
@@ -21,7 +21,7 @@ export const CSDashboardTransactionsTableRow: FC<Props> = ({
             <TableCell>{transaction?.rental?.id ?? '-'}</TableCell>
             <TableCell>{transaction.user.firstName} {transaction.user.lastName}</TableCell>
             <TableCell>{transaction.amount}</TableCell>
-            <TableCell>{'Dat'}</TableCell>
+            <TableCell>{formatDate(transaction.createdAt)}</TableCell>
             <TableCell>
                 <StatusBadge $status={transaction.type}>{uppercaseFirstLetter(transaction.type)}</StatusBadge>
             </TableCell>

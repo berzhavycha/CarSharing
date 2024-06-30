@@ -6,3 +6,4 @@ export * from './is-admin';
 export * from './handle-user-response';
 export * from './string-to-number';
 export * from './get-file-from-url';
+export * from './format-date'
