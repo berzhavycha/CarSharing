@@ -10,7 +10,7 @@ import {
 } from '@/components/cs-common';
 import { Env } from '@/core';
 import { DEFAULT_PAGINATION_PAGE, OrderOptions, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
-import { useSearchParamsWithDefaults } from '@/hooks';
+import { usePagination, useSearchParamsWithDefaults } from '@/hooks';
 
 import { TransactionLoaderData } from './loader';
 import { CSDashboardTransactionsTable } from './cs-dashboard-transactions-table';
@@ -25,15 +25,8 @@ const defaultSearchParams = {
 
 export const CSDashboardTransactions: FC = () => {
     const data = useLoaderData() as { data: TransactionLoaderData };
-    const { searchParams, setParams } = useSearchParamsWithDefaults(defaultSearchParams);
-
-    const onPageChange = (newPage: number): void => setParams({ page: String(newPage) });
-    const onSearchChange = (search: string): void => setParams({ search, page: '1' });
-    const onSortChange = (sort: string): void => {
-        const currentOrder = searchParams.get('order') ?? OrderOptions.ASC;
-        const newOrder = currentOrder === OrderOptions.ASC ? OrderOptions.DESC : OrderOptions.ASC;
-        setParams({ sort, order: newOrder, page: '1' });
-    };
+    const { searchParams } = useSearchParamsWithDefaults(defaultSearchParams)
+    const { onPageChange, onSearchChange, onSortChange } = usePagination(defaultSearchParams);
 
     return (
         <TransactionsContainer>
