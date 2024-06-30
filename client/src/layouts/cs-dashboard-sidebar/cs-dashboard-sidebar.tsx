@@ -134,7 +134,7 @@ const LogoutButton = styled.button`
   font-size: 16px;
   padding: 10px 0;
   margin: 0 auto;
-  margin-top: 100%;
+  margin-top: 130%;
   transition: var(--default-transition);
 
   &:hover {
