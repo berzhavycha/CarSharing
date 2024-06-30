@@ -30,6 +30,24 @@
     --maintained-border: #f5c6cb;
     --default-border: #f5c6cb;
 
+    --top-up-text: #28a745;
+    --rental-payment-text: #ffc107;
+    --refund-text: #17a2b8;
+    --penalty-text: #ff4343;
+    --default-text: #dc3545;
+
+    --top-up-bg: #d4edda;
+    --rental-payment-bg: #fff3cd;
+    --refund-bg: #d1ecf1;
+    --penalty-bg: #f8d7da;
+    --default-bg: #f8d7da;
+
+    --top-up-border: #c3e6cb;
+    --rental-payment-border: #ffeeba;
+    --refund-border: #bee5eb;
+    --penalty-border: #f5c6cb;
+    --default-border: #f5c6cb;
+
     /* Borders */
     --default-border: 1px solid rgba(195, 212, 233, 0.5);
     --input-border: 1px solid #e0e0e0;

@@ -17,15 +17,15 @@ export const CSDashboardTransactionsTable: FC<Props> = ({ transactions, onSortCh
                 <thead>
                     <tr>
                         <TableHeader style={{ width: '5%' }}>No.</TableHeader>
-                        <TableHeader style={{ width: '40%' }}>Rental Id</TableHeader>
-                        <TableHeader style={{ width: '25%' }}>User</TableHeader>
-                        <TableHeader style={{ width: '15%' }} onClick={() => onSortChange('amount')}>
+                        <TableHeader style={{ width: '33%' }}>Rental Id</TableHeader>
+                        <TableHeader style={{ width: '23%' }}>User</TableHeader>
+                        <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('amount')}>
                             Amount
                         </TableHeader>
-                        <TableHeader style={{ width: '40%' }} onClick={() => onSortChange('createdAt')}>
+                        <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('createdAt')}>
                             Date & Time
                         </TableHeader>
-                        <TableHeader style={{ width: '20%' }} onClick={() => onSortChange('type')}>
+                        <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('type')}>
                             Type
                         </TableHeader>
                     </tr>
