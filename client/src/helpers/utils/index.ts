@@ -8,3 +8,4 @@ export * from './string-to-number';
 export * from './get-file-from-url';
 export * from './format-date';
 export * from './convert-to-title-case';
+export * from './create-form-data'
