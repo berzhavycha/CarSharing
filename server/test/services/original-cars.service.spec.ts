@@ -16,7 +16,7 @@ import {
   repositoryMock,
 } from '../mocks';
 
-jest.mock('@/helpers/utils/applySearchAndPagination', () => ({
+jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
 }));
 
@@ -164,6 +164,8 @@ describe('OriginalCarsService', () => {
 
       (applySearchAndPagination as jest.Mock).mockReturnValue(mockQueryBuilder);
 
+      jest.spyOn(mockQueryBuilder, 'getManyAndCount').mockResolvedValue([[], 0])
+
       const result = await originalCarsService.findAll(listCarsDto);
 
       expect(originalCarsRepository.createQueryBuilder).toHaveBeenCalledWith(
@@ -180,8 +182,8 @@ describe('OriginalCarsService', () => {
           entityAlias: 'original_car',
         }),
       );
-      expect(mockQueryBuilder.getMany).toHaveBeenCalled();
-      expect(result).toEqual([]);
+      expect(mockQueryBuilder.getManyAndCount).toHaveBeenCalled();
+      expect(result).toEqual([[], 0])
     });
   });
 });

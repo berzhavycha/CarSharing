@@ -22,7 +22,7 @@ import {
   repositoryMock,
 } from '../mocks';
 
-jest.mock('@/helpers/utils/applySearchAndPagination', () => ({
+jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
 }));
 
@@ -93,7 +93,7 @@ describe('CarsService', () => {
       jest.spyOn(carsService, 'findById').mockResolvedValue(mockCar);
       jest.spyOn(carsRepository, 'save').mockResolvedValue(updatedCar);
 
-      const result = await carsService.updateCar(mockCar.id, updateCarDtoMock);
+      const result = await carsService.updateCar(mockCar.id, updateCarDtoMock, []);
 
       expect(result).toEqual(updatedCar);
       expect(carsService.findById).toHaveBeenCalledWith(mockCar.id);
@@ -114,7 +114,7 @@ describe('CarsService', () => {
         );
 
       await expect(
-        carsService.updateCar(nonExistingId, {} as UpdateCarDto),
+        carsService.updateCar(nonExistingId, {} as UpdateCarDto, []),
       ).rejects.toThrow(NotFoundException);
 
       expect(carsService.findById).toHaveBeenCalledWith(nonExistingId);
@@ -126,6 +126,7 @@ describe('CarsService', () => {
     it('should remove a car when no active rentals exist', async () => {
       const carWithNoActiveRentals = {
         ...mockCar,
+        status: CarStatus.AVAILABLE,
         rentals: [{ ...mockRental, status: RentalStatus.CLOSED }],
       };
 
@@ -195,7 +196,7 @@ describe('CarsService', () => {
       expect(result).toEqual(mockCar);
       expect(carsRepository.findOne).toHaveBeenCalledWith({
         where: { id: mockCar.id },
-        relations: ['rentals', 'local_file'],
+        relations: ['rentals', 'pictures'],
       });
     });
 
@@ -210,7 +211,7 @@ describe('CarsService', () => {
 
       expect(carsRepository.findOne).toHaveBeenCalledWith({
         where: { id: nonExistingId },
-        relations: ['rentals', 'local_file'],
+        relations: ['rentals', 'pictures'],
       });
     });
   });
@@ -227,11 +228,11 @@ describe('CarsService', () => {
 
       jest
         .spyOn(carsRepository, 'createQueryBuilder')
-        .mockReturnValue(
-          mockQueryBuilder as unknown as SelectQueryBuilder<Car>,
-        );
+        .mockReturnValue(mockQueryBuilder as unknown as SelectQueryBuilder<Car>);
 
-      (applySearchAndPagination as jest.Mock).mockReturnValue(mockQueryBuilder);
+      (applySearchAndPagination as jest.Mock).mockReturnValue(mockQueryBuilder as unknown as SelectQueryBuilder<Car>);
+
+      jest.spyOn(mockQueryBuilder, 'getManyAndCount').mockResolvedValue([[], 0])
 
       const result = await carsService.findAll(listCarsDto);
 
@@ -247,8 +248,8 @@ describe('CarsService', () => {
           entityAlias: 'car',
         }),
       );
-      expect(mockQueryBuilder.getMany).toHaveBeenCalled();
-      expect(result).toEqual([]);
+      expect(mockQueryBuilder.getManyAndCount).toHaveBeenCalled();
+      expect(result).toEqual([[], 0]);
     });
   });
 
@@ -270,6 +271,8 @@ describe('CarsService', () => {
 
       (applySearchAndPagination as jest.Mock).mockReturnValue(mockQueryBuilder);
 
+      jest.spyOn(mockQueryBuilder, 'getManyAndCount').mockResolvedValue([[], 0])
+
       const result = await carsService.findAllAvailable(listCarsDto);
 
       expect(carsRepository.createQueryBuilder).toHaveBeenCalledWith('car');
@@ -290,8 +293,8 @@ describe('CarsService', () => {
           entityAlias: 'car',
         }),
       );
-      expect(mockQueryBuilder.getMany).toHaveBeenCalled();
-      expect(result).toEqual([]);
+      expect(mockQueryBuilder.getManyAndCount).toHaveBeenCalled();
+      expect(result).toEqual([[], 0]);
     });
   });
 });

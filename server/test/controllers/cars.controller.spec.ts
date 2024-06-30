@@ -74,11 +74,11 @@ describe('CarsController', () => {
       };
       const cars: Car[] = [{ ...mockCar }, { ...mockCar, id: '2nd-car-id' }];
 
-      jest.spyOn(carsService, 'findAll').mockResolvedValue(cars);
+      jest.spyOn(carsService, 'findAll').mockResolvedValue([cars, cars.length]);
 
       const result = await carsController.findAll(listCarsDto);
 
-      expect(result).toBe(cars);
+      expect(result).toEqual([cars, cars.length]);
       expect(carsService.findAll).toHaveBeenCalledWith(listCarsDto);
     });
   });
@@ -96,11 +96,11 @@ describe('CarsController', () => {
 
       jest
         .spyOn(carsService, 'findAllAvailable')
-        .mockResolvedValue(availableCars);
+        .mockResolvedValue([availableCars, availableCars.length]);
 
       const result = await carsController.findAllAvailable(listCarsDto);
 
-      expect(result).toBe(availableCars);
+      expect(result).toEqual([availableCars, availableCars.length]);
       expect(carsService.findAllAvailable).toHaveBeenCalledWith(listCarsDto);
     });
   });
