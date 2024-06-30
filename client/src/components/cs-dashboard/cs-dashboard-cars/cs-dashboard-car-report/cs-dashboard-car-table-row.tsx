@@ -74,17 +74,17 @@ const StatusBadge = styled.div<{ $status: string }>`
   }};
   border: 2px solid
     ${(props): string => {
-      switch (props.$status) {
-        case 'available':
-          return 'var(--available-border)';
-        case 'booked':
-          return 'var(--booked-border)';
-        case 'maintained':
-          return 'var(--maintained-border)';
-        default:
-          return 'var(--default-border)';
-      }
-    }};
+    switch (props.$status) {
+      case 'available':
+        return 'var(--available-border)';
+      case 'booked':
+        return 'var(--booked-border)';
+      case 'maintained':
+        return 'var(--maintained-border)';
+      default:
+        return 'var(--default-border)';
+    }
+  }};
 `;
 
 const DetailsButton = styled.button`
