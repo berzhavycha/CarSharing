@@ -4,7 +4,7 @@ import {
   carsLoader,
   CSDashboardCarForm,
   CSDashboardCarReport,
-  CSDashboardProfileSettingsForm,
+  CSDashboardProfileSettings,
   CSDashboardCarEditForm,
   carLoader,
   CSDashboardTransactions,
@@ -25,7 +25,7 @@ export const router = createBrowserRouter(
         element={<CSProtectedRoute isAllowed={isAdmin} errorMessage={ONLY_ADMIN_PAGE_ERROR} />}
       >
         <Route path="dashboard" element={<CSDashboardSidebar />}>
-          <Route path="settings" element={<CSDashboardProfileSettingsForm />} />
+          <Route path="settings" element={<CSDashboardProfileSettings />} />
           <Route path="transactions" element={<CSDashboardTransactions />} loader={transactionsLoader} />
           <Route path="car-report" element={<CSDashboardCarReport />} loader={carsLoader} />
           <Route path="add-car" element={<CSDashboardCarForm onFormSubmit={addNewCar} />} />

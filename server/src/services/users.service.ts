@@ -108,9 +108,13 @@ export class UsersService {
         throw new BadRequestException(usersErrorMessages.INVALID_OLD_PASSWORD);
       }
 
-      const { salt, hash } = await hashValue(updateUserDto.newPassword);
-      user.passwordSalt = salt;
-      user.passwordHash = hash;
+      if (updateUserDto.newPassword) {
+        const { salt, hash } = await hashValue(updateUserDto.newPassword);
+        user.passwordSalt = salt;
+        user.passwordHash = hash;
+      } else {
+        throw new BadRequestException(usersErrorMessages.NO_NEW_PASSWORD);
+      }
 
       delete updateUserDto.oldPassword;
       delete updateUserDto.newPassword;
