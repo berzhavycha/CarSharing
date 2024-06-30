@@ -13,7 +13,7 @@ export type Preview = {
   url: string;
 }
 
-export const useImagePreviews = (defaultImage: string, actualImages?: string[]): HookReturn => {
+export const useImagePreviews = (defaultImage: string, actualImages?: string[], multiple?: boolean): HookReturn => {
   const [previews, setPreviews] = useState<Preview[]>(() => {
     if (actualImages && actualImages.length > 0) {
       return actualImages.map(img => ({ id: img, url: `${Env.API_BASE_URL}/local-files/${img}` }));
@@ -24,10 +24,16 @@ export const useImagePreviews = (defaultImage: string, actualImages?: string[]):
   const handleUploadedFiles = (event: ChangeEvent<HTMLInputElement>): void => {
     const files = Array.from(event.target.files || []);
     const previewUrls = files.map((file) => URL.createObjectURL(file));
-    setPreviews((prevPreviews) => [
-      ...prevPreviews.filter((preview) => preview.url !== defaultImage),
-      ...previewUrls.map((url) => ({ url })),
-    ]);
+    setPreviews((prevPreviews) => {
+      if (multiple) {
+        return [
+          ...prevPreviews.filter((preview) => preview.url !== defaultImage),
+          ...previewUrls.map((url) => ({ url })),
+        ]
+      } else {
+        return [...previewUrls.map((url) => ({ url }))]
+      }
+    });
   };
 
   const removeImage = (index: number): void => {

@@ -14,7 +14,6 @@ export const CSDashboardTransactionsTableRow: FC<Props> = ({
     transaction,
     index,
 }) => {
-    console.log(transaction);
     return (
         <TableRow key={transaction.id}>
             <TableCell>{index + 1}</TableCell>
@@ -23,13 +22,13 @@ export const CSDashboardTransactionsTableRow: FC<Props> = ({
             <TableCell>{Math.abs(transaction.amount)}</TableCell>
             <TableCell>{formatDate(transaction.createdAt)}</TableCell>
             <TableCell>
-                <StatusBadge $status={transaction.type}>{convertToTitleCase(transaction.type)}</StatusBadge>
+                <TypeBadge $status={transaction.type}>{convertToTitleCase(transaction.type)}</TypeBadge>
             </TableCell>
         </TableRow>
     );
 };
 
-const StatusBadge = styled.div<{ $status: TransactionType }>`
+const TypeBadge = styled.div<{ $status: TransactionType }>`
   width: 100%;
   display: inline-block;
   padding: 6px 10px;

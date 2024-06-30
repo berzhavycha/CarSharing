@@ -1,51 +1,33 @@
 import { observer } from 'mobx-react-lite';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 
-import { CSCommonForm, CSCommonModal } from '@/components/cs-common';
+import { CSCommonErrorMessage, CSCommonForm, CSCommonModal } from '@/components/cs-common';
 import { useStore } from '@/context';
 import { updateUserSchema, uppercaseFirstLetter } from '@/helpers';
 import { UpdateUserDto } from '@/types';
 
-import DefaultImage from '../../../../../public/avatar.webp';
+import DefaultImage from '../../../../public/avatar.webp';
+import { useProfileForm } from './hooks';
 
-export const CSDashboardProfileSettingsForm: FC = observer(() => {
+export const CSDashboardProfileSettings: FC = observer(() => {
+  const { currentUserStore: { user, updateErrors, updateUser, existingImagesIds: viewImagesIds } } = useStore();
+
   const {
-    currentUserStore: { user, updateErrors, updateUser, existingImagesIds: viewImagesIds },
-  } = useStore();
-  const [isUpdateSuccessful, setIsUpdateSuccessful] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [existingImagesIds, setExistingImagesIds] = useState<string[]>(user?.avatarId ? [user?.avatarId] : [])
-
-  useEffect(() => {
-    setExistingImagesIds(viewImagesIds)
-  }, [viewImagesIds])
-
-  const onSubmit = async (user: UpdateUserDto): Promise<void> => {
-    const userDtoWithoutEmptyPasswords = Object.fromEntries(
-      Object.entries(user).filter(([, value]) => {
-        return value !== '' && value !== null && value !== undefined;
-      }),
-    );
-
-    await updateUser({ ...userDtoWithoutEmptyPasswords, existingImagesIds });
-    if (!updateErrors) {
-      setIsUpdateSuccessful(true);
-    }
-  };
-
-  const onRemove = (removeId: string): void => {
-    setExistingImagesIds(ids => [...ids.filter(id => id !== removeId)])
-  }
-
-  const onCloseErrorWindow = (): void => setErrorMessage(null);
-  const handleCloseModal = (): void => setIsUpdateSuccessful(false);
+    isUpdateSuccessful,
+    setIsUpdateSuccessful,
+    existingImagesIds,
+    onSubmit,
+    onPreviewRemove,
+  } = useProfileForm(updateUser, viewImagesIds, updateErrors);
 
   const defaultValues = {
     firstName: user?.firstName,
     lastName: user?.lastName,
     email: user?.email,
   }
+
+  const handleCloseModal = (): void => setIsUpdateSuccessful(false);
 
   return (
     <>
@@ -61,9 +43,10 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
               <CSCommonForm.InputFile
                 defaultImage={DefaultImage}
                 existingImageIds={existingImagesIds}
-                onRemove={onRemove}
+                onRemove={onPreviewRemove}
                 name="picture"
                 label="Update Avatar"
+
               />
               <UserInfo>
                 <h2>
@@ -73,6 +56,8 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
               </UserInfo>
               <CSCommonForm.SubmitButton content="Save" />
             </ProfileHeaderWrapper>
+
+            <CSCommonErrorMessage>{updateErrors?.unexpectedError}</CSCommonErrorMessage>
 
             <Title>General Information</Title>
             <ProfileSection>
@@ -107,15 +92,6 @@ export const CSDashboardProfileSettingsForm: FC = observer(() => {
           </CSCommonForm>
         </ContentContainer>
       </ProfileContainer>
-
-      {errorMessage && (
-        <CSCommonModal
-          type="error"
-          title="Error"
-          message={errorMessage}
-          onClose={onCloseErrorWindow}
-        />
-      )}
 
       {isUpdateSuccessful && (
         <CSCommonModal
@@ -164,7 +140,7 @@ const PasswordSection = styled.div`
 const ProfileHeaderWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 `;
 
 const UserInfo = styled.div`

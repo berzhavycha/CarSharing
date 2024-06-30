@@ -40,6 +40,7 @@ export const CSCommonFormInputImage: FC<Props> = ({
   const { previews, handleUploadedFiles, removeImage, resetPreviews } = useImagePreviews(
     defaultImage,
     existingImageIds,
+    multiple,
   );
 
   useEffect(() => {
