@@ -63,7 +63,7 @@ describe('TransanctionsService', () => {
   });
 
   describe('findAll', () => {
-    it('should return all cars with pagination and search applied', async () => {
+    it('should return all transactions with pagination and search applied', async () => {
       const listCarsDto: QueryTransactionsDto = {
         search: 'query',
         page: 1,

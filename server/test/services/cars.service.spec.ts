@@ -16,6 +16,7 @@ import { CarsService, LocalFilesService } from '@/services';
 import {
   createCarDtoMock,
   mockCar,
+  mockLocalFile,
   mockLocalFilesService,
   mockQueryBuilder,
   mockRental,
@@ -29,6 +30,7 @@ jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
 describe('CarsService', () => {
   let carsService: CarsService;
   let carsRepository: Repository<Car>;
+  let localFilesService: LocalFilesService
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -47,6 +49,7 @@ describe('CarsService', () => {
 
     carsService = module.get<CarsService>(CarsService);
     carsRepository = module.get<Repository<Car>>(getRepositoryToken(Car));
+    localFilesService = module.get<LocalFilesService>(LocalFilesService)
   });
 
   afterEach(() => {
@@ -120,6 +123,71 @@ describe('CarsService', () => {
       expect(carsService.findById).toHaveBeenCalledWith(nonExistingId);
       expect(carsRepository.save).not.toHaveBeenCalled();
     });
+
+    it('should delete images not included in existingImagesIds', async () => {
+      const updateCarDtoMock = {
+        existingImagesIds: ['existing-image-id-1'],
+      };
+
+      const imagesToDelete = mockCar.pictures.filter(
+        (picture) => !updateCarDtoMock.existingImagesIds.includes(picture.id)
+      );
+
+      jest.spyOn(carsService, 'findById').mockResolvedValue(mockCar);
+      jest.spyOn(carsRepository, 'save').mockResolvedValue(mockCar);
+      jest.spyOn(localFilesService, 'removeFile').mockResolvedValue();
+
+      await carsService.updateCar(mockCar.id, updateCarDtoMock, []);
+
+      expect(localFilesService.removeFile).toHaveBeenCalledTimes(imagesToDelete.length);
+    });
+
+    it('should add new images to the car', async () => {
+      const updateCarDtoMock = {
+        existingImagesIds: [mockLocalFile.id],
+      };
+
+      const newImages = [{
+        filename: 'new-image.jpg',
+        mimetype: 'image/jpeg',
+        path: '/path/to/new-image.jpg',
+      }];
+
+      const updateCar = { ...mockCar, pictures: [mockLocalFile] }
+      jest.spyOn(carsService, 'findById').mockResolvedValue({...updateCar});
+      jest.spyOn(carsRepository, 'save').mockResolvedValue({ ...updateCar, pictures: [mockLocalFile, mockLocalFile] });
+      jest.spyOn(localFilesService, 'saveLocalFileData').mockResolvedValue(mockLocalFile);
+
+      const result = await carsService.updateCar(updateCar.id, updateCarDtoMock, newImages);
+
+      expect(result.pictures).toHaveLength(updateCar.pictures.length + 1);
+    });
+
+    it('should update other fields except pictures and existingImagesIds', async () => {
+      const updateCarDtoMock = {
+        status: CarStatus.BOOKED,
+        model: 'Updated Model',
+        description: 'Updated Description',
+        existingImagesIds: ['existing-image-id-1'],
+      };
+
+      const updatedCar = {
+        ...mockCar,
+        ...updateCarDtoMock,
+      } as Car;
+
+      jest.spyOn(carsService, 'findById').mockResolvedValue(mockCar);
+      jest.spyOn(carsRepository, 'save').mockResolvedValue(updatedCar);
+
+      const result = await carsService.updateCar(mockCar.id, updateCarDtoMock, []);
+
+      expect(result.status).toEqual(updateCarDtoMock.status);
+      expect(result.model).toEqual(updateCarDtoMock.model);
+      expect(result.description).toEqual(updateCarDtoMock.description);
+      expect(result.pictures).toEqual(expect.arrayContaining(mockCar.pictures));
+      expect(result.pictures).not.toContain(expect.objectContaining({ id: 'existing-image-id-1' }));
+    });
+
   });
 
   describe('removeCar', () => {
