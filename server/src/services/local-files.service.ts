@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { LocalFileDto } from '@/dtos';
-import { LocalFile } from '@/entities';
-import { localFilesErrors } from '@/helpers';
+import { LocalFileDto } from '@/dtos/local-files';
+import { LocalFile } from '@/entities/local-file.entity';
+import { localFilesErrors } from '@/helpers/errors/local-files';
 
 @Injectable()
 export class LocalFilesService {

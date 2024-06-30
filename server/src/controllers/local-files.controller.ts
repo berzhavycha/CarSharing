@@ -10,7 +10,7 @@ import { Response } from 'express-serve-static-core';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 
-import { LocalFilesService } from '@/services';
+import { LocalFilesService } from '@/services/local-files.service';
 
 @Controller('local-files')
 export class LocalFilesController {
