@@ -12,6 +12,7 @@ import { ErrorMessageWrapper, Span, Title } from '../cs-sign-up-page';
 
 export const CSSignInPage: FC = observer(() => {
   const { currentUserStore } = useStore();
+  
   const navigate = useNavigate();
   const location = useLocation();
   const errorMessage = location.state?.errorMessage;
