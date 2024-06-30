@@ -232,7 +232,7 @@ describe('CarsService', () => {
 
       (applySearchAndPagination as jest.Mock).mockReturnValue(mockQueryBuilder as unknown as SelectQueryBuilder<Car>);
 
-      jest.spyOn(mockQueryBuilder, 'getManyAndCount').mockResolvedValue([[], 0])
+      jest.spyOn(mockQueryBuilder, 'getManyAndCount').mockResolvedValue([[mockCar], 0])
 
       const result = await carsService.findAll(listCarsDto);
 
@@ -249,7 +249,7 @@ describe('CarsService', () => {
         }),
       );
       expect(mockQueryBuilder.getManyAndCount).toHaveBeenCalled();
-      expect(result).toEqual([[], 0]);
+      expect(result).toEqual([[mockCar], 0]);
     });
   });
 
@@ -271,7 +271,7 @@ describe('CarsService', () => {
 
       (applySearchAndPagination as jest.Mock).mockReturnValue(mockQueryBuilder);
 
-      jest.spyOn(mockQueryBuilder, 'getManyAndCount').mockResolvedValue([[], 0])
+      jest.spyOn(mockQueryBuilder, 'getManyAndCount').mockResolvedValue([[{ ...mockCar, status: CarStatus.AVAILABLE }], 1])
 
       const result = await carsService.findAllAvailable(listCarsDto);
 
@@ -294,7 +294,7 @@ describe('CarsService', () => {
         }),
       );
       expect(mockQueryBuilder.getManyAndCount).toHaveBeenCalled();
-      expect(result).toEqual([[], 0]);
+      expect(result).toEqual([[{ ...mockCar, status: CarStatus.AVAILABLE }], 1]);
     });
   });
 });
