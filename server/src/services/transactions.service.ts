@@ -2,16 +2,24 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import { Rental, Transaction, User } from '@/entities';
-import { DEFAULT_ORDER, DEFAULT_PAGINATION_LIMIT, DEFAULT_PAGINATION_PAGE, TRANSACTION_DEFAULT_SEARCH_COLUMNS, TRANSACTION_DEFAULT_SORT_COLUMN, TransactionType, applySearchAndPagination } from '@/helpers';
 import { QueryTransactionsDto } from '@/dtos';
+import { Rental, Transaction, User } from '@/entities';
+import {
+  applySearchAndPagination,
+  DEFAULT_ORDER,
+  DEFAULT_PAGINATION_LIMIT,
+  DEFAULT_PAGINATION_PAGE,
+  TRANSACTION_DEFAULT_SEARCH_COLUMNS,
+  TRANSACTION_DEFAULT_SORT_COLUMN,
+  TransactionType,
+} from '@/helpers';
 
 @Injectable()
 export class TransactionsService {
   constructor(
     @InjectRepository(Transaction)
     private readonly transactionsRepository: Repository<Transaction>,
-  ) { }
+  ) {}
 
   async createTransaction(
     transactionData: {
@@ -27,10 +35,13 @@ export class TransactionsService {
     return manager.save(transaction);
   }
 
-  async findAll(listDto: QueryTransactionsDto): Promise<[Transaction[], number]> {
+  async findAll(
+    listDto: QueryTransactionsDto,
+  ): Promise<[Transaction[], number]> {
     const { search, page, limit, order, sort } = listDto;
 
-    const queryBuilder = this.transactionsRepository.createQueryBuilder('transaction')
+    const queryBuilder = this.transactionsRepository
+      .createQueryBuilder('transaction')
       .leftJoinAndSelect('transaction.user', 'user')
       .leftJoinAndSelect('transaction.rental', 'rental');
 

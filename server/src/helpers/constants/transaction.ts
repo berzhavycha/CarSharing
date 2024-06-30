@@ -8,7 +8,7 @@ export enum TransactionType {
   PENALTY = 'penalty',
 }
 
-export const TRANSACTION_DEFAULT_SORT_COLUMN = 'amount'
+export const TRANSACTION_DEFAULT_SORT_COLUMN = 'amount';
 
 export const TRANSACTION_DEFAULT_SEARCH_COLUMNS = [
   'user.first_name',

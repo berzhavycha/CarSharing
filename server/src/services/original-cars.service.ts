@@ -18,7 +18,7 @@ export class OriginalCarsService {
   constructor(
     @InjectRepository(OriginalCar)
     private originalCarsRepository: Repository<OriginalCar>,
-  ) { }
+  ) {}
 
   async createOriginalCar(
     createCarDto: CreateOriginalCarDto,

@@ -1,4 +1,4 @@
 export const mockTransanctionService = {
   createTransaction: jest.fn(),
-  findAll: jest.fn()
+  findAll: jest.fn(),
 };

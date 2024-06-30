@@ -1,1 +1,1 @@
-export * from './query-transactions.dto'
+export * from './query-transactions.dto';

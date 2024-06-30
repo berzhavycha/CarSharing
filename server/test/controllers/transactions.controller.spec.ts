@@ -10,57 +10,64 @@ import { mockTransanction, mockTransanctionService } from '../mocks';
 
 jest.mock('@nestjs/config');
 const mockConfigService = {
-    get: jest.fn(),
+  get: jest.fn(),
 };
 
 describe('TransactionsController', () => {
-    let transactionsService: TransactionsService;
-    let transactionsController: TransactionsController;
+  let transactionsService: TransactionsService;
+  let transactionsController: TransactionsController;
 
-    beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
-            controllers: [TransactionsController],
-            providers: [
-                {
-                    provide: TransactionsService,
-                    useValue: mockTransanctionService,
-                },
-                {
-                    provide: ConfigService,
-                    useValue: mockConfigService,
-                },
-            ],
-        }).compile();
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [TransactionsController],
+      providers: [
+        {
+          provide: TransactionsService,
+          useValue: mockTransanctionService,
+        },
+        {
+          provide: ConfigService,
+          useValue: mockConfigService,
+        },
+      ],
+    }).compile();
 
-        transactionsService = module.get<TransactionsService>(TransactionsService);
-        transactionsController = module.get<TransactionsController>(TransactionsController);
+    transactionsService = module.get<TransactionsService>(TransactionsService);
+    transactionsController = module.get<TransactionsController>(
+      TransactionsController,
+    );
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should be defined', () => {
+    expect(transactionsController).toBeDefined();
+  });
+
+  describe('findAll', () => {
+    it('should return list of transactions', async () => {
+      const listDto: QueryTransactionsDto = {
+        search: 'query',
+        page: 1,
+        limit: 10,
+        order: 'ASC',
+        sort: 'amount',
+      };
+      const transactions: Transaction[] = [
+        { ...mockTransanction },
+        { ...mockTransanction, id: '2nd-id' },
+      ];
+
+      jest
+        .spyOn(transactionsService, 'findAll')
+        .mockResolvedValue([transactions, transactions.length]);
+
+      const result = await transactionsService.findAll(listDto);
+
+      expect(result).toEqual([transactions, transactions.length]);
+      expect(transactionsService.findAll).toHaveBeenCalledWith(listDto);
     });
-
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
-    it('should be defined', () => {
-        expect(transactionsController).toBeDefined();
-    });
-
-    describe('findAll', () => {
-        it('should return list of transactions', async () => {
-            const listDto: QueryTransactionsDto = {
-                search: 'query',
-                page: 1,
-                limit: 10,
-                order: 'ASC',
-                sort: 'amount',
-            };
-            const transactions: Transaction[] = [{ ...mockTransanction }, { ...mockTransanction, id: '2nd-id' }];
-
-            jest.spyOn(transactionsService, 'findAll').mockResolvedValue([transactions, transactions.length]);
-
-            const result = await transactionsService.findAll(listDto);
-
-            expect(result).toEqual([transactions, transactions.length]);
-            expect(transactionsService.findAll).toHaveBeenCalledWith(listDto);
-        });
-    });
+  });
 });
