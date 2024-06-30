@@ -11,7 +11,7 @@ import {
 } from '@/components/cs-common';
 import { Env } from '@/core';
 import { DEFAULT_PAGINATION_PAGE, OrderOptions, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
-import { useSearchParamsWithDefaults } from '@/hooks';
+import { usePagination, useSearchParamsWithDefaults } from '@/hooks';
 
 import { CSDashboardCarTable } from './cs-dashboard-car-table';
 import { CarsLoaderData } from './loader';
@@ -27,17 +27,12 @@ const defaultSearchParams = {
 export const CSDashboardCarReport: FC = () => {
   const navigate = useNavigate();
   const data = useLoaderData() as { data: CarsLoaderData };
-  const { searchParams, setParams } = useSearchParamsWithDefaults(defaultSearchParams);
+
+  const { searchParams } = useSearchParamsWithDefaults(defaultSearchParams)
+  const { onPageChange, onSearchChange, onSortChange } = usePagination(defaultSearchParams);
 
   const onAddBtnClick = (): void => navigate('/dashboard/add-car');
-  const onPageChange = (newPage: number): void => setParams({ page: String(newPage) });
-  const onSearchChange = (search: string): void => setParams({ search, page: '1' });
-  const onSortChange = (sort: string): void => {
-    const currentOrder = searchParams.get('order') ?? OrderOptions.ASC;
-    const newOrder = currentOrder === OrderOptions.ASC ? OrderOptions.DESC : OrderOptions.ASC;
-    setParams({ sort, order: newOrder, page: '1' });
-  };
-
+  
   return (
     <CarsContainer>
       <ContentContainer>
