@@ -43,7 +43,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
         <CSCommonForm<CarDto>
           validationSchema={createCarSchema(existingImagesIds)}
           onSubmit={onSubmit}
-          defaultValues={{ ...currentCar, pictures: [] }}
+          defaultValues={currentCar ? { ...currentCar, pictures: [] } : undefined}
         >
           <CarHeaderWrapper>
             <CSCommonForm.InputFile

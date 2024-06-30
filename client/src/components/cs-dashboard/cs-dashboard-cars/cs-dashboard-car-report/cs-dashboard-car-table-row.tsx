@@ -27,7 +27,7 @@ export const CSDashboardCarTableRow: FC<Props> = ({
       </TableCell>
       <TableCell>{car.model}</TableCell>
       <TableCell>{car.year}</TableCell>
-      <TableCell>$ {car.pricePerHour}</TableCell>
+      <TableCell>${car.pricePerHour}</TableCell>
       <TableCell>{car.type}</TableCell>
       <TableCell>
         <StatusBadge $status={car.status}>{uppercaseFirstLetter(car.status)}</StatusBadge>
