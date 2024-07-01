@@ -1,71 +1,60 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
+import { AvailableCarsLoaderData } from './loader';
+import { FilterOption } from '@/types';
 
-interface FilterOption {
-    label: string;
-    count: number;
+
+type Props = {
+  data: AvailableCarsLoaderData['filterOptions']
 }
 
-export const CSMainAvailableCarsFilter: FC = () => {
-    const [maxPrice, setMaxPrice] = useState<number>(100);
+export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
+  const [maxPrice, setMaxPrice] = useState<number>(100);
 
-    const typeOptions: FilterOption[] = [
-        { label: 'Sport', count: 10 },
-        { label: 'SUV', count: 12 },
-        { label: 'MPV', count: 16 },
-        { label: 'Sedan', count: 20 },
-        { label: 'Coupe', count: 14 },
-        { label: 'Hatchback', count: 14 },
-    ];
+  const typeOptions = data.types
+  const capacityOptions = data.capacities.map(item => ({ ...item, label: `${item.label} People` }))
 
-    const capacityOptions: FilterOption[] = [
-        { label: '2 Person', count: 10 },
-        { label: '4 Person', count: 14 },
-        { label: '6 Person', count: 12 },
-        { label: '8 or More', count: 16 },
-    ];
+  const renderCheckboxes = (options: FilterOption<string | number>[]): JSX.Element[] => {
+    return options.map((option) => (
+      <CheckboxLabel key={option.label}>
+        <HiddenCheckbox type="checkbox" />
+        <CustomCheckbox />
+        {option.label}
+        <Count>({option.count})</Count>
+      </CheckboxLabel>
+    ));
+  };
 
-    const renderCheckboxes = (options: FilterOption[]) => {
-        return options.map((option) => (
-            <CheckboxLabel key={option.label}>
-                <HiddenCheckbox type="checkbox" />
-                <CustomCheckbox />
-                {option.label}
-                <Count>({option.count})</Count>
-            </CheckboxLabel>
-        ));
-    };
+  return (
+    <SidebarContainer>
+      <SectionTitle>TYPE</SectionTitle>
+      <CheckBoxesWrapper>
+        {renderCheckboxes(typeOptions)}
+      </CheckBoxesWrapper>
 
-    return (
-        <SidebarContainer>
-            <SectionTitle>TYPE</SectionTitle>
-            <CheckBoxesWrapper>
-                {renderCheckboxes(typeOptions)}
-            </CheckBoxesWrapper>
+      <SectionTitle>CAPACITY</SectionTitle>
+      <CheckBoxesWrapper>
+        {renderCheckboxes(capacityOptions)}
+      </CheckBoxesWrapper>
 
-            <SectionTitle>CAPACITY</SectionTitle>
-            <CheckBoxesWrapper>
-                {renderCheckboxes(capacityOptions)}
-            </CheckBoxesWrapper>
-
-            <SectionTitle>PRICE</SectionTitle>
-            <PriceSliderContainer>
-                <PriceSlider
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(Number(e.target.value))}
-                />
-                <PriceValue>Max. ${maxPrice.toFixed(2)}</PriceValue>
-            </PriceSliderContainer>
-        </SidebarContainer>
-    );
+      <SectionTitle>PRICE</SectionTitle>
+      <PriceSliderContainer>
+        <PriceSlider
+          type="range"
+          min="0"
+          max="100"
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(Number(e.target.value))}
+        />
+        <PriceValue>Max. ${maxPrice.toFixed(2)}</PriceValue>
+      </PriceSliderContainer>
+    </SidebarContainer>
+  );
 };
 
 const SidebarContainer = styled.div`
   min-width: 350px;
-  padding: 20px;
+  padding: 35px;
   background-color: white;
   min-height: 100%;
   margin-top: 5px;
