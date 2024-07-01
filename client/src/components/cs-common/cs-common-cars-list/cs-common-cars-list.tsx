@@ -4,6 +4,7 @@ import { CSCarCard } from '@/components/cs-car';
 import { CSCommonNoData } from '@/components/cs-common';
 import { Env } from '@/core';
 import { Car } from '@/types';
+import styled from 'styled-components';
 
 type Props = {
     cars: Car[];
@@ -13,7 +14,9 @@ export const CSCommonCarList: FC<Props> = ({ cars }) => {
     return (
         <>
             {cars?.length === 0 ? (
-                <CSCommonNoData message="No cars available" />
+                <NoDataWrapper>
+                    <CSCommonNoData message="No cars available" />
+                </NoDataWrapper>
             ) : (
                 cars?.map((car) => (
                     <CSCarCard
@@ -31,3 +34,10 @@ export const CSCommonCarList: FC<Props> = ({ cars }) => {
         </>
     );
 };
+
+const NoDataWrapper = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
