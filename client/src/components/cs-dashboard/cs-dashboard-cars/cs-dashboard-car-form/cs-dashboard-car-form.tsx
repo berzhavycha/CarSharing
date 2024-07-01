@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { CSCommonForm, CSCommonModal } from '@/components/cs-common';
+import { CSCommonErrorMessage, CSCommonForm, CSCommonModal } from '@/components/cs-common';
 import {
   CarFuelTypeSelect,
   CarStatusSelect,
@@ -57,6 +57,8 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
             />
             <CSCommonForm.SubmitButton content="Save" />
           </CarHeaderWrapper>
+
+          <CSCommonErrorMessage>{errors?.unexpectedError}</CSCommonErrorMessage>
 
           <Title>General Information</Title>
           <Section>
