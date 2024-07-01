@@ -1,8 +1,6 @@
-import { defer, LoaderFunctionArgs, redirect } from 'react-router-dom';
+import { defer, LoaderFunctionArgs } from 'react-router-dom';
 
-import { Env } from '@/core';
-import { extractPaginationParams } from '@/helpers';
-import { fetchCars } from '@/services';
+import { carsLoader } from '@/helpers';
 import { Car } from '@/types';
 
 export type CarsLoaderData = {
@@ -10,19 +8,4 @@ export type CarsLoaderData = {
   totalPages: number;
 };
 
-export const carsLoader = async ({
-  request,
-}: LoaderFunctionArgs): Promise<Response | ReturnType<typeof defer>> => {
-  const url = new URL(request.url);
-  const { queryDto, defaultSearchParams } = extractPaginationParams(url, Env.ADMIN_CARS_PAGINATION_LIMIT);
-
-  if (defaultSearchParams) {
-    return redirect(`${url.pathname}?${defaultSearchParams}`);
-  }
-
-  const data = fetchCars(queryDto);
-
-  return defer({
-    data,
-  });
-};
+export const allCarsLoader = (args: LoaderFunctionArgs): Promise<Response | ReturnType<typeof defer>> => carsLoader(args.request, false)

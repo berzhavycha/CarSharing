@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
 
-import { CarFeature } from '../cs-car-feature';
+import { CarFeature } from './cs-car-feature';
 import { extractBracketContent } from '@/helpers';
 
 type CarCardProps = {

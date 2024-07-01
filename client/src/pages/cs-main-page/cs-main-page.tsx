@@ -47,6 +47,7 @@ export const CSMainUserPage: FC = () => {
 const BannerWrappers = styled.div`
   display: flex;
   gap: 20px;
+  margin-top: 50px;
   margin-bottom: 30px;
 `;
 

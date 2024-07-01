@@ -11,10 +11,10 @@ type Props = {
 export const CSInitialCarList: FC<Props> = ({ cars }) => {
     return (
         <>
-            {cars.length === 0 ? (
+            {cars?.length === 0 ? (
                 <CSCommonNoData message="No cars available" />
             ) : (
-                cars.map((car) => (
+                cars?.map((car) => (
                     <CSCarCard
                         key={car.id}
                         model={car.model}
