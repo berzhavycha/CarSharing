@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import { CSCommonErrorMessage } from '../cs-common-error-message';
 import { Label } from '../cs-common-input-field';
+import { CSCommonCheckIcon } from '../cs-common-check-icon';
+import { CSCommonErrorIcon } from '../cs-common-error-icon';
 
 export type Option = {
   value: string;
@@ -18,7 +20,7 @@ export interface SelectProps extends React.InputHTMLAttributes<HTMLSelectElement
 }
 
 export const CSCommonSelectField: FC<SelectProps> = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, options, error, ...props }, ref) => {
+  ({ label, options, formSubmitted, error, ...props }, ref) => {
     return (
       <>
         <Label>{label}</Label>
@@ -29,6 +31,8 @@ export const CSCommonSelectField: FC<SelectProps> = forwardRef<HTMLSelectElement
             </option>
           ))}
         </SelectElement>
+        {formSubmitted &&
+          (!error ? <CSCommonCheckIcon right={-25} /> : <CSCommonErrorIcon right={-25} />)}
         <CSCommonErrorMessage>{error}</CSCommonErrorMessage>
       </>
     );
