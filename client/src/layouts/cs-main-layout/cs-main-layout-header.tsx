@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonContainer } from '@/components';
@@ -7,22 +6,19 @@ import { CSCommonContainer } from '@/components';
 import { CSHeaderLayoutCarSearch } from './cs-header-layout-car-search';
 import { CSHeaderLayoutOptions } from './cs-header-layout-options';
 
-export const CSHeaderLayout: FC = () => {
+export const CSMainLayoutHeader: FC = () => {
   return (
-    <>
-      <Section>
-        <CSCommonContainer>
-          <Nav>
-            <LeftSection>
-              <Logo>CARRENT</Logo>
-              <CSHeaderLayoutCarSearch />
-            </LeftSection>
-            <CSHeaderLayoutOptions />
-          </Nav>
-        </CSCommonContainer>
-      </Section>
-      <Outlet />
-    </>
+    <Section>
+      <CSCommonContainer>
+        <Nav>
+          <LeftSection>
+            <Logo>CARRENT</Logo>
+            <CSHeaderLayoutCarSearch />
+          </LeftSection>
+          <CSHeaderLayoutOptions />
+        </Nav>
+      </CSCommonContainer>
+    </Section>
   );
 };
 
