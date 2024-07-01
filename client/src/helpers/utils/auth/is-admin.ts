@@ -1,6 +1,6 @@
 import { rootStore } from '@/app/stores';
 
-import { Roles } from '../constants';
+import { Roles } from '../../constants';
 
 export const isAdmin = async (): Promise<boolean> => {
   if (!rootStore.currentUserStore.user) {
