@@ -1,6 +1,7 @@
-import { CSCommonContainer } from '@/components';
 import { FC } from 'react';
 import styled from 'styled-components';
+
+import { CSCommonContainer } from '@/components';
 
 export const CSMainLayoutFooter: FC = () => {
   const currentYear = new Date().getFullYear();

@@ -10,8 +10,8 @@ type ServiceReturn = {
 
 export const addNewCar = async (car: CarDto): Promise<ServiceReturn> => {
   try {
-    const formData = createFormData(car)
-    
+    const formData = createFormData(car);
+
     car.pictures?.forEach((file) => {
       formData.append('pictures', file, file.name);
     });

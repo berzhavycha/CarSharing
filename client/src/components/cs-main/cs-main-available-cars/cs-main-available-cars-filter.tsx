@@ -1,25 +1,26 @@
 import { FC, useState } from 'react';
-import styled from 'styled-components';
-import { AvailableCarsLoaderData } from './loader';
-import { FilterOption } from '@/types';
 import { useSearchParams } from 'react-router-dom';
+import styled from 'styled-components';
 
+import { FilterOption } from '@/types';
+
+import { AvailableCarsLoaderData } from '../../../pages/user/cs-main-available-cars-page/loader';
 
 type Props = {
-  data: AvailableCarsLoaderData['filterOptions']
-}
+  data: AvailableCarsLoaderData['filterOptions'];
+};
 
 type CapacityOption = FilterOption<string | number> & { originalValue: string | number };
 
 export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
   const [maxPrice, setMaxPrice] = useState<number>(100);
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const typeOptions = data.types
-  const capacityOptions = data.capacities.map(item => ({
+  const typeOptions = data.types;
+  const capacityOptions = data.capacities.map((item) => ({
     ...item,
     label: `${item.label} People`,
-    originalValue: item.label
+    originalValue: item.label,
   }));
 
   const onType = (label: string): void => {
@@ -43,10 +44,19 @@ export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
     setSearchParams(searchParams);
   };
 
-  const renderCheckboxes = (type: "types[]" | "capacities[]", options: FilterOption<string | number>[], onCheck: (label: string) => void): JSX.Element[] => {
+  const renderCheckboxes = (
+    type: 'types[]' | 'capacities[]',
+    options: FilterOption<string | number>[],
+    onCheck: (label: string) => void,
+  ): JSX.Element[] => {
     return options.map((option) => (
-      <CheckboxLabel key={option.label} >
-        <HiddenCheckbox type="checkbox" checked={searchParams.getAll(type).includes(`${(option as CapacityOption).originalValue || option.label}`)} />
+      <CheckboxLabel key={option.label}>
+        <HiddenCheckbox
+          type="checkbox"
+          checked={searchParams
+            .getAll(type)
+            .includes(`${(option as CapacityOption).originalValue || option.label}`)}
+        />
         <CustomCheckbox
           onClick={() => onCheck(`${(option as CapacityOption).originalValue || option.label}`)}
         />
@@ -59,13 +69,11 @@ export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
   return (
     <SidebarContainer>
       <SectionTitle>TYPE</SectionTitle>
-      <CheckBoxesWrapper>
-        {renderCheckboxes("types[]", typeOptions, onType)}
-      </CheckBoxesWrapper>
+      <CheckBoxesWrapper>{renderCheckboxes('types[]', typeOptions, onType)}</CheckBoxesWrapper>
 
       <SectionTitle>CAPACITY</SectionTitle>
       <CheckBoxesWrapper>
-        {renderCheckboxes("capacities[]", capacityOptions, onCapacity)}
+        {renderCheckboxes('capacities[]', capacityOptions, onCapacity)}
       </CheckBoxesWrapper>
 
       <SectionTitle>PRICE</SectionTitle>
@@ -103,7 +111,7 @@ const CheckBoxesWrapper = styled.div`
   flex-direction: column;
   gap: 8px;
   margin-bottom: 30px;
-`
+`;
 
 const CheckboxLabel = styled.label`
   display: flex;
@@ -169,8 +177,8 @@ const PriceSlider = styled.input`
   background: #ddd;
   outline: none;
   opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;

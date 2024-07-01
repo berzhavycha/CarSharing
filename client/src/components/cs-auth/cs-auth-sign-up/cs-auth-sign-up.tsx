@@ -10,10 +10,10 @@ import { SignUpUserDto } from '@/types';
 
 import { useUserRole } from './hooks';
 
-export const CSSignUpPage: FC = observer(() => {
+export const CSAuthSignUp: FC = observer(() => {
   const { userRole, handleUserTypeChange, showSecretCodeInput } = useUserRole();
   const location = useLocation();
-  const from = location.state?.from || '/';
+  const from = location.state?.from;
 
   const navigate = useNavigate();
 

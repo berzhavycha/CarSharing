@@ -17,7 +17,7 @@ const FeatureWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
+`;
 
 const IconWrapper = styled.div`
   background-color: var(--main-bg-color);

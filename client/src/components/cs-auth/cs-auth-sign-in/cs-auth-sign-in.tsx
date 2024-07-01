@@ -3,20 +3,20 @@ import { FC } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { CSCommonErrorMessage, CSCommonForm } from '@/components';
+import { CSCommonErrorMessage, CSCommonForm } from '@/components/cs-common';
 import { useStore } from '@/context';
 import { AuthType, getUserSchema, Roles } from '@/helpers';
 import { SignInUserDto } from '@/types';
 
-import { ErrorMessageWrapper, Span, Title } from '../cs-sign-up-page';
+import { ErrorMessageWrapper, Span, Title } from '../cs-auth-sign-up';
 
-export const CSSignInPage: FC = observer(() => {
+export const CSAuthSignIn: FC = observer(() => {
   const { currentUserStore } = useStore();
 
   const navigate = useNavigate();
   const location = useLocation();
   const errorMessage = location.state?.errorMessage;
-  const from = location.state?.from || '/';
+  const from = location.state?.from;
 
   const onSubmit = async (data: SignInUserDto): Promise<void> => {
     await currentUserStore.signIn(data);
