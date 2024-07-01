@@ -20,6 +20,7 @@ import {
 } from '@/helpers';
 
 import { LocalFilesService } from './local-files.service';
+import { FilterOption } from '@/types';
 
 @Injectable()
 export class CarsService {
@@ -27,7 +28,7 @@ export class CarsService {
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
     private localFilesService: LocalFilesService,
-  ) {}
+  ) { }
 
   async createCar(
     createCarDto: CreateCarDto,
@@ -102,11 +103,19 @@ export class CarsService {
   }
 
   async findAll(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
-    const { search, page, limit, order, sort } = listCarsDto;
+    const { search, page, limit, order, sort, types, capacities } = listCarsDto;
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
     queryBuilder.leftJoinAndSelect('car.pictures', 'pictures');
+
+    if (types && types.length > 0) {
+      queryBuilder.andWhere('car.type IN (:...types)', { types });
+    }
+
+    if (capacities && capacities.length > 0) {
+      queryBuilder.andWhere('car.capacity IN (:...capacities)', { capacities });
+    }
 
     applySearchAndPagination(queryBuilder, {
       search,
@@ -122,7 +131,7 @@ export class CarsService {
   }
 
   async findAllAvailable(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
-    const { search, page, limit, order, sort } = listCarsDto;
+    const { search, page, limit, order, sort, types, capacities } = listCarsDto;
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
@@ -131,6 +140,14 @@ export class CarsService {
     });
 
     queryBuilder.leftJoinAndSelect('car.pictures', 'pictures');
+
+    if (types && types.length > 0) {
+      queryBuilder.andWhere('car.type IN (:...types)', { types });
+    }
+
+    if (capacities && capacities.length > 0) {
+      queryBuilder.andWhere('car.capacity IN (:...capacities)', { capacities });
+    }
 
     applySearchAndPagination(queryBuilder, {
       search,
@@ -143,5 +160,23 @@ export class CarsService {
     });
 
     return queryBuilder.getManyAndCount();
+  }
+
+  async getFilterOptions(): Promise<{ types: FilterOption<string>[], capacities: FilterOption<number>[] }> {
+    const types = await this.carsRepository
+      .createQueryBuilder('car')
+      .select('car.type', 'label')
+      .addSelect('COUNT(*)', 'count')
+      .groupBy('car.type')
+      .getRawMany();
+
+    const capacities = await this.carsRepository
+      .createQueryBuilder('car')
+      .select('car.capacity', 'label')
+      .addSelect('COUNT(*)', 'count')
+      .groupBy('car.capacity')
+      .getRawMany();
+
+    return { types, capacities };
   }
 }
