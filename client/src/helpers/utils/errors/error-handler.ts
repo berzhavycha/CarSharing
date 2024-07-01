@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 
 import { FieldErrorsState } from '@/types';
 
-import { UNEXPECTED_ERROR_MESSAGE } from '../constants';
+import { UNEXPECTED_ERROR_MESSAGE } from '../../constants';
 
 import { pickErrorMessages } from './pick-error-messages';
 
