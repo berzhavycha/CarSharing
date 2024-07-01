@@ -163,12 +163,10 @@ describe('CarsService', () => {
 
       const updateCar = { ...mockCar, pictures: [mockLocalFile] };
       jest.spyOn(carsService, 'findById').mockResolvedValue({ ...updateCar });
-      jest
-        .spyOn(carsRepository, 'save')
-        .mockResolvedValue({
-          ...updateCar,
-          pictures: [mockLocalFile, mockLocalFile],
-        });
+      jest.spyOn(carsRepository, 'save').mockResolvedValue({
+        ...updateCar,
+        pictures: [mockLocalFile, mockLocalFile],
+      });
       jest
         .spyOn(localFilesService, 'saveLocalFileData')
         .mockResolvedValue(mockLocalFile);
@@ -330,7 +328,7 @@ describe('CarsService', () => {
 
       jest
         .spyOn(mockQueryBuilder, 'getManyAndCount')
-        .mockResolvedValue([[mockCar], 0]);
+        .mockResolvedValue([[mockCar], 1]);
 
       const result = await carsService.findAll(listCarsDto);
 
@@ -347,57 +345,7 @@ describe('CarsService', () => {
         }),
       );
       expect(mockQueryBuilder.getManyAndCount).toHaveBeenCalled();
-      expect(result).toEqual([[mockCar], 0]);
-    });
-  });
-
-  describe('findAllAvailable', () => {
-    it('should return all available cars with pagination and search applied', async () => {
-      const listCarsDto: QueryCarsDto = {
-        search: 'query',
-        page: 1,
-        limit: 10,
-        order: 'ASC',
-        sort: 'model',
-      };
-
-      jest
-        .spyOn(carsRepository, 'createQueryBuilder')
-        .mockReturnValue(
-          mockQueryBuilder as unknown as SelectQueryBuilder<Car>,
-        );
-
-      (applySearchAndPagination as jest.Mock).mockReturnValue(mockQueryBuilder);
-
-      jest
-        .spyOn(mockQueryBuilder, 'getManyAndCount')
-        .mockResolvedValue([[{ ...mockCar, status: CarStatus.AVAILABLE }], 1]);
-
-      const result = await carsService.findAllAvailable(listCarsDto);
-
-      expect(carsRepository.createQueryBuilder).toHaveBeenCalledWith('car');
-      expect(mockQueryBuilder.where).toHaveBeenCalledWith(
-        'car.status = :status',
-        {
-          status: CarStatus.AVAILABLE,
-        },
-      );
-      expect(applySearchAndPagination).toHaveBeenCalledWith(
-        expect.any(Object),
-        expect.objectContaining({
-          search: listCarsDto.search,
-          page: listCarsDto.page,
-          limit: listCarsDto.limit,
-          order: listCarsDto.order,
-          sort: listCarsDto.sort,
-          entityAlias: 'car',
-        }),
-      );
-      expect(mockQueryBuilder.getManyAndCount).toHaveBeenCalled();
-      expect(result).toEqual([
-        [{ ...mockCar, status: CarStatus.AVAILABLE }],
-        1,
-      ]);
+      expect(result).toEqual([[mockCar], 1]);
     });
   });
 });

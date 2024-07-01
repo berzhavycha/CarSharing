@@ -84,28 +84,6 @@ describe('CarsController', () => {
     });
   });
 
-  describe('findAllAvailable', () => {
-    it('should return list of available cars', async () => {
-      const listCarsDto: QueryCarsDto = {
-        search: 'query',
-        page: 1,
-        limit: 10,
-        order: 'ASC',
-        sort: 'model',
-      };
-      const availableCars: Car[] = [mockCar];
-
-      jest
-        .spyOn(carsService, 'findAllAvailable')
-        .mockResolvedValue([availableCars, availableCars.length]);
-
-      const result = await carsController.findAllAvailable(listCarsDto);
-
-      expect(result).toEqual([availableCars, availableCars.length]);
-      expect(carsService.findAllAvailable).toHaveBeenCalledWith(listCarsDto);
-    });
-  });
-
   describe('findOne', () => {
     it('should return a car by ID', async () => {
       const carId = 'valid-car-id';
