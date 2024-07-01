@@ -6,8 +6,8 @@ import { ONE_MB } from '@/helpers/constants';
 export const updateUserSchema = z
   .object({
     picture: z
-      .custom<FileList>()
-      .transform((file) => file.length > 0 && file.item(0))
+      .custom<FileList | null | undefined>()
+      .transform((file) => (file && file.length > 0 ? file.item(0) : null))
       .refine((file) => !file || (!!file && file.size <= 10 * ONE_MB), {
         message: 'The profile picture must be a maximum of 10MB.',
       })

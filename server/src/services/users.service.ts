@@ -30,7 +30,7 @@ export class UsersService {
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
     private localFilesService: LocalFilesService,
-  ) {}
+  ) { }
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -103,6 +103,8 @@ export class UsersService {
       await this.localFilesService.removeFile(user.avatar.id);
       user.avatar = null;
       user.avatarId = null;
+
+      delete updateUserDto.existingImagesIds
     }
 
     if ('oldPassword' in updateUserDto && updateUserDto.oldPassword) {
