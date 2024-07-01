@@ -12,7 +12,7 @@ import {
 } from '@/components';
 import { isAdmin, isRegularUser, ONLY_ADMIN_PAGE_ERROR, ONLY_USER_PAGE_ERROR } from '@/helpers';
 import { CSDashboardSidebar, CSHeaderLayout, CSProtectedRoute } from '@/layouts';
-import { CSMainUserPage, CSSignInPage, CSSignUpPage } from '@/pages';
+import { CSMainUserPage, CSSignInPage, CSSignUpPage, initialCarsLoader } from '@/pages';
 import { addNewCar } from '@/services';
 
 export const router = createBrowserRouter(
@@ -20,7 +20,7 @@ export const router = createBrowserRouter(
     <>
       <Route element={<CSProtectedRoute isAllowed={isRegularUser} errorMessage={ONLY_USER_PAGE_ERROR} />}>
         <Route path="/" element={<CSHeaderLayout />}>
-          <Route index element={<CSMainUserPage />} />
+          <Route index element={<CSMainUserPage />} loader={initialCarsLoader} />
         </Route>
       </Route>
       <Route

@@ -28,7 +28,7 @@ type BannerWrapperProps = {
 const BannerWrapper = styled.div<BannerWrapperProps>`
     position: relative;
     padding: 30px 10px 10px 30px;
-    width: 48%;
+    width: 48.5%;
     height: 300px;
     border-radius: 20px;
     background-image: ${(props): string => `url(${props.$backgroundImage})`}

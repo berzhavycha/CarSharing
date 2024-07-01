@@ -19,7 +19,7 @@ const Feature = styled.div`
   display: flex;
   align-items: center;
   color: var(--gray);
-  font-size: 14px;
+  font-size: 12px;
 
   svg {
     margin-right: 7px;
