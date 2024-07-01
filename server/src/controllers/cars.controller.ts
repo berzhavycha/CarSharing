@@ -24,10 +24,11 @@ import {
 } from '@/helpers';
 import { LocalFilesInterceptor } from '@/interceptors';
 import { CarsService } from '@/services';
+import { FilterOption } from '@/types';
 
 @Controller('cars')
 export class CarsController {
-  constructor(private readonly carsService: CarsService) {}
+  constructor(private readonly carsService: CarsService) { }
 
   @Post()
   @UseGuards(RoleGuard(Roles.ADMIN))
@@ -59,6 +60,12 @@ export class CarsController {
     @Query() listCarsDto: QueryCarsDto,
   ): Promise<[Car[], number]> {
     return this.carsService.findAllAvailable(listCarsDto);
+  }
+
+  @Get('filter-options')
+  @UseGuards(JwtAuthGuard)
+  async getFilterOptions(): Promise<{ types: FilterOption<string>[], capacities: FilterOption<number>[] }> {
+    return this.carsService.getFilterOptions();
   }
 
   @Get(':id')
