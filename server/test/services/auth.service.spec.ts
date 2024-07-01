@@ -1,4 +1,8 @@
-import { ConflictException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
@@ -7,15 +11,20 @@ import { plainToClass } from 'class-transformer';
 import { Response } from 'express-serve-static-core';
 
 import { User } from '@/entities';
-import { DUPLICATE_EMAIL_ERROR_CODE, Roles } from '@/helpers';
+import { DUPLICATE_EMAIL_ERROR_CODE, hashValue, Roles } from '@/helpers';
 import { AuthService, UsersService } from '@/services';
 
 import {
+  mockHash,
   mockJwtService,
   mockTokens,
   mockUser,
   mockUsersService,
 } from '../mocks';
+
+jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
+  hashValue: jest.fn(),
+}));
 
 jest.mock('@nestjs/config');
 const mockConfigService = {
@@ -27,17 +36,14 @@ const mockConfigService = {
         return '1d';
       case 'AUTH_COOKIE_EXPIRATION_DAYS_TIME':
         return 7;
+      case 'ADMIN_INVITATION_CODE':
+        return '1234';
       case 'NODE_ENV':
         return 'production';
       default:
         return undefined;
     }
   }),
-};
-
-const mockHash = {
-  hash: 'mock-hash',
-  salt: 'mock-salt',
 };
 
 const mockResponse = {
@@ -83,7 +89,7 @@ describe('AuthService', () => {
     };
 
     it('should create a new user and generate tokens', async () => {
-      jest.spyOn(authService, 'hash').mockResolvedValueOnce(mockHash);
+      (hashValue as jest.Mock).mockResolvedValueOnce(mockHash);
       jest
         .spyOn(authService, 'generateTokens')
         .mockResolvedValueOnce(mockTokens);
@@ -98,6 +104,7 @@ describe('AuthService', () => {
     });
 
     it('should throw ConflictException if email already exists', async () => {
+      (hashValue as jest.Mock).mockResolvedValueOnce(mockHash);
       jest.spyOn(mockUsersService, 'createUser').mockImplementationOnce(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const error: any = new Error('Email already exists');
@@ -107,6 +114,18 @@ describe('AuthService', () => {
       });
       await expect(authService.signUp(registerUserDto)).rejects.toThrow(
         ConflictException,
+      );
+    });
+
+    it('should throw BadException if invitation code is invalid', async () => {
+      const registerDto = {
+        ...registerUserDto,
+        role: Roles.ADMIN,
+        invitationCode: 'invalid-code',
+      };
+
+      await expect(authService.signUp(registerDto)).rejects.toThrow(
+        BadRequestException,
       );
     });
   });
@@ -209,27 +228,12 @@ describe('AuthService', () => {
     });
   });
 
-  describe('hash', () => {
-    it('should generate a salt and hash the value', async () => {
-      const mockValue = 'string';
-
-      jest.spyOn(bcrypt, 'genSalt').mockResolvedValue(mockHash.salt);
-      jest.spyOn(bcrypt, 'hash').mockResolvedValue(mockHash.hash);
-      const result = await authService.hash(mockValue);
-
-      expect(bcrypt.genSalt).toHaveBeenCalledTimes(1);
-      expect(bcrypt.hash).toHaveBeenCalledWith(mockValue, mockHash.salt);
-
-      expect(result).toEqual(mockHash);
-    });
-  });
-
   describe('generateTokens', () => {
     const userId = 'mock_user_id';
     const email = 'mock@example.com';
 
     it('should generate access and refresh tokens and update user', async () => {
-      jest.spyOn(authService, 'hash').mockResolvedValue(mockHash);
+      (hashValue as jest.Mock).mockResolvedValue(mockHash);
       jest
         .spyOn(jwtService, 'signAsync')
         .mockResolvedValueOnce(mockTokens.accessToken)
@@ -240,7 +244,7 @@ describe('AuthService', () => {
 
       expect(result.accessToken).toBe(mockTokens.accessToken);
       expect(result.refreshToken).toBe(mockTokens.refreshToken);
-      expect(authService.hash).toHaveBeenCalledWith(mockTokens.refreshToken);
+      expect(hashValue).toHaveBeenCalledWith(mockTokens.refreshToken);
       expect(usersService.updateUser).toHaveBeenCalledWith(userId, {
         refreshTokenHash: mockHash.hash,
         refreshTokenSalt: mockHash.salt,
@@ -258,9 +262,7 @@ describe('AuthService', () => {
     });
 
     it('should throw an error if hashing fails', async () => {
-      jest
-        .spyOn(authService, 'hash')
-        .mockRejectedValue(new Error('Hashing failed'));
+      (hashValue as jest.Mock).mockRejectedValue(new Error('Hashing failed'));
       jest
         .spyOn(jwtService, 'signAsync')
         .mockResolvedValueOnce(mockTokens.accessToken)
@@ -272,7 +274,7 @@ describe('AuthService', () => {
     });
 
     it('should throw an error if updating user fails', async () => {
-      jest.spyOn(authService, 'hash').mockResolvedValue(mockHash);
+      (hashValue as jest.Mock).mockResolvedValue(mockHash);
       jest
         .spyOn(jwtService, 'signAsync')
         .mockResolvedValueOnce(mockTokens.accessToken)

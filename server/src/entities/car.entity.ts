@@ -10,17 +10,19 @@ import {
 } from 'typeorm';
 
 import {
-  CarDefaultFuelCapacity,
   CAR_DEFAULT_STEERING,
   CAR_FIELD_DEFAULT_PRECISION,
   CAR_FIELD_DEFAULT_SCALE,
   CAR_FIELD_MEDIUM_LENGTH,
   CAR_FIELD_SMALL_LENGTH,
+  CarDefaultFuelCapacity,
   CarFuelType,
   CarStatus,
   DecimalColumnTransformer,
+  IntColumnTransformer,
 } from '@/helpers';
 
+import { LocalFile } from './local-file.entity';
 import { Rental } from './rental.entity';
 
 @Entity({ schema: 'rental', name: 'cars' })
@@ -32,13 +34,10 @@ export class Car {
   id: string;
 
   @Column()
-  imageUrl: string;
-
-  @Column()
   @Index()
   model: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', transformer: new IntColumnTransformer() })
   year: number;
 
   @Column({ type: 'text' })
@@ -62,7 +61,7 @@ export class Car {
   })
   status: CarStatus;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', transformer: new IntColumnTransformer() })
   capacity: number;
 
   @Column({
@@ -96,4 +95,9 @@ export class Car {
 
   @OneToMany(() => Rental, (rental) => rental.car)
   rentals: Rental[];
+
+  @OneToMany(() => LocalFile, (localFile) => localFile.car, {
+    cascade: true,
+  })
+  pictures: LocalFile[];
 }

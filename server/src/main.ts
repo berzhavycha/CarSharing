@@ -9,17 +9,16 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.use(cookieParser());
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-
 
   app.enableCors({
     origin: configService.get<string>('CORS_ORIGIN'),
     credentials: true,
   });
-  
+
   const port = configService.get<number>('PORT');
 
   await app.listen(port);

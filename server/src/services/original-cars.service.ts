@@ -45,7 +45,7 @@ export class OriginalCarsService {
     return car;
   }
 
-  async findAll(listCarsDto: QueryCarsDto): Promise<OriginalCar[]> {
+  async findAll(listCarsDto: QueryCarsDto): Promise<[OriginalCar[], number]> {
     const {
       search,
       page = DEFAULT_PAGINATION_PAGE,
@@ -66,6 +66,6 @@ export class OriginalCarsService {
       entityAlias: 'original_car',
     });
 
-    return queryBuilder.getMany();
+    return queryBuilder.getManyAndCount();
   }
 }

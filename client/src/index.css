@@ -5,17 +5,64 @@
 }
 
 :root {
-    --default-border: 1px solid rgba(195, 212, 233, 0.5);
-    --default-transition: all .2s ease;
+    /* Colors */
     --main-bg-color: #F6F7F9;
+    --light-blue: #6b90ff;
     --main-blue: #3563e9;
     --dark-blue: #2b4fad;
     --gray: #90A3BF;
     --dark: #1a202c;
     --light-dark: #596780;
+
+    /* Status Colors */
+    --available-text: #28a745;
+    --booked-text: #ffc107;
+    --maintained-text: #ff4343;
+    --default-text: #dc3545;
+
+    --available-bg: #d4edda;
+    --booked-bg: #fff3cd;
+    --maintained-bg: #f8d7da;
+    --default-bg: #f8d7da;
+
+    --available-border: #c3e6cb;
+    --booked-border: #ffeeba;
+    --maintained-border: #f5c6cb;
+    --default-border: #f5c6cb;
+
+    --top-up-text: #28a745;
+    --rental-payment-text: #ffc107;
+    --refund-text: #17a2b8;
+    --penalty-text: #ff4343;
+    --default-text: #dc3545;
+
+    --top-up-bg: #d4edda;
+    --rental-payment-bg: #fff3cd;
+    --refund-bg: #d1ecf1;
+    --penalty-bg: #f8d7da;
+    --default-bg: #f8d7da;
+
+    --top-up-border: #c3e6cb;
+    --rental-payment-border: #ffeeba;
+    --refund-border: #bee5eb;
+    --penalty-border: #f5c6cb;
+    --default-border: #f5c6cb;
+
+    /* Borders */
+    --default-border: 1px solid rgba(195, 212, 233, 0.5);
+    --input-border: 1px solid #e0e0e0;
+
+    /* Shadows */
+    --default-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    /* Transitions */
+    --default-transition: all .2s ease;
+
+    /* Font */
+    --font-family: "Plus Jakarta Sans", sans-serif;
 }
 
 body {
     background-color: var(--main-bg-color);
-    font-family: "Plus Jakarta Sans";
+    font-family: var(--font-family);
 }

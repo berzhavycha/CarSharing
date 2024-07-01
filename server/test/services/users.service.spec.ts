@@ -1,16 +1,25 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { EntityManager, Repository } from 'typeorm';
 
 import { UpdateUserBalanceDto } from '@/dtos';
 import { User } from '@/entities';
-import { TransactionType, usersErrorMessages } from '@/helpers';
-import { RolesService, TransactionsService, UsersService } from '@/services';
+import { hashValue, TransactionType, usersErrorMessages } from '@/helpers';
+import {
+  LocalFilesService,
+  RolesService,
+  TransactionsService,
+  UsersService,
+} from '@/services';
 
 import {
   createUserDtoMock,
   mockEntityManager,
+  mockHash,
+  mockLocalFile,
+  mockLocalFilesService,
   mockRental,
   mockRole,
   mockRoleService,
@@ -21,11 +30,16 @@ import {
   userDetails,
 } from '../mocks';
 
+jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
+  hashValue: jest.fn(),
+}));
+
 describe('UsersService', () => {
   let usersService: UsersService;
   let transactionsService: TransactionsService;
   let rolesService: RolesService;
   let usersRepository: Repository<User>;
+  let localFilesService: LocalFilesService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -43,6 +57,10 @@ describe('UsersService', () => {
           provide: RolesService,
           useValue: mockRoleService,
         },
+        {
+          provide: LocalFilesService,
+          useValue: mockLocalFilesService,
+        },
       ],
     }).compile();
 
@@ -50,6 +68,7 @@ describe('UsersService', () => {
     transactionsService = module.get<TransactionsService>(TransactionsService);
     rolesService = module.get<RolesService>(RolesService);
     usersRepository = module.get<Repository<User>>(getRepositoryToken(User));
+    localFilesService = module.get<LocalFilesService>(LocalFilesService);
   });
 
   afterEach(() => {
@@ -136,7 +155,7 @@ describe('UsersService', () => {
       expect(result).toEqual(mockUser);
       expect(usersRepository.findOne).toHaveBeenCalledWith({
         where: { id: mockUser.id },
-        relations: ['role'],
+        relations: ['role', 'avatar'],
       });
     });
 
@@ -151,7 +170,7 @@ describe('UsersService', () => {
 
       expect(usersRepository.findOne).toHaveBeenCalledWith({
         where: { id: nonExistingId },
-        relations: ['role'],
+        relations: ['role', 'avatar'],
       });
     });
   });
@@ -197,6 +216,87 @@ describe('UsersService', () => {
 
       expect(usersService.findById).toHaveBeenCalledWith(nonExistingId);
       expect(usersRepository.save).not.toHaveBeenCalled();
+    });
+
+    it('should update user with file', async () => {
+      const updatedUser = {
+        ...mockUser,
+        avatarId: mockLocalFile.id,
+        avatar: mockLocalFile,
+        ...updateUserDtoMock,
+      } as User;
+
+      jest
+        .spyOn(localFilesService, 'saveLocalFileData')
+        .mockResolvedValue(mockLocalFile);
+      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
+
+      const result = await usersService.updateUser(
+        mockUser.id,
+        updateUserDtoMock,
+        mockLocalFile,
+      );
+
+      expect(result).toEqual(updatedUser);
+      expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
+      expect(usersRepository.save).toHaveBeenCalledWith(updatedUser);
+    });
+
+    it('should update user password', async () => {
+      const updateUserDtoMock = {
+        oldPassword: 'old password',
+        newPassword: 'new password',
+      };
+
+      const updatedUser = {
+        ...mockUser,
+        passwordHash: mockHash.hash,
+        passwordSalt: mockHash.salt,
+      } as User;
+
+      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
+      jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
+      (hashValue as jest.Mock).mockResolvedValueOnce(mockHash);
+
+      const result = await usersService.updateUser(
+        mockUser.id,
+        updateUserDtoMock,
+      );
+
+      expect(result).toEqual(updatedUser);
+      expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
+      expect(usersRepository.save).toHaveBeenCalledWith(updatedUser);
+    });
+
+    it('should throw BadRequestException if provided old password is invalid', async () => {
+      const updateUserDtoMock = {
+        oldPassword: 'invalid password',
+        newPassword: 'new password',
+      };
+
+      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
+
+      await expect(
+        usersService.updateUser(mockUser.id, updateUserDtoMock),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw BadRequestException if provided email if duplicated', async () => {
+      const updateUserDtoMock = {
+        email: 'duplicate@gmail.com',
+      };
+
+      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      jest
+        .spyOn(usersService, 'findByEmail')
+        .mockResolvedValue({ ...mockUser, id: 'new-id' });
+
+      await expect(
+        usersService.updateUser(mockUser.id, updateUserDtoMock),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 

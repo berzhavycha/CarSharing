@@ -5,8 +5,10 @@ import { CarsController } from '@/controllers';
 import { Car } from '@/entities';
 import { CarsService } from '@/services';
 
+import { LocalFilesModule } from './local-files.module';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([Car])],
+  imports: [LocalFilesModule, TypeOrmModule.forFeature([Car])],
   controllers: [CarsController],
   providers: [CarsService],
   exports: [CarsService],

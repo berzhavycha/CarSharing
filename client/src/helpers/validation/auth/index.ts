@@ -1,1 +1,1 @@
-export * from './getUserSchema';
+export * from './get-user-schema';

@@ -4,8 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { OriginalCar } from '@/entities';
 import { OriginalCarsService } from '@/services';
 
+import { LocalFilesModule } from './local-files.module';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([OriginalCar])],
+  imports: [LocalFilesModule, TypeOrmModule.forFeature([OriginalCar])],
   providers: [OriginalCarsService],
   exports: [OriginalCarsService],
 })
