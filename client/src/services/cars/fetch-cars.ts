@@ -7,7 +7,9 @@ type ServiceReturn = {
   total: number;
 };
 
-export const fetchCars = async (queryCarsDto: QueryCarsDto): Promise<ServiceReturn> => {
-  const { data } = await axiosInstance.get(`${Env.API_BASE_URL}/cars`, { params: queryCarsDto });
+export const fetchCars = async (queryCarsDto: QueryCarsDto, isAvailable?: boolean): Promise<ServiceReturn> => {
+  const url = isAvailable ? `${Env.API_BASE_URL}/cars/available` : `${Env.API_BASE_URL}/cars`
+  
+  const { data } = await axiosInstance.get(url, { params: queryCarsDto });
   return { cars: data[0], total: data[1] };
 };
