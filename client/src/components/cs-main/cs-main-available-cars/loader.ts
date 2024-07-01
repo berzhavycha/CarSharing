@@ -1,8 +1,9 @@
-import { defer, LoaderFunctionArgs } from 'react-router-dom';
+import { defer, LoaderFunctionArgs, redirect } from 'react-router-dom';
 
-import { carsLoader } from '@/helpers';
-import { fetchCarsFilterOptions } from '@/services';
+import { CarStatus, extractPaginationParams } from '@/helpers';
+import { fetchCars, fetchCarsFilterOptions } from '@/services';
 import { Car, FilterOption } from '@/types';
+import { Env } from '@/core';
 
 export type AvailableCarsLoaderData = {
     carsData: {
@@ -15,8 +16,25 @@ export type AvailableCarsLoaderData = {
     }
 }
 
-export const availableCarsLoader = async (args: LoaderFunctionArgs): Promise<Response | ReturnType<typeof defer>> => {
-    const carsData = carsLoader(args.request, true)
+export const availableCarsLoader = (args: LoaderFunctionArgs): Response | ReturnType<typeof defer> => {
+    const url = new URL(args.request.url);
+    const { queryDto, defaultSearchParams } = extractPaginationParams(url, Env.ADMIN_CARS_PAGINATION_LIMIT);
+
+    const types = url.searchParams.getAll('types[]');
+    const capacities = url.searchParams.getAll('capacities[]');
+
+    const extendedQueryDto = {
+        ...queryDto,
+        ...(types.length > 0 && { types }),
+        ...(capacities.length > 0 && { capacities }),
+        status: CarStatus.AVAILABLE
+    }
+
+    if (defaultSearchParams) {
+        return redirect(`${url.pathname}?${defaultSearchParams}`);
+    }
+
+    const carsData = fetchCars(extendedQueryDto)
     const filterOptions = fetchCarsFilterOptions()
 
     return defer({

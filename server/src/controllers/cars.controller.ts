@@ -49,17 +49,9 @@ export class CarsController {
   }
 
   @Get()
-  @UseGuards(RoleGuard(Roles.ADMIN))
+  @UseGuards(JwtAuthGuard)
   async findAll(@Query() listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
     return this.carsService.findAll(listCarsDto);
-  }
-
-  @Get('/available')
-  @UseGuards(JwtAuthGuard)
-  async findAllAvailable(
-    @Query() listCarsDto: QueryCarsDto,
-  ): Promise<[Car[], number]> {
-    return this.carsService.findAllAvailable(listCarsDto);
   }
 
   @Get('filter-options')
