@@ -1,3 +1,3 @@
 export * from './use-search-params-with-defaults';
 export * from './use-pagination';
-export * from './useSignOut';
+export * from './use-sign-out';
