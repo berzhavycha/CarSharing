@@ -53,6 +53,7 @@ export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
       <CheckboxLabel key={option.label}>
         <HiddenCheckbox
           type="checkbox"
+          readOnly
           checked={searchParams
             .getAll(type)
             .includes(`${(option as CapacityOption).originalValue || option.label}`)}
