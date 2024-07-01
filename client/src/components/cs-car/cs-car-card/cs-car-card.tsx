@@ -10,17 +10,17 @@ type CarCardProps = {
   model: string;
   type: string;
   fuelCapacity: number;
-  transmission: string;
+  steering: string;
   capacity: number;
   pricePerHour: number;
   imageUrl: string;
 };
 
-export const CarCard: FC<CarCardProps> = ({
+export const CSCarCard: FC<CarCardProps> = ({
   model,
   type,
   fuelCapacity,
-  transmission,
+  steering,
   capacity,
   pricePerHour,
   imageUrl,
@@ -37,7 +37,7 @@ export const CarCard: FC<CarCardProps> = ({
       </CarImageWrapper>
       <Features>
         <CarFeature icon={<FaGasPump />} text={`${fuelCapacity}L`} />
-        <CarFeature icon={<FaCog />} text={transmission} />
+        <CarFeature icon={<FaCog />} text={steering} />
         <CarFeature icon={<FaUsers />} text={`${capacity} People`} />
       </Features>
       <Footer>

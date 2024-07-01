@@ -10,8 +10,9 @@ export const CSMainUserPage: FC = () => {
   return (
     <CSCommonContainer>
       <BannerWrappers>
-        <CSMainPageBanner title='The Best Platform for Car Sharing' backgroundImage={BannerImage} description='Ease of doing a car rental safely and reliably. Of course at a low price.' carImage={DefaultCar} buttonType='light'/>
+        <CSMainPageBanner title='The Best Platform for Car Sharing' backgroundImage={BannerImage} description='Ease of doing a car rental safely and reliably. Of course at a low price.' carImage={DefaultCar} buttonType='light' />
         <CSMainPageBanner title='The Best Platform for Car Sharing' backgroundImage={BannerImage} description='Ease of doing a car rental safely and reliably. Of course at a low price.' carImage={DefaultCar} buttonType='main' />
+        {/* <CSInitialCarList /> */}
       </BannerWrappers>
     </CSCommonContainer>
   );
