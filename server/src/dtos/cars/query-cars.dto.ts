@@ -16,4 +16,8 @@ export class QueryCarsDto extends PaginationDto {
   @IsArray()
   @IsString({ each: true })
   capacities?: string[];
+
+  @IsOptional()
+  @IsString()
+  status?: string;
 }

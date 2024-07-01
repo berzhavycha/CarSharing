@@ -103,7 +103,7 @@ export class CarsService {
   }
 
   async findAll(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
-    const { search, page, limit, order, sort, types, capacities } = listCarsDto;
+    const { search, page, limit, order, sort, types, capacities, status } = listCarsDto;
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
@@ -117,37 +117,8 @@ export class CarsService {
       queryBuilder.andWhere('car.capacity IN (:...capacities)', { capacities });
     }
 
-    applySearchAndPagination(queryBuilder, {
-      search,
-      searchColumn: CAR_DEFAULT_SEARCH_COLUMN,
-      page: page || DEFAULT_PAGINATION_PAGE,
-      limit: limit || DEFAULT_PAGINATION_LIMIT,
-      order: order || DEFAULT_ORDER,
-      sort: sort || CAR_DEFAULT_ORDER_COLUMN,
-      entityAlias: 'car',
-    });
-
-    return queryBuilder.getManyAndCount();
-  }
-
-  async findAllAvailable(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
-    const { search, page, limit, order, sort, types, capacities } = listCarsDto;
-
-    console.log(listCarsDto)
-    const queryBuilder = this.carsRepository.createQueryBuilder('car');
-
-    queryBuilder.where('car.status = :status', {
-      status: CarStatus.AVAILABLE,
-    });
-
-    queryBuilder.leftJoinAndSelect('car.pictures', 'pictures');
-
-    if (types && types.length > 0) {
-      queryBuilder.andWhere('car.type IN (:...types)', { types });
-    }
-
-    if (capacities && capacities.length > 0) {
-      queryBuilder.andWhere('car.capacity IN (:...capacities)', { capacities });
+    if (status) {
+      queryBuilder.andWhere('car.status = :status', { status });
     }
 
     applySearchAndPagination(queryBuilder, {
