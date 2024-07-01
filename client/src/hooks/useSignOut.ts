@@ -15,7 +15,7 @@ export const useSignOut = (): HookReturn => {
 
   const onSignOut = async (): Promise<void> => {
     await signOut();
-    navigate('/');
+    navigate('/sign-in');
   };
 
   return {
