@@ -133,6 +133,7 @@ export class CarsService {
   async findAllAvailable(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
     const { search, page, limit, order, sort, types, capacities } = listCarsDto;
 
+    console.log(listCarsDto)
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
     queryBuilder.where('car.status = :status', {

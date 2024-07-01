@@ -2,6 +2,7 @@ import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { AvailableCarsLoaderData } from './loader';
 import { FilterOption } from '@/types';
+import { useSearchParamsWithDefaults } from '@/hooks';
 
 
 type Props = {
@@ -10,13 +11,17 @@ type Props = {
 
 export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
   const [maxPrice, setMaxPrice] = useState<number>(100);
+  const { setParams } = useSearchParamsWithDefaults()
 
   const typeOptions = data.types
   const capacityOptions = data.capacities.map(item => ({ ...item, label: `${item.label} People` }))
 
-  const renderCheckboxes = (options: FilterOption<string | number>[]): JSX.Element[] => {
+  const onType = (label: string): void => setParams({ 'types[]': label })
+  const onCapacity = (label: string): void => setParams({ 'capacities[]': label })
+
+  const renderCheckboxes = (options: FilterOption<string | number>[], onCheck: (label: string) => void): JSX.Element[] => {
     return options.map((option) => (
-      <CheckboxLabel key={option.label}>
+      <CheckboxLabel key={option.label} onClick={() => onCheck(`${option.label}`)}>
         <HiddenCheckbox type="checkbox" />
         <CustomCheckbox />
         {option.label}
@@ -29,12 +34,12 @@ export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
     <SidebarContainer>
       <SectionTitle>TYPE</SectionTitle>
       <CheckBoxesWrapper>
-        {renderCheckboxes(typeOptions)}
+        {renderCheckboxes(typeOptions, onType)}
       </CheckBoxesWrapper>
 
       <SectionTitle>CAPACITY</SectionTitle>
       <CheckBoxesWrapper>
-        {renderCheckboxes(capacityOptions)}
+        {renderCheckboxes(capacityOptions, onCapacity)}
       </CheckBoxesWrapper>
 
       <SectionTitle>PRICE</SectionTitle>

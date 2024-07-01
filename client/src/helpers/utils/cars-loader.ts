@@ -17,8 +17,8 @@ export const carsLoader = async (
     const url = new URL(request.url);
     const { queryDto, defaultSearchParams } = extractPaginationParams(url, Env.ADMIN_CARS_PAGINATION_LIMIT);
 
-    const types = url.searchParams.getAll('types');
-    const capacities = url.searchParams.getAll('capacities');
+    const types = url.searchParams.getAll('types[]');
+    const capacities = url.searchParams.getAll('capacities[]');
 
     const extendedQueryDto = {
         ...queryDto,
