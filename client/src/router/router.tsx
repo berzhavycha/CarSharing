@@ -11,7 +11,7 @@ import {
   transactionsLoader,
 } from '@/components';
 import { isAdmin, isRegularUser, ONLY_ADMIN_PAGE_ERROR, ONLY_USER_PAGE_ERROR } from '@/helpers';
-import { CSDashboardSidebar, CSHeaderLayout, CSProtectedRoute } from '@/layouts';
+import { CSDashboardSidebar, CSMainLayout, CSProtectedRoute } from '@/layouts';
 import { CSMainUserPage, CSSignInPage, CSSignUpPage, initialCarsLoader } from '@/pages';
 import { addNewCar } from '@/services';
 
@@ -19,7 +19,7 @@ export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route element={<CSProtectedRoute isAllowed={isRegularUser} errorMessage={ONLY_USER_PAGE_ERROR} />}>
-        <Route path="/" element={<CSHeaderLayout />}>
+        <Route path="/" element={<CSMainLayout />}>
           <Route index element={<CSMainUserPage />} loader={initialCarsLoader} />
         </Route>
       </Route>
