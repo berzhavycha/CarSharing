@@ -1,6 +1,6 @@
 import { FieldErrorsState } from '@/types/error';
 
-import { UNEXPECTED_ERROR_MESSAGE } from '../constants';
+import { UNEXPECTED_ERROR_MESSAGE } from '../../constants';
 
 const defaultFieldErrorsState = <T extends object>(): FieldErrorsState<T> => {
   const state: FieldErrorsState<T> = {
