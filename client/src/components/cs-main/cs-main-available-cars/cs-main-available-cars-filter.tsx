@@ -9,19 +9,25 @@ type Props = {
   data: AvailableCarsLoaderData['filterOptions']
 }
 
+type CapacityOption = FilterOption<string | number> & { originalValue: string | number };
+
 export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
   const [maxPrice, setMaxPrice] = useState<number>(100);
   const { setParams } = useSearchParamsWithDefaults()
 
   const typeOptions = data.types
-  const capacityOptions = data.capacities.map(item => ({ ...item, label: `${item.label} People` }))
+  const capacityOptions = data.capacities.map(item => ({
+    ...item,
+    label: `${item.label} People`,
+    originalValue: item.label
+  }));
 
   const onType = (label: string): void => setParams({ 'types[]': label, page: '1' })
   const onCapacity = (label: string): void => setParams({ 'capacities[]': label, page: '1' })
 
   const renderCheckboxes = (options: FilterOption<string | number>[], onCheck: (label: string) => void): JSX.Element[] => {
     return options.map((option) => (
-      <CheckboxLabel key={option.label} onClick={() => onCheck(`${option.label}`)}>
+      <CheckboxLabel key={option.label} onClick={() => onCheck(`${(option as CapacityOption).originalValue || option.label}`)}>
         <HiddenCheckbox type="checkbox" />
         <CustomCheckbox />
         {option.label}
@@ -58,7 +64,7 @@ export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
 };
 
 const SidebarContainer = styled.div`
-  min-width: 24%;
+  flex: 0 0 24%;
   padding: 35px;
   background-color: white;
   min-height: 100%;

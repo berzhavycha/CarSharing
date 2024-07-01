@@ -38,4 +38,5 @@ export const CSMainAvailableCars: FC = () => {
 const AvailableCarsWrapper = styled.div`
   display: flex;
   gap: 40px;
+  min-height: 74vh;
 `
