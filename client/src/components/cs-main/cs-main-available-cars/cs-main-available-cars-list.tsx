@@ -35,7 +35,8 @@ export const CSMainAvailableCarsList: FC<Props> = ({ data }) => {
 
 const CarsWrapper = styled.div`
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 40px;
-  margin: 40px 0;
+  margin: 40px 8% 40px 0;
 `

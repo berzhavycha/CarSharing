@@ -18,10 +18,7 @@ export const CSMainAvailableCars: FC = () => {
                     resolve={data.filterOptions}
                     errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
                 >
-                    {(resolvedData) => {
-                        console.log(resolvedData)
-                        return <CSMainAvailableCarsFilter data={resolvedData} />
-                    }}
+                    {(resolvedData) => <CSMainAvailableCarsFilter data={resolvedData} />}
                 </Await>
             </Suspense>
 
