@@ -44,7 +44,6 @@ export const CSCommonInputField = forwardRef<HTMLInputElement, InputProps>(
     );
   },
 );
-CSCommonInputField.displayName = 'CSCommonInputField';
 
 const TogglePasswordButton = styled.button`
   background: none;

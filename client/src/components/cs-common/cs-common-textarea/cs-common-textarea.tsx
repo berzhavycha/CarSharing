@@ -28,7 +28,6 @@ export const CSCommonTextArea = forwardRef<HTMLTextAreaElement, TextAreasProps>(
     );
   },
 );
-CSCommonTextArea.displayName = 'CSCommonTextArea';
 
 const TextGroup = styled.div`
   display: flex;
