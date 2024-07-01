@@ -1,7 +1,12 @@
 import { axiosInstance } from '@/api';
 import { ServiceUserResponse } from '@/app/stores';
 import { Env } from '@/core';
-import { createFormData, errorHandler, transformUserResponse, updateUserFieldMappings } from '@/helpers';
+import {
+  createFormData,
+  errorHandler,
+  transformUserResponse,
+  updateUserFieldMappings,
+} from '@/helpers';
 import { UpdateUserDto } from '@/types';
 
 export const updateUser = async (
@@ -9,7 +14,7 @@ export const updateUser = async (
   userDto: UpdateUserDto,
 ): Promise<ServiceUserResponse<UpdateUserDto>> => {
   try {
-    const formData = createFormData(userDto)
+    const formData = createFormData(userDto);
 
     if (userDto.picture) {
       formData.append('picture', userDto.picture as Blob);

@@ -9,7 +9,8 @@ type Props = {
 export const CSCommonPrice: FC<Props> = ({ amount, metric }) => {
   return (
     <PriceWrapper>
-      ${amount}<Metric> / {metric}</Metric>
+      ${amount}
+      <Metric> / {metric}</Metric>
     </PriceWrapper>
   );
 };

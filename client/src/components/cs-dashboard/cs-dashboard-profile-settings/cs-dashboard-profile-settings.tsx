@@ -28,7 +28,7 @@ export const CSDashboardProfileSettings: FC = observer(() => {
     firstName: user?.firstName,
     lastName: user?.lastName,
     email: user?.email,
-    picture: null
+    picture: null,
   };
 
   const handleCloseModal = (): void => setIsUpdateSuccessful(false);

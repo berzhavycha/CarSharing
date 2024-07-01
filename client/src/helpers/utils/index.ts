@@ -8,7 +8,7 @@ export * from './string-to-number';
 export * from './get-file-from-url';
 export * from './format-date';
 export * from './convert-to-title-case';
-export * from './create-form-data'
-export * from './extract-pagination-params'
-export * from './is-regular-user'
-export * from './extract-bracket-content'
+export * from './create-form-data';
+export * from './extract-pagination-params';
+export * from './is-regular-user';
+export * from './extract-bracket-content';

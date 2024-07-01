@@ -1,15 +1,18 @@
 import { FC } from 'react';
+import { FaDollarSign, FaSignOutAlt } from 'react-icons/fa';
 import { FaGear } from 'react-icons/fa6';
 import styled from 'styled-components';
 
-import DefaultImage from '../../../public/avatar.webp'
 import { useStore } from '@/context';
 import { useSignOut } from '@/hooks';
-import { FaDollarSign, FaSignOutAlt } from 'react-icons/fa';
+
+import DefaultImage from '../../../public/avatar.webp';
 
 export const CSHeaderLayoutOptions: FC = () => {
-  const { currentUserStore: { user } } = useStore()
-  const { onSignOut } = useSignOut()
+  const {
+    currentUserStore: { user },
+  } = useStore();
+  const { onSignOut } = useSignOut();
 
   return (
     <IconGroup>
@@ -23,7 +26,9 @@ export const CSHeaderLayoutOptions: FC = () => {
         <UserAvatar src={user?.avatarId ?? DefaultImage} alt="User Avatar" />
         {user && (
           <UserDetails>
-            <p>{user?.firstName} {user?.lastName}</p>
+            <p>
+              {user?.firstName} {user?.lastName}
+            </p>
             <Balance>Balance: ${user?.balance}</Balance>
           </UserDetails>
         )}
@@ -36,7 +41,7 @@ export const CSHeaderLayoutOptions: FC = () => {
 };
 
 const Balance = styled.h4`
-    font-size: 14px;
+  font-size: 14px;
 `;
 
 const IconGroup = styled.div`

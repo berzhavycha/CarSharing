@@ -14,7 +14,10 @@ export const transactionsLoader = async ({
   request,
 }: LoaderFunctionArgs): Promise<Response | ReturnType<typeof defer>> => {
   const url = new URL(request.url);
-  const { queryDto, defaultSearchParams } = extractPaginationParams(url, Env.ADMIN_TRANSACTIONS_PAGINATION_LIMIT);
+  const { queryDto, defaultSearchParams } = extractPaginationParams(
+    url,
+    Env.ADMIN_TRANSACTIONS_PAGINATION_LIMIT,
+  );
 
   if (defaultSearchParams) {
     return redirect(`${url.pathname}?${defaultSearchParams}`);

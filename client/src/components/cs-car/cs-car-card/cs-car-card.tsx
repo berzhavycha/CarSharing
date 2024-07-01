@@ -3,9 +3,9 @@ import { FaCog, FaGasPump, FaUsers } from 'react-icons/fa';
 import styled from 'styled-components';
 
 import { CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
+import { extractBracketContent } from '@/helpers';
 
 import { CarFeature } from './cs-car-feature';
-import { extractBracketContent } from '@/helpers';
 
 type CarCardProps = {
   model: string;
