@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
 
 import { CarFeature } from '../cs-car-feature';
+import { extractBracketContent } from '@/helpers';
 
 type CarCardProps = {
   model: string;
@@ -37,11 +38,11 @@ export const CSCarCard: FC<CarCardProps> = ({
       </CarImageWrapper>
       <Features>
         <CarFeature icon={<FaGasPump />} text={`${fuelCapacity}L`} />
-        <CarFeature icon={<FaCog />} text={steering} />
+        <CarFeature icon={<FaCog />} text={extractBracketContent(steering)} />
         <CarFeature icon={<FaUsers />} text={`${capacity} People`} />
       </Features>
       <Footer>
-        <CSCommonPrice amount={pricePerHour} metric="hours" />
+        <CSCommonPrice amount={pricePerHour} metric="hour" />
         <CSCommonPrimaryButton content="Rent Now" onClick={() => console.log('rent')} />
       </Footer>
     </CardWrapper>
@@ -50,6 +51,7 @@ export const CSCarCard: FC<CarCardProps> = ({
 
 const CardWrapper = styled.div`
   width: 300px;
+  height: auto;
   background-color: white;
   border-radius: 10px;
   padding: 20px;
@@ -77,7 +79,7 @@ const Type = styled.p`
 const CarImageWrapper = styled.div`
   position: relative;
   padding: 30px 0;
-  margin-bottom: 15px;
+  height: 50%;
 `;
 
 const ShadowImage = styled.img`
@@ -91,7 +93,6 @@ const ShadowImage = styled.img`
 `;
 
 const CarImage = styled.img`
-  position: relative;
   width: 100%;
   height: auto;
   z-index: 1;
@@ -100,7 +101,7 @@ const CarImage = styled.img`
 const Features = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 `;
 
 const Footer = styled.div`

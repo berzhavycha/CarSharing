@@ -11,3 +11,4 @@ export * from './convert-to-title-case';
 export * from './create-form-data'
 export * from './extract-pagination-params'
 export * from './is-regular-user'
+export * from './extract-bracket-content'

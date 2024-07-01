@@ -3,13 +3,13 @@ import styled from 'styled-components';
 
 type Props = {
   amount: number;
-  metric: 'days' | 'hours';
+  metric: 'day' | 'hour';
 };
 
 export const CSCommonPrice: FC<Props> = ({ amount, metric }) => {
   return (
     <PriceWrapper>
-      ${amount}.00<Metric> / {metric}</Metric>
+      ${amount}<Metric> / {metric}</Metric>
     </PriceWrapper>
   );
 };
