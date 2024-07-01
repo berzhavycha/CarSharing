@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { UsersController } from '@/controllers';
@@ -6,7 +7,17 @@ import { User } from '@/entities';
 import { TransactionType } from '@/helpers';
 import { UsersService } from '@/services';
 
-import { mockUser, mockUsersService } from '../mocks';
+import {
+  mockLocalFile,
+  mockPicture,
+  mockUser,
+  mockUsersService,
+} from '../mocks';
+
+jest.mock('@nestjs/config');
+const mockConfigService = {
+  get: jest.fn(),
+};
 
 describe('UsersController', () => {
   let usersController: UsersController;
@@ -20,6 +31,7 @@ describe('UsersController', () => {
           provide: UsersService,
           useValue: mockUsersService,
         },
+        { provide: ConfigService, useValue: mockConfigService },
       ],
     }).compile();
 
@@ -36,6 +48,10 @@ describe('UsersController', () => {
   });
 
   describe('updateUser', () => {
+    beforeEach(() => {
+      jest.spyOn(mockConfigService, 'get').mockReturnValue('uploads');
+    });
+
     it('should update user details', async () => {
       const mockUserId = mockUser.id;
       const mockUpdateUserDto: UpdateUserDto = {
@@ -52,13 +68,38 @@ describe('UsersController', () => {
       const result = await usersController.updateUser(
         mockUserId,
         mockUpdateUserDto,
+        undefined,
       );
 
       expect(result).toBe(mockUpdatedUser);
       expect(usersService.updateUser).toHaveBeenCalledWith(
         mockUserId,
         mockUpdateUserDto,
+        null,
       );
+    });
+
+    it('should update user details with file upload', async () => {
+      const mockUserId = mockUser.id;
+      const mockUpdateUserDto: UpdateUserDto = {
+        firstName: 'new first name',
+      };
+
+      jest.spyOn(usersService, 'updateUser').mockResolvedValue({
+        ...mockUser,
+        ...mockUpdateUserDto,
+        avatarId: mockLocalFile.id,
+      });
+
+      const result = await usersController.updateUser(
+        mockUserId,
+        mockUpdateUserDto,
+        mockPicture,
+      );
+
+      expect(result).toBeDefined();
+      expect(result.firstName).toBe(mockUpdateUserDto.firstName);
+      expect(result.avatarId).toBe(mockUser.avatarId);
     });
   });
 

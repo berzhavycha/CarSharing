@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -14,10 +15,12 @@ import { User } from '@/entities';
 import {
   authErrorMessages,
   DUPLICATE_EMAIL_ERROR_CODE,
+  hashValue,
   NODE_ENV,
   ONE_DAY_MILLISECONDS,
+  Roles,
 } from '@/helpers';
-import { AuthResult, HashResult, ITokens, JwtPayload } from '@/interfaces';
+import { AuthResult, ITokens, JwtPayload } from '@/interfaces';
 
 import { UsersService } from './users.service';
 
@@ -33,7 +36,19 @@ export class AuthService {
     try {
       const { password, ...safeUser } = registerUserDto;
 
-      const { salt, hash } = await this.hash(password);
+      const invitationCode = this.configService.get<string>(
+        'ADMIN_INVITATION_CODE',
+      );
+      if (
+        safeUser.role === Roles.ADMIN &&
+        invitationCode !== safeUser.invitationCode
+      ) {
+        throw new BadRequestException(
+          authErrorMessages.INVALID_INVITATION_CODE,
+        );
+      }
+
+      const { salt, hash } = await hashValue(password);
       const user = await this.usersService.createUser({
         userDetails: safeUser,
         passwordHash: hash,
@@ -86,11 +101,6 @@ export class AuthService {
     }
   }
 
-  async hash(value: string): Promise<HashResult> {
-    const salt = await bcrypt.genSalt();
-    return { salt, hash: await bcrypt.hash(value, salt) };
-  }
-
   async generateTokens(userId: string, email: string): Promise<ITokens> {
     const payload: JwtPayload = { sub: userId, email };
     const accessToken = await this.jwtService.signAsync(payload);
@@ -99,7 +109,7 @@ export class AuthService {
       expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_TIME'),
     });
 
-    const { salt, hash } = await this.hash(refreshToken);
+    const { salt, hash } = await hashValue(refreshToken);
     await this.usersService.updateUser(userId, {
       refreshTokenHash: hash,
       refreshTokenSalt: salt,

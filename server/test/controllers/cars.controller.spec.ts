@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CarsController } from '@/controllers';
@@ -7,6 +8,11 @@ import { CarStatus } from '@/helpers';
 import { CarsService } from '@/services';
 
 import { createCarDtoMock, mockCar, mockCarsService } from '../mocks';
+
+jest.mock('@nestjs/config');
+const mockConfigService = {
+  get: jest.fn(),
+};
 
 describe('CarsController', () => {
   let carsService: CarsService;
@@ -19,6 +25,10 @@ describe('CarsController', () => {
         {
           provide: CarsService,
           useValue: mockCarsService,
+        },
+        {
+          provide: ConfigService,
+          useValue: mockConfigService,
         },
       ],
     }).compile();
@@ -39,16 +49,18 @@ describe('CarsController', () => {
     it('should create a new car', async () => {
       const createdCar = {
         id: 'car-id',
+        ...mockCar,
         ...createCarDtoMock,
       } as Car;
 
+      jest.spyOn(mockConfigService, 'get').mockReturnValue('uploads');
       jest.spyOn(carsService, 'createCar').mockResolvedValue(createdCar);
 
       const dto = { ...createCarDtoMock, status: CarStatus.AVAILABLE };
-      const result = await carsController.create(dto);
+      const result = await carsController.create(dto, []);
 
       expect(result).toBe(createdCar);
-      expect(carsService.createCar).toHaveBeenCalledWith(dto);
+      expect(carsService.createCar).toHaveBeenCalledWith(dto, []);
     });
   });
 
@@ -63,11 +75,11 @@ describe('CarsController', () => {
       };
       const cars: Car[] = [{ ...mockCar }, { ...mockCar, id: '2nd-car-id' }];
 
-      jest.spyOn(carsService, 'findAll').mockResolvedValue(cars);
+      jest.spyOn(carsService, 'findAll').mockResolvedValue([cars, cars.length]);
 
       const result = await carsController.findAll(listCarsDto);
 
-      expect(result).toBe(cars);
+      expect(result).toEqual([cars, cars.length]);
       expect(carsService.findAll).toHaveBeenCalledWith(listCarsDto);
     });
   });
@@ -85,11 +97,11 @@ describe('CarsController', () => {
 
       jest
         .spyOn(carsService, 'findAllAvailable')
-        .mockResolvedValue(availableCars);
+        .mockResolvedValue([availableCars, availableCars.length]);
 
       const result = await carsController.findAllAvailable(listCarsDto);
 
-      expect(result).toBe(availableCars);
+      expect(result).toEqual([availableCars, availableCars.length]);
       expect(carsService.findAllAvailable).toHaveBeenCalledWith(listCarsDto);
     });
   });
@@ -121,6 +133,7 @@ describe('CarsController', () => {
         ...updateCarDtoMock,
       } as Car;
 
+      jest.spyOn(mockConfigService, 'get').mockReturnValue('uploads');
       jest.spyOn(carsService, 'updateCar').mockResolvedValue(updatedCar);
 
       const result = await carsController.update(carId, updateCarDtoMock);
@@ -129,6 +142,7 @@ describe('CarsController', () => {
       expect(carsService.updateCar).toHaveBeenCalledWith(
         carId,
         updateCarDtoMock,
+        [],
       );
     });
   });

@@ -83,6 +83,18 @@
       "@/api/*": [
         "src/api/*"
       ],
+      "@/app": [
+        "src/app"
+      ],
+      "@/app/*": [
+        "src/app/*"
+      ],
+      "@/services": [
+        "src/services"
+      ],
+      "@/services/*": [
+        "src/services/*"
+      ],
     },
   },
   "include": [

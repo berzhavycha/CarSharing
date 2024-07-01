@@ -1,4 +1,4 @@
-export type UserDto = {
+export type SignUpUserDto = {
   email: string;
   password: string;
   firstName: string;
@@ -6,12 +6,10 @@ export type UserDto = {
   lastName: string;
   confirmPassword?: string;
   invitationCode?: string;
+  pictureUrl?: string;
 };
 
-export type User = {
+export type SignInUserDto = {
   email: string;
-  firstName: string;
-  lastName: string;
-  balance: number;
-  role: string;
+  password: string;
 };

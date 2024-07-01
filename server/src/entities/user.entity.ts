@@ -3,8 +3,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -15,6 +17,7 @@ import {
   USER_BALANCE_SCALE,
 } from '@/helpers';
 
+import { LocalFile } from './local-file.entity';
 import { Rental } from './rental.entity';
 import { Role } from './role.entity';
 import { Transaction } from './transaction.entity';
@@ -23,6 +26,9 @@ import { Transaction } from './transaction.entity';
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column({ nullable: true })
+  avatarId?: string;
 
   @Column()
   firstName: string;
@@ -72,4 +78,13 @@ export class User {
 
   @OneToMany(() => Transaction, (transaction) => transaction.user)
   transactions: Transaction[];
+
+  @JoinColumn({ name: 'avatar_id' })
+  @OneToOne(() => LocalFile, {
+    nullable: true,
+    cascade: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  avatar?: LocalFile;
 }

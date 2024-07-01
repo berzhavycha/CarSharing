@@ -1,8 +1,10 @@
-import { CarDefaultCapacity } from '@/helpers';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
+import { CarDefaultCapacity } from '@/helpers';
+
 export class AddIndexesAndDescriptiveFieldToCar1718829206313
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   name = 'AddIndexesAndDescriptiveFieldToCar1718829206313';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

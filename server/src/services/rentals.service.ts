@@ -25,7 +25,7 @@ export class RentalsService {
     private originalCarsService: OriginalCarsService,
     private usersService: UsersService,
     private readonly entityManager: EntityManager,
-  ) { }
+  ) {}
 
   async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
     const existingActiveUserRental = await this.rentalsRepository.findOne({
@@ -47,7 +47,7 @@ export class RentalsService {
       throw new BadRequestException(rentalsErrorMessages.CAR_NOT_AVAILABLE);
     }
 
-    const rentalCost = car.pricePerHour * rentCarDto.days;
+    const rentalCost = car.pricePerHour * rentCarDto.hours;
     if (user.balance < rentalCost) {
       throw new BadRequestException(rentalsErrorMessages.INSUFFICIENT_BALANCE);
     }
@@ -67,7 +67,7 @@ export class RentalsService {
         user,
         originalCar,
         status: RentalStatus.ACTIVE,
-        requestedHours: rentCarDto.days,
+        requestedHours: rentCarDto.hours,
         rentalStart: new Date(),
       });
 
@@ -105,13 +105,13 @@ export class RentalsService {
       const returnDate = new Date();
       const hoursDifference = Math.ceil(
         (returnDate.getTime() - rental.rentalStart.getTime()) /
-        ONE_HOUR_MILLISECONDS,
+          ONE_HOUR_MILLISECONDS,
       );
 
-      console.log(hoursDifference)
       if (hoursDifference < rental.requestedHours) {
         const refundAmount =
-          rental.car.pricePerHour * Math.ceil(rental.requestedHours - hoursDifference);
+          rental.car.pricePerHour *
+          Math.ceil(rental.requestedHours - hoursDifference);
 
         await this.usersService.updateUserBalance(
           {
@@ -124,7 +124,8 @@ export class RentalsService {
         );
       } else if (hoursDifference > rental.requestedHours) {
         const fineAmount =
-          rental.car.pricePerHour * Math.ceil(hoursDifference - rental.requestedHours);
+          rental.car.pricePerHour *
+          Math.ceil(hoursDifference - rental.requestedHours);
 
         await this.usersService.updateUserBalance(
           {

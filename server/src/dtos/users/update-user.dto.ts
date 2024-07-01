@@ -1,11 +1,30 @@
-import { IsOptional, IsString } from 'class-validator';
+import { OmitType, PartialType } from '@nestjs/mapped-types';
+import { Transform } from 'class-transformer';
+import { IsArray, IsOptional, IsString, MinLength } from 'class-validator';
 
-export class UpdateUserDto {
+import { authErrorMessages, PASSWORD_MIN_LENGTH } from '@/helpers';
+
+import { RegisterUserDto } from '../auth';
+
+export class UpdateUserDto extends PartialType(
+  OmitType(RegisterUserDto, ['role', 'password']),
+) {
+  @IsOptional()
+  readonly picture?: Express.Multer.File;
+
   @IsOptional()
   @IsString()
-  readonly firstName?: string;
+  @MinLength(PASSWORD_MIN_LENGTH, { message: authErrorMessages.SMALL_PASSWORD })
+  oldPassword?: string;
 
   @IsOptional()
   @IsString()
-  readonly lastName?: string;
+  @MinLength(PASSWORD_MIN_LENGTH, { message: authErrorMessages.SMALL_PASSWORD })
+  newPassword?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @Transform(({ value }) => JSON.parse(value))
+  existingImagesIds?: string[];
 }

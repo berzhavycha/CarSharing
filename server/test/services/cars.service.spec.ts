@@ -11,23 +11,26 @@ import {
   CarStatus,
   RentalStatus,
 } from '@/helpers';
-import { CarsService } from '@/services';
+import { CarsService, LocalFilesService } from '@/services';
 
 import {
   createCarDtoMock,
   mockCar,
+  mockLocalFile,
+  mockLocalFilesService,
   mockQueryBuilder,
   mockRental,
   repositoryMock,
 } from '../mocks';
 
-jest.mock('@/helpers/utils/applySearchAndPagination', () => ({
+jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
 }));
 
 describe('CarsService', () => {
   let carsService: CarsService;
   let carsRepository: Repository<Car>;
+  let localFilesService: LocalFilesService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -37,11 +40,16 @@ describe('CarsService', () => {
           provide: getRepositoryToken(Car),
           useValue: repositoryMock,
         },
+        {
+          provide: LocalFilesService,
+          useValue: mockLocalFilesService,
+        },
       ],
     }).compile();
 
     carsService = module.get<CarsService>(CarsService);
     carsRepository = module.get<Repository<Car>>(getRepositoryToken(Car));
+    localFilesService = module.get<LocalFilesService>(LocalFilesService);
   });
 
   afterEach(() => {
@@ -56,6 +64,7 @@ describe('CarsService', () => {
     it('should create a car', async () => {
       const createdCar = {
         id: 'car-id',
+        ...mockCar,
         ...createCarDtoMock,
       } as Car;
 
@@ -64,6 +73,7 @@ describe('CarsService', () => {
 
       const result = await carsService.createCar(
         createCarDtoMock as CreateCarDto,
+        [],
       );
 
       expect(result).toBe(createdCar);
@@ -86,7 +96,11 @@ describe('CarsService', () => {
       jest.spyOn(carsService, 'findById').mockResolvedValue(mockCar);
       jest.spyOn(carsRepository, 'save').mockResolvedValue(updatedCar);
 
-      const result = await carsService.updateCar(mockCar.id, updateCarDtoMock);
+      const result = await carsService.updateCar(
+        mockCar.id,
+        updateCarDtoMock,
+        [],
+      );
 
       expect(result).toEqual(updatedCar);
       expect(carsService.findById).toHaveBeenCalledWith(mockCar.id);
@@ -107,11 +121,96 @@ describe('CarsService', () => {
         );
 
       await expect(
-        carsService.updateCar(nonExistingId, {} as UpdateCarDto),
+        carsService.updateCar(nonExistingId, {} as UpdateCarDto, []),
       ).rejects.toThrow(NotFoundException);
 
       expect(carsService.findById).toHaveBeenCalledWith(nonExistingId);
       expect(carsRepository.save).not.toHaveBeenCalled();
+    });
+
+    it('should delete images not included in existingImagesIds', async () => {
+      const updateCarDtoMock = {
+        existingImagesIds: ['existing-image-id-1'],
+      };
+
+      const imagesToDelete = mockCar.pictures.filter(
+        (picture) => !updateCarDtoMock.existingImagesIds.includes(picture.id),
+      );
+
+      jest.spyOn(carsService, 'findById').mockResolvedValue(mockCar);
+      jest.spyOn(carsRepository, 'save').mockResolvedValue(mockCar);
+      jest.spyOn(localFilesService, 'removeFile').mockResolvedValue();
+
+      await carsService.updateCar(mockCar.id, updateCarDtoMock, []);
+
+      expect(localFilesService.removeFile).toHaveBeenCalledTimes(
+        imagesToDelete.length,
+      );
+    });
+
+    it('should add new images to the car', async () => {
+      const updateCarDtoMock = {
+        existingImagesIds: [mockLocalFile.id],
+      };
+
+      const newImages = [
+        {
+          filename: 'new-image.jpg',
+          mimetype: 'image/jpeg',
+          path: '/path/to/new-image.jpg',
+        },
+      ];
+
+      const updateCar = { ...mockCar, pictures: [mockLocalFile] };
+      jest.spyOn(carsService, 'findById').mockResolvedValue({ ...updateCar });
+      jest
+        .spyOn(carsRepository, 'save')
+        .mockResolvedValue({
+          ...updateCar,
+          pictures: [mockLocalFile, mockLocalFile],
+        });
+      jest
+        .spyOn(localFilesService, 'saveLocalFileData')
+        .mockResolvedValue(mockLocalFile);
+
+      const result = await carsService.updateCar(
+        updateCar.id,
+        updateCarDtoMock,
+        newImages,
+      );
+
+      expect(result.pictures).toHaveLength(updateCar.pictures.length + 1);
+    });
+
+    it('should update other fields except pictures and existingImagesIds', async () => {
+      const updateCarDtoMock = {
+        status: CarStatus.BOOKED,
+        model: 'Updated Model',
+        description: 'Updated Description',
+        existingImagesIds: ['existing-image-id-1'],
+      };
+
+      const updatedCar = {
+        ...mockCar,
+        ...updateCarDtoMock,
+      } as Car;
+
+      jest.spyOn(carsService, 'findById').mockResolvedValue(mockCar);
+      jest.spyOn(carsRepository, 'save').mockResolvedValue(updatedCar);
+
+      const result = await carsService.updateCar(
+        mockCar.id,
+        updateCarDtoMock,
+        [],
+      );
+
+      expect(result.status).toEqual(updateCarDtoMock.status);
+      expect(result.model).toEqual(updateCarDtoMock.model);
+      expect(result.description).toEqual(updateCarDtoMock.description);
+      expect(result.pictures).toEqual(expect.arrayContaining(mockCar.pictures));
+      expect(result.pictures).not.toContain(
+        expect.objectContaining({ id: 'existing-image-id-1' }),
+      );
     });
   });
 
@@ -119,6 +218,7 @@ describe('CarsService', () => {
     it('should remove a car when no active rentals exist', async () => {
       const carWithNoActiveRentals = {
         ...mockCar,
+        status: CarStatus.AVAILABLE,
         rentals: [{ ...mockRental, status: RentalStatus.CLOSED }],
       };
 
@@ -188,7 +288,7 @@ describe('CarsService', () => {
       expect(result).toEqual(mockCar);
       expect(carsRepository.findOne).toHaveBeenCalledWith({
         where: { id: mockCar.id },
-        relations: ['rentals'],
+        relations: ['rentals', 'pictures'],
       });
     });
 
@@ -203,7 +303,7 @@ describe('CarsService', () => {
 
       expect(carsRepository.findOne).toHaveBeenCalledWith({
         where: { id: nonExistingId },
-        relations: ['rentals'],
+        relations: ['rentals', 'pictures'],
       });
     });
   });
@@ -224,7 +324,13 @@ describe('CarsService', () => {
           mockQueryBuilder as unknown as SelectQueryBuilder<Car>,
         );
 
-      (applySearchAndPagination as jest.Mock).mockReturnValue(mockQueryBuilder);
+      (applySearchAndPagination as jest.Mock).mockReturnValue(
+        mockQueryBuilder as unknown as SelectQueryBuilder<Car>,
+      );
+
+      jest
+        .spyOn(mockQueryBuilder, 'getManyAndCount')
+        .mockResolvedValue([[mockCar], 0]);
 
       const result = await carsService.findAll(listCarsDto);
 
@@ -240,8 +346,8 @@ describe('CarsService', () => {
           entityAlias: 'car',
         }),
       );
-      expect(mockQueryBuilder.getMany).toHaveBeenCalled();
-      expect(result).toEqual([]);
+      expect(mockQueryBuilder.getManyAndCount).toHaveBeenCalled();
+      expect(result).toEqual([[mockCar], 0]);
     });
   });
 
@@ -263,6 +369,10 @@ describe('CarsService', () => {
 
       (applySearchAndPagination as jest.Mock).mockReturnValue(mockQueryBuilder);
 
+      jest
+        .spyOn(mockQueryBuilder, 'getManyAndCount')
+        .mockResolvedValue([[{ ...mockCar, status: CarStatus.AVAILABLE }], 1]);
+
       const result = await carsService.findAllAvailable(listCarsDto);
 
       expect(carsRepository.createQueryBuilder).toHaveBeenCalledWith('car');
@@ -283,8 +393,11 @@ describe('CarsService', () => {
           entityAlias: 'car',
         }),
       );
-      expect(mockQueryBuilder.getMany).toHaveBeenCalled();
-      expect(result).toEqual([]);
+      expect(mockQueryBuilder.getManyAndCount).toHaveBeenCalled();
+      expect(result).toEqual([
+        [{ ...mockCar, status: CarStatus.AVAILABLE }],
+        1,
+      ]);
     });
   });
 });

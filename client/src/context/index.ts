@@ -1,1 +1,1 @@
-export * from './CurrentUser';
+export * from './cs-store-provider';

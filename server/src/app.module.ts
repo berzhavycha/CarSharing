@@ -5,6 +5,7 @@ import {
   CarsModule,
   ConfigModule,
   DatabaseModule,
+  LocalFilesModule,
   OriginalCarsModule,
   RentalsModule,
   TransactionsModule,
@@ -21,6 +22,7 @@ import {
     RentalsModule,
     TransactionsModule,
     AuthModule,
+    LocalFilesModule,
   ],
 })
 export class AppModule {}

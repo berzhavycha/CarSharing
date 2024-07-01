@@ -84,7 +84,7 @@ describe('RentalsService', () => {
     it('should throw BadRequestException if user already has an active rental', async () => {
       const rentCarDto: RentCarDto = {
         carId: 'car-id-1',
-        days: 2,
+        hours: 2,
         pickUpLocation: 'London',
         dropOffLocation: 'London',
       };
@@ -109,7 +109,7 @@ describe('RentalsService', () => {
     it('should throw BadRequestException if the car is not available', async () => {
       const rentCarDto: RentCarDto = {
         carId: 'car-id-1',
-        days: 2,
+        hours: 2,
         pickUpLocation: 'London',
         dropOffLocation: 'London',
       };
@@ -127,7 +127,7 @@ describe('RentalsService', () => {
     it('should throw BadRequestException if the user has insufficient balance', async () => {
       const rentCarDto: RentCarDto = {
         carId: 'car-id-1',
-        days: 2,
+        hours: 2,
         pickUpLocation: 'London',
         dropOffLocation: 'London',
       };
@@ -152,7 +152,7 @@ describe('RentalsService', () => {
     it('should throw BadRequestException if the car is not available', async () => {
       const rentCarDto: RentCarDto = {
         carId: 'car-id-1',
-        days: 2,
+        hours: 2,
         pickUpLocation: 'London',
         dropOffLocation: 'London',
       };
@@ -177,7 +177,7 @@ describe('RentalsService', () => {
     it('should create a rental successfully', async () => {
       const rentCarDto: RentCarDto = {
         carId: 'car-id-1',
-        days: 2,
+        hours: 2,
         pickUpLocation: 'London',
         dropOffLocation: 'London',
       };
@@ -279,7 +279,7 @@ describe('RentalsService', () => {
     it('should return the car and provide a refund if returned within requested hours', async () => {
       const rentalId = 'existing-id';
       const user = { id: 'user-id-1' } as User;
-      const RENT_ACTUAL_TIME_HOURS = 1.9
+      const RENT_ACTUAL_TIME_HOURS = 1.9;
       const rentalStart = new Date(
         mockNow - RENT_ACTUAL_TIME_HOURS * ONE_HOUR_MILLISECONDS,
       );
@@ -323,7 +323,7 @@ describe('RentalsService', () => {
     it('should return the car and apply a penalty if returned after requested hours', async () => {
       const rentalId = 'existing-id';
       const user = { id: 'user-id-1' } as User;
-      const RENT_ACTUAL_TIME_HOURS = 2.1
+      const RENT_ACTUAL_TIME_HOURS = 2.1;
       const rentalStart = new Date(
         mockNow - RENT_ACTUAL_TIME_HOURS * ONE_HOUR_MILLISECONDS,
       );
@@ -367,8 +367,10 @@ describe('RentalsService', () => {
     it('should return the car with no refund or penalty if returned at exact requested hours', async () => {
       const rentalId = 'existing-id';
       const user: User = { id: 'user-id-1' } as User;
-      const REQUESTED_HOURS = 2
-      const rentalStart = new Date(mockNow - REQUESTED_HOURS * ONE_HOUR_MILLISECONDS);
+      const REQUESTED_HOURS = 2;
+      const rentalStart = new Date(
+        mockNow - REQUESTED_HOURS * ONE_HOUR_MILLISECONDS,
+      );
       const rental = {
         ...mockRental,
         rentalStart,

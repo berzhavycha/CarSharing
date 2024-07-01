@@ -5,3 +5,4 @@ export * from './original-cars.service';
 export * from './rentals.service';
 export * from './transactions.service';
 export * from './roles.service';
+export * from './local-files.service';
