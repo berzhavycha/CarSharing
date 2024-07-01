@@ -8,4 +8,8 @@ export type CarsLoaderData = {
   totalPages: number;
 };
 
-export const allCarsLoader = (args: LoaderFunctionArgs): Promise<Response | ReturnType<typeof defer>> => carsLoader(args.request, false)
+export const allCarsLoader = (args: LoaderFunctionArgs): ReturnType<typeof defer> => {
+  return defer({
+    data: carsLoader(args.request)
+  })
+}

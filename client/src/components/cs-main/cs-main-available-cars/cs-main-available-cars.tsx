@@ -1,18 +1,39 @@
 import styled from 'styled-components';
 import { CSMainAvailableCarsFilter } from './cs-main-available-cars-filter';
-import { FC } from 'react';
+import { FC, Suspense } from 'react';
 import { CSMainAvailableCarsList } from './cs-main-available-cars-list';
-import { useLoaderData } from 'react-router-dom';
+import { Await, useLoaderData } from 'react-router-dom';
 import { AvailableCarsLoaderData } from './loader';
+import { CSCommonSpinner, CSCommonError } from '@/components/cs-common';
+import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 
 
 export const CSMainAvailableCars: FC = () => {
-    const data = useLoaderData() as { data: AvailableCarsLoaderData }
+    const data = useLoaderData() as AvailableCarsLoaderData
 
     return (
         <AvailableCarsWrapper>
-            <CSMainAvailableCarsFilter />
-            <CSMainAvailableCarsList data={data} />
+            <Suspense fallback={<CSCommonSpinner />}>
+                <Await
+                    resolve={data.filterOptions}
+                    errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
+                >
+                    {(resolvedData) => {
+                        console.log(resolvedData)
+                        return <CSMainAvailableCarsFilter data={resolvedData} />
+                    }}
+                </Await>
+            </Suspense>
+
+            <Suspense fallback={<CSCommonSpinner />}>
+                <Await
+                    resolve={data.carsData}
+                    errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
+                >
+                    {(resolvedData) => <CSMainAvailableCarsList data={resolvedData} />}
+                </Await>
+            </Suspense>
+
         </AvailableCarsWrapper>
     );
 };

@@ -1,11 +1,26 @@
 import { defer, LoaderFunctionArgs } from 'react-router-dom';
 
 import { carsLoader } from '@/helpers';
-import { Car } from '@/types';
+import { fetchCarsFilterOptions } from '@/services';
+import { Car, FilterOption } from '@/types';
 
 export type AvailableCarsLoaderData = {
-    cars: Car[];
-    totalPages: number;
-};
+    carsData: {
+        cars: Car[],
+        total: number,
+    }
+    filterOptions: {
+        types: FilterOption<string>[],
+        capacities: FilterOption<number>[]
+    }
+}
 
-export const availableCarsLoader = (args: LoaderFunctionArgs): Promise<Response | ReturnType<typeof defer>> => carsLoader(args.request, true)
+export const availableCarsLoader = async (args: LoaderFunctionArgs): Promise<Response | ReturnType<typeof defer>> => {
+    const carsData = carsLoader(args.request, true)
+    const filterOptions = fetchCarsFilterOptions()
+
+    return defer({
+        carsData,
+        filterOptions,
+    })
+}
