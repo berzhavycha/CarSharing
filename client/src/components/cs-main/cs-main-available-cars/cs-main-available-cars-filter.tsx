@@ -16,8 +16,8 @@ export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
   const typeOptions = data.types
   const capacityOptions = data.capacities.map(item => ({ ...item, label: `${item.label} People` }))
 
-  const onType = (label: string): void => setParams({ 'types[]': label })
-  const onCapacity = (label: string): void => setParams({ 'capacities[]': label })
+  const onType = (label: string): void => setParams({ 'types[]': label, page: '1' })
+  const onCapacity = (label: string): void => setParams({ 'capacities[]': label, page: '1' })
 
   const renderCheckboxes = (options: FilterOption<string | number>[], onCheck: (label: string) => void): JSX.Element[] => {
     return options.map((option) => (
@@ -58,7 +58,7 @@ export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
 };
 
 const SidebarContainer = styled.div`
-  min-width: 350px;
+  min-width: 24%;
   padding: 35px;
   background-color: white;
   min-height: 100%;
