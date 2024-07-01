@@ -22,16 +22,14 @@ export const useProfileUpdate = (
 
   useEffect(() => {
     setExistingImagesIds(viewImagesIds);
-  }, [viewImagesIds, setExistingImagesIds]);
 
-  useEffect(() => {
     if (isSubmitted) {
       if (!updateErrors) {
         setIsUpdateSuccessful(true);
       }
       setIsSubmitted(false);
     }
-  }, [isSubmitted]);
+  }, [viewImagesIds, isSubmitted, updateErrors]);
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
     const userDtoWithoutEmptyPasswords = Object.fromEntries(
