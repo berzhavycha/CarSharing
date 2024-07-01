@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import DefaultImage from '../../../public/avatar.webp'
 import { useStore } from '@/context';
 import { useSignOut } from '@/hooks';
-import { FaSignOutAlt } from 'react-icons/fa';
+import { FaDollarSign, FaSignOutAlt } from 'react-icons/fa';
 
 export const CSHeaderLayoutOptions: FC = () => {
   const { currentUserStore: { user } } = useStore()
@@ -15,6 +15,9 @@ export const CSHeaderLayoutOptions: FC = () => {
     <IconGroup>
       <IconWrapper>
         <FaGear />
+      </IconWrapper>
+      <IconWrapper>
+        <FaDollarSign />
       </IconWrapper>
       <UserInfo>
         <UserAvatar src={user?.avatarId ?? DefaultImage} alt="User Avatar" />
