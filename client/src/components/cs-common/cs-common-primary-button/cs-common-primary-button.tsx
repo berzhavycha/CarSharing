@@ -5,18 +5,23 @@ type Props = {
   type?: 'button' | 'submit' | 'reset';
   onClick?: () => Promise<void> | void;
   content: string;
+  style?: 'main' | 'light'
 };
 
-export const CSCommonPrimaryButton: FC<Props> = ({ type, onClick, content }) => {
+export const CSCommonPrimaryButton: FC<Props> = ({ type, onClick, content, style = 'main' }) => {
   return (
-    <Button type={type} onClick={onClick}>
+    <Button type={type} onClick={onClick} $style={style}>
       {content}
     </Button>
   );
 };
 
-const Button = styled.button`
-  background-color: var(--main-blue);
+type ButtonProps = {
+  $style: string
+}
+
+const Button = styled.button<ButtonProps>`
+  background-color: ${(props): string => props.$style === 'main' ? '#3563e9' : '#6b90ff'};
   color: white;
   border: none;
   border-radius: 5px;
