@@ -3,11 +3,11 @@ import { Await, useLoaderData, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
+  CSCommonCarList,
   CSCommonContainer,
   CSCommonError,
   CSCommonPrimaryButton,
   CSCommonSpinner,
-  CSInitialCarList,
   CSMainPageBanner,
 } from '@/components';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
@@ -48,7 +48,7 @@ export const CSMainPage: FC = () => {
             errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
           >
             {(data) => {
-              return <CSInitialCarList cars={data.cars} />;
+              return <CSCommonCarList cars={data.cars} />;
             }}
           </Await>
         </Suspense>
