@@ -18,9 +18,9 @@ import {
   DEFAULT_PAGINATION_LIMIT,
   DEFAULT_PAGINATION_PAGE,
 } from '@/helpers';
+import { FilterOption } from '@/types';
 
 import { LocalFilesService } from './local-files.service';
-import { FilterOption } from '@/types';
 
 @Injectable()
 export class CarsService {
@@ -28,7 +28,7 @@ export class CarsService {
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
     private localFilesService: LocalFilesService,
-  ) { }
+  ) {}
 
   async createCar(
     createCarDto: CreateCarDto,
@@ -103,7 +103,8 @@ export class CarsService {
   }
 
   async findAll(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
-    const { search, page, limit, order, sort, types, capacities, status } = listCarsDto;
+    const { search, page, limit, order, sort, types, capacities, status } =
+      listCarsDto;
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
@@ -134,7 +135,10 @@ export class CarsService {
     return queryBuilder.getManyAndCount();
   }
 
-  async getFilterOptions(): Promise<{ types: FilterOption<string>[], capacities: FilterOption<number>[] }> {
+  async getFilterOptions(): Promise<{
+    types: FilterOption<string>[];
+    capacities: FilterOption<number>[];
+  }> {
     const types = await this.carsRepository
       .createQueryBuilder('car')
       .select('car.type', 'label')
