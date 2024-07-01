@@ -2,13 +2,15 @@ import { createBrowserRouter, createRoutesFromElements, Route } from 'react-rout
 
 import {
   carLoader,
-  carsLoader,
+  allCarsLoader,
   CSDashboardCarEditForm,
   CSDashboardCarForm,
   CSDashboardCarReport,
   CSDashboardProfileSettings,
   CSDashboardTransactions,
   transactionsLoader,
+  availableCarsLoader,
+  CSMainAvailableCars
 } from '@/components';
 import { isAdmin, isRegularUser, ONLY_ADMIN_PAGE_ERROR, ONLY_USER_PAGE_ERROR } from '@/helpers';
 import { CSDashboardSidebar, CSMainLayout, CSProtectedRoute } from '@/layouts';
@@ -21,6 +23,7 @@ export const router = createBrowserRouter(
       <Route element={<CSProtectedRoute isAllowed={isRegularUser} errorMessage={ONLY_USER_PAGE_ERROR} />}>
         <Route path="/" element={<CSMainLayout />}>
           <Route index element={<CSMainUserPage />} loader={initialCarsLoader} />
+          <Route path='available-cars' element={<CSMainAvailableCars />} loader={availableCarsLoader} />
         </Route>
       </Route>
       <Route
@@ -33,7 +36,7 @@ export const router = createBrowserRouter(
             element={<CSDashboardTransactions />}
             loader={transactionsLoader}
           />
-          <Route path="car-report" element={<CSDashboardCarReport />} loader={carsLoader} />
+          <Route path="car-report" element={<CSDashboardCarReport />} loader={allCarsLoader} />
           <Route path="add-car" element={<CSDashboardCarForm onFormSubmit={addNewCar} />} />
           <Route path="edit-car" element={<CSDashboardCarEditForm />} loader={carLoader} />
         </Route>
