@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { AvailableCarsLoaderData } from '@/pages';
 import { CSCommonCheckboxFilter, CSCommonRangeFilter } from '@/components/cs-common';
 import { MIN_PRICE, PRICE_ROUNDING_INTERVAL } from '@/helpers';
+import { CSMainAvailableCarsSort } from './cs-main-available-cars-sort';
 
 type Props = {
   data: AvailableCarsLoaderData['filterOptions'];
@@ -30,6 +31,7 @@ export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
         minParam='minPrice'
         maxParam='maxPrice'
       />
+      <CSMainAvailableCarsSort />
     </SidebarContainer>
   );
 };
@@ -41,3 +43,4 @@ const SidebarContainer = styled.div`
   min-height: 100%;
   margin-top: 5px;
 `;
+
