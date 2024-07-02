@@ -1,3 +1,5 @@
+import { PaymentDto } from "./payment";
+
 export type AuthenticatedUser = {
   id: string;
   email: string;
@@ -18,6 +20,6 @@ export type UpdateUserDto = Partial<{
   existingImagesIds: string[];
 }>;
 
-export type UpdateUserBalanceDto = {
+export type UpdateUserBalanceDto = PaymentDto & {
   amount: number;
 }

@@ -1,21 +1,21 @@
 import { CSCommonContainer, CSCommonErrorMessage, CSCommonForm, CSCommonPaymentForm } from "@/components/cs-common";
 import { useStore } from "@/context";
-import { paymentFormSchema } from "@/helpers";
-import { PaymentDto } from "@/types";
+import { updateUserBalanceSchema } from "@/helpers";
+import { UpdateUserBalanceDto } from "@/types";
 import { FC } from "react";
 import styled from "styled-components";
 
 export const CSMainUserTopUp: FC = () => {
     const { currentUserStore: { topUpErrors, topUp } } = useStore()
 
-    const onSubmit = async (topUpDto: PaymentDto): Promise<void> => {
-        await topUp({ amount: topUpDto.amount })
+    const onSubmit = async (topUpDto: UpdateUserBalanceDto): Promise<void> => {
+        await topUp(topUpDto)
     }
 
     return (
         <CSCommonContainer>
-            <CSCommonForm<PaymentDto>
-                validationSchema={paymentFormSchema}
+            <CSCommonForm<UpdateUserBalanceDto>
+                validationSchema={updateUserBalanceSchema}
                 onSubmit={onSubmit}
             >
                 <FormInfoWrapper>

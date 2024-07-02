@@ -3,13 +3,21 @@ import { PaymentDto, RentalDto } from "@/types";
 import { FC } from "react";
 import styled from "styled-components";
 import { CSMainRentalFormSummary } from "./cs-main-rental-form-summary";
+import { rentalSchema } from "@/helpers";
 
 export const CSMainRentalForm: FC = () => {
+    const onSubmit = async (rentalDto: RentalDto & PaymentDto): Promise<void> => {
+
+    }
+
     return (
         <CSCommonContainer>
             <RentalForm>
                 <FormWrapper>
-                    <CSCommonForm<RentalDto & PaymentDto>>
+                    <CSCommonForm<RentalDto & PaymentDto>
+                        validationSchema={rentalSchema}
+                        onSubmit={onSubmit}
+                    >
                         <FormInfoWrapper>
                             <SectionTitle>Rental Info</SectionTitle>
                             <SectionDescription>Please enter your rental info</SectionDescription>
@@ -46,7 +54,7 @@ const RentalForm = styled.div`
     width: 100%;
     display: flex;
     gap: 40px;
-    margin: 50px 0;
+    margin-top: 50px;
 `
 
 const FormWrapper = styled.div`
@@ -58,7 +66,7 @@ const FormInfoWrapper = styled.div`
     width: 100%;
     background-color: white;
     border-radius: 20px;
-    padding: 25px 25px 10px 25px;
+    padding: 35px 35px 10px 35px;
     margin-bottom: 20px;
     box-shadow: var(--default-box-shadow);
 `
@@ -79,12 +87,5 @@ const RentalFormBlocks = styled.div`
   display: grid;
   grid-column: span 3;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 0px 40px;
-`;
-
-const PaymentFormBlocks = styled.div`
-  display: grid;
-  grid-column: span 2;
-  grid-template-columns: 1fr 1fr;
   gap: 0px 40px;
 `;
