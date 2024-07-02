@@ -15,7 +15,6 @@ export const CSMainAvailableCarsCheckboxList: FC<Props> = ({ title, type, option
     const [searchParams] = useSearchParams();
     const { onFilter } = useSearchParamFilter()
 
-
     return (
         <>
             <SectionTitle>{title}</SectionTitle>

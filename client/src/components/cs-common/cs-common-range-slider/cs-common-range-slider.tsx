@@ -1,7 +1,7 @@
-import React from 'react';
+import { ChangeEvent, FC } from 'react';
 import styled from 'styled-components';
 
-interface RangeSliderProps {
+type Props = {
   min: number;
   max: number;
   step?: number;
@@ -10,7 +10,7 @@ interface RangeSliderProps {
   formatValue?: (value: number) => string;
 }
 
-export const CSCommonRangeSlider: React.FC<RangeSliderProps> = ({
+export const CSCommonRangeSlider: FC<Props> = ({
   min,
   max,
   step = 1,
@@ -19,7 +19,7 @@ export const CSCommonRangeSlider: React.FC<RangeSliderProps> = ({
   formatValue = (v): string => v.toString(),
 }) => {
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const newValue = Number(event.target.value);
     const [minValue, maxValue] = value;
     if (event.target.name === 'min') {
