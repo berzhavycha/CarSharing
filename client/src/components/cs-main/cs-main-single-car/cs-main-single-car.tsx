@@ -2,8 +2,7 @@ import { FC, Suspense } from 'react';
 import { Await, useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { CSCommonContainer, CSCommonError, CSCommonSpinner } from '@/components/cs-common';
-import { SlideShow } from '@/components/cs-common/cs-common-slides/cs-common-slides';
+import { CSCommonContainer, CSCommonError, CSCommonSlides, CSCommonSpinner } from '@/components/cs-common';
 import { Env } from '@/core';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { Car, LocalFile } from '@/types';
@@ -27,7 +26,7 @@ export const CSMainSingleCar: FC = () => {
               );
               return (
                 <>
-                  <SlideShow images={carImages} width="600px" height="270px" />
+                  <CSCommonSlides images={carImages} width="600px" height="270px" />
                   <CSMainSingleCarDetails car={car} />
                 </>
               );

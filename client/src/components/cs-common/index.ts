@@ -23,3 +23,5 @@ export * from './cs-common-checkbox-filter';
 export * from './cs-common-banner';
 export * from './cs-common-payment-form';
 export * from './cs-common-profile-settings';
+export * from './cs-common-slides'
+export * from './cs-common-car-card'
