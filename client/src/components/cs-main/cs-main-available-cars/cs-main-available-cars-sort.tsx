@@ -1,6 +1,6 @@
 import { CSCommonSelectField } from "@/components/cs-common";
 import { useSearchParamsWithDefaults } from "@/hooks";
-import { FC } from "react";
+import { ChangeEvent, FC } from "react";
 import styled from "styled-components";
 
 const sortingOptions = [
@@ -13,13 +13,14 @@ const sortingOptions = [
 export const CSMainAvailableCarsSort: FC = () => {
     const { setParams } = useSearchParamsWithDefaults();
 
-    const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+    const handleSortChange = (event: ChangeEvent<HTMLSelectElement>): void => {
         const selectedValue = event.target.value;
         const [sort, order] = selectedValue.split('_');
         const sortField = sort === 'price' ? 'pricePerHour' : sort;
 
         setParams({ sort: sortField, order: order.toUpperCase() });
     };
+
     return (
         <SortContainer>
             <SectionTitle>Sort By:</SectionTitle>
