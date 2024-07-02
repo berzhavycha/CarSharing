@@ -15,7 +15,7 @@ export const CSMainAvailableCarsList: FC<Props> = ({ data }) => {
   const { searchParams } = useSearchParamsWithDefaults(defaultSearchParams);
   const { onPageChange } = usePagination(defaultSearchParams);
 
-  const totalPages = Math.ceil(data.total / Number(searchParams.get('limit') ?? Env.ADMIN_CARS_PAGINATION_LIMIT));
+  const totalPages = Math.ceil(data.total / Number(searchParams.get('limit') ?? Env.USER_CARS_PAGINATION_LIMIT));
   return (
     <CarsWrapper>
       <CSCommonCarList cars={data.cars} />
@@ -35,5 +35,5 @@ const CarsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
-  margin: 40px 8% 40px 0;
+  margin: 40px 8% 60px 0;
 `;

@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly VITE_ADMIN_CARS_PAGINATION_LIMIT: string;
   readonly VITE_ALLOWED_CAR_IMAGES_AMOUNT: string;
   readonly VITE_ADMIN_TRANSACTIONS_PAGINATION_LIMIT: string;
+  readonly VITE_USER_CARS_PAGINATION_LIMIT: string;
 }
 
 interface ImportMeta {
