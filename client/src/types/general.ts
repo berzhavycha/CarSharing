@@ -3,4 +3,5 @@ export type SearchParams = { [key: string]: string | string[] | number | undefin
 export type FilterOption<T> = {
   label: T;
   count: number;
+  originalValue?: T;
 };
