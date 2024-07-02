@@ -2,7 +2,12 @@ import { FC, Suspense } from 'react';
 import { Await, useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { CSCommonContainer, CSCommonError, CSCommonSlides, CSCommonSpinner } from '@/components/cs-common';
+import {
+  CSCommonContainer,
+  CSCommonError,
+  CSCommonSlides,
+  CSCommonSpinner,
+} from '@/components/cs-common';
 import { Env } from '@/core';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { Car, LocalFile } from '@/types';

@@ -6,14 +6,9 @@ type Props = {
   images: string[];
   width?: string;
   height?: string;
-}
+};
 
-
-export const CSCommonSlides: FC<Props> = ({
-  images,
-  width = '100%',
-  height = '200px',
-}) => {
+export const CSCommonSlides: FC<Props> = ({ images, width = '100%', height = '200px' }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToPrevious = (): void => {
@@ -53,7 +48,6 @@ export const CSCommonSlides: FC<Props> = ({
     </div>
   );
 };
-
 
 const SlideShowContainer = styled.div<{ width: string; height: string }>`
   position: relative;
