@@ -79,7 +79,7 @@ const Type = styled.p`
 const CarImageWrapper = styled.div`
   position: relative;
   padding: 30px 0;
-  height: 50%;
+  height: 180px;
 `;
 
 const ShadowImage = styled.img`
