@@ -1,14 +1,17 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import { CSCommonSearchBar } from '@/components/cs-common';
+import { usePagination, useSearchParamsWithDefaults } from '@/hooks';
 
 export const CSHeaderLayoutCarSearch: FC = () => {
-  const [carModel, setModel] = useState<string>('');
+  const { searchParams } = useSearchParamsWithDefaults();
+  const { onSearchChange } = usePagination();
+
 
   return (
     <CSCommonSearchBar
-      search={carModel}
-      onSearchChange={setModel}
+      search={searchParams.get('search') ?? ''}
+      onSearchChange={onSearchChange}
       placeholder="Search car by name"
     />
   );
