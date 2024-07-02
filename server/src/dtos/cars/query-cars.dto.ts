@@ -1,6 +1,7 @@
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 
 import { PaginationDto } from '../general';
+import { Transform } from 'class-transformer';
 
 export class QueryCarsDto extends PaginationDto {
   @IsOptional()
@@ -20,4 +21,14 @@ export class QueryCarsDto extends PaginationDto {
   @IsOptional()
   @IsString()
   status?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => parseInt(value))
+  minPrice?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => parseInt(value))
+  maxPrice?: number;
 }
