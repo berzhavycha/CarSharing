@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { CSMainSingleCarFeature } from "./cs-main-single-car-feature";
 import { CSCommonPrice, CSCommonPrimaryButton } from "@/components/cs-common";
 import { useRentCar } from "@/hooks";
+import { getFuelUnit, CarFuelType } from "@/helpers";
 
 type Props = {
     car: Car
@@ -24,7 +25,7 @@ export const CSMainSingleCarDetails: FC<Props> = ({ car }) => {
                 <CSMainSingleCarFeature label="Capacity" text={`${car.capacity} People`} />
                 <CSMainSingleCarFeature label="Steering" text={car.steering} />
                 <CSMainSingleCarFeature label="Fuel Type" text={car.fuelType} />
-                <CSMainSingleCarFeature label="Fuel Capacity" text={car.fuelCapacity} />
+                <CSMainSingleCarFeature label="Fuel Capacity" text={`${car.fuelCapacity} ${getFuelUnit(car.fuelType as CarFuelType)}`} />
             </FeaturesWrapper>
             <CarFooter>
                 <CSCommonPrice amount={car.pricePerHour} metric="hour" />
