@@ -2,8 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { AvailableCarsLoaderData } from '@/pages';
-import { CSMainAvailableCarsCheckboxList } from './cs-main-available-cars-checkbox-list';
-import { CSCommonRangeFilter } from '@/components/cs-common';
+import { CSCommonCheckboxFilter, CSCommonRangeFilter } from '@/components/cs-common';
 import { MIN_PRICE, PRICE_ROUNDING_INTERVAL } from '@/helpers';
 
 type Props = {
@@ -21,8 +20,8 @@ export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
 
   return (
     <SidebarContainer>
-      <CSMainAvailableCarsCheckboxList type='types[]' options={typeOptions} title='TYPE' />
-      <CSMainAvailableCarsCheckboxList type='capacities[]' options={capacityOptions} title='CAPACITY' />
+      <CSCommonCheckboxFilter type='types[]' options={typeOptions} title='TYPE' />
+      <CSCommonCheckboxFilter type='capacities[]' options={capacityOptions} title='CAPACITY' />
       <CSCommonRangeFilter
         title={'PRICE / HOUR'}
         min={MIN_PRICE}

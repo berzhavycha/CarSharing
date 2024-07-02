@@ -3,8 +3,7 @@ import { useDebounce } from "@/hooks";
 import { FC, useEffect } from "react";
 import styled from "styled-components";
 import { useRangeSearchParams } from "./hooks";
-
-const DEBOUNCE_DELAY = 300;
+import { DEBOUNCE_DELAY } from "@/helpers";
 
 type Props = {
     title?: string;
@@ -23,7 +22,7 @@ export const CSCommonRangeFilter: FC<Props> = ({ max, title, roundingInterval, m
         maxParam,
         roundingInterval
     );
-    
+
     const debouncedUpdateSearchParams = useDebounce(updateSearchParams, DEBOUNCE_DELAY);
 
     useEffect(() => {
@@ -34,7 +33,7 @@ export const CSCommonRangeFilter: FC<Props> = ({ max, title, roundingInterval, m
 
     return (
         <>
-            <SectionTitle>{title}</SectionTitle>
+            {title && <SectionTitle>{title}</SectionTitle>}
             <CSCommonRangeSlider
                 min={min}
                 max={roundedMaxValue}
@@ -46,7 +45,7 @@ export const CSCommonRangeFilter: FC<Props> = ({ max, title, roundingInterval, m
     );
 };
 
-export const SectionTitle = styled.h3`
+const SectionTitle = styled.h3`
   font-size: 14px;
   font-weight: 300;
   margin-bottom: 15px;
