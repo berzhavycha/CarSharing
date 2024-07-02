@@ -2,6 +2,7 @@ import { CSCommonContainer, CSCommonForm } from "@/components/cs-common";
 import { PaymentDto, RentalDto } from "@/types";
 import { FC } from "react";
 import styled from "styled-components";
+import { CSMainRentalFormSummary } from "./cs-main-rental-form-summary";
 
 export const CSMainRentalForm: FC = () => {
     return (
@@ -54,6 +55,7 @@ export const CSMainRentalForm: FC = () => {
                         </FormInfoWrapper>
                     </CSCommonForm>
                 </FormWrapper>
+                <CSMainRentalFormSummary />
             </RentalForm>
         </CSCommonContainer>
     )
@@ -62,7 +64,8 @@ export const CSMainRentalForm: FC = () => {
 const RentalForm = styled.div`
     width: 100%;
     display: flex;
-    margin-top: 50px;
+    gap: 40px;
+    margin: 50px 0;
 `
 
 const FormWrapper = styled.div`
@@ -79,12 +82,12 @@ const FormInfoWrapper = styled.div`
     box-shadow: var(--default-box-shadow);
 `
 
-const SectionTitle = styled.h3`
+export const SectionTitle = styled.h3`
     color: var(--dark);
     margin-bottom: 10px;
 `
 
-const SectionDescription = styled.p`
+export const SectionDescription = styled.p`
     color: var(--dark);
     font-size: 14px;
     font-weight: 300;
