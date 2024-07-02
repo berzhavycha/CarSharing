@@ -5,12 +5,15 @@ import { CSCommonNoData } from '@/components/cs-common';
 import { Env } from '@/core';
 import { Car } from '@/types';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
     cars: Car[];
 };
 
 export const CSCommonCarList: FC<Props> = ({ cars }) => {
+    const navigate = useNavigate()
+
     return (
         <>
             {cars?.length === 0 ? (
@@ -20,6 +23,7 @@ export const CSCommonCarList: FC<Props> = ({ cars }) => {
             ) : (
                 cars?.map((car) => (
                     <CSCarCard
+                        onClick={() => navigate(`/available-cars/${car.id}`)}
                         key={car.id}
                         model={car.model}
                         pricePerHour={car.pricePerHour}

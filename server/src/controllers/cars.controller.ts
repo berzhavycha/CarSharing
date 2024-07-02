@@ -65,7 +65,7 @@ export class CarsController {
   }
 
   @Get(':id')
-  @UseGuards(RoleGuard(Roles.ADMIN))
+  @UseGuards(JwtAuthGuard)
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Car> {
     return this.carsService.findById(id);
   }

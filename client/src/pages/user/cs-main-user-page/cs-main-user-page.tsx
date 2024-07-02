@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
-import { CSMainPage } from '@/components';
+import { CSMain } from '@/components';
 
 export const CSMainUserPage: FC = () => {
-  return <CSMainPage />;
+  return <CSMain />;
 };

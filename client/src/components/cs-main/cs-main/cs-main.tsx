@@ -3,12 +3,12 @@ import { Await, useLoaderData, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
+  CSCommonBanner,
   CSCommonCarList,
   CSCommonContainer,
   CSCommonError,
   CSCommonPrimaryButton,
   CSCommonSpinner,
-  CSMainPageBanner,
 } from '@/components';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { InitialCarsLoaderData } from '@/pages';
@@ -17,7 +17,7 @@ import BannerImage1 from '../../../../public/banner 1.png';
 import BannerImage2 from '../../../../public/banner 2.png';
 import DefaultCar from '../../../../public/default-car.png';
 
-export const CSMainPage: FC = () => {
+export const CSMain: FC = () => {
   const navigate = useNavigate();
   const data = useLoaderData() as { data: InitialCarsLoaderData };
 
@@ -26,19 +26,21 @@ export const CSMainPage: FC = () => {
   return (
     <CSCommonContainer>
       <BannerWrappers>
-        <CSMainPageBanner
+        <CSCommonBanner
           title="The Best Platform for Car Sharing"
           backgroundImage={BannerImage1}
           description="Ease of doing a car rental safely and reliably. Of course at a low price."
-          carImage={DefaultCar}
+          image={DefaultCar}
           buttonType="main"
+          buttonContent='Rent Car'
         />
-        <CSMainPageBanner
+        <CSCommonBanner
           title="Easy way to rent a car at a low price"
           backgroundImage={BannerImage2}
           description="Providing cheap car rental services and safe and comfortable facilities."
-          carImage={DefaultCar}
+          image={DefaultCar}
           buttonType="light"
+          buttonContent='Rent Car'
         />
       </BannerWrappers>
       <CarsWrapper>

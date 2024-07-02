@@ -15,6 +15,7 @@ type CarCardProps = {
   capacity: number;
   pricePerHour: number;
   imageUrl: string;
+  onClick: () => void;
 };
 
 export const CSCarCard: FC<CarCardProps> = ({
@@ -25,9 +26,10 @@ export const CSCarCard: FC<CarCardProps> = ({
   capacity,
   pricePerHour,
   imageUrl,
+  onClick
 }) => {
   return (
-    <CardWrapper>
+    <CardWrapper onClick={onClick}>
       <Header>
         <Title>{model}</Title>
         <Type>{type}</Type>
@@ -56,6 +58,12 @@ const CardWrapper = styled.div`
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: var(--default-transition);
+
+  &:hover {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
 `;
 
 const Header = styled.div`
