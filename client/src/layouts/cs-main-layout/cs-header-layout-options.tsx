@@ -9,6 +9,7 @@ import { useSignOut } from '@/hooks';
 import DefaultImage from '../../../public/avatar.webp';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import { Env } from '@/core';
 
 export const CSHeaderLayoutOptions: FC = observer(() => {
   const navigate = useNavigate()
@@ -16,17 +17,19 @@ export const CSHeaderLayoutOptions: FC = observer(() => {
   const { onSignOut } = useSignOut();
 
   const onTopUp = (): void => navigate('/top-up')
+  const onProfileSettings = (): void => navigate('/profile-settings')
+  const profilePicture = user?.avatarId ? `${Env.API_BASE_URL}/local-files/${user?.avatarId}` : DefaultImage
 
   return (
     <IconGroup>
-      <IconWrapper>
+      <IconWrapper onClick={onProfileSettings}>
         <FaGear />
       </IconWrapper>
       <IconWrapper onClick={onTopUp}>
         <FaDollarSign />
       </IconWrapper>
       <UserInfo>
-        <UserAvatar src={user?.avatarId ?? DefaultImage} alt="User Avatar" />
+        <UserAvatar src={profilePicture} alt="User Avatar" />
         {user && (
           <UserDetails>
             <p>
