@@ -7,23 +7,32 @@ import { rentalSchema } from "@/helpers";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/context";
 import { useLocation } from "react-router-dom";
+import { createRental } from "@/services";
 
 export const CSMainRentalForm: FC = observer(() => {
     const location = useLocation()
-    const { rentalStore: { updatePrice, setRental } } = useStore()
+    const rentedCar = location.state.car
+    const { rentalStore: { rental, updatePrice, setRental }, currentUserStore: { user, updateBalance } } = useStore()
 
     useEffect(() => {
-        setRental({price: location.state.car.pricePerHour})
+        setRental({ price: rentedCar.pricePerHour })
     }, [])
 
 
     const onSubmit = async (rentalDto: RentalDto & PaymentDto): Promise<void> => {
+        const { rental: createdRental, errors } = await createRental({
+            carId: rentedCar.id,
+            ...rentalDto
+        })
 
+        if (createdRental && user?.balance && rental) {
+            updateBalance(user.balance - rental.price)
+        }
     }
 
     const onRequestedHoursChange = (event: ChangeEvent<HTMLInputElement>): void => {
         const currentHours = +event.target.value
-        const carPricePerHour = location.state.car.pricePerHour * currentHours
+        const carPricePerHour = rentedCar.pricePerHour * currentHours
         updatePrice(carPricePerHour)
     }
 

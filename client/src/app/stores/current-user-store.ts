@@ -42,6 +42,11 @@ export const CurrentUserStore = t
     },
   }))
   .actions((self) => ({
+    updateBalance: (balance: number): void => {
+      if (self.user) {
+        self.user.balance = balance
+      }
+    },
     signUp: flow(function* (userDto: SignUpUserDto) {
       self.signUpErrors = null;
 
