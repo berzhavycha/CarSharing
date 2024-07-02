@@ -6,18 +6,18 @@ import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 
 type Props = {
-    title: string;
+    title?: string;
     type: string;
     options: FilterOption<string | number>[]
 }
 
-export const CSMainAvailableCarsCheckboxList: FC<Props> = ({ title, type, options }) => {
+export const CSCommonCheckboxFilter: FC<Props> = ({ title, type, options }) => {
     const [searchParams] = useSearchParams();
     const { onFilter } = useSearchParamFilter()
 
     return (
         <>
-            <SectionTitle>{title}</SectionTitle>
+            {title && <SectionTitle>{title}</SectionTitle>}
             <CheckBoxesWrapper>
                 {options.map(option => {
                     const label = `${option.originalValue || option.label}`
@@ -38,7 +38,7 @@ export const CSMainAvailableCarsCheckboxList: FC<Props> = ({ title, type, option
 }
 
 
-export const SectionTitle = styled.h3`
+const SectionTitle = styled.h3`
   font-size: 14px;
   font-weight: 300;
   margin-bottom: 15px;
