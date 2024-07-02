@@ -1,6 +1,6 @@
-import { CSCommonContainer, CSCommonForm, CSCommonPaymentForm } from "@/components/cs-common";
+import { CSCommonContainer, CSCommonForm, CSCommonModal, CSCommonPaymentForm } from "@/components/cs-common";
 import { PaymentDto, RentalDto } from "@/types";
-import { ChangeEvent, FC, useEffect } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { CSMainRentalFormSummary } from "./cs-main-rental-form-summary";
 import { rentalSchema } from "@/helpers";
@@ -13,6 +13,8 @@ export const CSMainRentalForm: FC = observer(() => {
     const location = useLocation()
     const rentedCar = location.state.car
     const { rentalStore: { rental, updatePrice, setRental }, currentUserStore: { user, updateBalance } } = useStore()
+    const [isRentSuccessful, setIsRentSuccessful] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string>('')
 
     useEffect(() => {
         setRental({ price: rentedCar.pricePerHour })
@@ -20,13 +22,16 @@ export const CSMainRentalForm: FC = observer(() => {
 
 
     const onSubmit = async (rentalDto: RentalDto & PaymentDto): Promise<void> => {
-        const { rental: createdRental, errors } = await createRental({
+        const { rental: createdRental, error } = await createRental({
             carId: rentedCar.id,
             ...rentalDto
         })
 
         if (createdRental && user?.balance && rental) {
             updateBalance(user.balance - rental.price)
+            setIsRentSuccessful(true)
+        } else if (error) {
+            setErrorMessage(error)
         }
     }
 
@@ -35,6 +40,9 @@ export const CSMainRentalForm: FC = observer(() => {
         const carPricePerHour = rentedCar.pricePerHour * currentHours
         updatePrice(carPricePerHour)
     }
+
+    const onCloseSuccessModal = (): void => setIsRentSuccessful(false)
+    const onCloseErrorWindow = (): void => setErrorMessage('')
 
     return (
         <CSCommonContainer>
@@ -73,6 +81,25 @@ export const CSMainRentalForm: FC = observer(() => {
                 </FormWrapper>
                 <CSMainRentalFormSummary />
             </RentalForm>
+
+            {isRentSuccessful && (
+                <CSCommonModal
+                    type="confirm"
+                    title="Success"
+                    message="Your rental was successfully created."
+                    onClose={onCloseSuccessModal}
+                    onOk={onCloseSuccessModal}
+                />
+            )}
+
+            {errorMessage && (
+                <CSCommonModal
+                    type="error"
+                    title="Error"
+                    message={errorMessage}
+                    onClose={onCloseErrorWindow}
+                />
+            )}
         </CSCommonContainer>
     )
 })
