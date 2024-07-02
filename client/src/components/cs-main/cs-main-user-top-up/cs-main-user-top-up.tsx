@@ -1,16 +1,33 @@
-import { CSCommonContainer, CSCommonErrorMessage, CSCommonForm, CSCommonPaymentForm } from "@/components/cs-common";
+import { CSCommonContainer, CSCommonErrorMessage, CSCommonForm, CSCommonModal, CSCommonPaymentForm } from "@/components/cs-common";
 import { useStore } from "@/context";
 import { updateUserBalanceSchema } from "@/helpers";
 import { UpdateUserBalanceDto } from "@/types";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 
 export const CSMainUserTopUp: FC = () => {
     const { currentUserStore: { topUpErrors, topUp } } = useStore()
 
+    const [isTopUpSuccessful, setIsTopUpSuccessful] = useState<boolean>(false);
+    const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+    const [unexpectedError, setUnexpectedError] = useState<string>(topUpErrors?.unexpectedError ?? '')
+
+    useEffect(() => {
+        if (isSubmitted) {
+            if (!topUpErrors) {
+                setIsTopUpSuccessful(true);
+            }
+            setIsSubmitted(false);
+        }
+    }, [isSubmitted, topUpErrors]);
+
     const onSubmit = async (topUpDto: UpdateUserBalanceDto): Promise<void> => {
         await topUp(topUpDto)
+        setIsSubmitted(true);
     }
+
+    const onCloseSuccessModal = (): void => setIsTopUpSuccessful(false);
+    const onCloseErrorModal = (): void => setUnexpectedError('');
 
     return (
         <CSCommonContainer>
@@ -34,6 +51,25 @@ export const CSMainUserTopUp: FC = () => {
                     submitButtonContent="Top Up"
                 />
             </CSCommonForm>
+
+            {isTopUpSuccessful && (
+                <CSCommonModal
+                    type="confirm"
+                    title="Success"
+                    message="You have successfully updated your balance!"
+                    onClose={onCloseSuccessModal}
+                    onOk={onCloseSuccessModal}
+                />
+            )}
+
+            {unexpectedError && (
+                <CSCommonModal
+                    type="error"
+                    title="Error"
+                    message={unexpectedError}
+                    onClose={onCloseErrorModal}
+                />
+            )}
         </CSCommonContainer>
     )
 }

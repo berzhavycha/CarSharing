@@ -14,7 +14,6 @@ export const topUp = async (
 ): Promise<ServiceUserResponse<UpdateUserBalanceDto>> => {
     try {
         const { data } = await axiosInstance.patch(`${Env.API_BASE_URL}/users/${userId}/top-up`, userDto);
-
         return { user: transformUserResponse(data) };
     } catch (error) {
         return { errors: errorHandler<UpdateUserBalanceDto>(error, updateUserBalanceFieldMappings) };
