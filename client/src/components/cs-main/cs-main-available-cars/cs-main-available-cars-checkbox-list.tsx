@@ -25,6 +25,7 @@ export const CSMainAvailableCarsCheckboxList: FC<Props> = ({ title, type, option
 
                     return (
                         <CSCommonCheckbox
+                            key={option.label}
                             type={type}
                             option={option}
                             checked={searchParams.getAll(type).includes(label)}
