@@ -13,7 +13,7 @@ export const CSMainLayoutHeader: FC = () => {
 
   const onMainPage = (): void => navigate('/')
 
-  const isSearchBarEnabled = !['/', '/available-cars'].includes(pathname);
+  const isSearchBarEnabled = ['/', '/available-cars'].includes(pathname);
 
   return (
     <Section>

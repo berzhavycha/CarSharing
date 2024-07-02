@@ -15,6 +15,7 @@ import {
   CSMainRentalFormPage,
   CSMainSingleCarPage,
   CSMainUserPage,
+  CSMainUserProfileSettingsPage,
   CSMainUserTopUpPage,
   CSSignInPage,
   CSSignUpPage,
@@ -39,6 +40,7 @@ export const router = createBrowserRouter(
           <Route path="available-cars/:carId" element={<CSMainSingleCarPage />} loader={singleCarLoader} />
           <Route path="rental-form" element={<CSMainRentalFormPage />} />
           <Route path="top-up" element={<CSMainUserTopUpPage />} />
+          <Route path="profile-settings" element={<CSMainUserProfileSettingsPage />} />
         </Route>
       </Route>
       <Route

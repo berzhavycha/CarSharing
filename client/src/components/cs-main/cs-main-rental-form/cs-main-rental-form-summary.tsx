@@ -23,10 +23,10 @@ export const CSMainRentalFormSummary: FC = observer(() => {
                 </CarDetails>
             </CarInfoWrapper>
             <Total>
-                <div>
+                <TotalInfo>
                     <h3>Total Rental Price</h3>
                     <TotalDescription>Overall price and includes rental discount</TotalDescription>
-                </div>
+                </TotalInfo>
                 <PriceWrapper>${rental?.price.toFixed(2)}</PriceWrapper>
             </Total>
         </SummaryWrapper>
@@ -80,6 +80,10 @@ const Total = styled.div`
     justify-content: space-between;
     gap: 10px;
     align-items: center;
+`
+
+const TotalInfo = styled.div`
+    width: 65%;
 `
 
 const TotalDescription = styled.div`
