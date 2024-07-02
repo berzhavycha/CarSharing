@@ -7,7 +7,6 @@ export const CSHeaderLayoutCarSearch: FC = () => {
   const { searchParams } = useSearchParamsWithDefaults();
   const { onSearchChange } = usePagination();
 
-
   return (
     <CSCommonSearchBar
       search={searchParams.get('search') ?? ''}

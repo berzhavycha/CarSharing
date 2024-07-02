@@ -1,6 +1,7 @@
 export type PaymentDto = {
-    cardNumber: number;
+    amount: number;
+    cardNumber: string;
     expirationDate: string;
     cardHolder: string;
-    'CVC': number
-}
+    CVC: string;
+};
