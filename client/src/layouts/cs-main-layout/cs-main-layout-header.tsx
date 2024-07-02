@@ -1,17 +1,17 @@
 import { FC } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonContainer } from '@/components';
 
 import { CSHeaderLayoutCarSearch } from './cs-header-layout-car-search';
 import { CSHeaderLayoutOptions } from './cs-header-layout-options';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 export const CSMainLayoutHeader: FC = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const onMainPage = (): void => navigate('/')
+  const onMainPage = (): void => navigate('/');
 
   const isSearchBarEnabled = ['/', '/available-cars'].includes(pathname);
 

@@ -4,40 +4,38 @@ import styled from 'styled-components';
 import { CSCommonPrimaryButton } from '@/components/cs-common';
 
 type Props = {
-    title: string;
-    description: string;
-    backgroundImage: string;
-    image: string;
-    buttonType?: 'main' | 'light';
-    buttonContent?: string;
-    onButtonClick?: () => void
+  title: string;
+  description: string;
+  backgroundImage: string;
+  image: string;
+  buttonType?: 'main' | 'light';
+  buttonContent?: string;
+  onButtonClick?: () => void;
 };
 
 export const CSCommonBanner: FC<Props> = ({
-    title,
-    description,
-    backgroundImage,
-    image,
-    buttonType,
-    buttonContent,
-    onButtonClick
+  title,
+  description,
+  backgroundImage,
+  image,
+  buttonType,
+  buttonContent,
+  onButtonClick,
 }) => {
-    return (
-        <BannerWrapper $backgroundImage={backgroundImage}>
-            <Title>{title}</Title>
-            <Description>{description}</Description>
-            {buttonContent && <CSCommonPrimaryButton
-                onClick={onButtonClick}
-                content={buttonContent}
-                style={buttonType}
-            />}
-            <Image src={image} />
-        </BannerWrapper>
-    );
+  return (
+    <BannerWrapper $backgroundImage={backgroundImage}>
+      <Title>{title}</Title>
+      <Description>{description}</Description>
+      {buttonContent && (
+        <CSCommonPrimaryButton onClick={onButtonClick} content={buttonContent} style={buttonType} />
+      )}
+      <Image src={image} />
+    </BannerWrapper>
+  );
 };
 
 type BannerWrapperProps = {
-    $backgroundImage: string;
+  $backgroundImage: string;
 };
 
 const BannerWrapper = styled.div<BannerWrapperProps>`

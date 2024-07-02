@@ -1,24 +1,28 @@
+import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
 import { FaDollarSign, FaSignOutAlt } from 'react-icons/fa';
 import { FaGear } from 'react-icons/fa6';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { useStore } from '@/context';
+import { Env } from '@/core';
 import { useSignOut } from '@/hooks';
 
 import DefaultImage from '../../../public/avatar.webp';
-import { useNavigate } from 'react-router-dom';
-import { observer } from 'mobx-react-lite';
-import { Env } from '@/core';
 
 export const CSHeaderLayoutOptions: FC = observer(() => {
-  const navigate = useNavigate()
-  const { currentUserStore: { user } } = useStore();
+  const navigate = useNavigate();
+  const {
+    currentUserStore: { user },
+  } = useStore();
   const { onSignOut } = useSignOut();
 
-  const onTopUp = (): void => navigate('/top-up')
-  const onProfileSettings = (): void => navigate('/profile-settings')
-  const profilePicture = user?.avatarId ? `${Env.API_BASE_URL}/local-files/${user?.avatarId}` : DefaultImage
+  const onTopUp = (): void => navigate('/top-up');
+  const onProfileSettings = (): void => navigate('/profile-settings');
+  const profilePicture = user?.avatarId
+    ? `${Env.API_BASE_URL}/local-files/${user?.avatarId}`
+    : DefaultImage;
 
   return (
     <IconGroup>

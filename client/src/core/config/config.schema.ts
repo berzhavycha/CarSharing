@@ -1,5 +1,6 @@
-import { paginationSchema } from '@/helpers/validation/pagination/pagination-schema';
 import { z } from 'zod';
+
+import { paginationSchema } from '@/helpers/validation/pagination/pagination-schema';
 
 const configSchema = z.object({
   API_BASE_URL: z.string().refine((value) => value.trim() !== '', {

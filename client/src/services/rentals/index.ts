@@ -1,1 +1,1 @@
-export * from './create-rental'
+export * from './create-rental';

@@ -1,6 +1,7 @@
-import { CSMainSingleCar } from "@/components";
-import { FC } from "react";
+import { FC } from 'react';
+
+import { CSMainSingleCar } from '@/components';
 
 export const CSMainSingleCarPage: FC = () => {
-    return <CSMainSingleCar />
-}
+  return <CSMainSingleCar />;
+};

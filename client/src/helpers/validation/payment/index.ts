@@ -1,1 +1,1 @@
-export * from './payment-form-schema'
+export * from './payment-form-schema';

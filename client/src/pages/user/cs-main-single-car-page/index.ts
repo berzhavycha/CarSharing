@@ -1,2 +1,2 @@
-export * from './cs-main-single-car-page'
-export * from './loader'
+export * from './cs-main-single-car-page';
+export * from './loader';

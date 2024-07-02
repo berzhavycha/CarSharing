@@ -1,1 +1,1 @@
-export * from './cs-main-rental-form-page'
+export * from './cs-main-rental-form-page';

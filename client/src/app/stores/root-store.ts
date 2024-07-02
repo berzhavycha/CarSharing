@@ -5,12 +5,12 @@ import { RentalStore } from './rental-store';
 
 const RootStore = t.model('RootStore', {
   currentUserStore: CurrentUserStore,
-  rentalStore: RentalStore
+  rentalStore: RentalStore,
 });
 
 export const rootStore = RootStore.create({
   currentUserStore: CurrentUserStore.create({}),
-  rentalStore: RentalStore.create()
+  rentalStore: RentalStore.create(),
 });
 
 export type RootStoreType = Instance<typeof RootStore>;

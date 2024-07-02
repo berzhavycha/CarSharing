@@ -7,4 +7,4 @@ export * from './local-files';
 export * from './transaction';
 export * from './rental';
 export * from './general';
-export * from './payment'
+export * from './payment';

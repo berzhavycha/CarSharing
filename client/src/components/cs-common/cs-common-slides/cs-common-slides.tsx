@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import styled from 'styled-components';
 
 interface SlideShowProps {
-    images: string[];
-    width?: string;
-    height?: string;
+  images: string[];
+  width?: string;
+  height?: string;
 }
 
 const SlideShowContainer = styled.div<{ width: string; height: string }>`
@@ -38,7 +38,7 @@ const NavButton = styled.button`
   align-items: center;
   justify-content: center;
   transition: background 0.3s;
-  
+
   &:hover {
     background: rgba(0, 0, 0, 0.8);
   }
@@ -61,8 +61,10 @@ const Thumbnail = styled.img<{ active: boolean }>`
   cursor: pointer;
   border-radius: 5px;
   box-shadow: ${({ active }) => (active ? '0 0 5px rgba(0, 0, 0, 0.5)' : 'none')};
-  transition: opacity 0.3s, box-shadow 0.3s;
-  
+  transition:
+    opacity 0.3s,
+    box-shadow 0.3s;
+
   &:hover {
     opacity: 1;
   }
@@ -74,39 +76,47 @@ const ThumbnailContainer = styled.div`
   margin-top: 10px;
 `;
 
-export const SlideShow: React.FC<SlideShowProps> = ({ images, width = '100%', height = '200px' }) => {
-    const [currentIndex, setCurrentIndex] = useState(0);
+export const SlideShow: React.FC<SlideShowProps> = ({
+  images,
+  width = '100%',
+  height = '200px',
+}) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-    const goToPrevious = () => {
-        setCurrentIndex(prevIndex => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
-    };
+  const goToPrevious = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
+  };
 
-    const goToNext = () => {
-        setCurrentIndex(prevIndex => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
-    };
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+  };
 
-    const goToSlide = (slideIndex: number) => {
-        setCurrentIndex(slideIndex);
-    };
+  const goToSlide = (slideIndex: number) => {
+    setCurrentIndex(slideIndex);
+  };
 
-    return (
-        <div>
-            <SlideShowContainer width={width} height={height}>
-                <SlideImage src={images[currentIndex]} alt={`Slide ${currentIndex}`} />
-                <PrevButton onClick={goToPrevious}><FaChevronLeft /></PrevButton>
-                <NextButton onClick={goToNext}><FaChevronRight /></NextButton>
-            </SlideShowContainer>
-            <ThumbnailContainer>
-                {images.map((image, index) => (
-                    <Thumbnail
-                        key={index}
-                        src={image}
-                        alt={`Thumbnail ${index}`}
-                        active={index === currentIndex}
-                        onClick={() => goToSlide(index)}
-                    />
-                ))}
-            </ThumbnailContainer>
-        </div>
-    );
+  return (
+    <div>
+      <SlideShowContainer width={width} height={height}>
+        <SlideImage src={images[currentIndex]} alt={`Slide ${currentIndex}`} />
+        <PrevButton onClick={goToPrevious}>
+          <FaChevronLeft />
+        </PrevButton>
+        <NextButton onClick={goToNext}>
+          <FaChevronRight />
+        </NextButton>
+      </SlideShowContainer>
+      <ThumbnailContainer>
+        {images.map((image, index) => (
+          <Thumbnail
+            key={index}
+            src={image}
+            alt={`Thumbnail ${index}`}
+            active={index === currentIndex}
+            onClick={() => goToSlide(index)}
+          />
+        ))}
+      </ThumbnailContainer>
+    </div>
+  );
 };

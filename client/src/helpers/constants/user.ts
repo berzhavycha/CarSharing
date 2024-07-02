@@ -9,7 +9,6 @@ export const updateUserFieldMappings: Record<string, keyof UpdateUserDto> = {
   image: 'picture',
 };
 
-
 export const updateUserBalanceFieldMappings: Record<string, keyof UpdateUserBalanceDto> = {
   amount: 'amount',
 };

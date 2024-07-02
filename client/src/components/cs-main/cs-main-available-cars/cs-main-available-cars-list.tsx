@@ -1,10 +1,10 @@
 import { FC } from 'react';
 
 import { CSCommonCarList, Pagination } from '@/components';
+import { Env } from '@/core';
 import { DEFAULT_PAGINATION_PAGE, defaultSearchParams } from '@/helpers';
 import { usePagination, useSearchParamsWithDefaults } from '@/hooks';
 import { AvailableCarsLoaderData } from '@/pages';
-import { Env } from '@/core';
 
 type Props = {
   data: AvailableCarsLoaderData['carsData'];
@@ -14,8 +14,10 @@ export const CSMainAvailableCarsList: FC<Props> = ({ data }) => {
   const { searchParams } = useSearchParamsWithDefaults(defaultSearchParams);
   const { onPageChange } = usePagination(defaultSearchParams);
 
-  const totalPages = Math.ceil(data.total / Number(searchParams.get('limit') ?? Env.USER_CARS_PAGINATION_LIMIT));
-  
+  const totalPages = Math.ceil(
+    data.total / Number(searchParams.get('limit') ?? Env.USER_CARS_PAGINATION_LIMIT),
+  );
+
   return (
     <>
       <CSCommonCarList cars={data.cars} />
@@ -29,4 +31,3 @@ export const CSMainAvailableCarsList: FC<Props> = ({ data }) => {
     </>
   );
 };
-

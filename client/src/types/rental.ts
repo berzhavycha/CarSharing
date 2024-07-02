@@ -7,11 +7,11 @@ export type RentalDto = {
   pickUpLocation: string;
   dropOffLocation: string;
   hours: number;
-}
+};
 
 export type UserRentalErrors = {
   rental: string;
   balance: string;
   money: string;
-  car: string
-}
+  car: string;
+};

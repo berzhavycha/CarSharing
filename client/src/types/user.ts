@@ -1,4 +1,4 @@
-import { PaymentDto } from "./payment";
+import { PaymentDto } from './payment';
 
 export type AuthenticatedUser = {
   id: string;
@@ -22,4 +22,4 @@ export type UpdateUserDto = Partial<{
 
 export type UpdateUserBalanceDto = PaymentDto & {
   amount: number;
-}
+};

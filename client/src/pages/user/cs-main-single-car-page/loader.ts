@@ -1,10 +1,11 @@
-import { getCar } from "@/services";
-import { LoaderFunctionArgs, defer } from "react-router-dom";
+import { defer, LoaderFunctionArgs } from 'react-router-dom';
+
+import { getCar } from '@/services';
 
 export const singleCarLoader = (args: LoaderFunctionArgs): ReturnType<typeof defer> => {
-    const data = getCar(args.params.carId ?? '')
+  const data = getCar(args.params.carId ?? '');
 
-    return defer({
-        data
-    })
-}
+  return defer({
+    data,
+  });
+};

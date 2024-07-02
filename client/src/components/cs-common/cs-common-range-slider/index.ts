@@ -1,1 +1,1 @@
-export * from './cs-common-range-slider'
+export * from './cs-common-range-slider';

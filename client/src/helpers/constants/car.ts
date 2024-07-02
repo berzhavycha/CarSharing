@@ -91,4 +91,4 @@ export const FAILED_REMOVE_CAR = 'Failed to remove the car. Please try again.';
 export const PRICE_ROUNDING_INTERVAL = 5;
 export const MIN_PRICE = 0;
 
-export const INITIAL_CARS_LIMIT = 8
+export const INITIAL_CARS_LIMIT = 8;
