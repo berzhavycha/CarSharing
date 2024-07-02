@@ -9,6 +9,9 @@ export const RentalStore = t
         rental: t.optional(t.maybeNull(Rental), null)
     })
     .actions((self) => ({
+        setRental: (rental: { price: number }): void => {
+            self.rental = rental
+        },
         updatePrice: (price: number): void => {
             if (self.rental) {
                 self.rental.price = price

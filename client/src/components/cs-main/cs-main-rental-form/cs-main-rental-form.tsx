@@ -1,13 +1,30 @@
 import { CSCommonContainer, CSCommonForm, CSCommonPaymentForm } from "@/components/cs-common";
 import { PaymentDto, RentalDto } from "@/types";
-import { FC } from "react";
+import { ChangeEvent, FC, useEffect } from "react";
 import styled from "styled-components";
 import { CSMainRentalFormSummary } from "./cs-main-rental-form-summary";
 import { rentalSchema } from "@/helpers";
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/context";
+import { useLocation } from "react-router-dom";
 
-export const CSMainRentalForm: FC = () => {
+export const CSMainRentalForm: FC = observer(() => {
+    const location = useLocation()
+    const { rentalStore: { updatePrice, setRental } } = useStore()
+
+    useEffect(() => {
+        setRental({price: location.state.car.pricePerHour})
+    }, [])
+
+
     const onSubmit = async (rentalDto: RentalDto & PaymentDto): Promise<void> => {
 
+    }
+
+    const onRequestedHoursChange = (event: ChangeEvent<HTMLInputElement>): void => {
+        const currentHours = +event.target.value
+        const carPricePerHour = location.state.car.pricePerHour * currentHours
+        updatePrice(carPricePerHour)
     }
 
     return (
@@ -34,6 +51,7 @@ export const CSMainRentalForm: FC = () => {
                                     name="hours"
                                     label="Requested Hours"
                                     type="number"
+                                    onChange={onRequestedHoursChange}
                                 />
                             </RentalFormBlocks>
                         </FormInfoWrapper>
@@ -48,7 +66,7 @@ export const CSMainRentalForm: FC = () => {
             </RentalForm>
         </CSCommonContainer>
     )
-}
+})
 
 const RentalForm = styled.div`
     width: 100%;
