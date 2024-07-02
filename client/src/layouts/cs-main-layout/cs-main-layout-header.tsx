@@ -5,11 +5,15 @@ import { CSCommonContainer } from '@/components';
 
 import { CSHeaderLayoutCarSearch } from './cs-header-layout-car-search';
 import { CSHeaderLayoutOptions } from './cs-header-layout-options';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const CSMainLayoutHeader: FC = () => {
   const navigate = useNavigate()
+  const { pathname } = useLocation();
+
   const onMainPage = (): void => navigate('/')
+
+  const isSearchBarEnabled = !['/', '/available-cars'].includes(pathname);
 
   return (
     <Section>
@@ -17,7 +21,7 @@ export const CSMainLayoutHeader: FC = () => {
         <Nav>
           <LeftSection>
             <Logo onClick={onMainPage}>CARRENT</Logo>
-            <CSHeaderLayoutCarSearch />
+            {isSearchBarEnabled && <CSHeaderLayoutCarSearch />}
           </LeftSection>
           <CSHeaderLayoutOptions />
         </Nav>
