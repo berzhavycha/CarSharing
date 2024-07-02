@@ -14,7 +14,6 @@ type Props = {
 
 export const CSMainSingleCarDetails: FC<Props> = ({ car }) => {
   const { onRentBtnClick } = useRentCar();
-
   const onRent = (): void => onRentBtnClick(car);
 
   return (

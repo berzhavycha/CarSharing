@@ -2,11 +2,11 @@ import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { CSCarCard } from '@/components/cs-car';
 import { CSCommonNoData } from '@/components/cs-common';
 import { Env } from '@/core';
 import { useRentCar } from '@/hooks';
 import { Car } from '@/types';
+import { CSCommonCarCard } from '../cs-common-car-card';
 
 type Props = {
   cars: Car[];
@@ -24,7 +24,7 @@ export const CSCommonCarList: FC<Props> = ({ cars }) => {
         </NoDataWrapper>
       ) : (
         cars?.map((car) => (
-          <CSCarCard
+          <CSCommonCarCard
             onClick={() => navigate(`/available-cars/${car.id}`)}
             onRent={() => onRentBtnClick(car)}
             key={car.id}

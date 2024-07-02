@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
 import { extractBracketContent } from '@/helpers';
 
-import { CarFeature } from './cs-car-feature';
+import { CarFeature } from './cs-common-car-feature';
 
 type CarCardProps = {
   model: string;
@@ -19,7 +19,7 @@ type CarCardProps = {
   onRent: () => void;
 };
 
-export const CSCarCard: FC<CarCardProps> = ({
+export const CSCommonCarCard: FC<CarCardProps> = ({
   model,
   type,
   fuelCapacity,
