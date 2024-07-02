@@ -17,3 +17,4 @@ export * from './cs-common-modal';
 export * from './cs-common-no-data';
 export * from './cs-common-cars-list'
 export * from './cs-common-checkbox'
+export * from './cs-common-range-slider'
