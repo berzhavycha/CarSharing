@@ -17,6 +17,7 @@ import {
   DEFAULT_ORDER,
   DEFAULT_PAGINATION_LIMIT,
   DEFAULT_PAGINATION_PAGE,
+  getFilterOptions,
 } from '@/helpers';
 import { FilterOption } from '@/types';
 
@@ -28,7 +29,7 @@ export class CarsService {
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
     private localFilesService: LocalFilesService,
-  ) {}
+  ) { }
 
   async createCar(
     createCarDto: CreateCarDto,
@@ -139,20 +140,8 @@ export class CarsService {
     types: FilterOption<string>[];
     capacities: FilterOption<number>[];
   }> {
-    const types = await this.carsRepository
-      .createQueryBuilder('car')
-      .select('car.type', 'label')
-      .addSelect('COUNT(*)', 'count')
-      .groupBy('car.type')
-      .getRawMany();
-
-    const capacities = await this.carsRepository
-      .createQueryBuilder('car')
-      .select('car.capacity', 'label')
-      .addSelect('COUNT(*)', 'count')
-      .groupBy('car.capacity')
-      .getRawMany();
-
+    const types = await getFilterOptions(this.carsRepository, 'type');
+    const capacities = await getFilterOptions(this.carsRepository, 'capacity');
     return { types, capacities };
   }
 }
