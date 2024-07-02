@@ -12,7 +12,7 @@ import {
   CSDashboardProfileSettingsPage,
   CSDashboardTransactionsPage,
   CSMainAvailableCarsPage,
-  CSMainRentalFormPage,
+  CSMainRentalPaymentPage,
   CSMainSingleCarPage,
   CSMainUserPage,
   CSMainUserProfileSettingsPage,
@@ -42,7 +42,7 @@ export const router = createBrowserRouter(
             element={<CSMainSingleCarPage />}
             loader={singleCarLoader}
           />
-          <Route path="rental-form" element={<CSMainRentalFormPage />} />
+          <Route path="rental-form" element={<CSMainRentalPaymentPage />} />
           <Route path="top-up" element={<CSMainUserTopUpPage />} />
           <Route path="profile-settings" element={<CSMainUserProfileSettingsPage />} />
         </Route>

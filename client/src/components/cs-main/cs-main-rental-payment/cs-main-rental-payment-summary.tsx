@@ -6,12 +6,13 @@ import styled from 'styled-components';
 import { useStore } from '@/context';
 import { Env } from '@/core';
 
-import { SectionDescription, SectionTitle } from './cs-main-rental-form';
+import { SectionDescription, SectionTitle } from './cs-main-rental-payment';
 
-export const CSMainRentalFormSummary: FC = observer(() => {
+export const CSMainRentalPaymentSummary: FC = observer(() => {
   const {
     rentalStore: { rental },
   } = useStore();
+  
   const location = useLocation();
   const car = location.state?.car;
 
