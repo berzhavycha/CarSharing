@@ -18,7 +18,7 @@ export type AvailableCarsLoaderData = {
 
 export const availableCarsLoader = (args: LoaderFunctionArgs): Response | ReturnType<typeof defer> => {
   const url = new URL(args.request.url);
-  const { queryDto, defaultSearchParams } = extractPaginationParams(url, Env.ADMIN_CARS_PAGINATION_LIMIT);
+  const { queryDto, defaultSearchParams } = extractPaginationParams(url, Env.USER_CARS_PAGINATION_LIMIT);
 
   const types = url.searchParams.getAll('types[]');
   const capacities = url.searchParams.getAll('capacities[]');
