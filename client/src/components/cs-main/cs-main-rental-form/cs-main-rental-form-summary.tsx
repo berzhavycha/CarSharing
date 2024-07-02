@@ -3,8 +3,11 @@ import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { SectionTitle, SectionDescription } from "./cs-main-rental-form";
 import { Env } from "@/core";
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/context";
 
-export const CSMainRentalFormSummary: FC = () => {
+export const CSMainRentalFormSummary: FC = observer(() => {
+    const { rentalStore: { rental } } = useStore()
     const location = useLocation()
     const car = location.state?.car
 
@@ -24,11 +27,11 @@ export const CSMainRentalFormSummary: FC = () => {
                     <h3>Total Rental Price</h3>
                     <TotalDescription>Overall price and includes rental discount</TotalDescription>
                 </div>
-                <PriceWrapper>${car.pricePerHour}</PriceWrapper>
+                <PriceWrapper>${rental?.price.toFixed(2)}</PriceWrapper>
             </Total>
         </SummaryWrapper>
     )
-}
+})
 
 const SummaryWrapper = styled.div`
     width: 100%;
