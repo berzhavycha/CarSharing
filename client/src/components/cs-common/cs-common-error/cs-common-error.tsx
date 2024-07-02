@@ -18,6 +18,7 @@ export const CSCommonError: FC<Props> = ({ errorMessage }) => {
 };
 
 const ErrorContainer = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
   padding: 8px;
