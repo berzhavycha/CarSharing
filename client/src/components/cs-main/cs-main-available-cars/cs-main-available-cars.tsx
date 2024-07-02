@@ -61,7 +61,6 @@ const CarsWrapper = styled.div`
   margin: 40px 8% 60px 0;
 `;
 
-
 const CarsErrorWrapper = styled.div`
   width: 100%;
   display: flex;

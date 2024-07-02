@@ -7,8 +7,10 @@ import {
   FieldErrorsState,
   SignInUserDto,
   SignUpUserDto,
+  UpdateUserBalanceDto,
   UpdateUserDto,
 } from '@/types';
+import { topUp } from '@/services/user/top-up';
 
 export type ServiceUserResponse<T extends object> = {
   user?: AuthenticatedUser;
@@ -32,6 +34,7 @@ export const CurrentUserStore = t
     signUpErrors: t.optional(t.frozen<FieldErrorsState<SignUpUserDto> | null>(), null),
     signOutErrors: t.optional(t.frozen<FieldErrorsState<AuthenticatedUser> | null>(), null),
     updateErrors: t.optional(t.frozen<FieldErrorsState<UpdateUserDto> | null>(), null),
+    topUpErrors: t.optional(t.frozen<FieldErrorsState<UpdateUserBalanceDto> | null>(), null),
   })
   .views((self) => ({
     get existingImagesIds(): string[] {
@@ -96,13 +99,29 @@ export const CurrentUserStore = t
         self.updateErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
       }
     }),
+    topUp: flow(function* (userDto: UpdateUserBalanceDto) {
+      self.topUpErrors = null;
+
+      try {
+        if (self.user) {
+          const response = yield topUp(self.user?.id, userDto);
+          handleUserResponse<UpdateUserDto>(
+            response,
+            (user) => (self.user = user),
+            (errors) => (self.topUpErrors = errors),
+          );
+        }
+      } catch (error) {
+        self.topUpErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
+      }
+    }),
     fetchCurrentUser: flow(function* () {
       try {
         const response = yield fetchCurrentUser();
         handleUserResponse(
           response,
           (user) => (self.user = user),
-          () => {},
+          () => { },
         );
       } catch (error) {
         self.user = null;

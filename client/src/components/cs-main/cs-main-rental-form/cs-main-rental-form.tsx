@@ -1,4 +1,4 @@
-import { CSCommonContainer, CSCommonForm } from "@/components/cs-common";
+import { CSCommonContainer, CSCommonForm, CSCommonPaymentForm } from "@/components/cs-common";
 import { PaymentDto, RentalDto } from "@/types";
 import { FC } from "react";
 import styled from "styled-components";
@@ -29,30 +29,11 @@ export const CSMainRentalForm: FC = () => {
                                 />
                             </RentalFormBlocks>
                         </FormInfoWrapper>
-                        <FormInfoWrapper>
-                            <SectionTitle>Payment Details</SectionTitle>
-                            <SectionDescription>Please enter your payment details</SectionDescription>
-                            <PaymentFormBlocks>
-                                <CSCommonForm.Input
-                                    name="cardNumber"
-                                    label="Card Number"
-                                />
-                                <CSCommonForm.Input
-                                    name="expirationDate"
-                                    label="Expiration Date"
-                                />
-                                <CSCommonForm.Input
-                                    name="cardHolder"
-                                    label="Card Holder"
-                                />
-                                <CSCommonForm.Input
-                                    name="CVV"
-                                    label="CVV"
-                                    type="number"
-                                />
-                            </PaymentFormBlocks>
-                            <CSCommonForm.SubmitButton content="Rent Now" />
-                        </FormInfoWrapper>
+                        <CSCommonPaymentForm
+                            title='Payment Details'
+                            description="Please enter your payment details"
+                            submitButtonContent="Rent Now"
+                        />
                     </CSCommonForm>
                 </FormWrapper>
                 <CSMainRentalFormSummary />

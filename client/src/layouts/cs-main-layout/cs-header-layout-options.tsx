@@ -7,19 +7,22 @@ import { useStore } from '@/context';
 import { useSignOut } from '@/hooks';
 
 import DefaultImage from '../../../public/avatar.webp';
+import { useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 
-export const CSHeaderLayoutOptions: FC = () => {
-  const {
-    currentUserStore: { user },
-  } = useStore();
+export const CSHeaderLayoutOptions: FC = observer(() => {
+  const navigate = useNavigate()
+  const { currentUserStore: { user } } = useStore();
   const { onSignOut } = useSignOut();
+
+  const onTopUp = (): void => navigate('/top-up')
 
   return (
     <IconGroup>
       <IconWrapper>
         <FaGear />
       </IconWrapper>
-      <IconWrapper>
+      <IconWrapper onClick={onTopUp}>
         <FaDollarSign />
       </IconWrapper>
       <UserInfo>
@@ -38,7 +41,7 @@ export const CSHeaderLayoutOptions: FC = () => {
       </UserInfo>
     </IconGroup>
   );
-};
+});
 
 const Balance = styled.h4`
   font-size: 14px;

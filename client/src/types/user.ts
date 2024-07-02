@@ -17,3 +17,7 @@ export type UpdateUserDto = Partial<{
   oldPassword: string;
   existingImagesIds: string[];
 }>;
+
+export type UpdateUserBalanceDto = {
+  amount: number;
+}
