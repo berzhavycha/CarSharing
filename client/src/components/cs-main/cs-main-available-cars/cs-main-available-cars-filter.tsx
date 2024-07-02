@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import styled from 'styled-components';
 
 import { AvailableCarsLoaderData } from '@/pages';
 import { CSCommonCheckboxFilter, CSCommonRangeFilter } from '@/components/cs-common';
@@ -20,7 +19,7 @@ export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
 
 
   return (
-    <SidebarContainer>
+    <>
       <CSCommonCheckboxFilter type='types[]' options={typeOptions} title='TYPE' />
       <CSCommonCheckboxFilter type='capacities[]' options={capacityOptions} title='CAPACITY' />
       <CSCommonRangeFilter
@@ -32,15 +31,9 @@ export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
         maxParam='maxPrice'
       />
       <CSMainAvailableCarsSort />
-    </SidebarContainer>
+    </>
   );
 };
 
-const SidebarContainer = styled.div`
-  flex: 0 0 24%;
-  padding: 35px;
-  background-color: white;
-  min-height: 100%;
-  margin-top: 5px;
-`;
+
 
