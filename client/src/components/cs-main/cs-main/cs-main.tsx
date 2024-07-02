@@ -1,26 +1,20 @@
-import { FC, Suspense } from 'react';
-import { Await, useLoaderData, useNavigate } from 'react-router-dom';
+import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
   CSCommonBanner,
-  CSCommonCarList,
   CSCommonContainer,
-  CSCommonError,
   CSCommonPrimaryButton,
-  CSCommonSpinner,
 } from '@/components';
-import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
-import { InitialCarsLoaderData } from '@/pages';
 
 import BannerImage1 from '../../../../public/banner 1.png';
 import BannerImage2 from '../../../../public/banner 2.png';
 import DefaultCar from '../../../../public/default-car.png';
+import { CSMainInitialCarList } from './cs-main-initial-car-list';
 
 export const CSMain: FC = () => {
   const navigate = useNavigate();
-  const data = useLoaderData() as { data: InitialCarsLoaderData };
-
   const onShowMore = (): void => navigate('/available-cars');
 
   return (
@@ -43,18 +37,7 @@ export const CSMain: FC = () => {
           buttonContent="Rent Car"
         />
       </BannerWrappers>
-      <CarsWrapper>
-        <Suspense fallback={<CSCommonSpinner />}>
-          <Await
-            resolve={data.data}
-            errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
-          >
-            {(data) => {
-              return <CSCommonCarList cars={data.cars} />;
-            }}
-          </Await>
-        </Suspense>
-      </CarsWrapper>
+      <CSMainInitialCarList />
       <ShowMoreWrapper>
         <CSCommonPrimaryButton onClick={onShowMore} content="Show more cars" />
       </ShowMoreWrapper>
@@ -67,12 +50,6 @@ const BannerWrappers = styled.div`
   gap: 20px;
   margin-top: 50px;
   margin-bottom: 30px;
-`;
-
-const CarsWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
 `;
 
 const ShowMoreWrapper = styled.div`
