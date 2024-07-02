@@ -12,10 +12,12 @@ import {
   CSDashboardProfileSettingsPage,
   CSDashboardTransactionsPage,
   CSMainAvailableCarsPage,
+  CSMainSingleCarPage,
   CSMainUserPage,
   CSSignInPage,
   CSSignUpPage,
   initialCarsLoader,
+  singleCarLoader,
   transactionsLoader,
 } from '@/pages';
 
@@ -32,6 +34,7 @@ export const router = createBrowserRouter(
             element={<CSMainAvailableCarsPage />}
             loader={availableCarsLoader}
           />
+          <Route path="available-cars/:carId" element={<CSMainSingleCarPage />} loader={singleCarLoader} />
         </Route>
       </Route>
       <Route
