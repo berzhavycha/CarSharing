@@ -2,15 +2,12 @@ import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-import {
-  CSCommonBanner,
-  CSCommonContainer,
-  CSCommonPrimaryButton,
-} from '@/components';
+import { CSCommonBanner, CSCommonContainer, CSCommonPrimaryButton } from '@/components';
 
 import BannerImage1 from '../../../../public/banner 1.png';
 import BannerImage2 from '../../../../public/banner 2.png';
 import DefaultCar from '../../../../public/default-car.png';
+
 import { CSMainInitialCarList } from './cs-main-initial-car-list';
 
 export const CSMain: FC = () => {
@@ -27,6 +24,7 @@ export const CSMain: FC = () => {
           image={DefaultCar}
           buttonType="main"
           buttonContent="Rent Car"
+          onButtonClick={onShowMore}
         />
         <CSCommonBanner
           title="Easy way to rent a car at a low price"
@@ -35,6 +33,7 @@ export const CSMain: FC = () => {
           image={DefaultCar}
           buttonType="light"
           buttonContent="Rent Car"
+          onButtonClick={onShowMore}
         />
       </BannerWrappers>
       <CSMainInitialCarList />

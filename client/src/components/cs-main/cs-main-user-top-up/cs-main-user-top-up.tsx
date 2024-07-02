@@ -11,11 +11,15 @@ import {
 import { useStore } from '@/context';
 import { updateUserBalanceSchema } from '@/helpers';
 import { UpdateUserBalanceDto } from '@/types';
+
 import { useTopUp } from './hooks';
 
 export const CSMainUserTopUp: FC = () => {
-  const { currentUserStore: { topUpErrors } } = useStore()
-  const { onSubmit, isTopUpSuccessful, setIsTopUpSuccessful, unexpectedError, setUnexpectedError } = useTopUp()
+  const {
+    currentUserStore: { topUpErrors },
+  } = useStore();
+  const { onSubmit, isTopUpSuccessful, setIsTopUpSuccessful, unexpectedError, setUnexpectedError } =
+    useTopUp();
 
   const onCloseSuccessModal = (): void => setIsTopUpSuccessful(false);
   const onCloseErrorModal = (): void => setUnexpectedError('');

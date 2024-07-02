@@ -12,7 +12,7 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
   const {
     rentalStore: { rental },
   } = useStore();
-  
+
   const location = useLocation();
   const car = location.state?.car;
 

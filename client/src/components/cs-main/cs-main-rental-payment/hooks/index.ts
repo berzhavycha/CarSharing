@@ -1,1 +1,1 @@
-export * from './use-rental'
+export * from './use-rental';
