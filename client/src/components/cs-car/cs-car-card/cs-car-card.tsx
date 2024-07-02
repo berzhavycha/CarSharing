@@ -16,6 +16,7 @@ type CarCardProps = {
   pricePerHour: number;
   imageUrl: string;
   onClick: () => void;
+  onRent: () => void;
 };
 
 export const CSCarCard: FC<CarCardProps> = ({
@@ -26,7 +27,8 @@ export const CSCarCard: FC<CarCardProps> = ({
   capacity,
   pricePerHour,
   imageUrl,
-  onClick
+  onClick,
+  onRent
 }) => {
   return (
     <CardWrapper onClick={onClick}>
@@ -45,7 +47,7 @@ export const CSCarCard: FC<CarCardProps> = ({
       </Features>
       <Footer>
         <CSCommonPrice amount={pricePerHour} metric="hour" />
-        <CSCommonPrimaryButton content="Rent Now" onClick={() => console.log('rent')} />
+        <CSCommonPrimaryButton content="Rent Now" onClick={onRent} />
       </Footer>
     </CardWrapper>
   );

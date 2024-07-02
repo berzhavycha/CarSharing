@@ -6,6 +6,7 @@ import { Env } from '@/core';
 import { Car } from '@/types';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useRentCar } from '@/hooks';
 
 type Props = {
     cars: Car[];
@@ -13,6 +14,7 @@ type Props = {
 
 export const CSCommonCarList: FC<Props> = ({ cars }) => {
     const navigate = useNavigate()
+    const { onRentBtnClick } = useRentCar()
 
     return (
         <>
@@ -24,6 +26,7 @@ export const CSCommonCarList: FC<Props> = ({ cars }) => {
                 cars?.map((car) => (
                     <CSCarCard
                         onClick={() => navigate(`/available-cars/${car.id}`)}
+                        onRent={() => onRentBtnClick(car)}
                         key={car.id}
                         model={car.model}
                         pricePerHour={car.pricePerHour}
