@@ -3,8 +3,8 @@ export type Rental = {
 };
 
 export type RentalDto = {
-  carId: string;
+  carId?: string;
   pickUpLocation: string;
   dropOffLocation: string;
-  hours: string;
+  hours: number;
 }

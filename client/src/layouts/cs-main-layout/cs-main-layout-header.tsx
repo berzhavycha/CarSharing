@@ -5,14 +5,18 @@ import { CSCommonContainer } from '@/components';
 
 import { CSHeaderLayoutCarSearch } from './cs-header-layout-car-search';
 import { CSHeaderLayoutOptions } from './cs-header-layout-options';
+import { useNavigate } from 'react-router-dom';
 
 export const CSMainLayoutHeader: FC = () => {
+  const navigate = useNavigate()
+  const onMainPage = (): void => navigate('/')
+
   return (
     <Section>
       <CSCommonContainer>
         <Nav>
           <LeftSection>
-            <Logo>CARRENT</Logo>
+            <Logo onClick={onMainPage}>CARRENT</Logo>
             <CSHeaderLayoutCarSearch />
           </LeftSection>
           <CSHeaderLayoutOptions />
@@ -45,4 +49,5 @@ const Logo = styled.div`
   font-size: 32px;
   font-weight: bold;
   color: var(--main-blue);
+  cursor: pointer;
 `;
