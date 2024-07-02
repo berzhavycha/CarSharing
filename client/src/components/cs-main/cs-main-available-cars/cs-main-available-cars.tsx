@@ -29,7 +29,11 @@ export const CSMainAvailableCars: FC = () => {
         <Suspense fallback={<CSCommonSpinner />}>
           <Await
             resolve={data.carsData}
-            errorElement={<CarsErrorWrapper><CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} /></CarsErrorWrapper>}
+            errorElement={
+              <CarsErrorWrapper>
+                <CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />
+              </CarsErrorWrapper>
+            }
           >
             {(resolvedData) => <CSMainAvailableCarsList data={resolvedData} />}
           </Await>
@@ -66,4 +70,4 @@ const CarsErrorWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
+`;

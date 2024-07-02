@@ -1,1 +1,1 @@
-export * from './cs-common-checkbox'
+export * from './cs-common-checkbox';

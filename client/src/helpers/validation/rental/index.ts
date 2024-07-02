@@ -1,1 +1,1 @@
-export * from './rental-schema'
+export * from './rental-schema';

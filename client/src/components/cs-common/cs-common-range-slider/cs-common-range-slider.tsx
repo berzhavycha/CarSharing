@@ -8,7 +8,7 @@ type Props = {
   value: [number, number];
   onChange: (value: [number, number]) => void;
   formatValue?: (value: number) => string;
-}
+};
 
 export const CSCommonRangeSlider: FC<Props> = ({
   min,
@@ -18,7 +18,6 @@ export const CSCommonRangeSlider: FC<Props> = ({
   onChange,
   formatValue = (v): string => v.toString(),
 }) => {
-
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const newValue = Number(event.target.value);
     const [minValue, maxValue] = value;
@@ -35,7 +34,7 @@ export const CSCommonRangeSlider: FC<Props> = ({
         <RangeSliderRange
           style={{
             left: `${((value[0] - min) / (max - min)) * 100}%`,
-            right: `${100 - ((value[1] - min) / (max - min)) * 100}%`
+            right: `${100 - ((value[1] - min) / (max - min)) * 100}%`,
           }}
         />
       </RangeSliderTrack>

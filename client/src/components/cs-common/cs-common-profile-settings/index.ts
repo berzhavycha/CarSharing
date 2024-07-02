@@ -1,1 +1,1 @@
-export * from './cs-common-profile-settings'
+export * from './cs-common-profile-settings';

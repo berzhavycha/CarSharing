@@ -1,6 +1,7 @@
-import { CSMainUserTopUp } from "@/components";
-import { FC } from "react";
+import { FC } from 'react';
+
+import { CSMainUserTopUp } from '@/components';
 
 export const CSMainUserTopUpPage: FC = () => {
-    return <CSMainUserTopUp />
-}
+  return <CSMainUserTopUp />;
+};

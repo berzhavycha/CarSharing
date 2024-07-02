@@ -1,1 +1,1 @@
-export * from './use-range-search-params'
+export * from './use-range-search-params';

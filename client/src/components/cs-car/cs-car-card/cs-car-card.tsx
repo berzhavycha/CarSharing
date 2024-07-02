@@ -28,7 +28,7 @@ export const CSCarCard: FC<CarCardProps> = ({
   pricePerHour,
   imageUrl,
   onClick,
-  onRent
+  onRent,
 }) => {
   return (
     <CardWrapper onClick={onClick}>

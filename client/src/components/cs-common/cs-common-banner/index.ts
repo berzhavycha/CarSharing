@@ -1,1 +1,1 @@
-export * from './cs-common-banner'
+export * from './cs-common-banner';

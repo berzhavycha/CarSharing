@@ -1,38 +1,30 @@
-import { FilterOption } from "@/types";
-import { FC } from "react";
-import styled from "styled-components";
+import { FC } from 'react';
+import styled from 'styled-components';
+
+import { FilterOption } from '@/types';
 
 type Props = {
-    type: string
-    option: FilterOption<string | number>;
-    checked: boolean;
-    onCheck: (key: string, label: string) => void
-}
+  type: string;
+  option: FilterOption<string | number>;
+  checked: boolean;
+  onCheck: (key: string, label: string) => void;
+};
 
 export const CSCommonCheckbox: FC<Props> = ({ type, option, checked, onCheck }) => {
-    return (
-        <CheckboxLabel key={option.label}>
-            <HiddenCheckbox
-                type="checkbox"
-                readOnly
-                checked={checked}
-            />
-            <CustomCheckbox
-                onClick={() => onCheck(type, `${option.originalValue || option.label}`)}
-            />
-            {option.label}
-            <Count>({option.count})</Count>
-        </CheckboxLabel>
-    )
-}
-
-
+  return (
+    <CheckboxLabel key={option.label}>
+      <HiddenCheckbox type="checkbox" readOnly checked={checked} />
+      <CustomCheckbox onClick={() => onCheck(type, `${option.originalValue || option.label}`)} />
+      {option.label}
+      <Count>({option.count})</Count>
+    </CheckboxLabel>
+  );
+};
 
 const Count = styled.span`
   color: #6c757d;
   margin-left: 4px;
 `;
-
 
 const CheckboxLabel = styled.label`
   display: flex;

@@ -23,7 +23,7 @@ export const CSCommonFormInput: FC<Props> = ({ name, label, error, onChange, ...
       <CSCommonInputField
         {...props}
         {...register(name, {
-          onChange
+          onChange,
         })}
         label={label}
         error={errorText}

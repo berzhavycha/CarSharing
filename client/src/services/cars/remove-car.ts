@@ -10,6 +10,6 @@ export const removeCar = async (carId: string): Promise<ServiceReturn> => {
   try {
     return await axiosInstance.delete(`${Env.API_BASE_URL}/cars/${carId}`);
   } catch (error) {
-    return findFirstExpectedError(error, removeCarMapping)
+    return findFirstExpectedError(error, removeCarMapping);
   }
 };

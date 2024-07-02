@@ -1,1 +1,1 @@
-export * from './cs-common-payment-form'
+export * from './cs-common-payment-form';

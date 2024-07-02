@@ -2,6 +2,7 @@ import { flow, Instance, types as t } from 'mobx-state-tree';
 
 import { handleUserResponse, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { fetchCurrentUser, signIn, signOut, signUp, updateUser } from '@/services';
+import { topUp } from '@/services/user/top-up';
 import {
   AuthenticatedUser,
   FieldErrorsState,
@@ -10,7 +11,6 @@ import {
   UpdateUserBalanceDto,
   UpdateUserDto,
 } from '@/types';
-import { topUp } from '@/services/user/top-up';
 
 export type ServiceUserResponse<T extends object> = {
   user?: AuthenticatedUser;
@@ -44,7 +44,7 @@ export const CurrentUserStore = t
   .actions((self) => ({
     updateBalance: (balance: number): void => {
       if (self.user) {
-        self.user.balance = balance
+        self.user.balance = balance;
       }
     },
     signUp: flow(function* (userDto: SignUpUserDto) {
@@ -126,7 +126,7 @@ export const CurrentUserStore = t
         handleUserResponse(
           response,
           (user) => (self.user = user),
-          () => { },
+          () => {},
         );
       } catch (error) {
         self.user = null;

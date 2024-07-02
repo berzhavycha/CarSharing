@@ -1,6 +1,7 @@
-import { CSMainRentalForm } from "@/components";
-import { FC } from "react";
+import { FC } from 'react';
+
+import { CSMainRentalForm } from '@/components';
 
 export const CSMainRentalFormPage: FC = () => {
-    return <CSMainRentalForm />
-}
+  return <CSMainRentalForm />;
+};

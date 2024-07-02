@@ -32,7 +32,7 @@ export const CSMain: FC = () => {
           description="Ease of doing a car rental safely and reliably. Of course at a low price."
           image={DefaultCar}
           buttonType="main"
-          buttonContent='Rent Car'
+          buttonContent="Rent Car"
         />
         <CSCommonBanner
           title="Easy way to rent a car at a low price"
@@ -40,7 +40,7 @@ export const CSMain: FC = () => {
           description="Providing cheap car rental services and safe and comfortable facilities."
           image={DefaultCar}
           buttonType="light"
-          buttonContent='Rent Car'
+          buttonContent="Rent Car"
         />
       </BannerWrappers>
       <CarsWrapper>
@@ -79,4 +79,3 @@ const ShowMoreWrapper = styled.div`
   margin: 40px 0;
   text-align: center;
 `;
-
