@@ -5,21 +5,18 @@ import { TableCell, TableRow } from '@/components/cs-common';
 import { Env } from '@/core';
 import { formatDate, uppercaseFirstLetter, RentalStatus } from '@/helpers';
 import { Rental } from '@/types';
-import { useReturnCar } from './hooks';
 
 type Props = {
     rental: Rental;
     index: number;
+    onCarReturn: () => Promise<void>
 };
 
 export const CSMainRentalHistoryTableRow: FC<Props> = ({
     rental,
-    index
+    index,
+    onCarReturn
 }) => {
-    const { carReturnHandler } = useReturnCar()
-
-    const onCarReturn = async (): Promise<{ rental?: Rental, error?: string }> => await carReturnHandler(rental.id)
-
     return (
         <TableRow key={rental.id}>
             <TableCell>{index + 1}</TableCell>

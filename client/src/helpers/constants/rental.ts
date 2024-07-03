@@ -9,6 +9,12 @@ export const createRentalFieldMappings: Record<string, keyof (RentalDto & UserRe
   car: 'car',
 };
 
+export const returnCarFieldMappings: Record<string, keyof UserRentalErrors> = {
+  rental: 'rental',
+  money: 'balance',
+  car: 'car',
+};
+
 export enum RentalStatus {
   ACTIVE = 'active',
   CLOSED = 'closed',

@@ -1,19 +1,20 @@
 import { axiosInstance } from '@/api';
 import { Env } from '@/core';
-import { createRentalFieldMappings, findFirstExpectedError } from '@/helpers';
-import { Rental, RentalDto, UserRentalErrors } from '@/types';
+import { findFirstExpectedError, returnCarFieldMappings } from '@/helpers';
+import { Rental, UserRentalErrors } from '@/types';
 
 type ServiceReturn = {
     rental?: Rental;
+    refund?: number;
+    penalty?: number;
     error?: string;
 };
 
 export const returnCar = async (id: string): Promise<ServiceReturn> => {
     try {
         const { data } = await axiosInstance.patch(`${Env.API_BASE_URL}/rentals/${id}`);
-        console.log(data)
-        return { rental: data };
+        return { rental: data.rental, penalty: data.penalty, refund: data.refund };
     } catch (error) {
-        return findFirstExpectedError<RentalDto & UserRentalErrors>(error, createRentalFieldMappings);
+        return findFirstExpectedError<UserRentalErrors>(error, returnCarFieldMappings);
     }
 };
