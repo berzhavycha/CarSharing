@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useStore } from '@/context';
 import { returnCar as returnCarService } from '@/services';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 type ReturnCarHook = {
     refund: number | undefined;
@@ -21,6 +22,9 @@ export const useReturnCar = (): ReturnCarHook => {
     const [penalty, setPenalty] = useState<number>();
     const [isReturnedInTime, setIsReturnedInTime] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const { pathname } = useLocation()
+    const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
 
     const carReturnHandler = async (id: string): Promise<void> => {
         try {
@@ -41,6 +45,8 @@ export const useReturnCar = (): ReturnCarHook => {
             }
         } catch (error) {
             setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
+        } finally {
+            navigate(`${pathname}?${searchParams}`)
         }
     };
 
