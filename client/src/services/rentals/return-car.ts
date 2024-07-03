@@ -11,6 +11,7 @@ type ServiceReturn = {
 export const returnCar = async (id: string): Promise<ServiceReturn> => {
     try {
         const { data } = await axiosInstance.patch(`${Env.API_BASE_URL}/rentals/${id}`);
+        console.log(data)
         return { rental: data };
     } catch (error) {
         return findFirstExpectedError<RentalDto & UserRentalErrors>(error, createRentalFieldMappings);
