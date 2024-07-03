@@ -3,7 +3,7 @@ import { Rental } from "@/types";
 import { FC } from "react";
 import styled from "styled-components";
 import { CSMainSingleRentalTransaction } from "./cs-main-single-rental-transactions";
-import { CSCommonDetailsFeature } from "@/components/cs-common";
+import { CSCommonDetailsFeature, CSCommonTitle } from "@/components/cs-common";
 
 type Props = {
     rental: Rental
@@ -12,11 +12,14 @@ type Props = {
 export const CSMainSingleRentalDetails: FC<Props> = ({ rental }) => {
     return (
         <RentalDetailsWrapper>
+            <CSCommonTitle>Rental Details</CSCommonTitle>
             <FeaturesWrapper>
                 <CSCommonDetailsFeature label="Car Model" text={rental.originalCar?.model} />
-                <CSCommonDetailsFeature label="Rental Status" component={<StatusBadge status={rental.status as RentalStatus}>
-                    {uppercaseFirstLetter(rental.status)}
-                </StatusBadge>} />
+                <CSCommonDetailsFeature label="Rental Status" component={
+                    <StatusBadge status={rental.status as RentalStatus}>
+                        {uppercaseFirstLetter(rental.status)}
+                    </StatusBadge>
+                } />
                 <CSCommonDetailsFeature label="Rental Start" text={formatDate(rental.rentalStart)} />
                 <CSCommonDetailsFeature label="Rental End" text={rental.rentalEnd ? formatDate(rental.rentalEnd) : 'Not returned yet'} />
                 <CSCommonDetailsFeature label="Requested Hours" text={rental.requestedHours} />
@@ -36,6 +39,7 @@ const RentalDetailsWrapper = styled.div`
   border-radius: 20px;
   box-shadow: var(--default-box-shadow);
 `;
+
 
 const FeaturesWrapper = styled.div`
   display: flex;

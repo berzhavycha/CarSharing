@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { CSCommonDetailsFeature, CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
+import { CSCommonDetailsFeature, CSCommonPrice, CSCommonPrimaryButton, CSCommonTitle } from '@/components/cs-common';
 import { CarFuelType, getFuelUnit } from '@/helpers';
 import { Car } from '@/types';
 
@@ -14,7 +14,7 @@ type Props = {
 export const CSMainSingleCarDetails: FC<Props> = ({ car }) => {
   return (
     <CarDetailsWrapper>
-      <Title>{car.model}</Title>
+      <CSCommonTitle>{car.model}</CSCommonTitle>
       <Description>{car.description}</Description>
       <FeaturesWrapper>
         <CSCommonDetailsFeature label="Type" text={car.type} />
@@ -41,13 +41,6 @@ const CarDetailsWrapper = styled.div`
   padding: 30px;
   border-radius: 20px;
   box-shadow: var(--default-box-shadow);
-`;
-
-const Title = styled.h2`
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--dark);
-  margin-bottom: 20px;
 `;
 
 const Description = styled.h2`
