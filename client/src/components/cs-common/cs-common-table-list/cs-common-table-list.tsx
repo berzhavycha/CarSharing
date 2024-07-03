@@ -74,9 +74,10 @@ export const CSCommonTableList = <T,>({
   );
 };
 
+
 const ListViewContainer = styled.div`
   width: 100%;
-  max-height: 100vh;
+  min-height: 100vh;
 `;
 
 const Header = styled.div`
