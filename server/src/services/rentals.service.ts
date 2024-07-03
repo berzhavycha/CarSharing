@@ -72,6 +72,8 @@ export class RentalsService {
         car,
         user,
         originalCar,
+        pickUpLocation: rentCarDto.pickUpLocation,
+        dropOffLocation: rentCarDto.dropOffLocation,
         totalPrice: rentalCost,
         status: RentalStatus.ACTIVE,
         requestedHours: rentCarDto.hours,
