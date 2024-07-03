@@ -24,6 +24,7 @@ import {
   initialCarsLoader,
   rentalHistoryLoader,
   singleCarLoader,
+  singleRentalLoader,
   transactionsLoader,
 } from '@/pages';
 
@@ -49,7 +50,7 @@ export const router = createBrowserRouter(
           <Route path="top-up" element={<CSMainUserTopUpPage />} />
           <Route path="profile-settings" element={<CSMainUserProfileSettingsPage />} />
           <Route path="rental-history" element={<CSMainRentalHistoryPage />} loader={rentalHistoryLoader} />
-          <Route path="rental-history/:rentalId" element={<CSMainSingleRentalPage />} loader={rentalHistoryLoader} />
+          <Route path="rental-history/:rentalId" element={<CSMainSingleRentalPage />} loader={singleRentalLoader} />
         </Route>
       </Route>
       <Route

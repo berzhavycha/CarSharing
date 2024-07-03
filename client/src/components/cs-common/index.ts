@@ -26,3 +26,4 @@ export * from './cs-common-profile-settings';
 export * from './cs-common-slides';
 export * from './cs-common-car-card';
 export * from './cs-common-table-list'
+export * from './cs-common-details-feature'

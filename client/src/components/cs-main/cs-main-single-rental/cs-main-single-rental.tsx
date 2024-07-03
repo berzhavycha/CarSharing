@@ -1,25 +1,46 @@
-import { CSCommonContainer, CSCommonSlides } from "@/components/cs-common";
-import { Env } from "@/core";
-import { LocalFile } from "@/types";
-import { FC } from "react";
-import { useLocation } from "react-router-dom";
-import styled from "styled-components";
+import React, { Suspense } from 'react';
+import { observer } from 'mobx-react-lite';
+import styled from 'styled-components';
+import { Env } from '@/core';
+import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
+import { CSCommonContainer, CSCommonError, CSCommonSlides, CSCommonSpinner } from '@/components/cs-common';
+import { LocalFile, Rental } from '@/types';
+import { Await, useLoaderData } from 'react-router-dom';
+import { CSMainSingleRentalDetails } from './cs-main-single-rental-details';
 
-export const CSMainSingleRental: FC = () => {
-    const location = useLocation()
-
-    const carImages = location.state?.rental?.originalCar.pictures.map((pic: LocalFile) => `${Env.API_BASE_URL}/local-files/${pic?.id}`) ?? []
-    console.log(carImages, location.state  )
+export const CSMainSingleRental: React.FC = observer(() => {
+    const data = useLoaderData() as { data: Rental };
 
     return (
         <CSCommonContainer>
-            <RentalWrapper>
-                <CSCommonSlides images={carImages} width="600px" height="270px" />
-            </RentalWrapper>
-        </CSCommonContainer>
-    )
-}
+            <Suspense fallback={<CSCommonSpinner />}>
+                <Await
+                    resolve={data.data}
+                    errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
+                >
+                    {(rental) => {
+                        const carImages = rental.originalCar?.pictures?.map(
+                            (pic: LocalFile) => `${Env.API_BASE_URL}/local-files/${pic?.id}`,
+                        );
 
-const RentalWrapper = styled.div`
-    display: flex;
+                        return (
+                            <RentalDetailsContainer>
+                                <CSCommonSlides images={carImages} width='600px' height='300px' />
+                                <CSMainSingleRentalDetails rental={rental} />
+                            </RentalDetailsContainer>
+                        );
+                    }}
+                </Await>
+            </Suspense>
+        </CSCommonContainer>
+    );
+});
+
+
+const RentalDetailsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  margin: 50px 0;
 `
+
