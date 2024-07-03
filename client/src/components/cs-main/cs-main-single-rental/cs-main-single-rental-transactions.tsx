@@ -1,36 +1,41 @@
-import { CSCommonNoData, CSCommonTitle } from "@/components/cs-common";
+import { CSCommonDetailsFeature, CSCommonNoData, CSCommonTitle } from "@/components/cs-common";
 import { formatDate, convertToTitleCase } from "@/helpers";
 import { Rental } from "@/types";
 import { FC } from "react";
 import styled from "styled-components";
 
 type Props = {
-    rental: Rental
+  rental: Rental
 }
 
 export const CSMainSingleRentalTransaction: FC<Props> = ({ rental }) => {
-    return (
-        <TransactionsSection>
-            <CSCommonTitle>Transactions</CSCommonTitle>
-            {rental?.transactions?.length > 0 ? (
-                <TransactionsList>
-                    {rental.transactions.map((transaction) => (
-                        <TransactionItem key={transaction.id}>
-                            <TransactionType>{convertToTitleCase(transaction.type)}</TransactionType>
-                            <TransactionAmount
-                                $type={transaction.amount > 0 ? 'gain' : 'lose'}
-                            >
-                                ${transaction.amount.toFixed(2)}
-                            </TransactionAmount>
-                            <TransactionDate>{formatDate(transaction.createdAt)}</TransactionDate>
-                        </TransactionItem>
-                    ))}
-                </TransactionsList>
-            ) : (
-                <CSCommonNoData message="No transactions" />
-            )}
-        </TransactionsSection>
-    )
+  const totalSpend = rental.transactions.reduce((acc, item) => {
+    return acc + item.amount
+  }, 0)
+
+  return (
+    <TransactionsSection>
+      <CSCommonTitle>Transactions</CSCommonTitle>
+      {rental?.transactions?.length > 0 ? (
+        <TransactionsList>
+          {rental.transactions.map((transaction) => (
+            <TransactionItem key={transaction.id}>
+              <TransactionType>{convertToTitleCase(transaction.type)}</TransactionType>
+              <TransactionAmount
+                $type={transaction.amount > 0 ? 'gain' : 'lose'}
+              >
+                ${transaction.amount.toFixed(2)}
+              </TransactionAmount>
+              <TransactionDate>{formatDate(transaction.createdAt)}</TransactionDate>
+            </TransactionItem>
+          ))}
+        </TransactionsList>
+      ) : (
+        <CSCommonNoData message="No transactions" />
+      )}
+      <CSCommonDetailsFeature label="Total Spend" text={`$${Math.abs(Number(totalSpend.toFixed(2))) }`}/>
+    </TransactionsSection>
+  )
 }
 
 const TransactionsSection = styled.div`
@@ -40,6 +45,7 @@ const TransactionsSection = styled.div`
 const TransactionsList = styled.ul`
   list-style: none;
   padding: 0;
+  margin-bottom: 20px;
 `;
 
 const TransactionItem = styled.li`
@@ -57,7 +63,7 @@ const TransactionType = styled.span`
 `;
 
 type TransactionAmountProps = {
-    $type: "lose" | "gain"
+  $type: "lose" | "gain"
 }
 
 const TransactionAmount = styled.span<TransactionAmountProps>`
