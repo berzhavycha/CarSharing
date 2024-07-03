@@ -96,7 +96,7 @@ const NextButton = styled(NavButton)`
 const Thumbnail = styled.img<{ active: boolean }>`
   width: 50px;
   height: 50px;
-  object-fit: cover;
+  object-fit: contain;
   margin: 0 5px;
   opacity: ${({ active }): number => (active ? 1 : 0.6)};
   cursor: pointer;
