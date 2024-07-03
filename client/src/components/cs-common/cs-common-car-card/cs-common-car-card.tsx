@@ -93,7 +93,8 @@ const ShadowImage = styled.img`
 
 const CarImage = styled.img`
   width: 100%;
-  height: auto;
+  height: 120px;
+  object-fit: contain;
   z-index: 1;
 `;
 
