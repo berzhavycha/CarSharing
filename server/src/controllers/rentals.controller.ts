@@ -45,7 +45,7 @@ export class RentalsController {
   async returnCar(
     @Param('id') id: string,
     @CurrentUser() user: User,
-  ): Promise<Rental> {
+  ): Promise<{ rental: Rental, penalty?: number, refund?: number }> {
     return this.rentalsService.returnCar(id, user);
   }
 }

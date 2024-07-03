@@ -94,7 +94,7 @@ export class RentalsService {
     });
   }
 
-  async returnCar(rentalId: string, user: User): Promise<Rental> {
+  async returnCar(rentalId: string, user: User): Promise<{ rental: Rental, penalty?: number, refund?: number }> {
     const rental = await this.rentalsRepository.findOne({
       where: { id: rentalId },
       relations: ['car', 'originalCar', 'user'],
@@ -115,29 +115,32 @@ export class RentalsService {
         ONE_HOUR_MILLISECONDS,
       );
 
+      let refund: number | undefined
+      let penalty: number | undefined
+
       if (hoursDifference < rental.requestedHours) {
-        const refundAmount =
+        refund =
           rental.car.pricePerHour *
           Math.ceil(rental.requestedHours - hoursDifference);
 
         await this.usersService.updateUserBalance(
           {
             id: user.id,
-            balanceDto: { amount: refundAmount },
+            balanceDto: { amount: refund },
             transactionType: TransactionType.REFUND,
             rental,
           },
           manager,
         );
       } else if (hoursDifference > rental.requestedHours) {
-        const fineAmount =
+        penalty =
           rental.car.pricePerHour *
           Math.ceil(hoursDifference - rental.requestedHours);
 
         await this.usersService.updateUserBalance(
           {
             id: user.id,
-            balanceDto: { amount: -fineAmount },
+            balanceDto: { amount: -penalty },
             transactionType: TransactionType.PENALTY,
             rental,
           },
@@ -151,7 +154,9 @@ export class RentalsService {
       rental.rentalEnd = returnDate;
       rental.status = RentalStatus.CLOSED;
 
-      return manager.save(rental);
+      const updatedRental = await manager.save(rental);
+
+      return { rental: updatedRental, refund, penalty }
     });
   }
 

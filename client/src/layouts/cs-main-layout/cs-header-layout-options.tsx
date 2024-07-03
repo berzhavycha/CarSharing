@@ -45,7 +45,7 @@ export const CSHeaderLayoutOptions: FC = observer(() => {
             <p>
               {user?.firstName} {user?.lastName}
             </p>
-            <Balance>Balance: ${user?.balance}</Balance>
+            <Balance>Balance: ${user?.balance?.toFixed(2)}</Balance>
           </UserDetails>
         )}
         <IconWrapper onClick={onSignOut}>
