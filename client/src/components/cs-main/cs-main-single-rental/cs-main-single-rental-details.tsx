@@ -16,7 +16,7 @@ export const CSMainSingleRentalDetails: FC<Props> = ({ rental }) => {
             <FeaturesWrapper>
                 <CSCommonDetailsFeature label="Car Model" text={rental.originalCar?.model} />
                 <CSCommonDetailsFeature label="Rental Status" component={
-                    <StatusBadge status={rental.status as RentalStatus}>
+                    <StatusBadge $status={rental.status as RentalStatus}>
                         {uppercaseFirstLetter(rental.status)}
                     </StatusBadge>
                 } />
@@ -49,7 +49,7 @@ const FeaturesWrapper = styled.div`
 `;
 
 
-const StatusBadge = styled.span<{ status: RentalStatus }>`
+const StatusBadge = styled.span<{ $status: RentalStatus }>`
   display: inline-block;
   padding: 4px 8px;
   border-radius: 4px;
@@ -57,8 +57,8 @@ const StatusBadge = styled.span<{ status: RentalStatus }>`
   font-weight: bold;
   text-transform: uppercase;
 
-  ${({ status }): string => {
-        switch (status) {
+  ${({ $status }): string => {
+        switch ($status) {
             case RentalStatus.ACTIVE:
                 return `
           color: #155724;
