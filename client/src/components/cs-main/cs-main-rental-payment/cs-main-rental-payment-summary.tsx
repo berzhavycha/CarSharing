@@ -10,7 +10,7 @@ import { SectionDescription, SectionTitle } from './cs-main-rental-payment';
 
 export const CSMainRentalPaymentSummary: FC = observer(() => {
   const {
-    rentalStore: { rental },
+    rentalStore: { potentialRentalPrice },
   } = useStore();
 
   const location = useLocation();
@@ -34,7 +34,7 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
           <h3>Total Rental Price</h3>
           <TotalDescription>Overall price and includes rental discount</TotalDescription>
         </TotalInfo>
-        <PriceWrapper>${rental?.price.toFixed(2)}</PriceWrapper>
+        <PriceWrapper>${potentialRentalPrice.toFixed(2)}</PriceWrapper>
       </Total>
     </SummaryWrapper>
   );

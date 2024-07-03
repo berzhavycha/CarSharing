@@ -10,7 +10,14 @@ const RootStore = t.model('RootStore', {
 
 export const rootStore = RootStore.create({
   currentUserStore: CurrentUserStore.create({}),
-  rentalStore: RentalStore.create(),
+  rentalStore: RentalStore.create({
+    rentals: undefined,
+    refund: undefined,
+    penalty: undefined,
+    isReturnedInTime: false,
+    errorMessage: '',
+    potentialRentalPrice: 0
+  }),
 });
 
 export type RootStoreType = Instance<typeof RootStore>;

@@ -6,6 +6,7 @@ import { Env } from '@/core';
 import { formatDate, uppercaseFirstLetter, RentalStatus } from '@/helpers';
 import { Rental } from '@/types';
 import { Link } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 
 type Props = {
     rental: Rental;
@@ -13,7 +14,7 @@ type Props = {
     onCarReturn: () => Promise<void>
 };
 
-export const CSMainRentalHistoryTableRow: FC<Props> = ({
+export const CSMainRentalHistoryTableRow: FC<Props> = observer(({
     rental,
     index,
     onCarReturn
@@ -42,7 +43,7 @@ export const CSMainRentalHistoryTableRow: FC<Props> = ({
             </TableCell>
         </TableRow>
     );
-};
+});
 
 const StatusBadge = styled.div<{ status: RentalStatus }>`
   width: 100%;

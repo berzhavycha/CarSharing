@@ -15,12 +15,12 @@ export const useRental = (onSuccess: () => void, onError: (error: string) => voi
   const rentedCar = location.state.car;
 
   const {
-    rentalStore: { rental, updatePrice, setRental },
+    rentalStore: { setPotentialRentalPrice, potentialRentalPrice },
     currentUserStore: { user, updateBalance },
   } = useStore();
 
   useEffect(() => {
-    setRental({ price: rentedCar.pricePerHour });
+    setPotentialRentalPrice(rentedCar.pricePerHour);
   }, []);
 
   const onSubmit = async (rentalDto: RentalDto & PaymentDto): Promise<void> => {
@@ -29,8 +29,8 @@ export const useRental = (onSuccess: () => void, onError: (error: string) => voi
       ...rentalDto,
     });
 
-    if (createdRental && user?.balance && rental) {
-      updateBalance(user.balance - rental.price);
+    if (createdRental && user?.balance && potentialRentalPrice) {
+      updateBalance(user.balance - potentialRentalPrice);
       onSuccess();
     } else if (error) {
       onError(error);
@@ -40,7 +40,7 @@ export const useRental = (onSuccess: () => void, onError: (error: string) => voi
   const onRequestedHoursChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const currentHours = +event.target.value;
     const carPricePerHour = rentedCar.pricePerHour * currentHours;
-    updatePrice(carPricePerHour);
+    setPotentialRentalPrice(carPricePerHour);
   };
 
   return { onSubmit, onRequestedHoursChange };
