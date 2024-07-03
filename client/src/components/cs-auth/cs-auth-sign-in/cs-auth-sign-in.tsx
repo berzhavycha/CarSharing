@@ -16,13 +16,11 @@ export const CSAuthSignIn: FC = observer(() => {
   const navigate = useNavigate();
   const location = useLocation();
   const errorMessage = location.state?.errorMessage;
-  const from = location.state?.from;
 
   const onSubmit = async (data: SignInUserDto): Promise<void> => {
     await currentUserStore.signIn(data);
     if (currentUserStore.user) {
-      const navigatePath =
-        from || (currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/');
+      const navigatePath = currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/';
       navigate(navigatePath);
     }
   };
@@ -32,7 +30,7 @@ export const CSAuthSignIn: FC = observer(() => {
       <Title>Login</Title>
       <Span>
         Don't Have an Account?
-        <Link to="/sign-up" state={{ from }}>
+        <Link to="/sign-up">
           Register here
         </Link>{' '}
         instead
