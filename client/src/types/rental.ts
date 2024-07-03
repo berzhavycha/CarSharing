@@ -7,6 +7,7 @@ export type Rental = {
   id: string;
   rentalStart: string;
   rentalEnd: string;
+  totalPrice: number;
   requestedHours: number;
   pickUpLocation: string;
   dropOffLocation: string;

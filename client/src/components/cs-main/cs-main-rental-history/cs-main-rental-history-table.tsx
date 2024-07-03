@@ -22,7 +22,10 @@ export const CSMainRentalHistoryTable: FC<Props> = ({ rentals, onSortChange }) =
                             Model
                         </TableHeader>
                         <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('amount')}>
-                            Price / Hour
+                            Hours
+                        </TableHeader>
+                        <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('amount')}>
+                            Total Price
                         </TableHeader>
                         <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('createdAt')}>
                             Start Time

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { TableCell, TableRow } from '@/components/cs-common';
 import { Env } from '@/core';
-import { formatDate, uppercaseFirstLetter } from '@/helpers';
+import { formatDate, uppercaseFirstLetter, RentalStatus } from '@/helpers';
 import { Rental } from '@/types';
 
 type Props = {
@@ -22,16 +22,17 @@ export const CSMainRentalHistoryTableRow: FC<Props> = ({
                 <img src={`${Env.API_BASE_URL}/local-files/${rental.originalCar?.pictures?.[0]?.id}`} alt="Car Image" />
             </TableCell>
             <TableCell>{rental.originalCar.model}</TableCell>
-            <TableCell>{rental.originalCar.pricePerHour}</TableCell>
+            <TableCell>{rental.requestedHours}</TableCell>
+            <TableCell>{rental.totalPrice}</TableCell>
             <TableCell>{formatDate(rental.rentalStart)}</TableCell>
             <TableCell>{rental.rentalEnd ? formatDate(rental.rentalEnd) : '-'}</TableCell>
             <TableCell>
-                <StatusBadge $status={rental.status}>{uppercaseFirstLetter(rental.status)}</StatusBadge>
+                <StatusBadge status={rental.status as RentalStatus}>{uppercaseFirstLetter(rental.status)}</StatusBadge>
             </TableCell>
             <TableCell>
                 <Buttons>
-                    {rental.status === 'active' && (
-                        <RemoveButton>Return Car</RemoveButton>
+                    {rental.status === RentalStatus.ACTIVE && (
+                        <ReturnButton>Return Car</ReturnButton>
                     )}
                 </Buttons>
             </TableCell>
@@ -39,7 +40,7 @@ export const CSMainRentalHistoryTableRow: FC<Props> = ({
     );
 };
 
-const StatusBadge = styled.div<{ $status: string }>`
+const StatusBadge = styled.div<{ status: RentalStatus }>`
   width: 100%;
   display: inline-block;
   padding: 6px 10px;
@@ -47,43 +48,36 @@ const StatusBadge = styled.div<{ $status: string }>`
   font-size: 12px;
   font-weight: bold;
   text-align: center;
-  color: ${(props): string => {
-        switch (props.$status) {
-            case 'available':
-                return 'var(--available-text)';
-            case 'booked':
-                return 'var(--booked-text)';
-            case 'maintained':
-                return 'var(--maintained-text)';
+  text-transform: capitalize;
+  
+  ${({ status }): string => {
+        switch (status) {
+            case RentalStatus.ACTIVE:
+                return `
+          color: #155724;
+          background-color: #d4edda;
+          border: 1px solid #c3e6cb;
+        `;
+            case RentalStatus.CLOSED:
+                return `
+          color: #1b1e21;
+          background-color: #d6d8d9;
+          border: 1px solid #c6c8ca;
+        `;
+            case RentalStatus.CANCELLED:
+                return `
+          color: #721c24;
+          background-color: #f8d7da;
+          border: 1px solid #f5c6cb;
+        `;
             default:
-                return 'var(--default-text)';
+                return `
+          color: #856404;
+          background-color: #fff3cd;
+          border: 1px solid #ffeeba;
+        `;
         }
-    }};
-  background-color: ${(props): string => {
-        switch (props.$status) {
-            case 'available':
-                return 'var(--available-bg)';
-            case 'booked':
-                return 'var(--booked-bg)';
-            case 'maintained':
-                return 'var(--maintained-bg)';
-            default:
-                return 'var(--default-bg)';
-        }
-    }};
-  border: 2px solid
-    ${(props): string => {
-        switch (props.$status) {
-            case 'available':
-                return 'var(--available-border)';
-            case 'booked':
-                return 'var(--booked-border)';
-            case 'maintained':
-                return 'var(--maintained-border)';
-            default:
-                return 'var(--default-border)';
-        }
-    }};
+    }}
 `;
 
 const Buttons = styled.div`
@@ -91,18 +85,17 @@ const Buttons = styled.div`
   align-items: center;
 `;
 
-
-const RemoveButton = styled.button`
+const ReturnButton = styled.button`
   padding: 7px 12px;
   border: none;
   border-radius: 4px;
-  background-color: var(--maintained-text);
+  background-color: #007bff;
   color: white;
   cursor: pointer;
-  margin-right: 5px;
-  transition: var(--default-transition);
+  font-size: 12px;
+  transition: background-color 0.2s ease-in-out;
 
   &:hover {
-    background-color: #aa2633;
+    background-color: #0056b3;
   }
 `;
