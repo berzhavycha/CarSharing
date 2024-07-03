@@ -3,4 +3,3 @@ export * from './use-pagination';
 export * from './use-sign-out';
 export * from './use-search-param-filter';
 export * from './use-debounce';
-export * from './use-rent-car';

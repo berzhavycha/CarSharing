@@ -2,6 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { CSCommonPrimaryButton } from '@/components/cs-common';
+import { Link } from 'react-router-dom';
 
 type Props = {
   title: string;
@@ -9,8 +10,8 @@ type Props = {
   backgroundImage: string;
   image: string;
   buttonType?: 'main' | 'light';
-  buttonContent?: string;
-  onButtonClick?: () => void;
+  linkContent: string;
+  onLinkRedirect: string;
 };
 
 export const CSCommonBanner: FC<Props> = ({
@@ -19,15 +20,15 @@ export const CSCommonBanner: FC<Props> = ({
   backgroundImage,
   image,
   buttonType,
-  buttonContent,
-  onButtonClick,
+  linkContent,
+  onLinkRedirect
 }) => {
   return (
     <BannerWrapper $backgroundImage={backgroundImage}>
       <Title>{title}</Title>
       <Description>{description}</Description>
-      {buttonContent && (
-        <CSCommonPrimaryButton onClick={onButtonClick} content={buttonContent} style={buttonType} />
+      {linkContent && (
+        <CSCommonPrimaryButton as={Link} to={onLinkRedirect} content={linkContent} style={buttonType} />
       )}
       <Image src={image} />
     </BannerWrapper>

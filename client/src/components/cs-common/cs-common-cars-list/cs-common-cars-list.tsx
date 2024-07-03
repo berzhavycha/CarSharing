@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonNoData } from '@/components/cs-common';
-import { Env } from '@/core';
-import { useRentCar } from '@/hooks';
 import { Car } from '@/types';
 
 import { CSCommonCarCard } from '../cs-common-car-card';
@@ -15,7 +13,6 @@ type Props = {
 
 export const CSCommonCarList: FC<Props> = ({ cars }) => {
   const navigate = useNavigate();
-  const { onRentBtnClick } = useRentCar();
 
   return (
     <>
@@ -26,16 +23,9 @@ export const CSCommonCarList: FC<Props> = ({ cars }) => {
       ) : (
         cars?.map((car) => (
           <CSCommonCarCard
-            onClick={() => navigate(`/available-cars/${car.id}`)}
-            onRent={() => onRentBtnClick(car)}
             key={car.id}
-            model={car.model}
-            pricePerHour={car.pricePerHour}
-            type={car.type}
-            steering={car.steering}
-            capacity={car.capacity}
-            fuelCapacity={car.fuelCapacity}
-            imageUrl={`${Env.API_BASE_URL}/local-files/${car.pictures[0]?.id}`}
+            onClick={() => navigate(`/available-cars/${car.id}`)}
+            carDetails={car}
           />
         ))
       )}

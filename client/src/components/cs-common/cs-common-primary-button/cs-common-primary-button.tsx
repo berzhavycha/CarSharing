@@ -1,16 +1,30 @@
-import { FC } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 type Props = {
-  type?: 'button' | 'submit' | 'reset';
   onClick?: () => Promise<void> | void;
   content: string;
   style?: 'main' | 'light';
+} & AsProp;
+
+export type AsProp<C extends React.ElementType = React.ElementType> = {
+  as?: C;
 };
 
-export const CSCommonPrimaryButton: FC<Props> = ({ type, onClick, content, style = 'main' }) => {
+export type PropsWithAs<P, C extends React.ElementType> = P &
+  AsProp<C> &
+  Omit<React.ComponentPropsWithoutRef<C>, keyof (P & AsProp<C>)>;
+
+
+export const CSCommonPrimaryButton = <C extends React.ElementType = 'button'>({
+  as,
+  onClick,
+  content,
+  style = 'main',
+  ...rest
+}: PropsWithAs<Props, C>): JSX.Element => {
   return (
-    <Button type={type} onClick={onClick} $style={style}>
+    <Button as={as} onClick={onClick} $style={style} {...rest}>
       {content}
     </Button>
   );
@@ -29,8 +43,10 @@ const Button = styled.button<ButtonProps>`
   font-size: 16px;
   cursor: pointer;
   transition: var(--default-transition);
+  text-decoration: none;
 
   &:hover {
     background-color: var(--dark-blue);
   }
 `;
+

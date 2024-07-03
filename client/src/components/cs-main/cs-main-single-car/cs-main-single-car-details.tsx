@@ -3,19 +3,16 @@ import styled from 'styled-components';
 
 import { CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
 import { CarFuelType, getFuelUnit } from '@/helpers';
-import { useRentCar } from '@/hooks';
 import { Car } from '@/types';
 
 import { CSMainSingleCarFeature } from './cs-main-single-car-feature';
+import { Link } from 'react-router-dom';
 
 type Props = {
   car: Car;
 };
 
 export const CSMainSingleCarDetails: FC<Props> = ({ car }) => {
-  const { onRentBtnClick } = useRentCar();
-  const onRent = (): void => onRentBtnClick(car);
-
   return (
     <CarDetailsWrapper>
       <Title>{car.model}</Title>
@@ -33,7 +30,7 @@ export const CSMainSingleCarDetails: FC<Props> = ({ car }) => {
       </FeaturesWrapper>
       <CarFooter>
         <CSCommonPrice amount={car.pricePerHour} metric="hour" />
-        <CSCommonPrimaryButton content="Rent Car" onClick={onRent} />
+        <CSCommonPrimaryButton as={Link} to="/rental-form" state={{ car }} content="Rent Car" />
       </CarFooter>
     </CarDetailsWrapper>
   );
