@@ -4,45 +4,45 @@ import styled from 'styled-components';
 import { TableCell, TableRow } from '@/components/cs-common';
 import { Env } from '@/core';
 import { formatDate, uppercaseFirstLetter, RentalStatus } from '@/helpers';
-import { Rental } from '@/types';
 import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import { RentalType } from '@/app/models';
 
 type Props = {
-    rental: Rental;
-    index: number;
-    onCarReturn: () => Promise<void>
+  rental: RentalType;
+  index: number;
+  onCarReturn: () => Promise<void>
 };
 
 export const CSMainRentalHistoryTableRow: FC<Props> = observer(({
-    rental,
-    index,
-    onCarReturn
+  rental,
+  index,
+  onCarReturn
 }) => {
-    return (
-        <TableRow key={rental.id}>
-            <TableCell>{index + 1}</TableCell>
-            <TableCell>
-                <img src={`${Env.API_BASE_URL}/local-files/${rental.originalCar?.pictures?.[0]?.id}`} alt="Car Image" />
-            </TableCell>
-            <TableCell>{rental.originalCar.model}</TableCell>
-            <TableCell>{rental.requestedHours}</TableCell>
-            <TableCell>{rental.totalPrice}</TableCell>
-            <TableCell>{formatDate(rental.rentalStart)}</TableCell>
-            <TableCell>{rental.rentalEnd ? formatDate(rental.rentalEnd) : '-'}</TableCell>
-            <TableCell>
-                <StatusBadge status={rental.status as RentalStatus}>{uppercaseFirstLetter(rental.status)}</StatusBadge>
-            </TableCell>
-            <TableCell>
-                <Buttons>
-                    {rental.status === RentalStatus.ACTIVE && (
-                        <ReturnButton onClick={onCarReturn}>Return Car</ReturnButton>
-                    )}
-                    <DetailsButton to={`/rental-history/${rental.id}`} state={{ rental }}>Details</DetailsButton>
-                </Buttons>
-            </TableCell>
-        </TableRow>
-    );
+  return (
+    <TableRow key={rental.id}>
+      <TableCell>{index + 1}</TableCell>
+      <TableCell>
+        <img src={`${Env.API_BASE_URL}/local-files/${rental.originalCar?.pictures?.[0]?.id}`} alt="Car Image" />
+      </TableCell>
+      <TableCell>{rental.originalCar?.model}</TableCell>
+      <TableCell>{rental.requestedHours}</TableCell>
+      <TableCell>{rental.totalPrice}</TableCell>
+      <TableCell>{formatDate(rental.rentalStart)}</TableCell>
+      <TableCell>{rental.rentalEnd ? formatDate(rental.rentalEnd) : '-'}</TableCell>
+      <TableCell>
+        <StatusBadge status={rental.status as RentalStatus}>{uppercaseFirstLetter(rental.status)}</StatusBadge>
+      </TableCell>
+      <TableCell>
+        <Buttons>
+          {rental.status === RentalStatus.ACTIVE && (
+            <ReturnButton onClick={onCarReturn}>Return Car</ReturnButton>
+          )}
+          <DetailsButton to={`/rental-history/${rental.id}`} state={{ rental }}>Details</DetailsButton>
+        </Buttons>
+      </TableCell>
+    </TableRow>
+  );
 });
 
 const StatusBadge = styled.div<{ status: RentalStatus }>`
@@ -56,33 +56,33 @@ const StatusBadge = styled.div<{ status: RentalStatus }>`
   text-transform: capitalize;
   
   ${({ status }): string => {
-        switch (status) {
-            case RentalStatus.ACTIVE:
-                return `
+    switch (status) {
+      case RentalStatus.ACTIVE:
+        return `
           color: #155724;
           background-color: #d4edda;
           border: 1px solid #c3e6cb;
         `;
-            case RentalStatus.CLOSED:
-                return `
+      case RentalStatus.CLOSED:
+        return `
           color: #1b1e21;
           background-color: #d6d8d9;
           border: 1px solid #c6c8ca;
         `;
-            case RentalStatus.CANCELLED:
-                return `
+      case RentalStatus.CANCELLED:
+        return `
           color: #721c24;
           background-color: #f8d7da;
           border: 1px solid #f5c6cb;
         `;
-            default:
-                return `
+      default:
+        return `
           color: #856404;
           background-color: #fff3cd;
           border: 1px solid #ffeeba;
         `;
-        }
-    }}
+    }
+  }}
 `;
 
 const Buttons = styled.div`

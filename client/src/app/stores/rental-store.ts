@@ -1,51 +1,53 @@
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { fetchRentalHistory, returnCar } from '@/services';
-import { Instance, flow, getParent, t } from 'mobx-state-tree';
-import { Rental } from '../models/rental-model';
-import { QueryRentalsDto, Rental as RentalType } from '@/types';
+import { Instance, flow, getParent, types } from 'mobx-state-tree';
+import { RentalModel } from '../models';
+import { QueryRentalsDto, Rental } from '@/types';
 import { CurrentUserStoreType } from './current-user-store';
 
-export const RentalStore = t
-  .model({
-    rentals: t.maybe(t.array(Rental)),
-    refund: t.maybe(t.number),
-    penalty: t.maybe(t.number),
-    isReturnedInTime: t.boolean,
-    errorMessage: t.string,
-    potentialRentalPrice: t.number
+export const RentalStore = types
+  .model('RentalStore', {
+    rentals: types.optional(types.array(RentalModel), []),
+    refund: types.maybe(types.number),
+    penalty: types.maybe(types.number),
+    isReturnedInTime: types.optional(types.boolean, false),
+    errorMessage: types.optional(types.string, ''),
+    potentialRentalPrice: types.optional(types.number, 0)
   })
   .actions((self) => ({
-    setPotentialRentalPrice: (price: number): void => {
-      self.potentialRentalPrice = price
+    setPotentialRentalPrice(price: number): void {
+      self.potentialRentalPrice = price;
+    },
+    setRentals(rentals: Rental[]): void {
+      self.rentals.replace(rentals.map(rental => RentalModel.create(rental)));
+    },
+    setRefund(refund?: number): void {
+      self.refund = refund;
+    },
+    setPenalty(penalty?: number): void {
+      self.penalty = penalty;
+    },
+    setErrorMessage(error: string): void {
+      self.errorMessage = error;
+    },
+    setIsReturnedInTime(inTime: boolean): void {
+      self.isReturnedInTime = inTime;
     },
     fetchRentals: flow(function* (params: QueryRentalsDto) {
       try {
-        const data = yield fetchRentalHistory(params);
-        self.rentals = data.rentals.map((rental: RentalType) => Rental.create({...rental}));
+        const { rentals } = yield fetchRentalHistory(params);
+        self.rentals = rentals.map((rental: Rental) => RentalModel.create(rental));
       } catch (error) {
-        console.log(error)
+        console.error('Error fetching rentals:', error);
         self.errorMessage = UNEXPECTED_ERROR_MESSAGE;
       }
     }),
-    setRefund: (refund?: number): void => {
-      self.refund = refund;
-    },
-    setPenalty: (penalty?: number): void => {
-      self.penalty = penalty;
-    },
-    setErrorMessage: (error: string): void => {
-      self.errorMessage = error;
-    },
-    setIsReturnedInTime: (inTime: boolean): void => {
-      self.isReturnedInTime = inTime;
-    },
-    returnCar: flow(function* (id) {
+    returnCar: flow(function* (id: string) {
       try {
         const { rental, refund, penalty, error } = yield returnCar(id);
+        const userStore = (getParent(self) as { currentUserStore: CurrentUserStoreType }).currentUserStore;
 
-        const userStore = (getParent(self) as { currentUserStore: CurrentUserStoreType }).currentUserStore
-
-        if (userStore.user && userStore.user.balance) {
+        if (userStore.user?.balance) {
           if (refund) {
             self.refund = refund;
             userStore.updateBalance(userStore.user.balance + refund);
@@ -61,9 +63,10 @@ export const RentalStore = t
           self.errorMessage = error;
         }
       } catch (error) {
+        console.error('Error returning car:', error);
         self.errorMessage = UNEXPECTED_ERROR_MESSAGE;
       }
     }),
   }));
 
-export type RentalStoreType = Instance<typeof RentalStore>;
+export interface RentalStoreType extends Instance<typeof RentalStore> { }

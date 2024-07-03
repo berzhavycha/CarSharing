@@ -11,7 +11,7 @@ import {
   UpdateUserBalanceDto,
   UpdateUserDto,
 } from '@/types';
-import { User } from '../models';
+import { UserModel } from '../models';
 
 export type ServiceUserResponse<T extends object> = {
   user?: AuthenticatedUser;
@@ -20,7 +20,7 @@ export type ServiceUserResponse<T extends object> = {
 
 export const CurrentUserStore = t
   .model('CurrentUserStore', {
-    user: t.optional(t.maybeNull(User), null),
+    user: t.optional(t.maybeNull(UserModel), null),
     signInErrors: t.optional(t.frozen<FieldErrorsState<SignInUserDto> | null>(), null),
     signUpErrors: t.optional(t.frozen<FieldErrorsState<SignUpUserDto> | null>(), null),
     signOutErrors: t.optional(t.frozen<FieldErrorsState<AuthenticatedUser> | null>(), null),
@@ -45,7 +45,7 @@ export const CurrentUserStore = t
         const response = yield signUp(userDto);
         handleUserResponse<SignUpUserDto>(
           response,
-          (user) => (self.user = User.create(user)),
+          (user) => (self.user = UserModel.create(user)),
           (errors) => (self.signUpErrors = errors),
         );
       } catch (error) {
@@ -58,7 +58,7 @@ export const CurrentUserStore = t
         const response = yield signIn(userDto);
         handleUserResponse<SignInUserDto>(
           response,
-          (user) => (self.user = User.create(user)),
+          (user) => (self.user = UserModel.create(user)),
           (errors) => (self.signInErrors = errors),
         );
       } catch (error) {

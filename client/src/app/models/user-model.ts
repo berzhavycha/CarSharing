@@ -1,6 +1,6 @@
 import { t } from "mobx-state-tree";
 
-export const User = t.model('User', {
+export const UserModel = t.model('UserModel', {
     id: t.string,
     email: t.string,
     firstName: t.string,

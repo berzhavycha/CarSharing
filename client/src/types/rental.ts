@@ -6,7 +6,7 @@ import { PaginationDto } from "./pagination";
 export type Rental = {
   id: string;
   rentalStart: string;
-  rentalEnd: string;
+  rentalEnd: string | null;
   totalPrice: number;
   requestedHours: number;
   pickUpLocation: string;
