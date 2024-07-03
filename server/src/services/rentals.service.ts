@@ -72,6 +72,7 @@ export class RentalsService {
         car,
         user,
         originalCar,
+        totalPrice: rentalCost,
         status: RentalStatus.ACTIVE,
         requestedHours: rentCarDto.hours,
         rentalStart: new Date(),

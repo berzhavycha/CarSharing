@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { RENTAL_STATUS_LENGTH, RentalStatus } from '@/helpers';
+import { CAR_FIELD_DEFAULT_PRECISION, CAR_FIELD_DEFAULT_SCALE, DEFAULT_PRICE, DecimalColumnTransformer, RENTAL_STATUS_LENGTH, RentalStatus } from '@/helpers';
 
 import { Car } from './car.entity';
 import { OriginalCar } from './original-car.entity';
@@ -31,6 +31,15 @@ export class Rental {
 
   @Column()
   requestedHours: number;
+
+  @Column({
+    type: 'decimal',
+    precision: CAR_FIELD_DEFAULT_PRECISION,
+    scale: CAR_FIELD_DEFAULT_SCALE,
+    transformer: new DecimalColumnTransformer(),
+    default: DEFAULT_PRICE
+  })
+  totalPrice: number;
 
   @Column({ default: '' })
   pickUpLocation: string;
