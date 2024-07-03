@@ -19,6 +19,7 @@ export const CSCommonDetailsFeature: FC<Props> = ({ label, text, component }) =>
 
 const FeatureWrapper = styled.div`
   display: flex;
+  align-items: center;
   width: 48%;
   gap: 10px;
 `;

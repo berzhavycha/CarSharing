@@ -52,11 +52,11 @@ const StatusBadge = styled.div<{ $status: string }>`
   color: ${(props): string => {
     switch (props.$status) {
       case 'available':
-        return 'var(--available-text)';
+        return 'var(--green-status-text)';
       case 'booked':
-        return 'var(--booked-text)';
+        return 'var(--yellow-status-text)';
       case 'maintained':
-        return 'var(--maintained-text)';
+        return 'var(--red-status-text)';
       default:
         return 'var(--default-text)';
     }
@@ -64,11 +64,11 @@ const StatusBadge = styled.div<{ $status: string }>`
   background-color: ${(props): string => {
     switch (props.$status) {
       case 'available':
-        return 'var(--available-bg)';
+        return 'var(--green-status-bg)';
       case 'booked':
-        return 'var(--booked-bg)';
+        return 'var(--yellow-status-bg)';
       case 'maintained':
-        return 'var(--maintained-bg)';
+        return 'var(--red-status-bg)';
       default:
         return 'var(--default-bg)';
     }
@@ -77,11 +77,11 @@ const StatusBadge = styled.div<{ $status: string }>`
     ${(props): string => {
     switch (props.$status) {
       case 'available':
-        return 'var(--available-border)';
+        return 'var(--green-status-border)';
       case 'booked':
-        return 'var(--booked-border)';
+        return 'var(--yellow-status-border)';
       case 'maintained':
-        return 'var(--maintained-border)';
+        return 'var(--red-status-border)';
       default:
         return 'var(--default-border)';
     }
@@ -114,7 +114,7 @@ const RemoveButton = styled.button`
   padding: 7px 12px;
   border: none;
   border-radius: 4px;
-  background-color: var(--maintained-text);
+  background-color: var(--red-status-text);
   color: white;
   cursor: pointer;
   margin-right: 5px;
