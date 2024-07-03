@@ -172,6 +172,7 @@ export class RentalsService {
 
     const queryBuilder = this.rentalsRepository.createQueryBuilder('rental')
       .leftJoinAndSelect('rental.originalCar', 'originalCar')
+      .leftJoinAndSelect('originalCar.pictures', 'localFile')
       .where('rental.user.id = :userId', { userId });
 
     applySearchAndPagination(queryBuilder, {
