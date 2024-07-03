@@ -8,3 +8,5 @@ export enum RentalStatus {
 
 export const RENTAL_DEFAULT_ORDER_COLUMN = 'status';
 export const RENTAL_DEFAULT_SEARCH_COLUMN = 'originalCar.model';
+
+export const DEFAULT_PRICE = 0
