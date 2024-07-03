@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonBanner, CSCommonContainer, CSCommonPrimaryButton } from '@/components';
@@ -11,9 +11,6 @@ import DefaultCar from '../../../../public/default-car.png';
 import { CSMainInitialCarList } from './cs-main-initial-car-list';
 
 export const CSMain: FC = () => {
-  const navigate = useNavigate();
-  const onShowMore = (): void => navigate('/available-cars');
-
   return (
     <CSCommonContainer>
       <BannerWrappers>
@@ -23,8 +20,8 @@ export const CSMain: FC = () => {
           description="Ease of doing a car rental safely and reliably. Of course at a low price."
           image={DefaultCar}
           buttonType="main"
-          buttonContent="Rent Car"
-          onButtonClick={onShowMore}
+          linkContent="Rent Car"
+          onLinkRedirect='/available-cars'
         />
         <CSCommonBanner
           title="Easy way to rent a car at a low price"
@@ -32,13 +29,13 @@ export const CSMain: FC = () => {
           description="Providing cheap car rental services and safe and comfortable facilities."
           image={DefaultCar}
           buttonType="light"
-          buttonContent="Rent Car"
-          onButtonClick={onShowMore}
+          linkContent="Rent Car"
+          onLinkRedirect='/available-cars'
         />
       </BannerWrappers>
       <CSMainInitialCarList />
       <ShowMoreWrapper>
-        <CSCommonPrimaryButton onClick={onShowMore} content="Show more cars" />
+        <CSCommonPrimaryButton as={Link} to="/available-cars" content="Show more cars" />
       </ShowMoreWrapper>
     </CSCommonContainer>
   );
@@ -55,3 +52,4 @@ const ShowMoreWrapper = styled.div`
   margin: 40px 0;
   text-align: center;
 `;
+

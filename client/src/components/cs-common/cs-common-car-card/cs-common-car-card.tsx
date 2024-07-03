@@ -3,51 +3,40 @@ import { FaCog, FaGasPump, FaUsers } from 'react-icons/fa';
 import styled from 'styled-components';
 
 import { CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
-import { extractBracketContent } from '@/helpers';
+import { CarFuelType, extractBracketContent, getFuelUnit } from '@/helpers';
 
 import { CarFeature } from './cs-common-car-feature';
+import { Link } from 'react-router-dom';
+import { Car } from '@/types';
+import { Env } from '@/core';
 
 type CarCardProps = {
-  model: string;
-  type: string;
-  fuelCapacity: number;
-  steering: string;
-  capacity: number;
-  pricePerHour: number;
-  imageUrl: string;
+  carDetails: Car
   onClick: () => void;
-  onRent: () => void;
 };
 
 export const CSCommonCarCard: FC<CarCardProps> = ({
-  model,
-  type,
-  fuelCapacity,
-  steering,
-  capacity,
-  pricePerHour,
-  imageUrl,
+  carDetails,
   onClick,
-  onRent,
 }) => {
   return (
     <CardWrapper onClick={onClick}>
       <Header>
-        <Title>{model}</Title>
-        <Type>{type}</Type>
+        <Title>{carDetails.model}</Title>
+        <Type>{carDetails.type}</Type>
       </Header>
       <CarImageWrapper>
         <ShadowImage src="../../../../public/shadow.png" alt="" />
-        <CarImage src={imageUrl} alt={model} />
+        <CarImage src={`${Env.API_BASE_URL}/local-files/${carDetails.pictures[0]?.id}`} alt={carDetails.model} />
       </CarImageWrapper>
       <Features>
-        <CarFeature icon={<FaGasPump />} text={`${fuelCapacity}L`} />
-        <CarFeature icon={<FaCog />} text={extractBracketContent(steering)} />
-        <CarFeature icon={<FaUsers />} text={`${capacity} People`} />
+        <CarFeature icon={<FaGasPump />} text={`${carDetails.fuelCapacity} ${getFuelUnit(carDetails.fuelType as CarFuelType)}`} />
+        <CarFeature icon={<FaCog />} text={extractBracketContent(carDetails.steering)} />
+        <CarFeature icon={<FaUsers />} text={`${carDetails.capacity} People`} />
       </Features>
       <Footer>
-        <CSCommonPrice amount={pricePerHour} metric="hour" />
-        <CSCommonPrimaryButton content="Rent Now" onClick={onRent} />
+        <CSCommonPrice amount={carDetails.pricePerHour} metric="hour" />
+        <CSCommonPrimaryButton as={Link} to="/rental-form" content="Rent Now" state={{ car: carDetails }} />
       </Footer>
     </CardWrapper>
   );
