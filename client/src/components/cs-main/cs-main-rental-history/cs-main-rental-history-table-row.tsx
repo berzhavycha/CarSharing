@@ -5,6 +5,7 @@ import { TableCell, TableRow } from '@/components/cs-common';
 import { Env } from '@/core';
 import { formatDate, uppercaseFirstLetter, RentalStatus } from '@/helpers';
 import { Rental } from '@/types';
+import { Link } from 'react-router-dom';
 
 type Props = {
     rental: Rental;
@@ -36,6 +37,7 @@ export const CSMainRentalHistoryTableRow: FC<Props> = ({
                     {rental.status === RentalStatus.ACTIVE && (
                         <ReturnButton onClick={onCarReturn}>Return Car</ReturnButton>
                     )}
+                    <DetailsButton to={`/rental-history/${rental.id}`} state={{ rental }}>Details</DetailsButton>
                 </Buttons>
             </TableCell>
         </TableRow>
@@ -91,13 +93,29 @@ const ReturnButton = styled.button`
   padding: 7px 12px;
   border: none;
   border-radius: 4px;
-  background-color: #007bff;
+  background-color: var(--main-blue);
   color: white;
   cursor: pointer;
   font-size: 12px;
   transition: background-color 0.2s ease-in-out;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: var(--dark-blue);
+  }
+`;
+
+const DetailsButton = styled(Link)`
+  padding: 7px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--main-blue);
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: var(--dark-blue);
   }
 `;
