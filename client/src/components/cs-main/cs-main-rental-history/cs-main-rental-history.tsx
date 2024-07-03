@@ -26,7 +26,7 @@ export const CSMainRentalHistory: FC = () => {
             paginationLimit={Env.USER_RENTAL_HISTORY_PAGINATION_LIMIT}
             renderTable={(data, onSortChange) => (
                 <CSMainRentalHistoryTable
-                    rentals={data.rentals}
+                    loadedRentals={data.rentals}
                     onSortChange={onSortChange}
                 />
             )}

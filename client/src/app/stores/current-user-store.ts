@@ -11,21 +11,12 @@ import {
   UpdateUserBalanceDto,
   UpdateUserDto,
 } from '@/types';
+import { User } from '../models';
 
 export type ServiceUserResponse<T extends object> = {
   user?: AuthenticatedUser;
   errors?: FieldErrorsState<T>;
 };
-
-export const User = t.model('User', {
-  id: t.string,
-  email: t.string,
-  firstName: t.string,
-  lastName: t.string,
-  balance: t.maybeNull(t.number),
-  role: t.string,
-  avatarId: t.maybeNull(t.string),
-});
 
 export const CurrentUserStore = t
   .model('CurrentUserStore', {

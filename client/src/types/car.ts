@@ -26,6 +26,4 @@ export type QueryCarsDto = PaginationDto & {
   search?: string;
 };
 
-export type OriginalCar = CarDto & {
-  pictures: LocalFile[];
-};
+export type OriginalCar = Omit<Car, 'status'>

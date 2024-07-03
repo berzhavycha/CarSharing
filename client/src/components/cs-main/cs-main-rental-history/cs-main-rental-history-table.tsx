@@ -1,23 +1,65 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 import { CSCommonModal, CSCommonNoData, Table, TableHeader } from '@/components/cs-common';
 import { Rental } from '@/types';
 
 import { CSMainRentalHistoryTableRow } from './cs-main-rental-history-table-row';
-import { useReturnCar } from './hooks';
+import { useStore } from '@/context';
+import { observer } from 'mobx-react-lite';
+import { Env } from '@/core';
+import { extractPaginationParams } from '@/helpers';
 
 type Props = {
-    rentals: Rental[];
+    loadedRentals: Rental[];
     onSortChange: (sort: string) => void;
 };
 
-export const CSMainRentalHistoryTable: FC<Props> = ({ rentals, onSortChange }) => {
-    const { isReturnedInTime, setIsReturnedInTime, refund, setRefund, penalty, setPenalty, errorMessage, setErrorMessage, carReturnHandler } = useReturnCar()
+export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, onSortChange }) => {
+    const { rentalStore } = useStore();
+
+
+    const {
+        rentals,
+        fetchRentals,
+        isReturnedInTime,
+        refund,
+        penalty,
+        errorMessage,
+        setRefund,
+        setErrorMessage,
+        setIsReturnedInTime,
+        setPenalty,
+        returnCar
+    } = rentalStore;
+
+
+    useEffect(() => {
+        const url = new URL(window.location.href)
+        const { queryDto } = extractPaginationParams(
+            url,
+            Env.USER_RENTAL_HISTORY_PAGINATION_LIMIT
+        );
+
+        fetchRentals(queryDto)
+    }, [])
 
     const handleCloseRefundWindow = (): void => setRefund(undefined)
     const handleClosePenaltyWindow = (): void => setPenalty(undefined)
     const handleCloseErrorWindow = (): void => setErrorMessage('')
     const handleCloseReturnWindow = (): void => setIsReturnedInTime(false)
+
+    const showedRentals = rentals ?? loadedRentals
+
+    const onCarReturn = async (id: string): Promise<void> => {
+        await returnCar(id)
+        const url = new URL(window.location.href)
+        const { queryDto } = extractPaginationParams(
+            url,
+            Env.USER_RENTAL_HISTORY_PAGINATION_LIMIT
+        );
+
+        await fetchRentals(queryDto)
+    }
 
     return (
         <>
@@ -48,19 +90,19 @@ export const CSMainRentalHistoryTable: FC<Props> = ({ rentals, onSortChange }) =
                     </tr>
                 </thead>
                 <tbody>
-                    {rentals.length === 0 ? (
+                    {showedRentals.length === 0 ? (
                         <tr>
                             <td colSpan={8}>
                                 <CSCommonNoData message="No history available" />
                             </td>
                         </tr>
                     ) : (
-                        rentals.map((rental, index) => (
+                        showedRentals.map((rental, index) => (
                             <CSMainRentalHistoryTableRow
                                 key={rental.id}
                                 index={index}
-                                rental={rental}
-                                onCarReturn={() => carReturnHandler(rental.id)}
+                                rental={rental as Rental}
+                                onCarReturn={() => onCarReturn(rental.id)}
                             />
                         ))
                     )}
@@ -96,7 +138,6 @@ export const CSMainRentalHistoryTable: FC<Props> = ({ rentals, onSortChange }) =
                 />
             )}
 
-
             {isReturnedInTime && (
                 <CSCommonModal
                     type="confirm"
@@ -107,4 +148,4 @@ export const CSMainRentalHistoryTable: FC<Props> = ({ rentals, onSortChange }) =
             )}
         </>
     );
-};
+});
