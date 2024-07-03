@@ -5,6 +5,7 @@ import { TableCell, TableRow } from '@/components/cs-common';
 import { Env } from '@/core';
 import { formatDate, uppercaseFirstLetter, RentalStatus } from '@/helpers';
 import { Rental } from '@/types';
+import { useReturnCar } from './hooks';
 
 type Props = {
     rental: Rental;
@@ -13,8 +14,12 @@ type Props = {
 
 export const CSMainRentalHistoryTableRow: FC<Props> = ({
     rental,
-    index,
+    index
 }) => {
+    const { carReturnHandler } = useReturnCar()
+
+    const onCarReturn = async (): Promise<{ rental?: Rental, error?: string }> => await carReturnHandler(rental.id)
+
     return (
         <TableRow key={rental.id}>
             <TableCell>{index + 1}</TableCell>
@@ -32,7 +37,7 @@ export const CSMainRentalHistoryTableRow: FC<Props> = ({
             <TableCell>
                 <Buttons>
                     {rental.status === RentalStatus.ACTIVE && (
-                        <ReturnButton>Return Car</ReturnButton>
+                        <ReturnButton onClick={onCarReturn}>Return Car</ReturnButton>
                     )}
                 </Buttons>
             </TableCell>
