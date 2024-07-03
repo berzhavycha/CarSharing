@@ -5,3 +5,6 @@ export enum RentalStatus {
   CLOSED = 'closed',
   CANCELLED = 'cancelled',
 }
+
+export const RENTAL_DEFAULT_ORDER_COLUMN = 'status';
+export const RENTAL_DEFAULT_SEARCH_COLUMN = 'originalCar.model';

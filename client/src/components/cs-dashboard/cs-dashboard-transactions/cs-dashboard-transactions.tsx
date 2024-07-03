@@ -4,7 +4,7 @@ import { Env } from '@/core';
 import { defaultSearchParams } from '@/helpers';
 import { Transaction } from '@/types';
 
-import { CSDashboardListView } from '../cs-dashboard-list-view';
+import { CSCommonTableList } from '../../cs-common';
 
 import { CSDashboardTransactionsTable } from './cs-dashboard-transactions-table';
 
@@ -20,7 +20,7 @@ type LoadedData = {
 
 export const CSDashboardTransactions: FC = () => {
   return (
-    <CSDashboardListView<LoadedData>
+    <CSCommonTableList<LoadedData>
       title="Transactions"
       searchPlaceholder="Search by user name and last name"
       defaultSearchParams={transactionsDefaultSearchParams}

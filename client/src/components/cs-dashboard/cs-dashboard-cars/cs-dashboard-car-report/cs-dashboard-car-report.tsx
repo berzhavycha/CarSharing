@@ -6,7 +6,7 @@ import { Env } from '@/core';
 import { defaultSearchParams } from '@/helpers';
 import { Car } from '@/types';
 
-import { CSDashboardListView } from '../../cs-dashboard-list-view';
+import { CSCommonTableList } from '../../../cs-common';
 
 import { CSDashboardCarTable } from './cs-dashboard-car-table';
 
@@ -22,7 +22,7 @@ type LoadedData = {
 
 export const CSDashboardCarReport: FC = () => {
   return (
-    <CSDashboardListView<LoadedData>
+    <CSCommonTableList<LoadedData>
       title="Cars"
       searchPlaceholder="Search by model name"
       defaultSearchParams={carsDefaultSearchParams}
