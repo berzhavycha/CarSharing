@@ -40,7 +40,7 @@ export const CSCommonSlides: FC<Props> = ({ images, width = '100%', height = '20
             key={index}
             src={image}
             alt={`Thumbnail ${index}`}
-            active={index === currentIndex}
+            $active={index === currentIndex}
             onClick={() => goToSlide(index)}
           />
         ))}
@@ -93,15 +93,15 @@ const NextButton = styled(NavButton)`
   right: 10px;
 `;
 
-const Thumbnail = styled.img<{ active: boolean }>`
+const Thumbnail = styled.img<{ $active: boolean }>`
   width: 50px;
   height: 50px;
   object-fit: contain;
   margin: 0 5px;
-  opacity: ${({ active }): number => (active ? 1 : 0.6)};
+  opacity: ${({ $active }): number => ($active ? 1 : 0.6)};
   cursor: pointer;
   border-radius: 5px;
-  box-shadow: ${({ active }): string => (active ? '0 0 5px rgba(0, 0, 0, 0.5)' : 'none')};
+  box-shadow: ${({ $active }): string => ($active ? '0 0 5px rgba(0, 0, 0, 0.5)' : 'none')};
   transition:
     opacity 0.3s,
     box-shadow 0.3s;
