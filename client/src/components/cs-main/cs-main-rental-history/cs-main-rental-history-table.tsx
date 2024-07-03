@@ -1,13 +1,10 @@
 import { FC, useEffect } from 'react';
-
 import { CSCommonModal, CSCommonNoData, Table, TableHeader } from '@/components/cs-common';
 import { Rental } from '@/types';
-
 import { CSMainRentalHistoryTableRow } from './cs-main-rental-history-table-row';
 import { useStore } from '@/context';
 import { observer } from 'mobx-react-lite';
-import { Env } from '@/core';
-import { extractPaginationParams } from '@/helpers';
+import { useRentalModals, useRentals } from './hooks';
 
 type Props = {
     loadedRentals: Rental[];
@@ -16,50 +13,28 @@ type Props = {
 
 export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, onSortChange }) => {
     const { rentalStore } = useStore();
-
-
     const {
         rentals,
-        fetchRentals,
         isReturnedInTime,
         refund,
         penalty,
+        setRentals,
         errorMessage,
-        setRefund,
-        setErrorMessage,
-        setIsReturnedInTime,
-        setPenalty,
         returnCar
     } = rentalStore;
-
+    const { handleCloseRefundWindow, handleClosePenaltyWindow, handleCloseErrorWindow, handleCloseReturnWindow } = useRentalModals()
+    const { refetchRentals } = useRentals()
 
     useEffect(() => {
-        const url = new URL(window.location.href)
-        const { queryDto } = extractPaginationParams(
-            url,
-            Env.USER_RENTAL_HISTORY_PAGINATION_LIMIT
-        );
+        setRentals(loadedRentals);
+    }, []);
 
-        fetchRentals(queryDto)
-    }, [])
+    const handleReturnCar = async (id: string): Promise<void> => {
+        await returnCar(id);
+        await refetchRentals();
+    };
 
-    const handleCloseRefundWindow = (): void => setRefund(undefined)
-    const handleClosePenaltyWindow = (): void => setPenalty(undefined)
-    const handleCloseErrorWindow = (): void => setErrorMessage('')
-    const handleCloseReturnWindow = (): void => setIsReturnedInTime(false)
-
-    const showedRentals = rentals ?? loadedRentals
-
-    const onCarReturn = async (id: string): Promise<void> => {
-        await returnCar(id)
-        const url = new URL(window.location.href)
-        const { queryDto } = extractPaginationParams(
-            url,
-            Env.USER_RENTAL_HISTORY_PAGINATION_LIMIT
-        );
-
-        await fetchRentals(queryDto)
-    }
+    const displayedRentals = rentals ?? loadedRentals;
 
     return (
         <>
@@ -71,38 +46,38 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
                         <TableHeader style={{ width: '15%' }} onClick={() => onSortChange('model')}>
                             Model
                         </TableHeader>
-                        <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('amount')}>
+                        <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('requestedHours')}>
                             Hours
                         </TableHeader>
-                        <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('amount')}>
+                        <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('totalPrice')}>
                             Total Price
                         </TableHeader>
-                        <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('createdAt')}>
+                        <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('rentalStart')}>
                             Start Time
                         </TableHeader>
-                        <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('type')}>
+                        <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('rentalEnd')}>
                             End Time
                         </TableHeader>
-                        <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('type')}>
+                        <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('status')}>
                             Status
                         </TableHeader>
                         <TableHeader style={{ width: '15%' }}>Actions</TableHeader>
                     </tr>
                 </thead>
                 <tbody>
-                    {showedRentals.length === 0 ? (
+                    {displayedRentals.length === 0 ? (
                         <tr>
                             <td colSpan={8}>
                                 <CSCommonNoData message="No history available" />
                             </td>
                         </tr>
                     ) : (
-                        showedRentals.map((rental, index) => (
+                        displayedRentals.map((rental, index) => (
                             <CSMainRentalHistoryTableRow
                                 key={rental.id}
                                 index={index}
-                                rental={rental as Rental}
-                                onCarReturn={() => onCarReturn(rental.id)}
+                                rental={rental}
+                                onCarReturn={() => handleReturnCar(rental.id)}
                             />
                         ))
                     )}
@@ -123,7 +98,7 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
                 <CSCommonModal
                     type="warning"
                     title="Warning"
-                    message={`You have returned the car later than we agreed. Here is your fine: ${penalty}`}
+                    message={`You have returned the car later than agreed. Here is your fine: ${penalty}`}
                     onClose={handleClosePenaltyWindow}
                     onOk={handleClosePenaltyWindow}
                 />
@@ -142,7 +117,7 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
                 <CSCommonModal
                     type="confirm"
                     title="Success"
-                    message={`You returned a car successfully! Thank you!`}
+                    message="You returned the car successfully! Thank you!"
                     onClose={handleCloseReturnWindow}
                 />
             )}

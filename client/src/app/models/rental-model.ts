@@ -1,8 +1,7 @@
-import { t } from "mobx-state-tree";
-import { OriginalCar } from "./original-car-model";
-import { Transaction } from "./transaction-model";
+import { Instance, t } from "mobx-state-tree";
+import { Car, OriginalCar, Transaction } from "@/types";
 
-export const Rental = t.model({
+export const RentalModel = t.model('RentalModel', {
     id: t.identifier,
     rentalStart: t.string,
     rentalEnd: t.maybeNull(t.string),
@@ -13,6 +12,9 @@ export const Rental = t.model({
     status: t.enumeration("RentalStatus", ["active", "closed", "cancelled"]),
     createdAt: t.string,
     updatedAt: t.string,
-    originalCar: t.late(() => OriginalCar),
-    transactions: t.array(t.late(() => Transaction)),
+    car: t.frozen<Car>(),
+    originalCar: t.frozen<OriginalCar>(),
+    transactions: t.array(t.frozen<Transaction>()),
 });
+
+export interface RentalType extends Instance<typeof RentalModel> { }
