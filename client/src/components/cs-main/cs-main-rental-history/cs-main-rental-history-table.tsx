@@ -4,7 +4,7 @@ import { Rental } from '@/types';
 import { CSMainRentalHistoryTableRow } from './cs-main-rental-history-table-row';
 import { useStore } from '@/context';
 import { observer } from 'mobx-react-lite';
-import { useRentalModals, useRentals } from './hooks';
+import { useRentals } from './hooks';
 
 type Props = {
     loadedRentals: Rental[];
@@ -20,19 +20,27 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
         penalty,
         setRentals,
         errorMessage,
-        returnCar
+        returnCar,
+        setRefund,
+        setPenalty,
+        setErrorMessage,
+        setIsReturnedInTime
     } = rentalStore;
-    const { handleCloseRefundWindow, handleClosePenaltyWindow, handleCloseErrorWindow, handleCloseReturnWindow } = useRentalModals()
     const { refetchRentals } = useRentals()
 
     useEffect(() => {
         setRentals(loadedRentals);
-    }, []);
+    }, [loadedRentals]);
 
     const handleReturnCar = async (id: string): Promise<void> => {
         await returnCar(id);
         await refetchRentals();
     };
+
+    const handleCloseRefundWindow = (): void => setRefund(undefined)
+    const handleClosePenaltyWindow = (): void => setPenalty(undefined)
+    const handleCloseErrorWindow = (): void => setErrorMessage('')
+    const handleCloseReturnWindow = (): void => setIsReturnedInTime(false)
 
     const displayedRentals = rentals ?? loadedRentals;
 
