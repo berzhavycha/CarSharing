@@ -14,12 +14,13 @@
     --gray: #90A3BF;
     --dark: #1a202c;
     --light-dark: #596780;
+    --light-gray: #eaebed;
 
     /* Status Colors */
     --available-text: #28a745;
     --booked-text: #ffc107;
     --maintained-text: #ff4343;
-    --default-text: #dc3545;
+    --default-red: #dc3545;
 
     --available-bg: #d4edda;
     --booked-bg: #fff3cd;
@@ -35,7 +36,6 @@
     --rental-payment-text: #ffc107;
     --refund-text: #17a2b8;
     --penalty-text: #ff4343;
-    --default-text: #dc3545;
 
     --top-up-bg: #d4edda;
     --rental-payment-bg: #fff3cd;
