@@ -38,7 +38,7 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({
           {rental.status === RentalStatus.ACTIVE && (
             <ReturnButton onClick={onCarReturn}>Return Car</ReturnButton>
           )}
-          <DetailsButton to={`/rental-history/${rental.id}`} state={{ rental }}>Details</DetailsButton>
+          <DetailsButton to={`/rental-history/${rental.id}`} >Details</DetailsButton>
         </Buttons>
       </TableCell>
     </TableRow>

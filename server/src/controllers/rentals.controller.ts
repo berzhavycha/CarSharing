@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -29,16 +30,23 @@ export class RentalsController {
     return this.rentalsService.rentCar(rentCarDto, user);
   }
 
+  @Get('history')
+  async getUserHistory(@Query() listRentalDto: QueryRentalsDto, @CurrentUser('id') id: string): Promise<[Rental[], number]> {
+    return this.rentalsService.findAllUserRentals(id, listRentalDto);
+  }
+
+  @Get(':id')
+  async findOne(
+    @Param('id', ParseUUIDPipe) id: string
+  ): Promise<Rental | null> {
+    return this.rentalsService.findById(id);
+  }
+
   @Get('current')
   async getCurrentUserRental(
     @CurrentUser('id') id: string,
   ): Promise<Rental | null> {
     return this.rentalsService.findActiveByUserId(id);
-  }
-
-  @Get('history')
-  async getUserHistory(@Query() listRentalDto: QueryRentalsDto, @CurrentUser('id') id: string): Promise<[Rental[], number]> {
-    return this.rentalsService.findAllUserRentals(id, listRentalDto);
   }
 
   @Patch(':id')

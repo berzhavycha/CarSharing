@@ -1,11 +1,10 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
+import { CSCommonDetailsFeature, CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
 import { CarFuelType, getFuelUnit } from '@/helpers';
 import { Car } from '@/types';
 
-import { CSMainSingleCarFeature } from './cs-main-single-car-feature';
 import { Link } from 'react-router-dom';
 
 type Props = {
@@ -18,12 +17,12 @@ export const CSMainSingleCarDetails: FC<Props> = ({ car }) => {
       <Title>{car.model}</Title>
       <Description>{car.description}</Description>
       <FeaturesWrapper>
-        <CSMainSingleCarFeature label="Type" text={car.type} />
-        <CSMainSingleCarFeature label="Year" text={car.year} />
-        <CSMainSingleCarFeature label="Capacity" text={`${car.capacity} People`} />
-        <CSMainSingleCarFeature label="Steering" text={car.steering} />
-        <CSMainSingleCarFeature label="Fuel Type" text={car.fuelType} />
-        <CSMainSingleCarFeature
+        <CSCommonDetailsFeature label="Type" text={car.type} />
+        <CSCommonDetailsFeature label="Year" text={car.year} />
+        <CSCommonDetailsFeature label="Capacity" text={`${car.capacity} People`} />
+        <CSCommonDetailsFeature label="Steering" text={car.steering} />
+        <CSCommonDetailsFeature label="Fuel Type" text={car.fuelType} />
+        <CSCommonDetailsFeature
           label="Fuel Capacity"
           text={`${car.fuelCapacity} ${getFuelUnit(car.fuelType as CarFuelType)}`}
         />

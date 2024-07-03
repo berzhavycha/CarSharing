@@ -172,6 +172,15 @@ export class RentalsService {
     });
   }
 
+  async findById(id: string): Promise<Rental | null> {
+    return this.rentalsRepository.findOne({
+      where: {
+        id
+      },
+      relations: ['originalCar', 'user', 'originalCar.pictures', 'transactions'],
+    });
+  }
+
   async findAllUserRentals(userId: string, query: QueryRentalsDto): Promise<[Rental[], number]> {
     const { search, page, limit, order, sort } = query
 
