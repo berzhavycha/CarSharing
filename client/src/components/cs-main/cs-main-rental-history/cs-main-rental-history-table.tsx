@@ -1,9 +1,10 @@
 import { FC } from 'react';
 
-import { CSCommonNoData, Table, TableHeader } from '@/components/cs-common';
+import { CSCommonModal, CSCommonNoData, Table, TableHeader } from '@/components/cs-common';
 import { Rental } from '@/types';
 
 import { CSMainRentalHistoryTableRow } from './cs-main-rental-history-table-row';
+import { useReturnCar } from './hooks';
 
 type Props = {
     rentals: Rental[];
@@ -11,6 +12,13 @@ type Props = {
 };
 
 export const CSMainRentalHistoryTable: FC<Props> = ({ rentals, onSortChange }) => {
+    const { isReturnedInTime, setIsReturnedInTime, refund, setRefund, penalty, setPenalty, errorMessage, setErrorMessage, carReturnHandler } = useReturnCar()
+
+    const handleCloseRefundWindow = (): void => setRefund(undefined)
+    const handleClosePenaltyWindow = (): void => setPenalty(undefined)
+    const handleCloseErrorWindow = (): void => setErrorMessage('')
+    const handleCloseReturnWindow = (): void => setIsReturnedInTime(false)
+
     return (
         <>
             <Table>
@@ -52,11 +60,51 @@ export const CSMainRentalHistoryTable: FC<Props> = ({ rentals, onSortChange }) =
                                 key={rental.id}
                                 index={index}
                                 rental={rental}
+                                onCarReturn={() => carReturnHandler(rental.id)}
                             />
                         ))
                     )}
                 </tbody>
             </Table>
+
+            {refund && (
+                <CSCommonModal
+                    type="confirm"
+                    title="Success"
+                    message={`Thank you for returning the car earlier. Here is your refund: ${refund}`}
+                    onClose={handleCloseRefundWindow}
+                    onOk={handleCloseRefundWindow}
+                />
+            )}
+
+            {penalty && (
+                <CSCommonModal
+                    type="warning"
+                    title="Warning"
+                    message={`You have returned the car later than we agreed. Here is your fine: ${penalty}`}
+                    onClose={handleClosePenaltyWindow}
+                    onOk={handleClosePenaltyWindow}
+                />
+            )}
+
+            {errorMessage && (
+                <CSCommonModal
+                    type="error"
+                    title="Error"
+                    message={errorMessage}
+                    onClose={handleCloseErrorWindow}
+                />
+            )}
+
+
+            {isReturnedInTime && (
+                <CSCommonModal
+                    type="confirm"
+                    title="Success"
+                    message={`You returned a car successfully! Thank you!`}
+                    onClose={handleCloseReturnWindow}
+                />
+            )}
         </>
     );
 };
