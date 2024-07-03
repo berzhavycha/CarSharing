@@ -1,5 +1,5 @@
 import { RentalStatus } from "@/helpers";
-import { Car } from "./car";
+import { Car, OriginalCar } from "./car";
 import { Transaction } from "./transaction";
 import { PaginationDto } from "./pagination";
 
@@ -15,7 +15,7 @@ export type Rental = {
   createdAt: string;
   updatedAt: string;
   car: Car;
-  originalCar: Car;
+  originalCar: OriginalCar;
   transactions: Transaction[];
 };
 
