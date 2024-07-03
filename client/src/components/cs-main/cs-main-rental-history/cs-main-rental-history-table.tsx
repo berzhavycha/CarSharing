@@ -39,7 +39,7 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
                     <tr>
                         <TableHeader style={{ width: '5%' }}>No.</TableHeader>
                         <TableHeader style={{ width: '10%' }}>Image</TableHeader>
-                        <TableHeader style={{ width: '15%' }} onClick={() => onSortChange('model')}>
+                        <TableHeader style={{ width: '15%' }}>
                             Model
                         </TableHeader>
                         <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('requestedHours')}>

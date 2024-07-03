@@ -49,36 +49,51 @@ const FeaturesWrapper = styled.div`
 `;
 
 
-const StatusBadge = styled.span<{ $status: RentalStatus }>`
+const StatusBadge = styled.div<{ $status: RentalStatus }>`
+  width: 100px;
   display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 4px 10px;
+  border-radius: 5px;
   font-size: 12px;
   font-weight: bold;
-  text-transform: uppercase;
+  text-align: center;
+  text-transform: capitalize;
 
-  ${({ $status }): string => {
-        switch ($status) {
+   color: ${(props): string => {
+        switch (props.$status) {
             case RentalStatus.ACTIVE:
-                return `
-          color: #155724;
-          background-color: #d4edda;
-        `;
+                return 'var(--green-status-text)';
             case RentalStatus.CLOSED:
-                return `
-          color: #1b1e21;
-          background-color: #d6d8d9;
-        `;
+                return 'var(--yellow-status-text)';
             case RentalStatus.CANCELLED:
-                return `
-          color: #721c24;
-          background-color: #f8d7da;
-        `;
+                return 'var(--red-status-text)';
             default:
-                return `
-          color: #856404;
-          background-color: #fff3cd;
-        `;
+                return 'var(--default-text)';
         }
-    }}
+    }};
+  background-color: ${(props): string => {
+        switch (props.$status) {
+            case RentalStatus.ACTIVE:
+                return 'var(--green-status-bg)';
+            case RentalStatus.CLOSED:
+                return 'var(--yellow-status-bg)';
+            case RentalStatus.CANCELLED:
+                return 'var(--red-status-bg)';
+            default:
+                return 'var(--default-bg)';
+        }
+    }};
+  border: 2px solid
+    ${(props): string => {
+        switch (props.$status) {
+            case RentalStatus.ACTIVE:
+                return 'var(--green-status-border)';
+            case RentalStatus.CLOSED:
+                return 'var(--yellow-status-border)';
+            case RentalStatus.CANCELLED:
+                return 'var(--red-status-border)';
+            default:
+                return 'var(--default-border)';
+        }
+    }};
 `;

@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import { FC, Suspense } from 'react';
 import { observer } from 'mobx-react-lite';
 import styled from 'styled-components';
 import { Env } from '@/core';
@@ -8,7 +8,7 @@ import { LocalFile, Rental } from '@/types';
 import { Await, useLoaderData } from 'react-router-dom';
 import { CSMainSingleRentalDetails } from './cs-main-single-rental-details';
 
-export const CSMainSingleRental: React.FC = observer(() => {
+export const CSMainSingleRental: FC = observer(() => {
     const data = useLoaderData() as { data: Rental };
 
     return (

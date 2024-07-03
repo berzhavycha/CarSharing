@@ -31,7 +31,7 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({
       <TableCell>{formatDate(rental.rentalStart)}</TableCell>
       <TableCell>{rental.rentalEnd ? formatDate(rental.rentalEnd) : '-'}</TableCell>
       <TableCell>
-        <StatusBadge status={rental.status as RentalStatus}>{uppercaseFirstLetter(rental.status)}</StatusBadge>
+        <StatusBadge $status={rental.status as RentalStatus}>{uppercaseFirstLetter(rental.status)}</StatusBadge>
       </TableCell>
       <TableCell>
         <Buttons>
@@ -45,7 +45,7 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({
   );
 });
 
-const StatusBadge = styled.div<{ status: RentalStatus }>`
+const StatusBadge = styled.div<{ $status: RentalStatus }>`
   width: 100%;
   display: inline-block;
   padding: 6px 10px;
@@ -54,39 +54,49 @@ const StatusBadge = styled.div<{ status: RentalStatus }>`
   font-weight: bold;
   text-align: center;
   text-transform: capitalize;
-  
-  ${({ status }): string => {
-    switch (status) {
+
+   color: ${(props): string => {
+    switch (props.$status) {
       case RentalStatus.ACTIVE:
-        return `
-          color: #155724;
-          background-color: #d4edda;
-          border: 1px solid #c3e6cb;
-        `;
+        return 'var(--green-status-text)';
       case RentalStatus.CLOSED:
-        return `
-          color: #1b1e21;
-          background-color: #d6d8d9;
-          border: 1px solid #c6c8ca;
-        `;
+        return 'var(--yellow-status-text)';
       case RentalStatus.CANCELLED:
-        return `
-          color: #721c24;
-          background-color: #f8d7da;
-          border: 1px solid #f5c6cb;
-        `;
+        return 'var(--red-status-text)';
       default:
-        return `
-          color: #856404;
-          background-color: #fff3cd;
-          border: 1px solid #ffeeba;
-        `;
+        return 'var(--default-text)';
     }
-  }}
+  }};
+  background-color: ${(props): string => {
+    switch (props.$status) {
+      case RentalStatus.ACTIVE:
+        return 'var(--green-status-bg)';
+      case RentalStatus.CLOSED:
+        return 'var(--yellow-status-bg)';
+      case RentalStatus.CANCELLED:
+        return 'var(--red-status-bg)';
+      default:
+        return 'var(--default-bg)';
+    }
+  }};
+  border: 2px solid
+    ${(props): string => {
+    switch (props.$status) {
+      case RentalStatus.ACTIVE:
+        return 'var(--green-status-border)';
+      case RentalStatus.CLOSED:
+        return 'var(--yellow-status-border)';
+      case RentalStatus.CANCELLED:
+        return 'var(--red-status-border)';
+      default:
+        return 'var(--default-border)';
+    }
+  }};
 `;
 
 const Buttons = styled.div`
   display: flex;
+  gap: 10px;
   align-items: center;
 `;
 
@@ -106,7 +116,7 @@ const ReturnButton = styled.button`
 `;
 
 const DetailsButton = styled(Link)`
-  padding: 7px 12px;
+  padding: 6px 12px;
   border: none;
   border-radius: 4px;
   background-color: var(--main-blue);

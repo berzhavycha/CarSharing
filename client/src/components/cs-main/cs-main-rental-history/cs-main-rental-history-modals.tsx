@@ -1,8 +1,9 @@
 import { CSCommonModal } from "@/components/cs-common";
 import { useStore } from "@/context";
+import { observer } from "mobx-react-lite";
 import { FC } from "react";
 
-export const CSMainRentalHistoryModals: FC = () => {
+export const CSMainRentalHistoryModals: FC = observer(() => {
     const { rentalStore } = useStore();
     const {
         isReturnedInTime,
@@ -61,4 +62,4 @@ export const CSMainRentalHistoryModals: FC = () => {
             )}
         </>
     )
-}
+})
