@@ -8,3 +8,9 @@ export const createRentalFieldMappings: Record<string, keyof (RentalDto & UserRe
   'drop off location': 'dropOffLocation',
   car: 'car',
 };
+
+export enum RentalStatus {
+  ACTIVE = 'active',
+  CLOSED = 'closed',
+  CANCELLED = 'cancelled',
+}

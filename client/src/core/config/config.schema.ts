@@ -15,6 +15,7 @@ const configSchema = z.object({
   ALLOWED_CAR_IMAGES_AMOUNT: paginationSchema.default('3'),
   ADMIN_TRANSACTIONS_PAGINATION_LIMIT: paginationSchema.default('10'),
   USER_CARS_PAGINATION_LIMIT: paginationSchema.default('9'),
+  USER_RENTAL_HISTORY_PAGINATION_LIMIT: paginationSchema.default('10')
 });
 
 export type Config = z.infer<typeof configSchema>;

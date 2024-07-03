@@ -2,11 +2,17 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import { RentCarDto } from '@/dtos';
+import { QueryRentalsDto, RentCarDto } from '@/dtos';
 import { Rental, User } from '@/entities';
 import {
+  applySearchAndPagination,
   CarStatus,
+  DEFAULT_ORDER,
+  DEFAULT_PAGINATION_LIMIT,
+  DEFAULT_PAGINATION_PAGE,
   ONE_HOUR_MILLISECONDS,
+  RENTAL_DEFAULT_ORDER_COLUMN,
+  RENTAL_DEFAULT_SEARCH_COLUMN,
   rentalsErrorMessages,
   RentalStatus,
   TransactionType,
@@ -25,7 +31,7 @@ export class RentalsService {
     private originalCarsService: OriginalCarsService,
     private usersService: UsersService,
     private readonly entityManager: EntityManager,
-  ) {}
+  ) { }
 
   async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
     const existingActiveUserRental = await this.rentalsRepository.findOne({
@@ -105,7 +111,7 @@ export class RentalsService {
       const returnDate = new Date();
       const hoursDifference = Math.ceil(
         (returnDate.getTime() - rental.rentalStart.getTime()) /
-          ONE_HOUR_MILLISECONDS,
+        ONE_HOUR_MILLISECONDS,
       );
 
       if (hoursDifference < rental.requestedHours) {
@@ -160,14 +166,24 @@ export class RentalsService {
     });
   }
 
-  async findAllUserRentals(userId: string): Promise<Rental[]> {
-    return this.rentalsRepository.find({
-      where: {
-        user: {
-          id: userId,
-        },
-      },
-      relations: ['originalCar'],
+  async findAllUserRentals(userId: string, query: QueryRentalsDto): Promise<[Rental[], number]> {
+    const { search, page, limit, order, sort } = query
+
+    const queryBuilder = this.rentalsRepository.createQueryBuilder('rental')
+      .leftJoinAndSelect('rental.originalCar', 'originalCar')
+      .where('rental.user.id = :userId', { userId });
+
+    applySearchAndPagination(queryBuilder, {
+      search,
+      searchColumn: RENTAL_DEFAULT_SEARCH_COLUMN,
+      page: page || DEFAULT_PAGINATION_PAGE,
+      limit: limit || DEFAULT_PAGINATION_LIMIT,
+      order: order || DEFAULT_ORDER,
+      sort: sort || RENTAL_DEFAULT_ORDER_COLUMN,
+      entityAlias: 'rental',
+
     });
+
+    return queryBuilder.getManyAndCount();
   }
 }

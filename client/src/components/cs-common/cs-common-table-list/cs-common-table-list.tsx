@@ -20,7 +20,7 @@ type Props<T> = {
   extraHeaderContent?: ReactNode;
 };
 
-export const CSDashboardListView = <T,>({
+export const CSCommonTableList = <T,>({
   title,
   searchPlaceholder,
   defaultSearchParams,
