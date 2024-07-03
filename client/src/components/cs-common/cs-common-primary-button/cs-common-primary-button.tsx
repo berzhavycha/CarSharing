@@ -23,8 +23,13 @@ export const CSCommonPrimaryButton = <C extends React.ElementType = 'button'>({
   style = 'main',
   ...rest
 }: PropsWithAs<Props, C>): JSX.Element => {
+  const handleClick = (event: React.MouseEvent): void => {
+    event.stopPropagation();
+    if (onClick) onClick();
+  };
+
   return (
-    <Button as={as} onClick={onClick} $style={style} {...rest}>
+    <Button as={as} onClick={handleClick} $style={style} {...rest}>
       {content}
     </Button>
   );
