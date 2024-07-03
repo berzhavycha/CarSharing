@@ -177,13 +177,12 @@ export class RentalsService {
 
     applySearchAndPagination(queryBuilder, {
       search,
-      searchColumn: RENTAL_DEFAULT_SEARCH_COLUMN,
+      searchColumns: RENTAL_DEFAULT_SEARCH_COLUMN,
       page: page || DEFAULT_PAGINATION_PAGE,
       limit: limit || DEFAULT_PAGINATION_LIMIT,
       order: order || DEFAULT_ORDER,
       sort: sort || RENTAL_DEFAULT_ORDER_COLUMN,
       entityAlias: 'rental',
-
     });
 
     return queryBuilder.getManyAndCount();
