@@ -38,7 +38,6 @@ export const RentalStore = types
         const { rentals } = yield fetchRentalHistory(params);
         self.rentals = rentals.map((rental: Rental) => RentalModel.create(rental));
       } catch (error) {
-        console.error('Error fetching rentals:', error);
         self.errorMessage = UNEXPECTED_ERROR_MESSAGE;
       }
     }),
@@ -63,7 +62,6 @@ export const RentalStore = types
           self.errorMessage = error;
         }
       } catch (error) {
-        console.error('Error returning car:', error);
         self.errorMessage = UNEXPECTED_ERROR_MESSAGE;
       }
     }),
