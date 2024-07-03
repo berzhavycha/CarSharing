@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonErrorMessage, CSCommonForm } from '@/components';
@@ -12,9 +12,6 @@ import { useUserRole } from './hooks';
 
 export const CSAuthSignUp: FC = observer(() => {
   const { userRole, handleUserTypeChange, showSecretCodeInput } = useUserRole();
-  const location = useLocation();
-  const from = location.state?.from;
-
   const navigate = useNavigate();
 
   const { currentUserStore } = useStore();
@@ -22,8 +19,7 @@ export const CSAuthSignUp: FC = observer(() => {
   const onSubmit = async (data: SignUpUserDto): Promise<void> => {
     await currentUserStore.signUp(data);
     if (currentUserStore.user) {
-      const navigatePath =
-        from || (currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/');
+      const navigatePath = currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/';
       navigate(navigatePath);
     }
   };
@@ -33,7 +29,7 @@ export const CSAuthSignUp: FC = observer(() => {
       <Title>Register</Title>
       <Span>
         Already have an account?
-        <Link to="/sign-in" state={{ from }}>
+        <Link to="/sign-in" >
           Login here
         </Link>{' '}
         instead
