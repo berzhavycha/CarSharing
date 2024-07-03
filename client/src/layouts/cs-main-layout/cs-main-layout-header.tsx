@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonContainer } from '@/components';
@@ -8,11 +8,7 @@ import { CSHeaderLayoutCarSearch } from './cs-header-layout-car-search';
 import { CSHeaderLayoutOptions } from './cs-header-layout-options';
 
 export const CSMainLayoutHeader: FC = () => {
-  const navigate = useNavigate();
   const { pathname } = useLocation();
-
-  const onMainPage = (): void => navigate('/');
-
   const isSearchBarEnabled = ['/', '/available-cars'].includes(pathname);
 
   return (
@@ -20,7 +16,7 @@ export const CSMainLayoutHeader: FC = () => {
       <CSCommonContainer>
         <Nav>
           <LeftSection>
-            <Logo onClick={onMainPage}>CARRENT</Logo>
+            <Logo to="/">CARRENT</Logo>
             {isSearchBarEnabled && <CSHeaderLayoutCarSearch />}
           </LeftSection>
           <CSHeaderLayoutOptions />
@@ -49,9 +45,10 @@ const Nav = styled.div`
   justify-content: space-between;
 `;
 
-const Logo = styled.div`
+const Logo = styled(Link)`
   font-size: 32px;
   font-weight: bold;
   color: var(--main-blue);
   cursor: pointer;
+  text-decoration: none;
 `;
