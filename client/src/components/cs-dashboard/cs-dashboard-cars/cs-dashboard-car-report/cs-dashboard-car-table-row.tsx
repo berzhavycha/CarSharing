@@ -5,18 +5,17 @@ import { TableCell, TableRow } from '@/components/cs-common';
 import { Env } from '@/core';
 import { uppercaseFirstLetter } from '@/helpers';
 import { Car } from '@/types';
+import { Link } from 'react-router-dom';
 
 type Props = {
   car: Car;
   index: number;
-  onDetailsClick: (car: Car) => void;
   onRemoveClick: (car: Car) => void;
 };
 
 export const CSDashboardCarTableRow: FC<Props> = ({
   car,
   index,
-  onDetailsClick,
   onRemoveClick,
 }) => {
   return (
@@ -33,8 +32,10 @@ export const CSDashboardCarTableRow: FC<Props> = ({
         <StatusBadge $status={car.status}>{uppercaseFirstLetter(car.status)}</StatusBadge>
       </TableCell>
       <TableCell>
-        <DetailsButton onClick={() => onDetailsClick(car)}>Details</DetailsButton>
-        <RemoveButton onClick={() => onRemoveClick(car)}>Remove</RemoveButton>
+        <Buttons>
+          <DetailsButton to={`/dashboard/edit-car?carId=${car.id}`}>Details</DetailsButton>
+          <RemoveButton onClick={() => onRemoveClick(car)}>Remove</RemoveButton>
+        </Buttons>
       </TableCell>
     </TableRow>
   );
@@ -74,20 +75,26 @@ const StatusBadge = styled.div<{ $status: string }>`
   }};
   border: 2px solid
     ${(props): string => {
-      switch (props.$status) {
-        case 'available':
-          return 'var(--available-border)';
-        case 'booked':
-          return 'var(--booked-border)';
-        case 'maintained':
-          return 'var(--maintained-border)';
-        default:
-          return 'var(--default-border)';
-      }
-    }};
+    switch (props.$status) {
+      case 'available':
+        return 'var(--available-border)';
+      case 'booked':
+        return 'var(--booked-border)';
+      case 'maintained':
+        return 'var(--maintained-border)';
+      default:
+        return 'var(--default-border)';
+    }
+  }};
 `;
 
-const DetailsButton = styled.button`
+const Buttons = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const DetailsButton = styled(Link)`
+  font-size: 14px;
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
@@ -96,6 +103,7 @@ const DetailsButton = styled.button`
   cursor: pointer;
   margin-right: 5px;
   transition: var(--default-transition);
+  text-decoration: none;
 
   &:hover {
     background-color: var(--dark-blue);
@@ -103,7 +111,7 @@ const DetailsButton = styled.button`
 `;
 
 const RemoveButton = styled.button`
-  padding: 6px 12px;
+  padding: 7px 12px;
   border: none;
   border-radius: 4px;
   background-color: var(--maintained-text);
