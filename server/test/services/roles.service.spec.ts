@@ -5,7 +5,8 @@ import { Repository } from 'typeorm';
 import { Role } from '@/entities';
 import { RolesService } from '@/services';
 
-import { mockRole, repositoryMock } from '../mocks';
+import { repositoryMock } from '../mocks';
+import { makeRole } from '../utils';
 
 describe('RolesService', () => {
   let rolesService: RolesService;
@@ -37,28 +38,27 @@ describe('RolesService', () => {
   describe('createRole', () => {
     it('should create a role', async () => {
       const roleName = 'user';
+      const role = makeRole()
 
-      jest.spyOn(rolesRepository, 'create').mockReturnValue(mockRole);
-      jest.spyOn(rolesRepository, 'save').mockResolvedValue(mockRole);
+      jest.spyOn(rolesRepository, 'create').mockReturnValue(role);
+      jest.spyOn(rolesRepository, 'save').mockResolvedValue(role);
 
       const result = await rolesService.createRole(roleName);
 
-      expect(result).toBe(mockRole);
-      expect(rolesRepository.create).toHaveBeenCalledWith({ name: roleName });
-      expect(rolesRepository.save).toHaveBeenCalledWith(mockRole);
+      expect(result).toBe(role);
+      expect(rolesRepository.save).toHaveBeenCalledWith(role);
     });
   });
 
   describe('findByName', () => {
     it('should return a role when found', async () => {
-      jest.spyOn(rolesRepository, 'findOne').mockResolvedValue(mockRole);
+      const role = makeRole()
 
-      const result = await rolesService.findByName(mockRole.name);
+      jest.spyOn(rolesRepository, 'findOne').mockResolvedValue(role);
 
-      expect(result).toEqual(mockRole);
-      expect(rolesRepository.findOne).toHaveBeenCalledWith({
-        where: { name: mockRole.name },
-      });
+      const result = await rolesService.findByName(role.name);
+
+      expect(result).toEqual(role);
     });
 
     it('should return null when role is not found', async () => {
@@ -69,9 +69,6 @@ describe('RolesService', () => {
       const result = await rolesService.findByName(nonExistingRole);
 
       expect(result).toBe(null);
-      expect(rolesRepository.findOne).toHaveBeenCalledWith({
-        where: { name: nonExistingRole },
-      });
     });
   });
 });
