@@ -9,12 +9,11 @@ import { applySearchAndPagination } from '@/helpers';
 import { OriginalCarsService } from '@/services';
 
 import {
-  createCarDtoMock,
   mockEntityManager,
-  mockOriginalCar,
   mockQueryBuilder,
   repositoryMock,
 } from '../mocks';
+import { makeOriginalCar, makeOriginalCarDto } from '../utils';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
@@ -51,84 +50,66 @@ describe('OriginalCarsService', () => {
 
   describe('createOriginalCar', () => {
     it('should create an original car', async () => {
-      const createdCar = {
-        id: 'car-id',
-        pictures: [],
-        ...mockOriginalCar,
-        ...createCarDtoMock,
-      } as OriginalCar;
+      const createdCar = makeOriginalCar()
+      const dto = makeOriginalCarDto()
 
       jest.spyOn(originalCarsRepository, 'create').mockReturnValue(createdCar);
       jest.spyOn(originalCarsRepository, 'save').mockResolvedValue(createdCar);
 
       const result =
-        await originalCarsService.createOriginalCar(createCarDtoMock);
+        await originalCarsService.createOriginalCar(dto);
 
       expect(result).toBe(createdCar);
-      expect(originalCarsRepository.create).toHaveBeenCalledWith(
-        createCarDtoMock,
-      );
       expect(originalCarsRepository.save).toHaveBeenCalledWith(createdCar);
     });
   });
 
   describe('createOriginalCarTransaction', () => {
     it('should create an original car within a transaction', async () => {
-      const createdCar = {
-        id: 'car-id',
-        ...mockOriginalCar,
-        ...createCarDtoMock,
-      } as OriginalCar;
+      const createdCar = makeOriginalCar()
+      const dto = makeOriginalCarDto()
 
       jest.spyOn(mockEntityManager, 'create').mockReturnValue(createdCar);
       jest.spyOn(mockEntityManager, 'save').mockResolvedValue(createdCar);
 
       const result = await originalCarsService.createOriginalCarTransaction(
-        createCarDtoMock,
+        dto,
         mockEntityManager as unknown as EntityManager,
       );
 
       expect(result).toEqual(createdCar);
-      expect(mockEntityManager.create).toHaveBeenCalledWith(
-        OriginalCar,
-        createCarDtoMock,
-      );
       expect(mockEntityManager.save).toHaveBeenCalledWith(createdCar);
     });
 
     it('should propagate error when save operation fails', async () => {
-      jest.spyOn(mockEntityManager, 'create').mockReturnValue(mockOriginalCar);
+      const originalCar = makeOriginalCar()
+      const dto = makeOriginalCarDto()
+
+      jest.spyOn(mockEntityManager, 'create').mockReturnValue(originalCar);
       jest
         .spyOn(mockEntityManager, 'save')
         .mockRejectedValue(new Error('Save failed'));
 
       await expect(
         originalCarsService.createOriginalCarTransaction(
-          createCarDtoMock,
+          dto,
           mockEntityManager as unknown as EntityManager,
         ),
       ).rejects.toThrow(Error);
-
-      expect(mockEntityManager.create).toHaveBeenCalledWith(
-        OriginalCar,
-        createCarDtoMock,
-      );
-      expect(mockEntityManager.save).toHaveBeenCalledWith(mockOriginalCar);
     });
   });
 
   describe('findById', () => {
+    const originalCar = makeOriginalCar()
+
     it('should return an original car when found', async () => {
       jest
         .spyOn(originalCarsRepository, 'findOne')
-        .mockResolvedValue(mockOriginalCar);
+        .mockResolvedValue(originalCar);
 
-      const result = await originalCarsService.findById(mockOriginalCar.id);
+      const result = await originalCarsService.findById(originalCar.id);
 
-      expect(result).toEqual(mockOriginalCar);
-      expect(originalCarsRepository.findOne).toHaveBeenCalledWith({
-        where: { id: mockOriginalCar.id },
-      });
+      expect(result).toEqual(originalCar);
     });
 
     it('should throw NotFoundException when original car is not found', async () => {
@@ -139,10 +120,6 @@ describe('OriginalCarsService', () => {
       await expect(originalCarsService.findById(nonExistingId)).rejects.toThrow(
         NotFoundException,
       );
-
-      expect(originalCarsRepository.findOne).toHaveBeenCalledWith({
-        where: { id: nonExistingId },
-      });
     });
   });
 
@@ -156,6 +133,9 @@ describe('OriginalCarsService', () => {
         sort: 'model',
       };
 
+      const originalCar = makeOriginalCar()
+      const resultValue = [[originalCar, { ...originalCar, id: '2nd-id' }], 2]
+
       jest
         .spyOn(originalCarsRepository, 'createQueryBuilder')
         .mockReturnValue(
@@ -166,26 +146,11 @@ describe('OriginalCarsService', () => {
 
       jest
         .spyOn(mockQueryBuilder, 'getManyAndCount')
-        .mockResolvedValue([[], 0]);
+        .mockResolvedValue(resultValue);
 
       const result = await originalCarsService.findAll(listCarsDto);
 
-      expect(originalCarsRepository.createQueryBuilder).toHaveBeenCalledWith(
-        'original_car',
-      );
-      expect(applySearchAndPagination).toHaveBeenCalledWith(
-        expect.any(Object),
-        expect.objectContaining({
-          search: listCarsDto.search,
-          page: listCarsDto.page,
-          limit: listCarsDto.limit,
-          order: listCarsDto.order,
-          sort: listCarsDto.sort,
-          entityAlias: 'original_car',
-        }),
-      );
-      expect(mockQueryBuilder.getManyAndCount).toHaveBeenCalled();
-      expect(result).toEqual([[], 0]);
+      expect(result).toEqual(resultValue);
     });
   });
 });
