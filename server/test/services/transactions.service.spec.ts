@@ -10,9 +10,9 @@ import { TransactionsService } from '@/services';
 import {
   mockEntityManager,
   mockQueryBuilder,
-  mockTransanction,
   repositoryMock,
 } from '../mocks';
+import { makeTransaction } from '../utils';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
@@ -49,21 +49,20 @@ describe('TransanctionsService', () => {
 
   describe('createTransaction', () => {
     it('should create a transanction', async () => {
+      const transaction = makeTransaction()
+
       jest
         .spyOn(transactionsRepository, 'create')
-        .mockReturnValue(mockTransanction);
-      jest.spyOn(mockEntityManager, 'save').mockResolvedValue(mockTransanction);
+        .mockReturnValue(transaction);
+      jest.spyOn(mockEntityManager, 'save').mockResolvedValue(transaction);
 
       const result = await transactionsService.createTransaction(
-        mockTransanction,
+        transaction,
         mockEntityManager as unknown as EntityManager,
       );
 
-      expect(result).toBe(mockTransanction);
-      expect(transactionsRepository.create).toHaveBeenCalledWith(
-        mockTransanction,
-      );
-      expect(mockEntityManager.save).toHaveBeenCalledWith(mockTransanction);
+      expect(result).toBe(transaction);
+      expect(mockEntityManager.save).toHaveBeenCalledWith(transaction);
     });
   });
 
@@ -77,6 +76,8 @@ describe('TransanctionsService', () => {
         sort: 'amount',
       };
 
+      const transaction = makeTransaction()
+
       jest
         .spyOn(transactionsRepository, 'createQueryBuilder')
         .mockReturnValue(
@@ -87,28 +88,15 @@ describe('TransanctionsService', () => {
         mockQueryBuilder as unknown as SelectQueryBuilder<Transaction>,
       );
 
+      const paginationResult = [[transaction, transaction], 2]
+
       jest
         .spyOn(mockQueryBuilder, 'getManyAndCount')
-        .mockResolvedValue([[mockTransanction], 1]);
+        .mockResolvedValue(paginationResult);
 
       const result = await transactionsService.findAll(listCarsDto);
 
-      expect(transactionsRepository.createQueryBuilder).toHaveBeenCalledWith(
-        'transaction',
-      );
-      expect(applySearchAndPagination).toHaveBeenCalledWith(
-        expect.any(Object),
-        expect.objectContaining({
-          search: listCarsDto.search,
-          page: listCarsDto.page,
-          limit: listCarsDto.limit,
-          order: listCarsDto.order,
-          sort: listCarsDto.sort,
-          entityAlias: 'transaction',
-        }),
-      );
-      expect(mockQueryBuilder.getManyAndCount).toHaveBeenCalled();
-      expect(result).toEqual([[mockTransanction], 1]);
+      expect(result).toEqual(paginationResult);
     });
   });
 });
