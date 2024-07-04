@@ -1,6 +1,7 @@
-import { Role, User } from '@/entities';
-import { Roles } from '@/helpers';
+import { Rental, Role, User } from '@/entities';
+import { Roles, TransactionType } from '@/helpers';
 import { SafeUser } from '@/interfaces';
+import { mockRental } from '../mocks';
 
 type UserDto = {
     userDetails: SafeUser;
@@ -8,6 +9,15 @@ type UserDto = {
     passwordSalt: string;
     refreshTokenHash: null | string;
     refreshTokenSalt: null | string;
+}
+
+type UpdateUserBalanceOptions = {
+    id: string;
+    balanceDto: {
+        amount: number;
+    };
+    transactionType: TransactionType;
+    rental: Rental;
 }
 
 export const makeCreateUserDto = (user?: Partial<UserDto>): UserDto => {
@@ -54,3 +64,14 @@ export const makeRole = (role?: Partial<Role>): Role => {
         ...role
     } as Role
 }
+
+export const makeUpdateUserBalanceOptions = (details?: UpdateUserBalanceOptions): UpdateUserBalanceOptions => {
+    return {
+        id: 'user-id',
+        balanceDto: { amount: 100 },
+        transactionType: TransactionType.REFUND,
+        rental: mockRental,
+        ...details
+    }
+}
+
