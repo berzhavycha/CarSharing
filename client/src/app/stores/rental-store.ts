@@ -1,18 +1,20 @@
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
-import { fetchRentalHistory, returnCar } from '@/services';
-import { Instance, flow, getParent, types } from 'mobx-state-tree';
+import { fetchRentalHistory, getRental, returnCar } from '@/services';
+import { Instance, flow, getParent, t } from 'mobx-state-tree';
 import { RentalModel } from '../models';
 import { QueryRentalsDto, Rental } from '@/types';
 import { CurrentUserStoreType } from './current-user-store';
 
-export const RentalStore = types
+export const RentalStore = t
   .model('RentalStore', {
-    rentals: types.optional(types.array(RentalModel), []),
-    refund: types.maybe(types.number),
-    penalty: types.maybe(types.number),
-    isReturnedInTime: types.optional(types.boolean, false),
-    errorMessage: types.optional(types.string, ''),
-    potentialRentalPrice: types.optional(types.number, 0)
+    rentals: t.optional(t.array(RentalModel), []),
+    refund: t.maybe(t.number),
+    penalty: t.maybe(t.number),
+    isReturnedInTime: t.optional(t.boolean, false),
+    errorMessage: t.optional(t.string, ''),
+    potentialRentalPrice: t.optional(t.number, 0),
+    singleRental: t.optional(t.maybeNull(RentalModel), null),
+    singleRentalErrorMessage: t.optional(t.string, ''),
   })
   .actions((self) => ({
     setPotentialRentalPrice(price: number): void {
@@ -33,6 +35,17 @@ export const RentalStore = types
     setIsReturnedInTime(inTime: boolean): void {
       self.isReturnedInTime = inTime;
     },
+    setSingleRental(rental: Rental): void {
+      self.singleRental = RentalModel.create(rental)
+    },
+    fetchSingleRental: flow(function* (id: string) {
+      try {
+        const data = yield getRental(id);
+        self.singleRental = RentalModel.create(data);
+      } catch (error) {
+        self.singleRentalErrorMessage = UNEXPECTED_ERROR_MESSAGE;
+      }
+    }),
     fetchRentals: flow(function* (params: QueryRentalsDto) {
       try {
         const { rentals } = yield fetchRentalHistory(params);
