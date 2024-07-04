@@ -42,6 +42,7 @@ export const makeUser = (user?: Partial<User>): User => {
         rentals: [],
         avatarId: 'av-id',
         transactions: [],
+        role: new Role(),
         ...user,
     } as User
 }
