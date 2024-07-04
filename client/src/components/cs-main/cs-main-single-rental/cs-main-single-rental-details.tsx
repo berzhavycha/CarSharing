@@ -1,36 +1,58 @@
 import { RentalStatus, uppercaseFirstLetter, formatDate } from "@/helpers";
 import { Rental } from "@/types";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import styled from "styled-components";
 import { CSMainSingleRentalTransaction } from "./cs-main-single-rental-transactions";
-import { CSCommonDetailsFeature, CSCommonTitle } from "@/components/cs-common";
+import { CSCommonDetailsFeature, CSCommonPrimaryButton, CSCommonTitle } from "@/components/cs-common";
+import { useStore } from "@/context";
+import { observer } from "mobx-react-lite";
+import { useParams } from "react-router-dom";
 
 type Props = {
     rental: Rental
 }
 
-export const CSMainSingleRentalDetails: FC<Props> = ({ rental }) => {
+export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
+    const { rentalStore: { singleRental, setSingleRental, fetchSingleRental, returnCar } } = useStore()
+    const { rentalId } = useParams() as { rentalId: string }
+
+    useEffect(() => {
+        setSingleRental(rental)
+    }, [])
+
+    const onCarReturn = async (): Promise<void> => {
+        await returnCar(rentalId)
+        await fetchSingleRental(rentalId)
+    }
+
+    const usedRental = singleRental ?? rental
+
     return (
         <RentalDetailsWrapper>
             <CSCommonTitle>Rental Details</CSCommonTitle>
             <FeaturesWrapper>
-                <CSCommonDetailsFeature label="Car Model" text={rental.originalCar?.model} />
+                <CSCommonDetailsFeature label="Car Model" text={usedRental.originalCar?.model} />
                 <CSCommonDetailsFeature label="Rental Status" component={
-                    <StatusBadge $status={rental.status as RentalStatus}>
-                        {uppercaseFirstLetter(rental.status)}
+                    <StatusBadge $status={usedRental.status as RentalStatus}>
+                        {uppercaseFirstLetter(usedRental.status)}
                     </StatusBadge>
                 } />
-                <CSCommonDetailsFeature label="Rental Start" text={formatDate(rental.rentalStart)} />
-                <CSCommonDetailsFeature label="Rental End" text={rental.rentalEnd ? formatDate(rental.rentalEnd) : 'Not returned yet'} />
-                <CSCommonDetailsFeature label="Requested Hours" text={rental.requestedHours} />
-                <CSCommonDetailsFeature label="Total Price" text={`$${rental.totalPrice.toFixed(2)}`} />
-                <CSCommonDetailsFeature label="Pick-up Location" text={rental.pickUpLocation} />
-                <CSCommonDetailsFeature label="Drop-off Location" text={rental.dropOffLocation} />
+                <CSCommonDetailsFeature label="Rental Start" text={formatDate(usedRental.rentalStart)} />
+                <CSCommonDetailsFeature label="Rental End" text={usedRental.rentalEnd ? formatDate(usedRental.rentalEnd) : 'Not returned yet'} />
+                <CSCommonDetailsFeature label="Requested Hours" text={usedRental.requestedHours} />
+                <CSCommonDetailsFeature label="Total Price" text={`$${usedRental.totalPrice.toFixed(2)}`} />
+                <CSCommonDetailsFeature label="Pick-up Location" text={usedRental.pickUpLocation} />
+                <CSCommonDetailsFeature label="Drop-off Location" text={usedRental.dropOffLocation} />
             </FeaturesWrapper>
-            <CSMainSingleRentalTransaction rental={rental} />
+            <CSMainSingleRentalTransaction rental={usedRental} />
+            {rental.status === RentalStatus.ACTIVE && (
+                <ReturnCarWrapper>
+                    <CSCommonPrimaryButton content="Return Car" onClick={onCarReturn} />
+                </ReturnCarWrapper>
+            )}
         </RentalDetailsWrapper>
     )
-}
+})
 
 const RentalDetailsWrapper = styled.div`
   width: 50%;
@@ -48,6 +70,9 @@ const FeaturesWrapper = styled.div`
   margin-bottom: 30px;
 `;
 
+const ReturnCarWrapper = styled.div`
+  margin-bottom: 30px;
+`;
 
 const StatusBadge = styled.div<{ $status: RentalStatus }>`
   width: 100px;

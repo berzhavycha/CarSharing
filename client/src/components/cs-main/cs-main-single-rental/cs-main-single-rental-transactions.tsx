@@ -1,3 +1,4 @@
+import { RentalType } from "@/app/models";
 import { CSCommonDetailsFeature, CSCommonNoData, CSCommonTitle } from "@/components/cs-common";
 import { formatDate, convertToTitleCase } from "@/helpers";
 import { Rental } from "@/types";
@@ -5,7 +6,7 @@ import { FC } from "react";
 import styled from "styled-components";
 
 type Props = {
-  rental: Rental
+  rental: Rental | RentalType
 }
 
 export const CSMainSingleRentalTransaction: FC<Props> = ({ rental }) => {
@@ -33,7 +34,7 @@ export const CSMainSingleRentalTransaction: FC<Props> = ({ rental }) => {
       ) : (
         <CSCommonNoData message="No transactions" />
       )}
-      <CSCommonDetailsFeature label="Total Spend" text={`$${Math.abs(Number(totalSpend.toFixed(2))) }`}/>
+      <CSCommonDetailsFeature label="Total Spend" text={`$${Math.abs(Number(totalSpend.toFixed(2)))}`} />
     </TransactionsSection>
   )
 }
