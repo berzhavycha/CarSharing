@@ -7,7 +7,7 @@ import { Car } from '@/entities';
 import { CarStatus } from '@/helpers';
 import { CarsService } from '@/services';
 
-import { mockCarsService } from '../mocks';
+import { testCarsService } from '../test-objects';
 import { makeCar, makeCreateCarDto } from '../utils';
 
 jest.mock('@nestjs/config');
@@ -25,7 +25,7 @@ describe('CarsController', () => {
       providers: [
         {
           provide: CarsService,
-          useValue: mockCarsService,
+          useValue: testCarsService,
         },
         {
           provide: ConfigService,

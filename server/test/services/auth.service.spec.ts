@@ -15,9 +15,9 @@ import { DUPLICATE_EMAIL_ERROR_CODE, hashValue, Roles } from '@/helpers';
 import { AuthService, UsersService } from '@/services';
 
 import {
-  mockJwtService,
-  mockUsersService,
-} from '../mocks';
+  testJwtService,
+  testUsersService,
+} from '../test-objects';
 import { makeHash, makeResponse, makeTokens, makeUser } from '../utils';
 
 jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
@@ -55,8 +55,8 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         { provide: ConfigService, useValue: mockConfigService },
-        { provide: UsersService, useValue: mockUsersService },
-        { provide: JwtService, useValue: mockJwtService },
+        { provide: UsersService, useValue: testUsersService },
+        { provide: JwtService, useValue: testJwtService },
       ],
     }).compile();
 
@@ -104,7 +104,7 @@ describe('AuthService', () => {
       const hash = makeHash();
 
       (hashValue as jest.Mock).mockResolvedValueOnce(hash);
-      jest.spyOn(mockUsersService, 'createUser').mockImplementationOnce(() => {
+      jest.spyOn(testUsersService, 'createUser').mockImplementationOnce(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const error: any = new Error('Email already exists');
         error.code = DUPLICATE_EMAIL_ERROR_CODE;
@@ -245,7 +245,7 @@ describe('AuthService', () => {
         .spyOn(jwtService, 'signAsync')
         .mockResolvedValueOnce(tokens.accessToken)
         .mockResolvedValueOnce(tokens.refreshToken);
-      jest.spyOn(mockUsersService, 'updateUser').mockResolvedValue(user);
+      jest.spyOn(testUsersService, 'updateUser').mockResolvedValue(user);
 
       const result = await authService.generateTokens(userId, email);
 
@@ -264,7 +264,7 @@ describe('AuthService', () => {
         .spyOn(jwtService, 'signAsync')
         .mockResolvedValueOnce(tokens.accessToken)
         .mockResolvedValueOnce(tokens.refreshToken);
-      jest.spyOn(mockUsersService, 'updateUser').mockResolvedValue(user);
+      jest.spyOn(testUsersService, 'updateUser').mockResolvedValue(user);
 
       await authService.generateTokens(userId, email);
 
@@ -392,7 +392,7 @@ describe('AuthService', () => {
 
     it('should set secure to false when NODE_ENV is not production', () => {
       const mockResponse = makeResponse()
-      
+
       mockConfigService.get = jest.fn().mockImplementation((key: string) => {
         switch (key) {
           case 'NODE_ENV':

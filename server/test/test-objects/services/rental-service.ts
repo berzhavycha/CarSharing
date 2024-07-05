@@ -1,4 +1,4 @@
-export const mockRentalsService = {
+export const testRentalsService = {
   rentCar: jest.fn(),
   findActiveByUserId: jest.fn(),
   findAllUserRentals: jest.fn(),

@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Role } from '@/entities';
 import { RolesService } from '@/services';
 
-import { repositoryMock } from '../mocks';
+import { testRepository } from '../test-objects';
 import { makeRole } from '../utils';
 
 describe('RolesService', () => {
@@ -18,7 +18,7 @@ describe('RolesService', () => {
         RolesService,
         {
           provide: getRepositoryToken(Role),
-          useValue: repositoryMock,
+          useValue: testRepository,
         },
       ],
     }).compile();

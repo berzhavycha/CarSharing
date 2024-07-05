@@ -1,4 +1,4 @@
-export const mockAuthService = {
+export const testAuthService = {
   signUp: jest.fn(),
   signIn: jest.fn(),
   refreshAccessToken: jest.fn(),

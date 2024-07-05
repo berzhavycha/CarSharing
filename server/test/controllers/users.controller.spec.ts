@@ -6,8 +6,8 @@ import { User } from '@/entities';
 import { UsersService } from '@/services';
 
 import {
-  mockUsersService,
-} from '../mocks';
+  testUsersService,
+} from '../test-objects';
 import { makeLocalFile, makePicture, makeUser } from '../utils';
 
 jest.mock('@nestjs/config');
@@ -25,7 +25,7 @@ describe('UsersController', () => {
       providers: [
         {
           provide: UsersService,
-          useValue: mockUsersService,
+          useValue: testUsersService,
         },
         { provide: ConfigService, useValue: mockConfigService },
       ],

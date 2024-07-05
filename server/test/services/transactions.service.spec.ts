@@ -8,10 +8,10 @@ import { applySearchAndPagination } from '@/helpers';
 import { TransactionsService } from '@/services';
 
 import {
-  mockEntityManager,
-  mockQueryBuilder,
-  repositoryMock,
-} from '../mocks';
+  testEntityManager,
+  testQueryBuilder,
+  testRepository,
+} from '../test-objects';
 import { makeTransaction } from '../utils';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
@@ -28,7 +28,7 @@ describe('TransanctionsService', () => {
         TransactionsService,
         {
           provide: getRepositoryToken(Transaction),
-          useValue: repositoryMock,
+          useValue: testRepository,
         },
       ],
     }).compile();
@@ -54,15 +54,15 @@ describe('TransanctionsService', () => {
       jest
         .spyOn(transactionsRepository, 'create')
         .mockReturnValue(transaction);
-      jest.spyOn(mockEntityManager, 'save').mockResolvedValue(transaction);
+      jest.spyOn(testEntityManager, 'save').mockResolvedValue(transaction);
 
       const result = await transactionsService.createTransaction(
         transaction,
-        mockEntityManager as unknown as EntityManager,
+        testEntityManager as unknown as EntityManager,
       );
 
       expect(result).toBe(transaction);
-      expect(mockEntityManager.save).toHaveBeenCalledWith(transaction);
+      expect(testEntityManager.save).toHaveBeenCalledWith(transaction);
     });
   });
 
@@ -81,17 +81,17 @@ describe('TransanctionsService', () => {
       jest
         .spyOn(transactionsRepository, 'createQueryBuilder')
         .mockReturnValue(
-          mockQueryBuilder as unknown as SelectQueryBuilder<Transaction>,
+          testQueryBuilder as unknown as SelectQueryBuilder<Transaction>,
         );
 
       (applySearchAndPagination as jest.Mock).mockReturnValue(
-        mockQueryBuilder as unknown as SelectQueryBuilder<Transaction>,
+        testQueryBuilder as unknown as SelectQueryBuilder<Transaction>,
       );
 
       const paginationResult = [[transaction, transaction], 2]
 
       jest
-        .spyOn(mockQueryBuilder, 'getManyAndCount')
+        .spyOn(testQueryBuilder, 'getManyAndCount')
         .mockResolvedValue(paginationResult);
 
       const result = await transactionsService.findAll(listCarsDto);

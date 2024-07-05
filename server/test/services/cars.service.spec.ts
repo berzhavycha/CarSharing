@@ -14,10 +14,10 @@ import {
 import { CarsService, LocalFilesService } from '@/services';
 
 import {
-  mockLocalFilesService,
-  mockQueryBuilder,
-  repositoryMock,
-} from '../mocks';
+  testLocalFilesService,
+  testQueryBuilder,
+  testRepository,
+} from '../test-objects';
 import { makeCar, makeCreateCarDto, makeLocalFile, makeRental } from '../utils';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
@@ -35,11 +35,11 @@ describe('CarsService', () => {
         CarsService,
         {
           provide: getRepositoryToken(Car),
-          useValue: repositoryMock,
+          useValue: testRepository,
         },
         {
           provide: LocalFilesService,
-          useValue: mockLocalFilesService,
+          useValue: testLocalFilesService,
         },
       ],
     }).compile();
@@ -83,7 +83,7 @@ describe('CarsService', () => {
         ...updateCarDto,
       });
 
-      jest.spyOn(carsService, 'findById').mockResolvedValue(car);
+      jest.spyOn(carsService, 'findById').mockResolvedValue(updatedCar);
       jest.spyOn(carsRepository, 'save').mockResolvedValue(updatedCar);
 
       const result = await carsService.updateCar(
@@ -302,15 +302,15 @@ describe('CarsService', () => {
       jest
         .spyOn(carsRepository, 'createQueryBuilder')
         .mockReturnValue(
-          mockQueryBuilder as unknown as SelectQueryBuilder<Car>,
+          testQueryBuilder as unknown as SelectQueryBuilder<Car>,
         );
 
       (applySearchAndPagination as jest.Mock).mockReturnValue(
-        mockQueryBuilder as unknown as SelectQueryBuilder<Car>,
+        testQueryBuilder as unknown as SelectQueryBuilder<Car>,
       );
 
       jest
-        .spyOn(mockQueryBuilder, 'getManyAndCount')
+        .spyOn(testQueryBuilder, 'getManyAndCount')
         .mockResolvedValue(resultValue);
 
       const result = await carsService.findAll(listCarsDto);

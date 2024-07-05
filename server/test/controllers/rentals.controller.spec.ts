@@ -5,7 +5,7 @@ import { QueryRentalsDto, RentCarDto } from '@/dtos';
 import { Rental } from '@/entities';
 import { RentalsService } from '@/services';
 
-import { mockRentalsService } from '../mocks';
+import { testRentalsService } from '../test-objects';
 import { makeRental, makeUser } from '../utils';
 
 describe('RentalsController', () => {
@@ -18,7 +18,7 @@ describe('RentalsController', () => {
       providers: [
         {
           provide: RentalsService,
-          useValue: mockRentalsService,
+          useValue: testRentalsService,
         },
       ],
     }).compile();

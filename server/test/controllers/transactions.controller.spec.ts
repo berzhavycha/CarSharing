@@ -6,7 +6,7 @@ import { QueryTransactionsDto } from '@/dtos';
 import { Transaction } from '@/entities';
 import { TransactionsService } from '@/services';
 
-import { mockTransanctionService } from '../mocks';
+import { testTransanctionService } from '../test-objects';
 import { makeTransaction } from '../utils';
 
 jest.mock('@nestjs/config');
@@ -24,7 +24,7 @@ describe('TransactionsController', () => {
       providers: [
         {
           provide: TransactionsService,
-          useValue: mockTransanctionService,
+          useValue: testTransanctionService,
         },
         {
           provide: ConfigService,

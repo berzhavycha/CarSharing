@@ -1,4 +1,4 @@
-export const mockQueryBuilder = {
+export const testQueryBuilder = {
   where: jest.fn().mockReturnThis(),
   andWhere: jest.fn().mockReturnThis(),
   skip: jest.fn().mockReturnThis(),
