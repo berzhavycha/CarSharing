@@ -112,7 +112,7 @@ const InputImageContainer = styled.div`
 `;
 
 const ErrorMessageWrapper = styled.div`
-  width: 500px;
+  width: 100%;
   position: absolute;
   bottom: -40px;
   left: 0;

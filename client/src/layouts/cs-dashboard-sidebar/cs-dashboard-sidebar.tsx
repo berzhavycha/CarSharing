@@ -117,6 +117,7 @@ const Sidebar = styled.div<{ $isOpen: boolean }>`
   flex-direction: column;
   justify-content: space-between;
   position: fixed;
+  z-index: 1000;
   background-color: var(--main-blue);
   color: white;
   height: 100vh;
