@@ -95,6 +95,12 @@
       "@/services/*": [
         "src/services/*"
       ],
+      "@/styles": [
+        "src/styles"
+      ],
+      "@/styles/*": [
+        "src/styles/*"
+      ],
     },
   },
   "include": [
