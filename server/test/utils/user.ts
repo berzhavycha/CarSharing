@@ -1,7 +1,6 @@
 import { Rental, Role, User } from '@/entities';
 import { Roles, TransactionType } from '@/helpers';
 import { SafeUser } from '@/interfaces';
-import { mockRental } from '../mocks';
 
 type UserDto = {
     userDetails: SafeUser;
@@ -70,7 +69,7 @@ export const makeUpdateUserBalanceOptions = (details?: UpdateUserBalanceOptions)
         id: 'user-id',
         balanceDto: { amount: 100 },
         transactionType: TransactionType.REFUND,
-        rental: mockRental,
+        rental: new Rental(),
         ...details
     }
 }

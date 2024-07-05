@@ -10,7 +10,7 @@ import { Roles } from '@/helpers';
 import { RequestWithUser } from '@/interfaces';
 import { AuthService } from '@/services';
 
-import { mockAuthService } from '../mocks';
+import { testAuthService } from '../test-objects';
 import { makeResponse, makeTokens, makeUser } from '../utils';
 
 describe('AuthController', () => {
@@ -23,7 +23,7 @@ describe('AuthController', () => {
       providers: [
         {
           provide: AuthService,
-          useValue: mockAuthService,
+          useValue: testAuthService,
         },
       ],
     }).compile();
@@ -48,7 +48,7 @@ describe('AuthController', () => {
       email: 'email@gmail.com',
       role: Roles.USER,
     };
-    
+
     it('should create a new user and send him back', async () => {
 
       const tokens = makeTokens()

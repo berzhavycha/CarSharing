@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { LocalFile } from '@/entities';
 import { LocalFilesService } from '@/services';
 
-import { repositoryMock } from '../mocks';
+import { testRepository } from '../test-objects';
 import { makeLocalFile } from '../utils';
 
 describe('LocalFilesService', () => {
@@ -19,7 +19,7 @@ describe('LocalFilesService', () => {
         LocalFilesService,
         {
           provide: getRepositoryToken(LocalFile),
-          useValue: repositoryMock,
+          useValue: testRepository,
         },
       ],
     }).compile();

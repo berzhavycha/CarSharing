@@ -14,14 +14,13 @@ import {
 } from '@/services';
 
 import {
-  mockEntityManager,
-  mockLocalFile,
-  mockLocalFilesService,
-  mockRoleService,
-  mockTransanctionService,
-  repositoryMock,
-} from '../mocks';
-import { makeCreateUserDto, makeHash, makeRole, makeUpdateUserBalanceOptions, makeUser } from '../utils';
+  testEntityManager,
+  testLocalFilesService,
+  testRoleService,
+  testTransanctionService,
+  testRepository,
+} from '../test-objects';
+import { makeCreateUserDto, makeHash, makeLocalFile, makeRole, makeUpdateUserBalanceOptions, makeUser } from '../utils';
 
 jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
   hashValue: jest.fn(),
@@ -40,19 +39,19 @@ describe('UsersService', () => {
         UsersService,
         {
           provide: getRepositoryToken(User),
-          useValue: repositoryMock,
+          useValue: testRepository,
         },
         {
           provide: TransactionsService,
-          useValue: mockTransanctionService,
+          useValue: testTransanctionService,
         },
         {
           provide: RolesService,
-          useValue: mockRoleService,
+          useValue: testRoleService,
         },
         {
           provide: LocalFilesService,
-          useValue: mockLocalFilesService,
+          useValue: testLocalFilesService,
         },
       ],
     }).compile();
@@ -188,22 +187,23 @@ describe('UsersService', () => {
 
     it('should update user with file', async () => {
       const user = makeUser()
+      const localFile = makeLocalFile()
       const updatedUser = makeUser({
-        avatarId: mockLocalFile.id,
-        avatar: mockLocalFile,
+        avatarId: localFile.id,
+        avatar: localFile,
         ...updateUserDtoStub,
       })
 
       jest
         .spyOn(localFilesService, 'saveLocalFileData')
-        .mockResolvedValue(mockLocalFile);
+        .mockResolvedValue(localFile);
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
 
       const result = await usersService.updateUser(
         user.id,
         updateUserDtoStub,
-        mockLocalFile,
+        localFile,
       );
 
       expect(result).toEqual(updatedUser);
@@ -277,7 +277,7 @@ describe('UsersService', () => {
       const balance = 100
       const options = makeUpdateUserBalanceOptions()
 
-      jest.spyOn(mockEntityManager, 'save').mockResolvedValue({
+      jest.spyOn(testEntityManager, 'save').mockResolvedValue({
         ...user,
         balance,
       })
@@ -285,7 +285,7 @@ describe('UsersService', () => {
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       const result = await usersService.updateUserBalance(
         options,
-        mockEntityManager as unknown as EntityManager,
+        testEntityManager as unknown as EntityManager,
       );
 
       expect(result).toEqual(user);
@@ -297,9 +297,9 @@ describe('UsersService', () => {
           user: { ...user },
           rental: options.rental,
         },
-        mockEntityManager,
+        testEntityManager,
       );
-      expect(mockEntityManager.save).toHaveBeenCalledWith({
+      expect(testEntityManager.save).toHaveBeenCalledWith({
         ...user,
         balance,
       });
