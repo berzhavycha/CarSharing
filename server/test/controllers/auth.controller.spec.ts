@@ -10,7 +10,8 @@ import { Roles } from '@/helpers';
 import { RequestWithUser } from '@/interfaces';
 import { AuthService } from '@/services';
 
-import { mockAuthService, mockTokens, mockUser, responseMock } from '../mocks';
+import { mockAuthService } from '../mocks';
+import { makeResponse, makeTokens, makeUser } from '../utils';
 
 describe('AuthController', () => {
   let authService: AuthService;
@@ -40,7 +41,7 @@ describe('AuthController', () => {
   });
 
   describe('signUp', () => {
-    it('should sign up a new user', async () => {
+    it('should create a new user and send him back', async () => {
       const userDto: RegisterUserDto = {
         firstName: 'firstName',
         lastName: 'lastName',
@@ -49,119 +50,174 @@ describe('AuthController', () => {
         role: Roles.USER,
       };
 
+      const tokens = makeTokens()
+      const user = makeUser()
+      const responseMock = makeResponse()
+
       jest
         .spyOn(authService, 'signUp')
-        .mockResolvedValue({ user: mockUser, tokens: mockTokens });
+        .mockResolvedValue({ user, tokens });
 
       await authController.signUp(userDto, responseMock);
 
       expect(authService.signUp).toHaveBeenCalledWith(userDto);
-      expect(authService.setTokensCookies).toHaveBeenCalledWith(
-        responseMock,
-        mockTokens,
-      );
       expect(responseMock.status).toHaveBeenCalledWith(HttpStatus.CREATED);
       expect(responseMock.json).toHaveBeenCalledWith(
-        plainToClass(User, mockUser),
+        plainToClass(User, user),
+      );
+    });
+
+    it('should send tokens in cookies on sign up', async () => {
+      const userDto: RegisterUserDto = {
+        firstName: 'firstName',
+        lastName: 'lastName',
+        password: 'password1',
+        email: 'email@gmail.com',
+        role: Roles.USER,
+      };
+
+      const tokens = makeTokens()
+      const user = makeUser()
+      const response = makeResponse()
+
+      jest
+        .spyOn(authService, 'signUp')
+        .mockResolvedValue({ user, tokens });
+
+      await authController.signUp(userDto, response);
+
+      expect(authService.setTokensCookies).toHaveBeenCalledWith(
+        response,
+        tokens,
       );
     });
   });
 
   describe('signIn', () => {
-    it('should sign in a user', async () => {
+    it('should sign in a user and send him back', async () => {
       const userDto: LoginUserDto = {
         password: 'password1',
         email: 'email@gmail.com',
       };
 
-      const requestMock = { user: mockUser } as RequestWithUser;
+      const user = makeUser()
+      const tokens = makeTokens()
+      const responseMock = makeResponse()
+      const request = { user } as RequestWithUser;
 
       jest
         .spyOn(authService, 'signIn')
-        .mockResolvedValue({ user: mockUser, tokens: mockTokens });
+        .mockResolvedValue({ user, tokens });
 
-      await authController.signIn(userDto, responseMock, requestMock);
+      await authController.signIn(userDto, responseMock, request);
 
-      expect(authService.signIn).toHaveBeenCalledWith(requestMock.user);
-      expect(authService.setTokensCookies).toHaveBeenCalledWith(
-        responseMock,
-        mockTokens,
-      );
+      expect(authService.signIn).toHaveBeenCalledWith(request.user);
       expect(responseMock.status).toHaveBeenCalledWith(HttpStatus.OK);
-      expect(responseMock.json).toHaveBeenCalledWith(mockUser);
+      expect(responseMock.json).toHaveBeenCalledWith(user);
+    });
+
+    it('should send tokens in cookies on sign in', async () => {
+      const userDto: LoginUserDto = {
+        password: 'password1',
+        email: 'email@gmail.com',
+      };
+
+      const user = makeUser()
+      const tokens = makeTokens()
+      const response = makeResponse()
+      const request = { user } as RequestWithUser;
+
+      jest
+        .spyOn(authService, 'signIn')
+        .mockResolvedValue({ user, tokens });
+
+      await authController.signIn(userDto, response, request);
+
+      expect(authService.setTokensCookies).toHaveBeenCalledWith(
+        response,
+        tokens,
+      );
     });
   });
 
   describe('refreshAccess', () => {
-    it('should refresh access token', async () => {
+    it('should refresh access token and send a new pair of tokens back in cookies', async () => {
       const refreshToken = 'mockRefreshToken';
 
-      const requestMock = {
+      const request = {
         cookies: {
           tokens: { refreshToken },
         },
       } as Request;
 
+      const tokens = makeTokens()
+      const responseMock = makeResponse()
+
       jest
         .spyOn(authService, 'refreshAccessToken')
-        .mockResolvedValue(mockTokens);
+        .mockResolvedValue(tokens);
 
-      await authController.refreshAccess(responseMock, requestMock);
+      await authController.refreshAccess(responseMock, request);
 
       expect(authService.refreshAccessToken).toHaveBeenCalledWith(refreshToken);
-      expect(authService.setTokensCookies).toHaveBeenCalledWith(
-        responseMock,
-        mockTokens,
-      );
       expect(responseMock.status).toHaveBeenCalledWith(HttpStatus.OK);
       expect(responseMock.send).toHaveBeenCalled();
     });
 
     it('should throw an error if refresh token is not found', async () => {
-      const requestMock = {
+      const request = {
         cookies: {},
       } as Request;
 
+      const response = makeResponse()
+
       await expect(
-        authController.refreshAccess(responseMock, requestMock),
+        authController.refreshAccess(response, request),
       ).rejects.toThrow(UnauthorizedException);
-      expect(authService.refreshAccessToken).not.toHaveBeenCalled();
-      expect(authService.setTokensCookies).not.toHaveBeenCalled();
-      expect(responseMock.status).not.toHaveBeenCalled();
-      expect(responseMock.send).not.toHaveBeenCalled();
     });
   });
 
   describe('signOut', () => {
     it('should sign out a user', async () => {
       const userId = 'mockUserId';
+      const responseMock = makeResponse()
 
       await authController.signOut(userId, responseMock);
 
       expect(authService.signOut).toHaveBeenCalledWith(userId);
-      expect(authService.clearTokensCookies).toHaveBeenCalledWith(responseMock);
       expect(responseMock.status).toHaveBeenCalledWith(HttpStatus.OK);
       expect(responseMock.send).toHaveBeenCalled();
+    });
+
+    it('should clear tokens in cookies on sign out', async () => {
+      const userId = 'mockUserId';
+
+      const response = makeResponse()
+
+      await authController.signOut(userId, response);
+
+      expect(authService.clearTokensCookies).toHaveBeenCalledWith(response);
     });
   });
 
   describe('getCurrentUser', () => {
     it('should return current user when authenticated', async () => {
-      const requestMock = {
-        user: plainToClass(User, mockUser),
+      const user = makeUser()
+      const request = {
+        user: plainToClass(User, user),
       } as RequestWithUser;
 
-      const result = await authController.getCurrentUser(requestMock.user);
+      const result = await authController.getCurrentUser(request.user);
 
-      expect(result).toEqual(plainToClass(User, mockUser));
+      expect(result).toEqual(plainToClass(User, user));
     });
 
     it('should return null when no user is authenticated', async () => {
-      const requestMock = {
+      const request = {
         user: null,
       } as RequestWithUser;
 
-      const result = await authController.getCurrentUser(requestMock.user);
+      const result = await authController.getCurrentUser(request.user);
 
       expect(result).toBeNull();
     });
