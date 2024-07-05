@@ -10,6 +10,7 @@ import { UpdateUserDto } from '@/types';
 import DefaultImage from '../../../../public/avatar.webp';
 
 import { useProfileUpdate } from './hooks';
+import { device } from '@/styles';
 
 export const CSCommonProfileSettings: FC = observer(() => {
   const {
@@ -124,6 +125,10 @@ const ContentContainer = styled.div`
 
 const Title = styled.h3`
   margin-bottom: 30px;
+
+  @media ${device.md} {
+    font-size: 16px;
+  }
 `;
 
 const ProfileSection = styled.div`
@@ -131,6 +136,11 @@ const ProfileSection = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 0 40px;
   margin-right: 10px;
+
+  @media ${device.sm} {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const PasswordSection = styled.div`
@@ -160,5 +170,25 @@ const UserInfo = styled.div`
   span {
     font-size: 14px;
     color: #666;
+  }
+
+  @media ${device.md} {
+    h2 {
+      font-size: 20px;
+    }
+
+     span {
+      font-size: 12px;
+    }
+  }
+
+  @media ${device.sm} {
+    h2 {
+      font-size: 16px;
+    }
+
+     span {
+      font-size: 10px;
+    }
   }
 `;
