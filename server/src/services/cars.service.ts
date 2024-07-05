@@ -17,7 +17,9 @@ import {
   DEFAULT_ORDER,
   DEFAULT_PAGINATION_LIMIT,
   DEFAULT_PAGINATION_PAGE,
+  getFilterOptions,
 } from '@/helpers';
+import { FilterOption } from '@/types';
 
 import { LocalFilesService } from './local-files.service';
 
@@ -102,11 +104,41 @@ export class CarsService {
   }
 
   async findAll(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
-    const { search, page, limit, order, sort } = listCarsDto;
+    const {
+      search,
+      page,
+      limit,
+      order,
+      sort,
+      types,
+      capacities,
+      status,
+      minPrice,
+      maxPrice,
+    } = listCarsDto;
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
     queryBuilder.leftJoinAndSelect('car.pictures', 'pictures');
+
+    if (types && types.length > 0) {
+      queryBuilder.andWhere('car.type IN (:...types)', { types });
+    }
+
+    if (capacities && capacities.length > 0) {
+      queryBuilder.andWhere('car.capacity IN (:...capacities)', { capacities });
+    }
+
+    if (status) {
+      queryBuilder.andWhere('car.status = :status', { status });
+    }
+
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      queryBuilder.andWhere(
+        'car.pricePerHour BETWEEN :minPrice AND :maxPrice',
+        { minPrice, maxPrice },
+      );
+    }
 
     applySearchAndPagination(queryBuilder, {
       search,
@@ -121,27 +153,21 @@ export class CarsService {
     return queryBuilder.getManyAndCount();
   }
 
-  async findAllAvailable(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
-    const { search, page, limit, order, sort } = listCarsDto;
+  async getFilterOptions(): Promise<{
+    types: FilterOption<string>[];
+    capacities: FilterOption<number>[];
+    maxPrice: number;
+  }> {
+    const types = await getFilterOptions(this.carsRepository, 'type');
+    const capacities = await getFilterOptions(this.carsRepository, 'capacity');
 
-    const queryBuilder = this.carsRepository.createQueryBuilder('car');
+    const maxPriceResult = await this.carsRepository
+      .createQueryBuilder('car')
+      .select('MAX(car.pricePerHour)', 'maxPrice')
+      .getRawOne();
 
-    queryBuilder.where('car.status = :status', {
-      status: CarStatus.AVAILABLE,
-    });
+    const maxPrice = maxPriceResult ? parseFloat(maxPriceResult.maxPrice) : 0;
 
-    queryBuilder.leftJoinAndSelect('car.pictures', 'pictures');
-
-    applySearchAndPagination(queryBuilder, {
-      search,
-      searchColumn: CAR_DEFAULT_SEARCH_COLUMN,
-      page: page || DEFAULT_PAGINATION_PAGE,
-      limit: limit || DEFAULT_PAGINATION_LIMIT,
-      order: order || DEFAULT_ORDER,
-      sort: sort || CAR_DEFAULT_ORDER_COLUMN,
-      entityAlias: 'car',
-    });
-
-    return queryBuilder.getManyAndCount();
+    return { types, capacities, maxPrice };
   }
 }

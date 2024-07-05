@@ -1,12 +1,12 @@
 import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { CSCommonPrimaryButton } from '@/components/cs-common';
 import { Env } from '@/core';
 import { defaultSearchParams } from '@/helpers';
 import { Car } from '@/types';
 
-import { CSDashboardListView } from '../../cs-dashboard-list-view';
+import { CSCommonTableList } from '../../../cs-common';
 
 import { CSDashboardCarTable } from './cs-dashboard-car-table';
 
@@ -21,12 +21,8 @@ type LoadedData = {
 };
 
 export const CSDashboardCarReport: FC = () => {
-  const navigate = useNavigate();
-
-  const onAddBtnClick = (): void => navigate('/dashboard/add-car');
-
   return (
-    <CSDashboardListView<LoadedData>
+    <CSCommonTableList<LoadedData>
       title="Cars"
       searchPlaceholder="Search by model name"
       defaultSearchParams={carsDefaultSearchParams}
@@ -34,7 +30,7 @@ export const CSDashboardCarReport: FC = () => {
       renderTable={(data, onSortChange) => (
         <CSDashboardCarTable cars={data.cars} onSortChange={onSortChange} />
       )}
-      extraHeaderContent={<CSCommonPrimaryButton onClick={onAddBtnClick} content="Add Car" />}
+      extraHeaderContent={<CSCommonPrimaryButton as={Link} to="/dashboard/add-car" content="Add Car" />}
     />
   );
 };

@@ -1,5 +1,4 @@
 import { FC, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { CSCommonModal, CSCommonNoData, Table, TableHeader } from '@/components/cs-common';
 import { Car } from '@/types';
@@ -22,9 +21,6 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
     setErrorMessage,
     handleRemoveCar,
   } = useCarRemoval(cars);
-
-  const navigate = useNavigate();
-  const onDetailsBtnClick = (car: Car): void => navigate(`/dashboard/edit-car?carId=${car.id}`);
 
   useEffect(() => {
     setCarList(cars);
@@ -71,7 +67,6 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
                 key={car.id}
                 car={car}
                 index={index}
-                onDetailsClick={onDetailsBtnClick}
                 onRemoveClick={setCarToRemove}
               />
             ))

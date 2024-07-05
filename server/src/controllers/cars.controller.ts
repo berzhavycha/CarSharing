@@ -24,6 +24,7 @@ import {
 } from '@/helpers';
 import { LocalFilesInterceptor } from '@/interceptors';
 import { CarsService } from '@/services';
+import { FilterOption } from '@/types';
 
 @Controller('cars')
 export class CarsController {
@@ -48,21 +49,23 @@ export class CarsController {
   }
 
   @Get()
-  @UseGuards(RoleGuard(Roles.ADMIN))
+  @UseGuards(JwtAuthGuard)
   async findAll(@Query() listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
     return this.carsService.findAll(listCarsDto);
   }
 
-  @Get('/available')
+  @Get('filter-options')
   @UseGuards(JwtAuthGuard)
-  async findAllAvailable(
-    @Query() listCarsDto: QueryCarsDto,
-  ): Promise<[Car[], number]> {
-    return this.carsService.findAllAvailable(listCarsDto);
+  async getFilterOptions(): Promise<{
+    types: FilterOption<string>[];
+    capacities: FilterOption<number>[];
+    maxPrice: number;
+  }> {
+    return this.carsService.getFilterOptions();
   }
 
   @Get(':id')
-  @UseGuards(RoleGuard(Roles.ADMIN))
+  @UseGuards(JwtAuthGuard)
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Car> {
     return this.carsService.findById(id);
   }

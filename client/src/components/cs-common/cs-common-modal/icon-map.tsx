@@ -9,14 +9,14 @@ const iconStyles = css`
 export const iconMap = {
   error: styled(FaExclamationCircle)`
     ${iconStyles}
-    color: var(--maintained-text);
+    color: var(--red-status-text);
   `,
   confirm: styled(FaCheckCircle)`
     ${iconStyles}
-    color: var(--available-text);
+    color: var(--green-status-text);
   `,
   warning: styled(FaExclamationTriangle)`
     ${iconStyles}
-    color: var(--booked-text);
+    color: var(--yellow-status-text);
   `,
 };

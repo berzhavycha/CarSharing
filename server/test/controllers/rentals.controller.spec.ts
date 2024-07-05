@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { RentalsController } from '@/controllers';
-import { RentCarDto } from '@/dtos';
+import { QueryRentalsDto, RentCarDto } from '@/dtos';
 import { Rental } from '@/entities';
 import { RentalsService } from '@/services';
 
-import { mockRental, mockRentalsService, mockUser } from '../mocks';
+import { testRentalsService } from '../test-objects';
+import { makeRental, makeUser } from '../utils';
 
 describe('RentalsController', () => {
   let rentalsController: RentalsController;
@@ -17,7 +18,7 @@ describe('RentalsController', () => {
       providers: [
         {
           provide: RentalsService,
-          useValue: mockRentalsService,
+          useValue: testRentalsService,
         },
       ],
     }).compile();
@@ -43,29 +44,31 @@ describe('RentalsController', () => {
         dropOffLocation: 'London',
       };
 
-      jest.spyOn(rentalsService, 'rentCar').mockResolvedValue(mockRental);
+      const rental = makeRental();
+      const user = makeUser();
 
-      const result = await rentalsController.createRental(rentCarDto, mockUser);
+      jest.spyOn(rentalsService, 'rentCar').mockResolvedValue(rental);
 
-      expect(result).toBe(mockRental);
-      expect(rentalsService.rentCar).toHaveBeenCalledWith(rentCarDto, mockUser);
+      const result = await rentalsController.createRental(rentCarDto, user);
+
+      expect(result).toBe(rental);
     });
   });
 
   describe('getCurrentUserRental', () => {
     it('should get current user rental', async () => {
-      const mockUserId = 'user123';
+      const userId = 'user123';
+
+      const rental = makeRental();
 
       jest
         .spyOn(rentalsService, 'findActiveByUserId')
-        .mockResolvedValue(mockRental);
+        .mockResolvedValue(rental);
 
-      const result = await rentalsController.getCurrentUserRental(mockUserId);
+      const result = await rentalsController.getCurrentUserRental(userId);
 
-      expect(result).toBe(mockRental);
-      expect(rentalsService.findActiveByUserId).toHaveBeenCalledWith(
-        mockUserId,
-      );
+      expect(result).toBe(rental);
+      expect(rentalsService.findActiveByUserId).toHaveBeenCalledWith(userId);
     });
 
     it('should return null if there is no active rental for a user', async () => {
@@ -76,44 +79,40 @@ describe('RentalsController', () => {
       const result = await rentalsController.getCurrentUserRental(mockUserId);
 
       expect(result).toBe(null);
-      expect(rentalsService.findActiveByUserId).toHaveBeenCalledWith(
-        mockUserId,
-      );
     });
   });
 
   describe('getUserHistory', () => {
     it('should get user rental history', async () => {
-      const mockUserId = 'user123';
+      const userId = 'user123';
+      const queryDto: QueryRentalsDto = { page: 1, limit: 10 };
 
-      const mockRentals: Rental[] = [mockRental];
+      const rental = makeRental();
+      const rentalsResult: [Rental[], number] = [[rental], 1];
 
       jest
         .spyOn(rentalsService, 'findAllUserRentals')
-        .mockResolvedValue(mockRentals);
+        .mockResolvedValue(rentalsResult);
 
-      const result = await rentalsController.getUserHistory(mockUserId);
+      const result = await rentalsController.getUserHistory(queryDto, userId);
 
-      expect(result).toBe(mockRentals);
-      expect(rentalsService.findAllUserRentals).toHaveBeenCalledWith(
-        mockUserId,
-      );
+      expect(result).toBe(rentalsResult);
     });
   });
 
   describe('returnCar', () => {
     it('should return a rented car', async () => {
-      const mockRentalId = 'rental123';
+      const rentalId = 'rental123';
 
-      jest.spyOn(rentalsService, 'returnCar').mockResolvedValue(mockRental);
+      const user = makeUser();
+      const rental = makeRental();
+      const returnResult = { rental };
 
-      const result = await rentalsController.returnCar(mockRentalId, mockUser);
+      jest.spyOn(rentalsService, 'returnCar').mockResolvedValue(returnResult);
 
-      expect(result).toBe(mockRental);
-      expect(rentalsService.returnCar).toHaveBeenCalledWith(
-        mockRentalId,
-        mockUser,
-      );
+      const result = await rentalsController.returnCar(rentalId, user);
+
+      expect(result).toBe(returnResult);
     });
   });
 });

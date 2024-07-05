@@ -2,11 +2,17 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import { RentCarDto } from '@/dtos';
+import { QueryRentalsDto, RentCarDto } from '@/dtos';
 import { Rental, User } from '@/entities';
 import {
+  applySearchAndPagination,
   CarStatus,
+  DEFAULT_ORDER,
+  DEFAULT_PAGINATION_LIMIT,
+  DEFAULT_PAGINATION_PAGE,
   ONE_HOUR_MILLISECONDS,
+  RENTAL_DEFAULT_ORDER_COLUMN,
+  RENTAL_DEFAULT_SEARCH_COLUMN,
   rentalsErrorMessages,
   RentalStatus,
   TransactionType,
@@ -66,6 +72,9 @@ export class RentalsService {
         car,
         user,
         originalCar,
+        pickUpLocation: rentCarDto.pickUpLocation,
+        dropOffLocation: rentCarDto.dropOffLocation,
+        totalPrice: rentalCost,
         status: RentalStatus.ACTIVE,
         requestedHours: rentCarDto.hours,
         rentalStart: new Date(),
@@ -87,7 +96,10 @@ export class RentalsService {
     });
   }
 
-  async returnCar(rentalId: string, user: User): Promise<Rental> {
+  async returnCar(
+    rentalId: string,
+    user: User,
+  ): Promise<{ rental: Rental; penalty?: number; refund?: number }> {
     const rental = await this.rentalsRepository.findOne({
       where: { id: rentalId },
       relations: ['car', 'originalCar', 'user'],
@@ -108,29 +120,32 @@ export class RentalsService {
           ONE_HOUR_MILLISECONDS,
       );
 
+      let refund: number | undefined;
+      let penalty: number | undefined;
+
       if (hoursDifference < rental.requestedHours) {
-        const refundAmount =
+        refund =
           rental.car.pricePerHour *
           Math.ceil(rental.requestedHours - hoursDifference);
 
         await this.usersService.updateUserBalance(
           {
             id: user.id,
-            balanceDto: { amount: refundAmount },
+            balanceDto: { amount: refund },
             transactionType: TransactionType.REFUND,
             rental,
           },
           manager,
         );
       } else if (hoursDifference > rental.requestedHours) {
-        const fineAmount =
+        penalty =
           rental.car.pricePerHour *
           Math.ceil(hoursDifference - rental.requestedHours);
 
         await this.usersService.updateUserBalance(
           {
             id: user.id,
-            balanceDto: { amount: -fineAmount },
+            balanceDto: { amount: -penalty },
             transactionType: TransactionType.PENALTY,
             rental,
           },
@@ -144,7 +159,9 @@ export class RentalsService {
       rental.rentalEnd = returnDate;
       rental.status = RentalStatus.CLOSED;
 
-      return manager.save(rental);
+      const updatedRental = await manager.save(rental);
+
+      return { rental: updatedRental, refund, penalty };
     });
   }
 
@@ -160,14 +177,42 @@ export class RentalsService {
     });
   }
 
-  async findAllUserRentals(userId: string): Promise<Rental[]> {
-    return this.rentalsRepository.find({
+  async findById(id: string): Promise<Rental | null> {
+    return this.rentalsRepository.findOne({
       where: {
-        user: {
-          id: userId,
-        },
+        id,
       },
-      relations: ['originalCar'],
+      relations: [
+        'originalCar',
+        'user',
+        'originalCar.pictures',
+        'transactions',
+      ],
     });
+  }
+
+  async findAllUserRentals(
+    userId: string,
+    query: QueryRentalsDto,
+  ): Promise<[Rental[], number]> {
+    const { search, page, limit, order, sort } = query;
+
+    const queryBuilder = this.rentalsRepository
+      .createQueryBuilder('rental')
+      .leftJoinAndSelect('rental.originalCar', 'originalCar')
+      .leftJoinAndSelect('originalCar.pictures', 'localFile')
+      .where('rental.user.id = :userId', { userId });
+
+    applySearchAndPagination(queryBuilder, {
+      search,
+      searchColumns: RENTAL_DEFAULT_SEARCH_COLUMN,
+      page: page || DEFAULT_PAGINATION_PAGE,
+      limit: limit || DEFAULT_PAGINATION_LIMIT,
+      order: order || DEFAULT_ORDER,
+      sort: sort || RENTAL_DEFAULT_ORDER_COLUMN,
+      entityAlias: 'rental',
+    });
+
+    return queryBuilder.getManyAndCount();
   }
 }

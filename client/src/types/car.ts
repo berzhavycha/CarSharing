@@ -25,3 +25,5 @@ export type Car = CarDto & {
 export type QueryCarsDto = PaginationDto & {
   search?: string;
 };
+
+export type OriginalCar = Omit<Car, 'status'>

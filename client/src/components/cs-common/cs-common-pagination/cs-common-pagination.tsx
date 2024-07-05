@@ -41,6 +41,7 @@ export const Pagination: FC<PaginationProps> = ({ totalPages, currentPage, onPag
 };
 
 const PaginationContainer = styled.div`
+  width: 100%;
   display: flex;
   justify-content: center;
   margin-top: 20px;
