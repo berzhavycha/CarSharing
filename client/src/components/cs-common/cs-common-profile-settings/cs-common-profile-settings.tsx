@@ -115,10 +115,9 @@ const ProfileContainer = styled.div`
 `;
 
 const ContentContainer = styled.div`
-  max-height: calc(100vh - 40px);
-  padding: 30px;
+  padding: 30px 30px 0 30px;
   background-color: white;
-  margin: 20px;
+  margin: 15px;
   border-radius: 10px;
   box-shadow: var(--default-box-shadow);
 `;
