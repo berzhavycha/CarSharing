@@ -6,10 +6,9 @@ import { Env } from '@/core';
 import { uppercaseFirstLetter } from '@/helpers';
 import { Car } from '@/types';
 import { Link } from 'react-router-dom';
-import { device } from '@/styles';
+import { device, HideOnMDScreen, HideOnSMScreen, HideOnXSScreen } from '@/styles';
 import { FaEllipsisV, FaInfoCircle, FaTrash } from 'react-icons/fa';
 import { useClickOutside } from '@/hooks';
-import { HideOnMDScreen, HideOnSMScreen, HideOnXSScreen } from './cs-dashboard-car-table';
 
 type Props = {
   car: Car;

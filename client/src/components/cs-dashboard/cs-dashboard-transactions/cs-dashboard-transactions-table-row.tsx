@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { TableCell, TableRow } from '@/components/cs-common';
 import { convertToTitleCase, formatDate } from '@/helpers';
 import { Transaction, TransactionType } from '@/types';
+import { device, HideOnSMScreen } from '@/styles';
 
 type Props = {
   transaction: Transaction;
@@ -14,7 +15,9 @@ export const CSDashboardTransactionsTableRow: FC<Props> = ({ transaction, index 
   return (
     <TableRow key={transaction.id}>
       <TableCell>{index + 1}</TableCell>
-      <TableCell>{transaction?.rental?.id ?? '-'}</TableCell>
+      <HideOnSMScreen>
+        <TableCell>{transaction?.rental?.id ?? '-'}</TableCell>
+      </HideOnSMScreen>
       <TableCell>
         {transaction.user.firstName} {transaction.user.lastName}
       </TableCell>
@@ -65,17 +68,28 @@ const TypeBadge = styled.div<{ $status: TransactionType }>`
   }};
   border: 2px solid
     ${(props): string => {
-      switch (props.$status) {
-        case TransactionType.TOP_UP:
-          return 'var(--top-up-border)';
-        case TransactionType.RENTAL_PAYMENT:
-          return 'var(--rental-payment-border)';
-        case TransactionType.REFUND:
-          return 'var(--refund-border)';
-        case TransactionType.PENALTY:
-          return 'var(--penalty-border)';
-        default:
-          return 'var(--default-border)';
-      }
-    }};
+    switch (props.$status) {
+      case TransactionType.TOP_UP:
+        return 'var(--top-up-border)';
+      case TransactionType.RENTAL_PAYMENT:
+        return 'var(--rental-payment-border)';
+      case TransactionType.REFUND:
+        return 'var(--refund-border)';
+      case TransactionType.PENALTY:
+        return 'var(--penalty-border)';
+      default:
+        return 'var(--default-border)';
+    }
+  }};
+
+
+    @media ${device.lg} {
+       padding: 4px 8px;
+       font-size: 10px;
+    }
+
+     @media ${device.sm} {
+       padding: 2px 4px;
+       font-size: 8px;
+    }
 `;

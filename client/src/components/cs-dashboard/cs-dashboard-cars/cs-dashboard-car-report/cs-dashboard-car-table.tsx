@@ -5,8 +5,7 @@ import { Car } from '@/types';
 
 import { CSDashboardCarTableRow } from './cs-dashboard-car-table-row';
 import { useCarRemoval } from './hooks';
-import { device } from '@/styles';
-import styled from 'styled-components';
+import { HideOnMDScreen, HideOnSMScreen, HideOnXSScreen } from '@/styles';
 
 type CarTableProps = {
   cars: Car[];
@@ -106,28 +105,3 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
     </>
   );
 };
-
-export const HideOnMDScreen = styled.div`
-  display: contents;
-
-  @media ${device.md} {
-    display: none;
-  }
-`;
-
-
-export const HideOnSMScreen = styled.div`
-  display: contents;
-
-  @media ${device.sm} {
-    display: none;
-  }
-`;
-
-export const HideOnXSScreen = styled.div`
-  display: contents;
-
-  @media ${device.xs} {
-    display: none;
-  }
-`;
