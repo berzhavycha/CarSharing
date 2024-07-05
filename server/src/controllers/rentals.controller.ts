@@ -20,7 +20,7 @@ import { RentalsService } from '@/services';
 @Controller('rentals')
 @UseGuards(RoleGuard(Roles.USER))
 export class RentalsController {
-  constructor(private readonly rentalsService: RentalsService) { }
+  constructor(private readonly rentalsService: RentalsService) {}
 
   @Post()
   async createRental(
@@ -31,13 +31,16 @@ export class RentalsController {
   }
 
   @Get('history')
-  async getUserHistory(@Query() listRentalDto: QueryRentalsDto, @CurrentUser('id') id: string): Promise<[Rental[], number]> {
+  async getUserHistory(
+    @Query() listRentalDto: QueryRentalsDto,
+    @CurrentUser('id') id: string,
+  ): Promise<[Rental[], number]> {
     return this.rentalsService.findAllUserRentals(id, listRentalDto);
   }
 
   @Get(':id')
   async findOne(
-    @Param('id', ParseUUIDPipe) id: string
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<Rental | null> {
     return this.rentalsService.findById(id);
   }
@@ -53,7 +56,7 @@ export class RentalsController {
   async returnCar(
     @Param('id') id: string,
     @CurrentUser() user: User,
-  ): Promise<{ rental: Rental, penalty?: number, refund?: number }> {
+  ): Promise<{ rental: Rental; penalty?: number; refund?: number }> {
     return this.rentalsService.returnCar(id, user);
   }
 }

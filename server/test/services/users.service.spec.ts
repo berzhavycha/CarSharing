@@ -16,11 +16,18 @@ import {
 import {
   testEntityManager,
   testLocalFilesService,
+  testRepository,
   testRoleService,
   testTransanctionService,
-  testRepository,
 } from '../test-objects';
-import { makeCreateUserDto, makeHash, makeLocalFile, makeRole, makeUpdateUserBalanceOptions, makeUser } from '../utils';
+import {
+  makeCreateUserDto,
+  makeHash,
+  makeLocalFile,
+  makeRole,
+  makeUpdateUserBalanceOptions,
+  makeUser,
+} from '../utils';
 
 jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
   hashValue: jest.fn(),
@@ -73,9 +80,9 @@ describe('UsersService', () => {
 
   describe('createUser', () => {
     it('should create a user with existing role', async () => {
-      const role = makeRole()
-      const user = makeUser()
-      const userDto = makeCreateUserDto()
+      const role = makeRole();
+      const user = makeUser();
+      const userDto = makeCreateUserDto();
 
       jest.spyOn(rolesService, 'findByName').mockResolvedValue(role);
 
@@ -89,9 +96,9 @@ describe('UsersService', () => {
     });
 
     it('should create a user and a new role', async () => {
-      const role = makeRole()
-      const user = makeUser()
-      const userDto = makeCreateUserDto()
+      const role = makeRole();
+      const user = makeUser();
+      const userDto = makeCreateUserDto();
 
       jest.spyOn(rolesService, 'findByName').mockResolvedValue(null);
       jest.spyOn(rolesService, 'createRole').mockResolvedValue(role);
@@ -108,7 +115,7 @@ describe('UsersService', () => {
 
   describe('findByEmail', () => {
     it('should return a user when found', async () => {
-      const user = makeUser()
+      const user = makeUser();
       jest.spyOn(usersRepository, 'findOne').mockResolvedValue(user);
 
       const result = await usersService.findByEmail(user.email);
@@ -129,7 +136,7 @@ describe('UsersService', () => {
 
   describe('findById', () => {
     it('should return a user when found', async () => {
-      const user = makeUser()
+      const user = makeUser();
 
       jest.spyOn(usersRepository, 'findOne').mockResolvedValue(user);
 
@@ -155,16 +162,13 @@ describe('UsersService', () => {
     };
 
     it('should update a user', async () => {
-      const user = makeUser()
-      const updatedUser = makeUser({ firstName: 'new first name' })
+      const user = makeUser();
+      const updatedUser = makeUser({ firstName: 'new first name' });
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
 
-      const result = await usersService.updateUser(
-        user.id,
-        updateUserDtoStub,
-      );
+      const result = await usersService.updateUser(user.id, updateUserDtoStub);
 
       expect(result).toEqual(updatedUser);
     });
@@ -186,13 +190,13 @@ describe('UsersService', () => {
     });
 
     it('should update user with file', async () => {
-      const user = makeUser()
-      const localFile = makeLocalFile()
+      const user = makeUser();
+      const localFile = makeLocalFile();
       const updatedUser = makeUser({
         avatarId: localFile.id,
         avatar: localFile,
         ...updateUserDtoStub,
-      })
+      });
 
       jest
         .spyOn(localFilesService, 'saveLocalFileData')
@@ -216,8 +220,8 @@ describe('UsersService', () => {
         newPassword: 'new password',
       };
 
-      const user = makeUser()
-      const hash = makeHash()
+      const user = makeUser();
+      const hash = makeHash();
       const updatedUser = makeUser({
         passwordHash: hash.hash,
         passwordSalt: hash.salt,
@@ -228,10 +232,7 @@ describe('UsersService', () => {
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
       (hashValue as jest.Mock).mockResolvedValueOnce(hash);
 
-      const result = await usersService.updateUser(
-        user.id,
-        updateUserDtoStub,
-      );
+      const result = await usersService.updateUser(user.id, updateUserDtoStub);
 
       expect(result).toEqual(updatedUser);
       expect(usersRepository.save).toHaveBeenCalledWith(updatedUser);
@@ -243,7 +244,7 @@ describe('UsersService', () => {
         newPassword: 'new password',
       };
 
-      const user = makeUser()
+      const user = makeUser();
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
@@ -258,7 +259,7 @@ describe('UsersService', () => {
         email: 'duplicate@gmail.com',
       };
 
-      const user = makeUser()
+      const user = makeUser();
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest
@@ -273,14 +274,14 @@ describe('UsersService', () => {
 
   describe('updateUserBalance', () => {
     it('should update user balance within a created transaction if manager is provided', async () => {
-      const user = makeUser()
-      const balance = 100
-      const options = makeUpdateUserBalanceOptions()
+      const user = makeUser();
+      const balance = 100;
+      const options = makeUpdateUserBalanceOptions();
 
       jest.spyOn(testEntityManager, 'save').mockResolvedValue({
         ...user,
         balance,
-      })
+      });
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       const result = await usersService.updateUserBalance(
@@ -306,8 +307,8 @@ describe('UsersService', () => {
     });
 
     it('should update user balance and within repositories transaction', async () => {
-      const user = makeUser()
-      const options = makeUpdateUserBalanceOptions()
+      const user = makeUser();
+      const options = makeUpdateUserBalanceOptions();
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest
@@ -321,7 +322,7 @@ describe('UsersService', () => {
     });
 
     it('should throw NotFoundException if user is not found', async () => {
-      const options = makeUpdateUserBalanceOptions()
+      const options = makeUpdateUserBalanceOptions();
 
       jest.spyOn(usersService, 'findById').mockImplementationOnce(() => {
         throw new NotFoundException(usersErrorMessages.USER_NOT_FOUND);

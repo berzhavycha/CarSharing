@@ -24,10 +24,16 @@ import {
   testEntityManager,
   testOriginalCarsService,
   testQueryBuilder,
-  testUsersService,
   testRepository,
+  testUsersService,
 } from '../test-objects';
-import { makeCar, makeOriginalCar, makeRental, makeRentalDto, makeUser } from '../utils';
+import {
+  makeCar,
+  makeOriginalCar,
+  makeRental,
+  makeRentalDto,
+  makeUser,
+} from '../utils';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
@@ -86,9 +92,9 @@ describe('RentalsService', () => {
 
   describe('rentCar', () => {
     it('should throw BadRequestException if user already has an active rental', async () => {
-      const rentCarDto = makeRentalDto()
-      const user = makeUser({ balance: 1000 })
-      const rental = makeRental()
+      const rentCarDto = makeRentalDto();
+      const user = makeUser({ balance: 1000 });
+      const rental = makeRental();
 
       jest
         .spyOn(rentalsRepository, 'findOne')
@@ -100,8 +106,8 @@ describe('RentalsService', () => {
     });
 
     it('should throw BadRequestException if the car is not available', async () => {
-      const rentCarDto = makeRentalDto()
-      const user = makeUser({ balance: 1000 })
+      const rentCarDto = makeRentalDto();
+      const user = makeUser({ balance: 1000 });
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
       jest.spyOn(carsService, 'findById').mockResolvedValue(null);
@@ -112,12 +118,12 @@ describe('RentalsService', () => {
     });
 
     it('should throw BadRequestException if the user has insufficient balance', async () => {
-      const rentCarDto = makeRentalDto()
-      const user = makeUser({ balance: 0 })
+      const rentCarDto = makeRentalDto();
+      const user = makeUser({ balance: 0 });
       const car = makeCar({
         status: CarStatus.AVAILABLE,
         pricePerHour: 20,
-      })
+      });
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
@@ -128,12 +134,12 @@ describe('RentalsService', () => {
     });
 
     it('should throw BadRequestException if the car is not available', async () => {
-      const rentCarDto = makeRentalDto()
-      const user = makeUser({ balance: 0 })
+      const rentCarDto = makeRentalDto();
+      const user = makeUser({ balance: 0 });
       const car = makeCar({
         status: CarStatus.BOOKED,
         pricePerHour: 20,
-      })
+      });
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
@@ -144,13 +150,13 @@ describe('RentalsService', () => {
     });
 
     it('should create a rental successfully', async () => {
-      const rentCarDto = makeRentalDto()
-      const user = makeUser({ balance: 1000 })
+      const rentCarDto = makeRentalDto();
+      const user = makeUser({ balance: 1000 });
       const car = makeCar({
         pricePerHour: 20,
-      })
-      const originalCar = makeOriginalCar()
-      const rental = makeRental()
+      });
+      const originalCar = makeOriginalCar();
+      const rental = makeRental();
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
@@ -179,13 +185,13 @@ describe('RentalsService', () => {
     });
 
     it('should create a rental successfully and update user balance', async () => {
-      const rentCarDto = makeRentalDto()
-      const user = makeUser({ balance: 1000 })
+      const rentCarDto = makeRentalDto();
+      const user = makeUser({ balance: 1000 });
       const car = makeCar({
         pricePerHour: 20,
-      })
-      const originalCar = makeOriginalCar()
-      const rental = makeRental()
+      });
+      const originalCar = makeOriginalCar();
+      const rental = makeRental();
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
@@ -223,13 +229,13 @@ describe('RentalsService', () => {
     });
 
     it('should create a rental successfully and create transaction for user balance update', async () => {
-      const rentCarDto = makeRentalDto()
-      const user = makeUser({ balance: 1000 })
+      const rentCarDto = makeRentalDto();
+      const user = makeUser({ balance: 1000 });
       const car = makeCar({
         pricePerHour: 20,
-      })
-      const originalCar = makeOriginalCar()
-      const rental = makeRental()
+      });
+      const originalCar = makeOriginalCar();
+      const rental = makeRental();
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
@@ -287,7 +293,7 @@ describe('RentalsService', () => {
     it('should throw BadRequestException if the car has already been returned', async () => {
       const rentalId = 'existing-id';
       const user = makeUser();
-      const rental = makeRental()
+      const rental = makeRental();
 
       const returnedRental = { ...rental, rentalEnd: new Date() };
 
@@ -307,7 +313,7 @@ describe('RentalsService', () => {
       const rentalStart = new Date(
         mockNow - RENT_ACTUAL_TIME_HOURS * ONE_HOUR_MILLISECONDS,
       );
-      const car = makeCar()
+      const car = makeCar();
       const rental = makeRental({
         rentalStart,
         requestedHours: 4,
@@ -315,7 +321,7 @@ describe('RentalsService', () => {
         car: { ...car, pricePerHour: 20 },
       });
 
-      const returnResult = { refund: 40, rental }
+      const returnResult = { refund: 40, rental };
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
       jest
@@ -344,7 +350,7 @@ describe('RentalsService', () => {
       const rentalStart = new Date(
         mockNow - RENT_ACTUAL_TIME_HOURS * ONE_HOUR_MILLISECONDS,
       );
-      const car = makeCar()
+      const car = makeCar();
       const rental = makeRental({
         rentalStart,
         requestedHours: 4,
@@ -352,7 +358,7 @@ describe('RentalsService', () => {
         car: { ...car, pricePerHour: 20 },
       });
 
-      const returnResult = { refund: 40, rental }
+      const returnResult = { refund: 40, rental };
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
       jest
@@ -387,7 +393,7 @@ describe('RentalsService', () => {
       const rentalStart = new Date(
         mockNow - RENT_ACTUAL_TIME_HOURS * ONE_HOUR_MILLISECONDS,
       );
-      const car = makeCar()
+      const car = makeCar();
       const rental = makeRental({
         rentalStart,
         requestedHours: 2,
@@ -395,7 +401,7 @@ describe('RentalsService', () => {
         car: { ...car, pricePerHour: 20 },
       });
 
-      const returnResult = { penalty: 20, rental }
+      const returnResult = { penalty: 20, rental };
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
       jest
@@ -430,7 +436,7 @@ describe('RentalsService', () => {
       const rentalStart = new Date(
         mockNow - REQUESTED_HOURS * ONE_HOUR_MILLISECONDS,
       );
-      const car = makeCar()
+      const car = makeCar();
       const rental = makeRental({
         rentalStart,
         requestedHours: 2,
@@ -438,7 +444,7 @@ describe('RentalsService', () => {
         car: { ...car, pricePerHour: 20 },
       });
 
-      const returnResult = { rental }
+      const returnResult = { rental };
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
       jest
@@ -464,8 +470,8 @@ describe('RentalsService', () => {
 
   describe('findActiveByUserId', () => {
     it('should return a rental when found', async () => {
-      const user = makeUser()
-      const rental = makeRental()
+      const user = makeUser();
+      const rental = makeRental();
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
 
@@ -486,8 +492,8 @@ describe('RentalsService', () => {
 
   describe('findAllUserRentals', () => {
     it('should return user rentals when found', async () => {
-      const user = makeUser()
-      const queryDto: QueryRentalsDto = { page: 1, limit: 10 }
+      const user = makeUser();
+      const queryDto: QueryRentalsDto = { page: 1, limit: 10 };
 
       const userRentals = [
         makeRental({ id: '1st-rental' }),

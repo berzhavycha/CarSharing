@@ -59,8 +59,8 @@ describe('CarsService', () => {
 
   describe('createCar', () => {
     it('should create a car', async () => {
-      const createdCar = makeCar()
-      const dto = makeCreateCarDto()
+      const createdCar = makeCar();
+      const dto = makeCreateCarDto();
 
       jest.spyOn(carsRepository, 'create').mockReturnValue(createdCar);
       jest.spyOn(carsRepository, 'save').mockResolvedValue(createdCar);
@@ -78,7 +78,7 @@ describe('CarsService', () => {
         status: CarStatus.BOOKED,
       };
 
-      const car = makeCar()
+      const car = makeCar();
       const updatedCar = makeCar({
         ...updateCarDto,
       });
@@ -86,11 +86,7 @@ describe('CarsService', () => {
       jest.spyOn(carsService, 'findById').mockResolvedValue(updatedCar);
       jest.spyOn(carsRepository, 'save').mockResolvedValue(updatedCar);
 
-      const result = await carsService.updateCar(
-        car.id,
-        updateCarDto,
-        [],
-      );
+      const result = await carsService.updateCar(car.id, updateCarDto, []);
 
       expect(result).toEqual(updatedCar);
       expect(carsRepository.save).toHaveBeenCalledWith(updatedCar);
@@ -119,7 +115,7 @@ describe('CarsService', () => {
         existingImagesIds: ['existing-image-id-1'],
       };
 
-      const car = makeCar()
+      const car = makeCar();
       const imagesToDelete = car.pictures.filter(
         (picture) => !updateCarDtoMock.existingImagesIds.includes(picture.id),
       );
@@ -136,7 +132,7 @@ describe('CarsService', () => {
     });
 
     it('should add new images to the car', async () => {
-      const localFile = makeLocalFile()
+      const localFile = makeLocalFile();
       const updateCarDtoMock = {
         existingImagesIds: [localFile.id],
       };
@@ -149,7 +145,7 @@ describe('CarsService', () => {
         },
       ];
 
-      const car = makeCar()
+      const car = makeCar();
       const updateCar = { ...car, pictures: [localFile] };
 
       jest.spyOn(carsService, 'findById').mockResolvedValue({ ...updateCar });
@@ -178,7 +174,7 @@ describe('CarsService', () => {
         existingImagesIds: ['existing-image-id-1'],
       };
 
-      const car = makeCar()
+      const car = makeCar();
       const updatedCar = makeCar({
         ...updateCarDtoMock,
       });
@@ -186,11 +182,7 @@ describe('CarsService', () => {
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
       jest.spyOn(carsRepository, 'save').mockResolvedValue(updatedCar);
 
-      const result = await carsService.updateCar(
-        car.id,
-        updateCarDtoMock,
-        [],
-      );
+      const result = await carsService.updateCar(car.id, updateCarDtoMock, []);
 
       expect(result.status).toEqual(updateCarDtoMock.status);
       expect(result.model).toEqual(updateCarDtoMock.model);
@@ -205,12 +197,12 @@ describe('CarsService', () => {
   describe('removeCar', () => {
     it('should remove a car when no active rentals exist', async () => {
       const rental = makeRental({
-        status: RentalStatus.CLOSED
-      })
+        status: RentalStatus.CLOSED,
+      });
       const carWithNoActiveRentals = makeCar({
         status: CarStatus.AVAILABLE,
         rentals: [rental],
-      })
+      });
 
       jest
         .spyOn(carsService, 'findById')
@@ -226,13 +218,13 @@ describe('CarsService', () => {
 
     it('should throw BadRequestException when active rentals exist', async () => {
       const rental = makeRental({
-        status: RentalStatus.ACTIVE
-      })
+        status: RentalStatus.ACTIVE,
+      });
       const carWithActiveRental = makeCar({
         status: CarStatus.BOOKED,
         rentals: [rental],
-      })
-      const car = makeCar()
+      });
+      const car = makeCar();
 
       jest
         .spyOn(carsService, 'findById')
@@ -266,7 +258,7 @@ describe('CarsService', () => {
 
   describe('findById', () => {
     it('should return a car when found', async () => {
-      const car = makeCar()
+      const car = makeCar();
 
       jest.spyOn(carsRepository, 'findOne').mockResolvedValue(car);
 
@@ -296,8 +288,14 @@ describe('CarsService', () => {
         sort: 'model',
       };
 
-      const car = makeCar()
-      const resultValue = [[{ ...car, id: '1' }, { ...car, id: '2' }], 2]
+      const car = makeCar();
+      const resultValue = [
+        [
+          { ...car, id: '1' },
+          { ...car, id: '2' },
+        ],
+        2,
+      ];
 
       jest
         .spyOn(carsRepository, 'createQueryBuilder')

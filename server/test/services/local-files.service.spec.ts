@@ -46,7 +46,7 @@ describe('LocalFilesService', () => {
         mimetype: 'mimetype',
       };
 
-      const localFile = makeLocalFile()
+      const localFile = makeLocalFile();
 
       jest.spyOn(localFilesRepository, 'create').mockReturnValue(localFile);
       jest.spyOn(localFilesRepository, 'save').mockResolvedValue(localFile);
@@ -60,11 +60,9 @@ describe('LocalFilesService', () => {
 
   describe('findById', () => {
     it('should return a local file when found', async () => {
-      const localFile = makeLocalFile()
+      const localFile = makeLocalFile();
 
-      jest
-        .spyOn(localFilesRepository, 'findOne')
-        .mockResolvedValue(localFile);
+      jest.spyOn(localFilesRepository, 'findOne').mockResolvedValue(localFile);
 
       const result = await localFilesService.findById(localFile.id);
 

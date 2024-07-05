@@ -44,8 +44,8 @@ describe('RentalsController', () => {
         dropOffLocation: 'London',
       };
 
-      const rental = makeRental()
-      const user = makeUser()
+      const rental = makeRental();
+      const user = makeUser();
 
       jest.spyOn(rentalsService, 'rentCar').mockResolvedValue(rental);
 
@@ -59,7 +59,7 @@ describe('RentalsController', () => {
     it('should get current user rental', async () => {
       const userId = 'user123';
 
-      const rental = makeRental()
+      const rental = makeRental();
 
       jest
         .spyOn(rentalsService, 'findActiveByUserId')
@@ -68,9 +68,7 @@ describe('RentalsController', () => {
       const result = await rentalsController.getCurrentUserRental(userId);
 
       expect(result).toBe(rental);
-      expect(rentalsService.findActiveByUserId).toHaveBeenCalledWith(
-        userId,
-      );
+      expect(rentalsService.findActiveByUserId).toHaveBeenCalledWith(userId);
     });
 
     it('should return null if there is no active rental for a user', async () => {
@@ -87,9 +85,9 @@ describe('RentalsController', () => {
   describe('getUserHistory', () => {
     it('should get user rental history', async () => {
       const userId = 'user123';
-      const queryDto: QueryRentalsDto = { page: 1, limit: 10 }
+      const queryDto: QueryRentalsDto = { page: 1, limit: 10 };
 
-      const rental = makeRental()
+      const rental = makeRental();
       const rentalsResult: [Rental[], number] = [[rental], 1];
 
       jest
@@ -106,9 +104,9 @@ describe('RentalsController', () => {
     it('should return a rented car', async () => {
       const rentalId = 'rental123';
 
-      const user = makeUser()
-      const rental = makeRental()
-      const returnResult = { rental }
+      const user = makeUser();
+      const rental = makeRental();
+      const returnResult = { rental };
 
       jest.spyOn(rentalsService, 'returnCar').mockResolvedValue(returnResult);
 

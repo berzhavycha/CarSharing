@@ -38,7 +38,7 @@ describe('RolesService', () => {
   describe('createRole', () => {
     it('should create a role', async () => {
       const roleName = 'user';
-      const role = makeRole()
+      const role = makeRole();
 
       jest.spyOn(rolesRepository, 'create').mockReturnValue(role);
       jest.spyOn(rolesRepository, 'save').mockResolvedValue(role);
@@ -52,7 +52,7 @@ describe('RolesService', () => {
 
   describe('findByName', () => {
     it('should return a role when found', async () => {
-      const role = makeRole()
+      const role = makeRole();
 
       jest.spyOn(rolesRepository, 'findOne').mockResolvedValue(role);
 

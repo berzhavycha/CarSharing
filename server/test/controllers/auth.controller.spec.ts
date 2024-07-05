@@ -50,32 +50,25 @@ describe('AuthController', () => {
     };
 
     it('should create a new user and send him back', async () => {
+      const tokens = makeTokens();
+      const user = makeUser();
+      const responseMock = makeResponse();
 
-      const tokens = makeTokens()
-      const user = makeUser()
-      const responseMock = makeResponse()
-
-      jest
-        .spyOn(authService, 'signUp')
-        .mockResolvedValue({ user, tokens });
+      jest.spyOn(authService, 'signUp').mockResolvedValue({ user, tokens });
 
       await authController.signUp(userDto, responseMock);
 
       expect(authService.signUp).toHaveBeenCalledWith(userDto);
       expect(responseMock.status).toHaveBeenCalledWith(HttpStatus.CREATED);
-      expect(responseMock.json).toHaveBeenCalledWith(
-        plainToClass(User, user),
-      );
+      expect(responseMock.json).toHaveBeenCalledWith(plainToClass(User, user));
     });
 
     it('should send tokens in cookies on sign up', async () => {
-      const tokens = makeTokens()
-      const user = makeUser()
-      const response = makeResponse()
+      const tokens = makeTokens();
+      const user = makeUser();
+      const response = makeResponse();
 
-      jest
-        .spyOn(authService, 'signUp')
-        .mockResolvedValue({ user, tokens });
+      jest.spyOn(authService, 'signUp').mockResolvedValue({ user, tokens });
 
       await authController.signUp(userDto, response);
 
@@ -93,15 +86,12 @@ describe('AuthController', () => {
     };
 
     it('should sign in a user and send him back', async () => {
-
-      const user = makeUser()
-      const tokens = makeTokens()
-      const responseMock = makeResponse()
+      const user = makeUser();
+      const tokens = makeTokens();
+      const responseMock = makeResponse();
       const request = { user } as RequestWithUser;
 
-      jest
-        .spyOn(authService, 'signIn')
-        .mockResolvedValue({ user, tokens });
+      jest.spyOn(authService, 'signIn').mockResolvedValue({ user, tokens });
 
       await authController.signIn(userDto, responseMock, request);
 
@@ -111,14 +101,12 @@ describe('AuthController', () => {
     });
 
     it('should send tokens in cookies on sign in', async () => {
-      const user = makeUser()
-      const tokens = makeTokens()
-      const response = makeResponse()
+      const user = makeUser();
+      const tokens = makeTokens();
+      const response = makeResponse();
       const request = { user } as RequestWithUser;
 
-      jest
-        .spyOn(authService, 'signIn')
-        .mockResolvedValue({ user, tokens });
+      jest.spyOn(authService, 'signIn').mockResolvedValue({ user, tokens });
 
       await authController.signIn(userDto, response, request);
 
@@ -139,12 +127,10 @@ describe('AuthController', () => {
         },
       } as Request;
 
-      const tokens = makeTokens()
-      const responseMock = makeResponse()
+      const tokens = makeTokens();
+      const responseMock = makeResponse();
 
-      jest
-        .spyOn(authService, 'refreshAccessToken')
-        .mockResolvedValue(tokens);
+      jest.spyOn(authService, 'refreshAccessToken').mockResolvedValue(tokens);
 
       await authController.refreshAccess(responseMock, request);
 
@@ -158,7 +144,7 @@ describe('AuthController', () => {
         cookies: {},
       } as Request;
 
-      const response = makeResponse()
+      const response = makeResponse();
 
       await expect(
         authController.refreshAccess(response, request),
@@ -169,7 +155,7 @@ describe('AuthController', () => {
   describe('signOut', () => {
     it('should sign out a user', async () => {
       const userId = 'mockUserId';
-      const responseMock = makeResponse()
+      const responseMock = makeResponse();
 
       await authController.signOut(userId, responseMock);
 
@@ -181,7 +167,7 @@ describe('AuthController', () => {
     it('should clear tokens in cookies on sign out', async () => {
       const userId = 'mockUserId';
 
-      const response = makeResponse()
+      const response = makeResponse();
 
       await authController.signOut(userId, response);
 
@@ -191,7 +177,7 @@ describe('AuthController', () => {
 
   describe('getCurrentUser', () => {
     it('should return current user when authenticated', async () => {
-      const user = makeUser()
+      const user = makeUser();
       const request = {
         user: plainToClass(User, user),
       } as RequestWithUser;

@@ -1,7 +1,7 @@
+import { Transform } from 'class-transformer';
 import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 
 import { PaginationDto } from '../general';
-import { Transform } from 'class-transformer';
 
 export class QueryCarsDto extends PaginationDto {
   @IsOptional()

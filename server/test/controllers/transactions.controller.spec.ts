@@ -57,7 +57,7 @@ describe('TransactionsController', () => {
         sort: 'amount',
       };
 
-      const transaction = makeTransaction()
+      const transaction = makeTransaction();
       const transactions: Transaction[] = [
         { ...transaction },
         { ...transaction, id: '2nd-id' },
