@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { TableCell, TableRow } from '@/components/cs-common';
+import { HiddenSMTableCell, TableCell, TableRow } from '@/components/cs-common';
 import { convertToTitleCase, formatDate } from '@/helpers';
 import { Transaction, TransactionType } from '@/types';
-import { device, HideOnSMScreen } from '@/styles';
+import { device } from '@/styles';
 
 type Props = {
   transaction: Transaction;
@@ -15,9 +15,7 @@ export const CSDashboardTransactionsTableRow: FC<Props> = ({ transaction, index 
   return (
     <TableRow key={transaction.id}>
       <TableCell>{index + 1}</TableCell>
-      <HideOnSMScreen>
-        <TableCell>{transaction?.rental?.id ?? '-'}</TableCell>
-      </HideOnSMScreen>
+      <HiddenSMTableCell>{transaction?.rental?.id ?? '-'}</HiddenSMTableCell>
       <TableCell>
         {transaction.user.firstName} {transaction.user.lastName}
       </TableCell>
