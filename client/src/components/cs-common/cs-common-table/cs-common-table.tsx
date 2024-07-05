@@ -63,3 +63,40 @@ export const TableCell = styled.td`
     }
   }
 `;
+
+
+export const HiddenSMTableHeader = styled(TableHeader)`
+  @media ${device.sm} {
+    display: none;
+  }
+`;
+
+export const HiddenXSTableHeader = styled(TableHeader)`
+  @media ${device.sm} {
+    display: none;
+  }
+`;
+
+export const HiddenMDTableHeader = styled(TableHeader)`
+  @media ${device.sm} {
+    display: none;
+  }
+`;
+
+export const HiddenSMTableCell = styled(TableCell)`
+  @media ${device.sm} {
+    display: none;
+  }
+`;
+
+export const HiddenXSTableCell = styled(TableCell)`
+  @media ${device.sm} {
+    display: none;
+  }
+`;
+
+export const HiddenMDTableCell = styled(TableCell)`
+  @media ${device.sm} {
+    display: none;
+  }
+`;

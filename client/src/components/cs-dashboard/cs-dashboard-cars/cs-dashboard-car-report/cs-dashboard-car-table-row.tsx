@@ -1,12 +1,12 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
 
-import { TableCell, TableRow } from '@/components/cs-common';
+import { HiddenMDTableCell, HiddenSMTableCell, HiddenXSTableCell, TableCell, TableRow } from '@/components/cs-common';
 import { Env } from '@/core';
 import { uppercaseFirstLetter } from '@/helpers';
 import { Car } from '@/types';
 import { Link } from 'react-router-dom';
-import { device, HideOnMDScreen, HideOnSMScreen, HideOnXSScreen } from '@/styles';
+import { device } from '@/styles';
 import { FaEllipsisV, FaInfoCircle, FaTrash } from 'react-icons/fa';
 import { useClickOutside } from '@/hooks';
 
@@ -32,24 +32,16 @@ export const CSDashboardCarTableRow: FC<Props> = ({
   return (
     <TableRow key={car.id}>
       <TableCell>{index + 1}</TableCell>
-      <HideOnXSScreen>
-        <TableCell>
-          <img src={`${Env.API_BASE_URL}/local-files/${car.pictures[0]?.id}`} alt="Car Image" />
-        </TableCell>
-      </HideOnXSScreen>
+      <HiddenXSTableCell>
+        <img src={`${Env.API_BASE_URL}/local-files/${car.pictures[0]?.id}`} alt="Car Image" />
+      </HiddenXSTableCell>
       <TableCell>{car.model}</TableCell>
-      <HideOnMDScreen>
-        <TableCell>{car.year}</TableCell>
-      </HideOnMDScreen>
+      <HiddenMDTableCell>{car.year} </HiddenMDTableCell>
       <TableCell>${car.pricePerHour}</TableCell>
-      <HideOnMDScreen>
-        <TableCell>{car.type}</TableCell>
-      </HideOnMDScreen>
-      <HideOnSMScreen>
-        <TableCell>
-          <StatusBadge $status={car.status}>{uppercaseFirstLetter(car.status)}</StatusBadge>
-        </TableCell>
-      </HideOnSMScreen>
+      <HiddenMDTableCell>{car.type}</HiddenMDTableCell>
+      <HiddenSMTableCell>
+        <StatusBadge $status={car.status}>{uppercaseFirstLetter(car.status)}</StatusBadge>
+      </HiddenSMTableCell>
       <ActionsCell>
         <DesktopActions>
           <DetailsButton to={`/dashboard/edit-car?carId=${car.id}`}>Details</DetailsButton>

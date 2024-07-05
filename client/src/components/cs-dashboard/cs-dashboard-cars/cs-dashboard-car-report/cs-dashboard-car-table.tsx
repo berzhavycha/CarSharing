@@ -1,11 +1,10 @@
 import { FC, useEffect } from 'react';
 
-import { CSCommonModal, CSCommonNoData, Table, TableHeader } from '@/components/cs-common';
+import { CSCommonModal, CSCommonNoData, HiddenMDTableHeader, HiddenSMTableHeader, HiddenXSTableHeader, Table, TableHeader } from '@/components/cs-common';
 import { Car } from '@/types';
 
 import { CSDashboardCarTableRow } from './cs-dashboard-car-table-row';
 import { useCarRemoval } from './hooks';
-import { HideOnMDScreen, HideOnSMScreen, HideOnXSScreen } from '@/styles';
 
 type CarTableProps = {
   cars: Car[];
@@ -36,30 +35,22 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
         <thead>
           <tr>
             <TableHeader style={{ width: '2%' }}>No.</TableHeader>
-            <HideOnXSScreen>
-              <TableHeader style={{ width: '10%' }}>Image</TableHeader>
-            </HideOnXSScreen>
+            <HiddenXSTableHeader style={{ width: '10%' }}>Image</HiddenXSTableHeader>
             <TableHeader style={{ width: '15%' }} onClick={() => onSortChange('model')}>
               Model
             </TableHeader>
-            <HideOnMDScreen>
-              <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('year')}>
-                Year
-              </TableHeader>
-            </HideOnMDScreen>
+            <HiddenMDTableHeader style={{ width: '10%' }} onClick={() => onSortChange('year')}>
+              Year
+            </HiddenMDTableHeader>
             <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('pricePerHour')}>
               Price / Hour
             </TableHeader>
-            <HideOnMDScreen>
-              <TableHeader style={{ width: '8%' }} onClick={() => onSortChange('type')}>
-                Type
-              </TableHeader>
-            </HideOnMDScreen>
-            <HideOnSMScreen>
-              <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('status')}>
-                Status
-              </TableHeader>
-            </HideOnSMScreen>
+            <HiddenMDTableHeader style={{ width: '8%' }} onClick={() => onSortChange('type')}>
+              Type
+            </HiddenMDTableHeader>
+            <HiddenSMTableHeader style={{ width: '10%' }} onClick={() => onSortChange('status')}>
+              Status
+            </HiddenSMTableHeader>
             <TableHeader style={{ width: '4%' }}>Actions</TableHeader>
           </tr>
         </thead>

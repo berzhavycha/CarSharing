@@ -1,10 +1,9 @@
 import { FC } from 'react';
 
-import { CSCommonNoData, Table, TableHeader } from '@/components/cs-common';
+import { CSCommonNoData, HiddenSMTableHeader, Table, TableHeader } from '@/components/cs-common';
 import { Transaction } from '@/types';
 
 import { CSDashboardTransactionsTableRow } from './cs-dashboard-transactions-table-row';
-import { HideOnSMScreen } from '@/styles';
 
 type Props = {
   transactions: Transaction[];
@@ -18,9 +17,7 @@ export const CSDashboardTransactionsTable: FC<Props> = ({ transactions, onSortCh
         <thead>
           <tr>
             <TableHeader style={{ width: '2%' }}>No.</TableHeader>
-            <HideOnSMScreen>
-              <TableHeader style={{ width: '30%' }}>Rental Id</TableHeader>
-            </HideOnSMScreen>
+            <HiddenSMTableHeader style={{ width: '30%' }}>Rental Id</HiddenSMTableHeader>
             <TableHeader style={{ width: '20%' }}>User</TableHeader>
             <TableHeader style={{ width: '5%' }} onClick={() => onSortChange('amount')}>
               Amount
@@ -54,3 +51,4 @@ export const CSDashboardTransactionsTable: FC<Props> = ({ transactions, onSortCh
     </>
   );
 };
+
