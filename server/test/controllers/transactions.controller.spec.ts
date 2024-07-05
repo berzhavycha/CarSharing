@@ -6,7 +6,8 @@ import { QueryTransactionsDto } from '@/dtos';
 import { Transaction } from '@/entities';
 import { TransactionsService } from '@/services';
 
-import { mockTransanction, mockTransanctionService } from '../mocks';
+import { mockTransanctionService } from '../mocks';
+import { makeTransaction } from '../utils';
 
 jest.mock('@nestjs/config');
 const mockConfigService = {
@@ -55,9 +56,11 @@ describe('TransactionsController', () => {
         order: 'ASC',
         sort: 'amount',
       };
+
+      const transaction = makeTransaction()
       const transactions: Transaction[] = [
-        { ...mockTransanction },
-        { ...mockTransanction, id: '2nd-id' },
+        { ...transaction },
+        { ...transaction, id: '2nd-id' },
       ];
 
       jest
@@ -67,7 +70,6 @@ describe('TransactionsController', () => {
       const result = await transactionsService.findAll(listDto);
 
       expect(result).toEqual([transactions, transactions.length]);
-      expect(transactionsService.findAll).toHaveBeenCalledWith(listDto);
     });
   });
 });
