@@ -10,6 +10,7 @@ import {
 } from '@/components/cs-common';
 import { DEFAULT_PAGINATION_PAGE, defaultSearchParams, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { usePagination, useSearchParamsWithDefaults } from '@/hooks';
+import { device } from '@/styles';
 
 type Props<T> = {
   title: string;
@@ -86,6 +87,12 @@ const Header = styled.div`
   align-items: baseline;
   justify-content: space-between;
   margin-bottom: 30px;
+
+  @media ${device.lg} {
+    h3{
+      font-size: 16px;
+    }
+  }
 `;
 
 const ContentContainer = styled.div`
@@ -95,4 +102,12 @@ const ContentContainer = styled.div`
   border-radius: 10px;
   box-shadow: var(--default-box-shadow);
   height: 94%;
+
+  @media ${device.md} {
+      padding: 20px;
+  }
+
+  @media ${device.sm} {
+      padding: 15px;
+  }
 `;
