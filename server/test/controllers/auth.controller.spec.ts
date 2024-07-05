@@ -41,14 +41,15 @@ describe('AuthController', () => {
   });
 
   describe('signUp', () => {
+    const userDto: RegisterUserDto = {
+      firstName: 'firstName',
+      lastName: 'lastName',
+      password: 'password1',
+      email: 'email@gmail.com',
+      role: Roles.USER,
+    };
+    
     it('should create a new user and send him back', async () => {
-      const userDto: RegisterUserDto = {
-        firstName: 'firstName',
-        lastName: 'lastName',
-        password: 'password1',
-        email: 'email@gmail.com',
-        role: Roles.USER,
-      };
 
       const tokens = makeTokens()
       const user = makeUser()
@@ -68,14 +69,6 @@ describe('AuthController', () => {
     });
 
     it('should send tokens in cookies on sign up', async () => {
-      const userDto: RegisterUserDto = {
-        firstName: 'firstName',
-        lastName: 'lastName',
-        password: 'password1',
-        email: 'email@gmail.com',
-        role: Roles.USER,
-      };
-
       const tokens = makeTokens()
       const user = makeUser()
       const response = makeResponse()
@@ -94,11 +87,12 @@ describe('AuthController', () => {
   });
 
   describe('signIn', () => {
+    const userDto: LoginUserDto = {
+      password: 'password1',
+      email: 'email@gmail.com',
+    };
+
     it('should sign in a user and send him back', async () => {
-      const userDto: LoginUserDto = {
-        password: 'password1',
-        email: 'email@gmail.com',
-      };
 
       const user = makeUser()
       const tokens = makeTokens()
@@ -117,11 +111,6 @@ describe('AuthController', () => {
     });
 
     it('should send tokens in cookies on sign in', async () => {
-      const userDto: LoginUserDto = {
-        password: 'password1',
-        email: 'email@gmail.com',
-      };
-
       const user = makeUser()
       const tokens = makeTokens()
       const response = makeResponse()
