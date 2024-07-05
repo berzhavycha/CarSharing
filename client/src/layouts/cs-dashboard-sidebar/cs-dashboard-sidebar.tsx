@@ -65,8 +65,8 @@ const DashboardWrapper = styled.div`
 
 const SidebarToggle = styled.button<{ $isSidebarOpen: boolean }>`
   position: fixed;
-  bottom: 40px;
-  left: 40px;
+  top: 20px;
+  left: 20px;
   z-index: 1000;
   background: var(--main-blue);
   color: white;
@@ -88,6 +88,20 @@ const SidebarToggle = styled.button<{ $isSidebarOpen: boolean }>`
 
   @media ${device.lg} {
     display: ${({ $isSidebarOpen }): string => ($isSidebarOpen ? 'none' : 'flex')};
+  }
+
+  @media ${device.md} {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+
+  @media ${device.sm} {
+    top: 15px;
+    left: 15px;
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
   }
 `;
 
