@@ -9,6 +9,7 @@ import { AuthType, getUserSchema, Roles } from '@/helpers';
 import { SignInUserDto } from '@/types';
 
 import { ErrorMessageWrapper, Span, Title } from '../cs-auth-sign-up';
+import { device } from '@/styles';
 
 export const CSAuthSignIn: FC = observer(() => {
   const { currentUserStore } = useStore();
@@ -64,7 +65,7 @@ export const CSAuthSignIn: FC = observer(() => {
 });
 
 const FormInner = styled.div`
-  width: 400px;
+  width: 35%;
   padding: 40px;
   position: absolute;
   border-radius: 10px;
@@ -73,6 +74,18 @@ const FormInner = styled.div`
   transform: translate(-50%, -50%);
   background-color: white;
   box-shadow: var(--default-box-shadow);
+
+  @media ${device.lg} {
+    width: 40%;
+  }
+
+  @media ${device.md} {
+    width: 60%;
+  }
+
+  @media ${device.sm} {
+    width: 90%;
+  }
 `;
 
 const FormBlocks = styled.div`

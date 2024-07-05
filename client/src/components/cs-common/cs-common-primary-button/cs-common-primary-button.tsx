@@ -58,15 +58,5 @@ const Button = styled.button<ButtonProps>`
   @media ${device.lg} {
     font-size: 14px;
   }
-
-  @media ${device.md} {
-    font-size: 12px;
-    padding: 8px 15px;
-  }
-
-  @media ${device.sm} {
-    font-size: 10px;
-    padding: 5px 10px;
-  }
 `;
 
