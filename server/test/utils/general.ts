@@ -33,7 +33,7 @@ export const makeEntityManager = (details?: Partial<EntityManager>): EntityManag
     } as EntityManager;
 }
 
-export const makeMockPicture = (details?: Partial<Picture>): Picture => {
+export const makePicture = (details?: Partial<Picture>): Picture => {
     return {
         fieldname: 'picture',
         originalname: 'test.jpg',

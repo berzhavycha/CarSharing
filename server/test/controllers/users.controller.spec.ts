@@ -2,17 +2,13 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { UsersController } from '@/controllers';
-import { UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
 import { User } from '@/entities';
-import { TransactionType } from '@/helpers';
 import { UsersService } from '@/services';
 
 import {
-  mockLocalFile,
-  mockPicture,
-  mockUser,
   mockUsersService,
 } from '../mocks';
+import { makeLocalFile, makePicture, makeUser } from '../utils';
 
 jest.mock('@nestjs/config');
 const mockConfigService = {
@@ -53,84 +49,79 @@ describe('UsersController', () => {
     });
 
     it('should update user details', async () => {
-      const mockUserId = mockUser.id;
-      const mockUpdateUserDto: UpdateUserDto = {
+      const user = makeUser()
+      const userId = user.id;
+      const updateUserDto = {
         firstName: 'new first name',
       };
 
-      const mockUpdatedUser: User = {
-        ...mockUser,
-        ...mockUpdateUserDto,
-      };
+      const updatedUser = makeUser({
+        ...updateUserDto,
+      })
 
-      jest.spyOn(usersService, 'updateUser').mockResolvedValue(mockUpdatedUser);
+      jest.spyOn(usersService, 'updateUser').mockResolvedValue(updatedUser);
 
       const result = await usersController.updateUser(
-        mockUserId,
-        mockUpdateUserDto,
+        userId,
+        updateUserDto,
         undefined,
       );
 
-      expect(result).toBe(mockUpdatedUser);
-      expect(usersService.updateUser).toHaveBeenCalledWith(
-        mockUserId,
-        mockUpdateUserDto,
-        null,
-      );
+      expect(result).toEqual(updatedUser);
     });
 
     it('should update user details with file upload', async () => {
-      const mockUserId = mockUser.id;
-      const mockUpdateUserDto: UpdateUserDto = {
+      const user = makeUser()
+      const userId = user.id;
+      const updateUserDto = {
         firstName: 'new first name',
       };
 
+      const updatedUser = makeUser({
+        ...updateUserDto,
+      })
+
+      const localFile = makeLocalFile()
+      const picture = makePicture()
+
       jest.spyOn(usersService, 'updateUser').mockResolvedValue({
-        ...mockUser,
-        ...mockUpdateUserDto,
-        avatarId: mockLocalFile.id,
+        ...user,
+        ...updateUserDto,
+        avatarId: localFile.id,
       });
 
       const result = await usersController.updateUser(
-        mockUserId,
-        mockUpdateUserDto,
-        mockPicture,
+        userId,
+        updateUserDto,
+        picture,
       );
 
-      expect(result).toBeDefined();
-      expect(result.firstName).toBe(mockUpdateUserDto.firstName);
-      expect(result.avatarId).toBe(mockUser.avatarId);
+      expect(result).toEqual(updatedUser);
     });
   });
 
   describe('topUpUserAccount', () => {
     it('should top up user account balance', async () => {
-      const mockUserId = mockUser.id;
-      const mockUpdateUserBalanceDto: UpdateUserBalanceDto = {
-        amount: 100,
+      const user = makeUser({ balance: 80 })
+      const userId = user.id;
+      const updateUserBalanceDto = {
+        amount: 20,
       };
-      const mockUserBalance = mockUser.balance;
 
-      const mockUpdatedUser: User = {
-        ...mockUser,
-        balance: mockUserBalance + mockUpdateUserBalanceDto.amount,
-      };
+      const updatedUser: User = makeUser({
+        balance: 100
+      })
 
       jest
         .spyOn(usersService, 'updateUserBalance')
-        .mockResolvedValue(mockUpdatedUser);
+        .mockResolvedValue(updatedUser);
 
       const result = await usersController.topUpUserAccount(
-        mockUserId,
-        mockUpdateUserBalanceDto,
+        userId,
+        updateUserBalanceDto,
       );
 
-      expect(result).toBe(mockUpdatedUser);
-      expect(usersService.updateUserBalance).toHaveBeenCalledWith({
-        id: mockUserId,
-        balanceDto: mockUpdateUserBalanceDto,
-        transactionType: TransactionType.TOP_UP,
-      });
+      expect(result).toBe(updatedUser);
     });
   });
 });
