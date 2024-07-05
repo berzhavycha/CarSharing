@@ -4,6 +4,7 @@ import { CSCommonNoData, Table, TableHeader } from '@/components/cs-common';
 import { Transaction } from '@/types';
 
 import { CSDashboardTransactionsTableRow } from './cs-dashboard-transactions-table-row';
+import { HideOnSMScreen } from '@/styles';
 
 type Props = {
   transactions: Transaction[];
@@ -16,14 +17,16 @@ export const CSDashboardTransactionsTable: FC<Props> = ({ transactions, onSortCh
       <Table>
         <thead>
           <tr>
-            <TableHeader style={{ width: '5%' }}>No.</TableHeader>
-            <TableHeader style={{ width: '33%' }}>Rental Id</TableHeader>
-            <TableHeader style={{ width: '23%' }}>User</TableHeader>
-            <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('amount')}>
+            <TableHeader style={{ width: '2%' }}>No.</TableHeader>
+            <HideOnSMScreen>
+              <TableHeader style={{ width: '30%' }}>Rental Id</TableHeader>
+            </HideOnSMScreen>
+            <TableHeader style={{ width: '20%' }}>User</TableHeader>
+            <TableHeader style={{ width: '5%' }} onClick={() => onSortChange('amount')}>
               Amount
             </TableHeader>
-            <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('createdAt')}>
-              Date & Time
+            <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('createdAt')}>
+              Time
             </TableHeader>
             <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('type')}>
               Type

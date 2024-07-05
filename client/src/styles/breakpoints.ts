@@ -1,3 +1,5 @@
+import styled from "styled-components"
+
 interface Size {
     xs: string
     sm: string
@@ -25,3 +27,28 @@ export const device = {
     xxl: `(max-width: ${size.xxl})`,
 }
 
+
+export const HideOnMDScreen = styled.div`
+  display: contents;
+
+  @media ${device.md} {
+    display: none;
+  }
+`;
+
+
+export const HideOnSMScreen = styled.div`
+  display: contents;
+
+  @media ${device.sm} {
+    display: none;
+  }
+`;
+
+export const HideOnXSScreen = styled.div`
+  display: contents;
+
+  @media ${device.xs} {
+    display: none;
+  }
+`;
