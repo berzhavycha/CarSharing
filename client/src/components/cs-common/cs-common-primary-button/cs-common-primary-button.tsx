@@ -1,3 +1,4 @@
+import { device } from '@/styles';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -52,6 +53,10 @@ const Button = styled.button<ButtonProps>`
 
   &:hover {
     background-color: var(--dark-blue);
+  }
+
+  @media ${device.lg} {
+    font-size: 14px;
   }
 `;
 
