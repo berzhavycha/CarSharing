@@ -29,6 +29,15 @@ const SearchContainer = styled.div`
   border-radius: 35px;
   width: 400px;
   border: var(--default-border);
+
+  @media ${device.md} {
+    width: 300px;
+  }
+
+  @media ${device.sm} {
+    width: 200px;
+    padding: 2px 5px 2px 10px;
+  }
 `;
 
 const SearchInput = styled.input`
@@ -46,6 +55,10 @@ const SearchInput = styled.input`
   @media ${device.md} {
     font-size: 12px;
   }
+
+  @media ${device.sm} {
+    font-size: 11px;
+  }
 `;
 
 const SearchIcon = styled(FaSearch)`
@@ -54,5 +67,9 @@ const SearchIcon = styled(FaSearch)`
 
   @media ${device.md} {
     font-size: 12px;
+  }
+
+  @media ${device.sm} {
+    font-size: 11px;
   }
 `;

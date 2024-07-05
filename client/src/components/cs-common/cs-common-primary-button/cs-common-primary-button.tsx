@@ -63,5 +63,10 @@ const Button = styled.button<ButtonProps>`
     font-size: 12px;
     padding: 8px 15px;
   }
+
+  @media ${device.sm} {
+    font-size: 10px;
+    padding: 5px 10px;
+  }
 `;
 

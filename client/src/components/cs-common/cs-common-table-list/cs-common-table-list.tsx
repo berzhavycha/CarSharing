@@ -93,6 +93,12 @@ const Header = styled.div`
       font-size: 16px;
     }
   }
+
+  @media ${device.sm} {
+    h3{
+      display: none;
+    }
+  }
 `;
 
 const ContentContainer = styled.div`
