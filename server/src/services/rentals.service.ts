@@ -31,7 +31,7 @@ export class RentalsService {
     private originalCarsService: OriginalCarsService,
     private usersService: UsersService,
     private readonly entityManager: EntityManager,
-  ) { }
+  ) {}
 
   async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
     const existingActiveUserRental = await this.rentalsRepository.findOne({
@@ -96,7 +96,10 @@ export class RentalsService {
     });
   }
 
-  async returnCar(rentalId: string, user: User): Promise<{ rental: Rental, penalty?: number, refund?: number }> {
+  async returnCar(
+    rentalId: string,
+    user: User,
+  ): Promise<{ rental: Rental; penalty?: number; refund?: number }> {
     const rental = await this.rentalsRepository.findOne({
       where: { id: rentalId },
       relations: ['car', 'originalCar', 'user'],
@@ -114,11 +117,11 @@ export class RentalsService {
       const returnDate = new Date();
       const hoursDifference = Math.ceil(
         (returnDate.getTime() - rental.rentalStart.getTime()) /
-        ONE_HOUR_MILLISECONDS,
+          ONE_HOUR_MILLISECONDS,
       );
 
-      let refund: number | undefined
-      let penalty: number | undefined
+      let refund: number | undefined;
+      let penalty: number | undefined;
 
       if (hoursDifference < rental.requestedHours) {
         refund =
@@ -158,7 +161,7 @@ export class RentalsService {
 
       const updatedRental = await manager.save(rental);
 
-      return { rental: updatedRental, refund, penalty }
+      return { rental: updatedRental, refund, penalty };
     });
   }
 
@@ -177,16 +180,25 @@ export class RentalsService {
   async findById(id: string): Promise<Rental | null> {
     return this.rentalsRepository.findOne({
       where: {
-        id
+        id,
       },
-      relations: ['originalCar', 'user', 'originalCar.pictures', 'transactions'],
+      relations: [
+        'originalCar',
+        'user',
+        'originalCar.pictures',
+        'transactions',
+      ],
     });
   }
 
-  async findAllUserRentals(userId: string, query: QueryRentalsDto): Promise<[Rental[], number]> {
-    const { search, page, limit, order, sort } = query
+  async findAllUserRentals(
+    userId: string,
+    query: QueryRentalsDto,
+  ): Promise<[Rental[], number]> {
+    const { search, page, limit, order, sort } = query;
 
-    const queryBuilder = this.rentalsRepository.createQueryBuilder('rental')
+    const queryBuilder = this.rentalsRepository
+      .createQueryBuilder('rental')
       .leftJoinAndSelect('rental.originalCar', 'originalCar')
       .leftJoinAndSelect('originalCar.pictures', 'localFile')
       .where('rental.user.id = :userId', { userId });

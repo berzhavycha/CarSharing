@@ -49,11 +49,9 @@ describe('TransanctionsService', () => {
 
   describe('createTransaction', () => {
     it('should create a transanction', async () => {
-      const transaction = makeTransaction()
+      const transaction = makeTransaction();
 
-      jest
-        .spyOn(transactionsRepository, 'create')
-        .mockReturnValue(transaction);
+      jest.spyOn(transactionsRepository, 'create').mockReturnValue(transaction);
       jest.spyOn(testEntityManager, 'save').mockResolvedValue(transaction);
 
       const result = await transactionsService.createTransaction(
@@ -76,7 +74,7 @@ describe('TransanctionsService', () => {
         sort: 'amount',
       };
 
-      const transaction = makeTransaction()
+      const transaction = makeTransaction();
 
       jest
         .spyOn(transactionsRepository, 'createQueryBuilder')
@@ -88,7 +86,7 @@ describe('TransanctionsService', () => {
         testQueryBuilder as unknown as SelectQueryBuilder<Transaction>,
       );
 
-      const paginationResult = [[transaction, transaction], 2]
+      const paginationResult = [[transaction, transaction], 2];
 
       jest
         .spyOn(testQueryBuilder, 'getManyAndCount')

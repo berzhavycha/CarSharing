@@ -48,8 +48,8 @@ describe('CarsController', () => {
 
   describe('create', () => {
     it('should create a new car', async () => {
-      const createdCar = makeCar()
-      const createCarDto = makeCreateCarDto()
+      const createdCar = makeCar();
+      const createCarDto = makeCreateCarDto();
 
       jest.spyOn(mockConfigService, 'get').mockReturnValue('uploads');
       jest.spyOn(carsService, 'createCar').mockResolvedValue(createdCar);
@@ -71,7 +71,7 @@ describe('CarsController', () => {
         sort: 'model',
       };
 
-      const car = makeCar()
+      const car = makeCar();
 
       const cars: Car[] = [{ ...car }, { ...car, id: '2nd-car-id' }];
 
@@ -98,7 +98,7 @@ describe('CarsController', () => {
 
   describe('update', () => {
     it('should update a car', async () => {
-      const car = makeCar()
+      const car = makeCar();
       const carId = car.id;
 
       const updateCarDto = {

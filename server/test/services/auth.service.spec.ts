@@ -14,10 +14,7 @@ import { User } from '@/entities';
 import { DUPLICATE_EMAIL_ERROR_CODE, hashValue, Roles } from '@/helpers';
 import { AuthService, UsersService } from '@/services';
 
-import {
-  testJwtService,
-  testUsersService,
-} from '../test-objects';
+import { testJwtService, testUsersService } from '../test-objects';
 import { makeHash, makeResponse, makeTokens, makeUser } from '../utils';
 
 jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
@@ -43,7 +40,6 @@ const mockConfigService = {
     }
   }),
 };
-
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -88,9 +84,7 @@ describe('AuthService', () => {
       const user = makeUser();
 
       (hashValue as jest.Mock).mockResolvedValueOnce(hash);
-      jest
-        .spyOn(authService, 'generateTokens')
-        .mockResolvedValueOnce(tokens);
+      jest.spyOn(authService, 'generateTokens').mockResolvedValueOnce(tokens);
       jest.spyOn(usersService, 'createUser').mockResolvedValueOnce(user);
 
       const result = await authService.signUp(registerUserDto);
@@ -172,7 +166,9 @@ describe('AuthService', () => {
       jest
         .spyOn(authService, 'validateRefreshToken')
         .mockResolvedValue(undefined);
-      jest.spyOn(authService, 'generateTokens').mockResolvedValue(existingTokens);
+      jest
+        .spyOn(authService, 'generateTokens')
+        .mockResolvedValue(existingTokens);
 
       const tokens = await authService.refreshAccessToken(refreshToken);
 
@@ -321,13 +317,10 @@ describe('AuthService', () => {
     const WEEK = 7 * 24 * 60 * 60 * 1000;
 
     it('should set tokens cookie with correct options', () => {
-      const tokens = makeTokens()
-      const mockResponse = makeResponse()
+      const tokens = makeTokens();
+      const mockResponse = makeResponse();
 
-      authService.setTokensCookies(
-        mockResponse as unknown as Response,
-        tokens,
-      );
+      authService.setTokensCookies(mockResponse as unknown as Response, tokens);
 
       expect(mockResponse.cookie).toHaveBeenCalledWith('tokens', tokens, {
         httpOnly: true,
@@ -338,8 +331,8 @@ describe('AuthService', () => {
     });
 
     it('should set secure to false when NODE_ENV is not production', () => {
-      const tokens = makeTokens()
-      const mockResponse = makeResponse()
+      const tokens = makeTokens();
+      const mockResponse = makeResponse();
 
       mockConfigService.get = jest
         .fn()
@@ -354,10 +347,7 @@ describe('AuthService', () => {
           }
         });
 
-      authService.setTokensCookies(
-        mockResponse as unknown as Response,
-        tokens,
-      );
+      authService.setTokensCookies(mockResponse as unknown as Response, tokens);
 
       expect(mockResponse.cookie).toHaveBeenCalledWith('tokens', tokens, {
         httpOnly: true,
@@ -370,7 +360,7 @@ describe('AuthService', () => {
 
   describe('clearTokensCookies', () => {
     it('should clear tokens cookie with correct options', () => {
-      const mockResponse = makeResponse()
+      const mockResponse = makeResponse();
 
       mockConfigService.get = jest.fn().mockImplementation((key: string) => {
         switch (key) {
@@ -391,7 +381,7 @@ describe('AuthService', () => {
     });
 
     it('should set secure to false when NODE_ENV is not production', () => {
-      const mockResponse = makeResponse()
+      const mockResponse = makeResponse();
 
       mockConfigService.get = jest.fn().mockImplementation((key: string) => {
         switch (key) {
@@ -414,7 +404,7 @@ describe('AuthService', () => {
 
   describe('validateUserById', () => {
     it('should return a user if found', async () => {
-      const user = makeUser()
+      const user = makeUser();
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
 
@@ -424,7 +414,7 @@ describe('AuthService', () => {
     });
 
     it('should throw UnauthorizedException if user is not found', async () => {
-      const user = makeUser()
+      const user = makeUser();
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(null);
 
@@ -437,7 +427,7 @@ describe('AuthService', () => {
   describe('validateUserCredentials', () => {
     it('should return a user if credentials are valid', async () => {
       const validPassword = 'validPassword';
-      const user = makeUser()
+      const user = makeUser();
 
       jest.spyOn(usersService, 'findByEmail').mockResolvedValue(user);
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
@@ -462,7 +452,7 @@ describe('AuthService', () => {
 
     it('should throw UnauthorizedException if password is invalid', async () => {
       const invalidPassword = 'invalidPassword';
-      const user = makeUser()
+      const user = makeUser();
 
       jest.spyOn(usersService, 'findByEmail').mockResolvedValue(user);
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);

@@ -50,14 +50,13 @@ describe('OriginalCarsService', () => {
 
   describe('createOriginalCar', () => {
     it('should create an original car', async () => {
-      const createdCar = makeOriginalCar()
-      const dto = makeOriginalCarDto()
+      const createdCar = makeOriginalCar();
+      const dto = makeOriginalCarDto();
 
       jest.spyOn(originalCarsRepository, 'create').mockReturnValue(createdCar);
       jest.spyOn(originalCarsRepository, 'save').mockResolvedValue(createdCar);
 
-      const result =
-        await originalCarsService.createOriginalCar(dto);
+      const result = await originalCarsService.createOriginalCar(dto);
 
       expect(result).toBe(createdCar);
       expect(originalCarsRepository.save).toHaveBeenCalledWith(createdCar);
@@ -66,8 +65,8 @@ describe('OriginalCarsService', () => {
 
   describe('createOriginalCarTransaction', () => {
     it('should create an original car within a transaction', async () => {
-      const createdCar = makeOriginalCar()
-      const dto = makeOriginalCarDto()
+      const createdCar = makeOriginalCar();
+      const dto = makeOriginalCarDto();
 
       jest.spyOn(testEntityManager, 'create').mockReturnValue(createdCar);
       jest.spyOn(testEntityManager, 'save').mockResolvedValue(createdCar);
@@ -82,8 +81,8 @@ describe('OriginalCarsService', () => {
     });
 
     it('should propagate error when save operation fails', async () => {
-      const originalCar = makeOriginalCar()
-      const dto = makeOriginalCarDto()
+      const originalCar = makeOriginalCar();
+      const dto = makeOriginalCarDto();
 
       jest.spyOn(testEntityManager, 'create').mockReturnValue(originalCar);
       jest
@@ -100,7 +99,7 @@ describe('OriginalCarsService', () => {
   });
 
   describe('findById', () => {
-    const originalCar = makeOriginalCar()
+    const originalCar = makeOriginalCar();
 
     it('should return an original car when found', async () => {
       jest
@@ -133,8 +132,8 @@ describe('OriginalCarsService', () => {
         sort: 'model',
       };
 
-      const originalCar = makeOriginalCar()
-      const resultValue = [[originalCar, { ...originalCar, id: '2nd-id' }], 2]
+      const originalCar = makeOriginalCar();
+      const resultValue = [[originalCar, { ...originalCar, id: '2nd-id' }], 2];
 
       jest
         .spyOn(originalCarsRepository, 'createQueryBuilder')

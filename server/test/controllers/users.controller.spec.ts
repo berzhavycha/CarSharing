@@ -5,9 +5,7 @@ import { UsersController } from '@/controllers';
 import { User } from '@/entities';
 import { UsersService } from '@/services';
 
-import {
-  testUsersService,
-} from '../test-objects';
+import { testUsersService } from '../test-objects';
 import { makeLocalFile, makePicture, makeUser } from '../utils';
 
 jest.mock('@nestjs/config');
@@ -49,7 +47,7 @@ describe('UsersController', () => {
     });
 
     it('should update user details', async () => {
-      const user = makeUser()
+      const user = makeUser();
       const userId = user.id;
       const updateUserDto = {
         firstName: 'new first name',
@@ -57,7 +55,7 @@ describe('UsersController', () => {
 
       const updatedUser = makeUser({
         ...updateUserDto,
-      })
+      });
 
       jest.spyOn(usersService, 'updateUser').mockResolvedValue(updatedUser);
 
@@ -71,7 +69,7 @@ describe('UsersController', () => {
     });
 
     it('should update user details with file upload', async () => {
-      const user = makeUser()
+      const user = makeUser();
       const userId = user.id;
       const updateUserDto = {
         firstName: 'new first name',
@@ -79,10 +77,10 @@ describe('UsersController', () => {
 
       const updatedUser = makeUser({
         ...updateUserDto,
-      })
+      });
 
-      const localFile = makeLocalFile()
-      const picture = makePicture()
+      const localFile = makeLocalFile();
+      const picture = makePicture();
 
       jest.spyOn(usersService, 'updateUser').mockResolvedValue({
         ...user,
@@ -102,15 +100,15 @@ describe('UsersController', () => {
 
   describe('topUpUserAccount', () => {
     it('should top up user account balance', async () => {
-      const user = makeUser({ balance: 80 })
+      const user = makeUser({ balance: 80 });
       const userId = user.id;
       const updateUserBalanceDto = {
         amount: 20,
       };
 
       const updatedUser: User = makeUser({
-        balance: 100
-      })
+        balance: 100,
+      });
 
       jest
         .spyOn(usersService, 'updateUserBalance')
