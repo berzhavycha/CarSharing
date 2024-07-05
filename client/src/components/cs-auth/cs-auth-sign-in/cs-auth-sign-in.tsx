@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { CSCommonErrorMessage, CSCommonForm } from '@/components/cs-common';
 import { useStore } from '@/context';
-import { AuthType, getUserSchema, Roles } from '@/helpers';
+import { authCedirectPages, AuthType, getUserSchema, Roles } from '@/helpers';
 import { SignInUserDto } from '@/types';
 
 import { ErrorMessageWrapper, Span, Title } from '../cs-auth-sign-up';
@@ -21,8 +21,7 @@ export const CSAuthSignIn: FC = observer(() => {
   const onSubmit = async (data: SignInUserDto): Promise<void> => {
     await currentUserStore.signIn(data);
     if (currentUserStore.user) {
-      const navigatePath = currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/';
-      navigate(navigatePath);
+      navigate(authCedirectPages[currentUserStore.user.role as Roles]);
     }
   };
 
