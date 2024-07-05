@@ -6,6 +6,7 @@ import { Env } from '@/core';
 import { uppercaseFirstLetter } from '@/helpers';
 import { Car } from '@/types';
 import { Link } from 'react-router-dom';
+import { device } from '@/styles';
 
 type Props = {
   car: Car;
@@ -86,6 +87,11 @@ const StatusBadge = styled.div<{ $status: string }>`
         return 'var(--default-border)';
     }
   }};
+
+  @media ${device.lg} {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
 `;
 
 const Buttons = styled.div`
@@ -108,6 +114,10 @@ const DetailsButton = styled(Link)`
   &:hover {
     background-color: var(--dark-blue);
   }
+
+  @media ${device.lg} {
+    font-size: 12px;
+  }
 `;
 
 const RemoveButton = styled.button`
@@ -122,5 +132,9 @@ const RemoveButton = styled.button`
 
   &:hover {
     background-color: #aa2633;
+  }
+
+  @media ${device.lg} {
+    font-size: 12px;
   }
 `;
