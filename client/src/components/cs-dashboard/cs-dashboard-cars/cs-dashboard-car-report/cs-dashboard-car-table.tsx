@@ -5,6 +5,8 @@ import { Car } from '@/types';
 
 import { CSDashboardCarTableRow } from './cs-dashboard-car-table-row';
 import { useCarRemoval } from './hooks';
+import { device } from '@/styles';
+import styled from 'styled-components';
 
 type CarTableProps = {
   cars: Car[];
@@ -34,24 +36,32 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
       <Table>
         <thead>
           <tr>
-            <TableHeader style={{ width: '5%' }}>No.</TableHeader>
-            <TableHeader style={{ width: '10%' }}>Image</TableHeader>
+            <TableHeader style={{ width: '2%' }}>No.</TableHeader>
+            <HideOnXSScreen>
+              <TableHeader style={{ width: '10%' }}>Image</TableHeader>
+            </HideOnXSScreen>
             <TableHeader style={{ width: '15%' }} onClick={() => onSortChange('model')}>
               Model
             </TableHeader>
-            <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('year')}>
-              Year
-            </TableHeader>
+            <HideOnMDScreen>
+              <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('year')}>
+                Year
+              </TableHeader>
+            </HideOnMDScreen>
             <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('pricePerHour')}>
               Price / Hour
             </TableHeader>
-            <TableHeader style={{ width: '8%' }} onClick={() => onSortChange('type')}>
-              Type
-            </TableHeader>
-            <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('status')}>
-              Status
-            </TableHeader>
-            <TableHeader style={{ width: '15%' }}>Actions</TableHeader>
+            <HideOnMDScreen>
+              <TableHeader style={{ width: '8%' }} onClick={() => onSortChange('type')}>
+                Type
+              </TableHeader>
+            </HideOnMDScreen>
+            <HideOnSMScreen>
+              <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('status')}>
+                Status
+              </TableHeader>
+            </HideOnSMScreen>
+            <TableHeader style={{ width: '4%' }}>Actions</TableHeader>
           </tr>
         </thead>
         <tbody>
@@ -96,3 +106,28 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
     </>
   );
 };
+
+export const HideOnMDScreen = styled.div`
+  display: contents;
+
+  @media ${device.md} {
+    display: none;
+  }
+`;
+
+
+export const HideOnSMScreen = styled.div`
+  display: contents;
+
+  @media ${device.sm} {
+    display: none;
+  }
+`;
+
+export const HideOnXSScreen = styled.div`
+  display: contents;
+
+  @media ${device.xs} {
+    display: none;
+  }
+`;

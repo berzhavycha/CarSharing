@@ -42,9 +42,17 @@ const SearchInput = styled.input`
   @media ${device.lg} {
     font-size: 14px;
   }
+
+  @media ${device.md} {
+    font-size: 12px;
+  }
 `;
 
 const SearchIcon = styled(FaSearch)`
   color: var(--light-dark);
   font-weight: lighter;
+
+  @media ${device.md} {
+    font-size: 12px;
+  }
 `;
