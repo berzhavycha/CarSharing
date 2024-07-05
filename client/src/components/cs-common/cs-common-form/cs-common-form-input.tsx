@@ -9,7 +9,7 @@ type Props = Omit<InputProps, 'name'> & {
   name: string;
 };
 
-export const CSCommonFormInput: FC<Props> = ({ name, label, error, ...props }) => {
+export const CSCommonFormInput: FC<Props> = ({ name, label, error, onChange, ...props }) => {
   const {
     register,
     formState: { errors, isSubmitted },
@@ -22,7 +22,9 @@ export const CSCommonFormInput: FC<Props> = ({ name, label, error, ...props }) =
     <FormBlock>
       <CSCommonInputField
         {...props}
-        {...register(name)}
+        {...register(name, {
+          onChange,
+        })}
         label={label}
         error={errorText}
         formSubmitted={isSubmitted}

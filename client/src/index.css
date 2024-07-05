@@ -10,31 +10,32 @@
     --light-blue: #6b90ff;
     --main-blue: #3563e9;
     --dark-blue: #2b4fad;
+    --gray-blue: #6b7280;
     --gray: #90A3BF;
     --dark: #1a202c;
     --light-dark: #596780;
+    --light-gray: #eaebed;
 
     /* Status Colors */
-    --available-text: #28a745;
-    --booked-text: #ffc107;
-    --maintained-text: #ff4343;
-    --default-text: #dc3545;
+    --green-status-text: #28a745;
+    --yellow-status-text: #ffc107;
+    --red-status-text: #ff4343;
+    --default-red: #dc3545;
 
-    --available-bg: #d4edda;
-    --booked-bg: #fff3cd;
-    --maintained-bg: #f8d7da;
+    --green-status-bg: #d4edda;
+    --yellow-status-bg: #fff3cd;
+    --red-status-bg: #f8d7da;
     --default-bg: #f8d7da;
 
-    --available-border: #c3e6cb;
-    --booked-border: #ffeeba;
-    --maintained-border: #f5c6cb;
+    --green-status-border: #c3e6cb;
+    --yellow-status-border: #ffeeba;
+    --red-status-border: #f5c6cb;
     --default-border: #f5c6cb;
 
     --top-up-text: #28a745;
     --rental-payment-text: #ffc107;
     --refund-text: #17a2b8;
     --penalty-text: #ff4343;
-    --default-text: #dc3545;
 
     --top-up-bg: #d4edda;
     --rental-payment-bg: #fff3cd;

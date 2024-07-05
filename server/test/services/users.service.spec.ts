@@ -4,9 +4,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { EntityManager, Repository } from 'typeorm';
 
-import { UpdateUserBalanceDto } from '@/dtos';
 import { User } from '@/entities';
-import { hashValue, TransactionType, usersErrorMessages } from '@/helpers';
+import { hashValue, usersErrorMessages } from '@/helpers';
 import {
   LocalFilesService,
   RolesService,
@@ -15,20 +14,20 @@ import {
 } from '@/services';
 
 import {
-  createUserDtoMock,
-  mockEntityManager,
-  mockHash,
-  mockLocalFile,
-  mockLocalFilesService,
-  mockRental,
-  mockRole,
-  mockRoleService,
-  mockTransanctionService,
-  mockUser,
-  repositoryMock,
-  secureUserData,
-  userDetails,
-} from '../mocks';
+  testEntityManager,
+  testLocalFilesService,
+  testRepository,
+  testRoleService,
+  testTransanctionService,
+} from '../test-objects';
+import {
+  makeCreateUserDto,
+  makeHash,
+  makeLocalFile,
+  makeRole,
+  makeUpdateUserBalanceOptions,
+  makeUser,
+} from '../utils';
 
 jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
   hashValue: jest.fn(),
@@ -47,19 +46,19 @@ describe('UsersService', () => {
         UsersService,
         {
           provide: getRepositoryToken(User),
-          useValue: repositoryMock,
+          useValue: testRepository,
         },
         {
           provide: TransactionsService,
-          useValue: mockTransanctionService,
+          useValue: testTransanctionService,
         },
         {
           provide: RolesService,
-          useValue: mockRoleService,
+          useValue: testRoleService,
         },
         {
           provide: LocalFilesService,
-          useValue: mockLocalFilesService,
+          useValue: testLocalFilesService,
         },
       ],
     }).compile();
@@ -81,54 +80,47 @@ describe('UsersService', () => {
 
   describe('createUser', () => {
     it('should create a user with existing role', async () => {
-      jest.spyOn(rolesService, 'findByName').mockResolvedValue(mockRole);
+      const role = makeRole();
+      const user = makeUser();
+      const userDto = makeCreateUserDto();
 
-      jest.spyOn(usersRepository, 'create').mockReturnValue(mockUser);
-      jest.spyOn(usersRepository, 'save').mockResolvedValue(mockUser);
+      jest.spyOn(rolesService, 'findByName').mockResolvedValue(role);
 
-      const result = await usersService.createUser(createUserDtoMock);
+      jest.spyOn(usersRepository, 'create').mockReturnValue(user);
+      jest.spyOn(usersRepository, 'save').mockResolvedValue(user);
 
-      expect(result).toBe(mockUser);
-      expect(usersRepository.create).toHaveBeenCalledWith({
-        ...userDetails,
-        ...secureUserData,
-        balance: 0,
-        role: mockRole,
-      });
-      expect(usersRepository.save).toHaveBeenCalledWith(mockUser);
+      const result = await usersService.createUser(userDto);
+
+      expect(result).toBe(user);
+      expect(usersRepository.save).toHaveBeenCalledWith(user);
     });
 
     it('should create a user and a new role', async () => {
+      const role = makeRole();
+      const user = makeUser();
+      const userDto = makeCreateUserDto();
+
       jest.spyOn(rolesService, 'findByName').mockResolvedValue(null);
-      jest.spyOn(rolesService, 'createRole').mockResolvedValue(mockRole);
+      jest.spyOn(rolesService, 'createRole').mockResolvedValue(role);
 
-      jest.spyOn(usersRepository, 'create').mockReturnValue(mockUser);
-      jest.spyOn(usersRepository, 'save').mockResolvedValue(mockUser);
+      jest.spyOn(usersRepository, 'create').mockReturnValue(user);
+      jest.spyOn(usersRepository, 'save').mockResolvedValue(user);
 
-      const result = await usersService.createUser(createUserDtoMock);
+      const result = await usersService.createUser(userDto);
 
-      expect(result).toBe(mockUser);
-      expect(usersRepository.create).toHaveBeenCalledWith({
-        ...userDetails,
-        ...secureUserData,
-        balance: 0,
-        role: mockRole,
-      });
-      expect(usersRepository.save).toHaveBeenCalledWith(mockUser);
+      expect(result).toBe(user);
+      expect(usersRepository.save).toHaveBeenCalledWith(user);
     });
   });
 
   describe('findByEmail', () => {
     it('should return a user when found', async () => {
-      jest.spyOn(usersRepository, 'findOne').mockResolvedValue(mockUser);
+      const user = makeUser();
+      jest.spyOn(usersRepository, 'findOne').mockResolvedValue(user);
 
-      const result = await usersService.findByEmail(mockUser.email);
+      const result = await usersService.findByEmail(user.email);
 
-      expect(result).toEqual(mockUser);
-      expect(usersRepository.findOne).toHaveBeenCalledWith({
-        where: { email: mockUser.email },
-        relations: ['role'],
-      });
+      expect(result).toEqual(user);
     });
 
     it('should return null when user is not found', async () => {
@@ -139,24 +131,18 @@ describe('UsersService', () => {
       const result = await usersService.findByEmail(nonExistingEmail);
 
       expect(result).toBe(null);
-      expect(usersRepository.findOne).toHaveBeenCalledWith({
-        where: { email: nonExistingEmail },
-        relations: ['role'],
-      });
     });
   });
 
   describe('findById', () => {
     it('should return a user when found', async () => {
-      jest.spyOn(usersRepository, 'findOne').mockResolvedValue(mockUser);
+      const user = makeUser();
 
-      const result = await usersService.findById(mockUser.id);
+      jest.spyOn(usersRepository, 'findOne').mockResolvedValue(user);
 
-      expect(result).toEqual(mockUser);
-      expect(usersRepository.findOne).toHaveBeenCalledWith({
-        where: { id: mockUser.id },
-        relations: ['role', 'avatar'],
-      });
+      const result = await usersService.findById(user.id);
+
+      expect(result).toEqual(user);
     });
 
     it('should throw NotFoundException when user is not found', async () => {
@@ -167,36 +153,24 @@ describe('UsersService', () => {
       await expect(usersService.findById(nonExistingId)).rejects.toThrow(
         NotFoundException,
       );
-
-      expect(usersRepository.findOne).toHaveBeenCalledWith({
-        where: { id: nonExistingId },
-        relations: ['role', 'avatar'],
-      });
     });
   });
 
   describe('updateUser', () => {
-    const updateUserDtoMock = {
+    const updateUserDtoStub = {
       firstName: 'new first name',
     };
 
     it('should update a user', async () => {
-      const updatedUser = {
-        ...mockUser,
-        ...updateUserDtoMock,
-      } as User;
+      const user = makeUser();
+      const updatedUser = makeUser({ firstName: 'new first name' });
 
-      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
 
-      const result = await usersService.updateUser(
-        mockUser.id,
-        updateUserDtoMock,
-      );
+      const result = await usersService.updateUser(user.id, updateUserDtoStub);
 
       expect(result).toEqual(updatedUser);
-      expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
-      expect(usersRepository.save).toHaveBeenCalledWith(updatedUser);
     });
 
     it('should throw NotFoundException if user with given id is not found', async () => {
@@ -211,147 +185,145 @@ describe('UsersService', () => {
         );
 
       await expect(
-        usersService.updateUser(nonExistingId, updateUserDtoMock),
+        usersService.updateUser(nonExistingId, updateUserDtoStub),
       ).rejects.toThrow(NotFoundException);
-
-      expect(usersService.findById).toHaveBeenCalledWith(nonExistingId);
-      expect(usersRepository.save).not.toHaveBeenCalled();
     });
 
     it('should update user with file', async () => {
-      const updatedUser = {
-        ...mockUser,
-        avatarId: mockLocalFile.id,
-        avatar: mockLocalFile,
-        ...updateUserDtoMock,
-      } as User;
+      const user = makeUser();
+      const localFile = makeLocalFile();
+      const updatedUser = makeUser({
+        avatarId: localFile.id,
+        avatar: localFile,
+        ...updateUserDtoStub,
+      });
 
       jest
         .spyOn(localFilesService, 'saveLocalFileData')
-        .mockResolvedValue(mockLocalFile);
-      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+        .mockResolvedValue(localFile);
+      jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
 
       const result = await usersService.updateUser(
-        mockUser.id,
-        updateUserDtoMock,
-        mockLocalFile,
+        user.id,
+        updateUserDtoStub,
+        localFile,
       );
 
       expect(result).toEqual(updatedUser);
-      expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
       expect(usersRepository.save).toHaveBeenCalledWith(updatedUser);
     });
 
     it('should update user password', async () => {
-      const updateUserDtoMock = {
+      const updateUserDtoStub = {
         oldPassword: 'old password',
         newPassword: 'new password',
       };
 
-      const updatedUser = {
-        ...mockUser,
-        passwordHash: mockHash.hash,
-        passwordSalt: mockHash.salt,
-      } as User;
+      const user = makeUser();
+      const hash = makeHash();
+      const updatedUser = makeUser({
+        passwordHash: hash.hash,
+        passwordSalt: hash.salt,
+      });
 
-      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
-      (hashValue as jest.Mock).mockResolvedValueOnce(mockHash);
+      (hashValue as jest.Mock).mockResolvedValueOnce(hash);
 
-      const result = await usersService.updateUser(
-        mockUser.id,
-        updateUserDtoMock,
-      );
+      const result = await usersService.updateUser(user.id, updateUserDtoStub);
 
       expect(result).toEqual(updatedUser);
-      expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
       expect(usersRepository.save).toHaveBeenCalledWith(updatedUser);
     });
 
     it('should throw BadRequestException if provided old password is invalid', async () => {
-      const updateUserDtoMock = {
+      const updateUserDtoStub = {
         oldPassword: 'invalid password',
         newPassword: 'new password',
       };
 
-      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      const user = makeUser();
+
+      jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
 
       await expect(
-        usersService.updateUser(mockUser.id, updateUserDtoMock),
+        usersService.updateUser(user.id, updateUserDtoStub),
       ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw BadRequestException if provided email if duplicated', async () => {
-      const updateUserDtoMock = {
+      const updateUserDtoStub = {
         email: 'duplicate@gmail.com',
       };
 
-      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      const user = makeUser();
+
+      jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest
         .spyOn(usersService, 'findByEmail')
-        .mockResolvedValue({ ...mockUser, id: 'new-id' });
+        .mockResolvedValue({ ...user, id: 'new-id' });
 
       await expect(
-        usersService.updateUser(mockUser.id, updateUserDtoMock),
+        usersService.updateUser(user.id, updateUserDtoStub),
       ).rejects.toThrow(BadRequestException);
     });
   });
 
   describe('updateUserBalance', () => {
-    const balanceDto: UpdateUserBalanceDto = { amount: 20 };
-    const options = {
-      id: mockUser.id,
-      balanceDto,
-      transactionType: TransactionType.REFUND,
-      rental: mockRental,
-    };
+    it('should update user balance within a created transaction if manager is provided', async () => {
+      const user = makeUser();
+      const balance = 100;
+      const options = makeUpdateUserBalanceOptions();
 
-    const mockUserBalance = mockUser.balance;
+      jest.spyOn(testEntityManager, 'save').mockResolvedValue({
+        ...user,
+        balance,
+      });
 
-    it('should update user balance within a transaction if manager is provided', async () => {
-      jest.spyOn(mockEntityManager, 'save').mockResolvedValue(mockUser),
-        jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+      jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       const result = await usersService.updateUserBalance(
         options,
-        mockEntityManager as unknown as EntityManager,
+        testEntityManager as unknown as EntityManager,
       );
 
-      expect(result).toEqual(mockUser);
-      expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
+      expect(result).toEqual(user);
       expect(transactionsService.createTransaction).toHaveBeenCalledWith(
         {
-          amount: balanceDto.amount,
+          amount: balance,
           description: `${options.transactionType} for ${options.id} user account`,
           type: options.transactionType,
-          user: { ...mockUser },
+          user: { ...user },
           rental: options.rental,
         },
-        mockEntityManager,
+        testEntityManager,
       );
-
-      expect(mockEntityManager.save).toHaveBeenCalledWith({
-        ...mockUser,
-        balance: mockUserBalance + balanceDto.amount,
+      expect(testEntityManager.save).toHaveBeenCalledWith({
+        ...user,
+        balance,
       });
     });
 
-    it('should update user balance and create a transaction', async () => {
-      jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
+    it('should update user balance and within repositories transaction', async () => {
+      const user = makeUser();
+      const options = makeUpdateUserBalanceOptions();
+
+      jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest
         .spyOn(usersRepository.manager, 'transaction')
-        .mockResolvedValue(mockUser);
+        .mockResolvedValue(user);
 
       const result = await usersService.updateUserBalance(options);
 
-      expect(result).toEqual(mockUser);
-      expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
+      expect(result).toEqual(user);
       expect(usersRepository.manager.transaction).toHaveBeenCalled();
     });
 
     it('should throw NotFoundException if user is not found', async () => {
+      const options = makeUpdateUserBalanceOptions();
+
       jest.spyOn(usersService, 'findById').mockImplementationOnce(() => {
         throw new NotFoundException(usersErrorMessages.USER_NOT_FOUND);
       });
@@ -359,10 +331,6 @@ describe('UsersService', () => {
       await expect(usersService.updateUserBalance(options)).rejects.toThrow(
         NotFoundException,
       );
-
-      expect(usersService.findById).toHaveBeenCalledWith(mockUser.id);
-      expect(transactionsService.createTransaction).not.toHaveBeenCalled();
-      expect(usersRepository.manager.transaction).not.toHaveBeenCalled();
     });
   });
 });

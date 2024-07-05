@@ -1,4 +1,4 @@
-import { UpdateUserDto } from '@/types';
+import { UpdateUserBalanceDto, UpdateUserDto } from '@/types';
 
 export const updateUserFieldMappings: Record<string, keyof UpdateUserDto> = {
   firstname: 'firstName',
@@ -7,4 +7,8 @@ export const updateUserFieldMappings: Record<string, keyof UpdateUserDto> = {
   'old password': 'oldPassword',
   'new password': 'newPassword',
   image: 'picture',
+};
+
+export const updateUserBalanceFieldMappings: Record<string, keyof UpdateUserBalanceDto> = {
+  amount: 'amount',
 };

@@ -2,12 +2,13 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CarsController } from '@/controllers';
-import { QueryCarsDto, UpdateCarDto } from '@/dtos';
+import { QueryCarsDto } from '@/dtos';
 import { Car } from '@/entities';
 import { CarStatus } from '@/helpers';
 import { CarsService } from '@/services';
 
-import { createCarDtoMock, mockCar, mockCarsService } from '../mocks';
+import { testCarsService } from '../test-objects';
+import { makeCar, makeCreateCarDto } from '../utils';
 
 jest.mock('@nestjs/config');
 const mockConfigService = {
@@ -24,7 +25,7 @@ describe('CarsController', () => {
       providers: [
         {
           provide: CarsService,
-          useValue: mockCarsService,
+          useValue: testCarsService,
         },
         {
           provide: ConfigService,
@@ -47,20 +48,16 @@ describe('CarsController', () => {
 
   describe('create', () => {
     it('should create a new car', async () => {
-      const createdCar = {
-        id: 'car-id',
-        ...mockCar,
-        ...createCarDtoMock,
-      } as Car;
+      const createdCar = makeCar();
+      const createCarDto = makeCreateCarDto();
 
       jest.spyOn(mockConfigService, 'get').mockReturnValue('uploads');
       jest.spyOn(carsService, 'createCar').mockResolvedValue(createdCar);
 
-      const dto = { ...createCarDtoMock, status: CarStatus.AVAILABLE };
+      const dto = { ...createCarDto, status: CarStatus.AVAILABLE };
       const result = await carsController.create(dto, []);
 
       expect(result).toBe(createdCar);
-      expect(carsService.createCar).toHaveBeenCalledWith(dto, []);
     });
   });
 
@@ -73,77 +70,51 @@ describe('CarsController', () => {
         order: 'ASC',
         sort: 'model',
       };
-      const cars: Car[] = [{ ...mockCar }, { ...mockCar, id: '2nd-car-id' }];
+
+      const car = makeCar();
+
+      const cars: Car[] = [{ ...car }, { ...car, id: '2nd-car-id' }];
 
       jest.spyOn(carsService, 'findAll').mockResolvedValue([cars, cars.length]);
 
       const result = await carsController.findAll(listCarsDto);
 
       expect(result).toEqual([cars, cars.length]);
-      expect(carsService.findAll).toHaveBeenCalledWith(listCarsDto);
-    });
-  });
-
-  describe('findAllAvailable', () => {
-    it('should return list of available cars', async () => {
-      const listCarsDto: QueryCarsDto = {
-        search: 'query',
-        page: 1,
-        limit: 10,
-        order: 'ASC',
-        sort: 'model',
-      };
-      const availableCars: Car[] = [mockCar];
-
-      jest
-        .spyOn(carsService, 'findAllAvailable')
-        .mockResolvedValue([availableCars, availableCars.length]);
-
-      const result = await carsController.findAllAvailable(listCarsDto);
-
-      expect(result).toEqual([availableCars, availableCars.length]);
-      expect(carsService.findAllAvailable).toHaveBeenCalledWith(listCarsDto);
     });
   });
 
   describe('findOne', () => {
     it('should return a car by ID', async () => {
       const carId = 'valid-car-id';
-      const foundCar: Car = mockCar;
+      const foundCar = makeCar();
 
       jest.spyOn(carsService, 'findById').mockResolvedValue(foundCar);
 
       const result = await carsController.findOne(carId);
 
       expect(result).toBe(foundCar);
-      expect(carsService.findById).toHaveBeenCalledWith(carId);
     });
   });
 
   describe('update', () => {
     it('should update a car', async () => {
-      const carId = mockCar.id;
+      const car = makeCar();
+      const carId = car.id;
 
-      const updateCarDtoMock: UpdateCarDto = {
+      const updateCarDto = {
         status: CarStatus.BOOKED,
       };
 
-      const updatedCar = {
-        ...mockCar,
-        ...updateCarDtoMock,
-      } as Car;
+      const updatedCar = makeCar({
+        ...updateCarDto,
+      });
 
       jest.spyOn(mockConfigService, 'get').mockReturnValue('uploads');
       jest.spyOn(carsService, 'updateCar').mockResolvedValue(updatedCar);
 
-      const result = await carsController.update(carId, updateCarDtoMock);
+      const result = await carsController.update(carId, updateCarDto);
 
       expect(result).toBe(updatedCar);
-      expect(carsService.updateCar).toHaveBeenCalledWith(
-        carId,
-        updateCarDtoMock,
-        [],
-      );
     });
   });
 

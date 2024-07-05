@@ -3,13 +3,15 @@ import {
   Controller,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 
 import { CurrentUser } from '@/decorators';
-import { RentCarDto } from '@/dtos';
+import { QueryRentalsDto, RentCarDto } from '@/dtos';
 import { Rental, User } from '@/entities';
 import { RoleGuard } from '@/guards';
 import { Roles } from '@/helpers';
@@ -28,6 +30,21 @@ export class RentalsController {
     return this.rentalsService.rentCar(rentCarDto, user);
   }
 
+  @Get('history')
+  async getUserHistory(
+    @Query() listRentalDto: QueryRentalsDto,
+    @CurrentUser('id') id: string,
+  ): Promise<[Rental[], number]> {
+    return this.rentalsService.findAllUserRentals(id, listRentalDto);
+  }
+
+  @Get(':id')
+  async findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<Rental | null> {
+    return this.rentalsService.findById(id);
+  }
+
   @Get('current')
   async getCurrentUserRental(
     @CurrentUser('id') id: string,
@@ -35,16 +52,11 @@ export class RentalsController {
     return this.rentalsService.findActiveByUserId(id);
   }
 
-  @Get('history')
-  async getUserHistory(@CurrentUser('id') id: string): Promise<Rental[]> {
-    return this.rentalsService.findAllUserRentals(id);
-  }
-
   @Patch(':id')
   async returnCar(
     @Param('id') id: string,
     @CurrentUser() user: User,
-  ): Promise<Rental> {
+  ): Promise<{ rental: Rental; penalty?: number; refund?: number }> {
     return this.rentalsService.returnCar(id, user);
   }
 }

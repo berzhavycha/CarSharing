@@ -1,22 +1,46 @@
-import { FC } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 type Props = {
-  type?: 'button' | 'submit' | 'reset';
   onClick?: () => Promise<void> | void;
   content: string;
+  style?: 'main' | 'light';
+} & AsProp;
+
+export type AsProp<C extends React.ElementType = React.ElementType> = {
+  as?: C;
 };
 
-export const CSCommonPrimaryButton: FC<Props> = ({ type, onClick, content }) => {
+export type PropsWithAs<P, C extends React.ElementType> = P &
+  AsProp<C> &
+  Omit<React.ComponentPropsWithoutRef<C>, keyof (P & AsProp<C>)>;
+
+
+export const CSCommonPrimaryButton = <C extends React.ElementType = 'button'>({
+  as,
+  onClick,
+  content,
+  style = 'main',
+  ...rest
+}: PropsWithAs<Props, C>): JSX.Element => {
+  const handleClick = (event: React.MouseEvent): void => {
+    event.stopPropagation();
+    if (onClick) onClick();
+  };
+
   return (
-    <Button type={type} onClick={onClick}>
+    <Button as={as} onClick={handleClick} $style={style} {...rest}>
       {content}
     </Button>
   );
 };
 
-const Button = styled.button`
-  background-color: var(--main-blue);
+type ButtonProps = {
+  $style: string;
+};
+
+const Button = styled.button<ButtonProps>`
+  background-color: ${(props): string => (props.$style === 'main' ? '#3563e9' : '#6b90ff')};
   color: white;
   border: none;
   border-radius: 5px;
@@ -24,8 +48,10 @@ const Button = styled.button`
   font-size: 16px;
   cursor: pointer;
   transition: var(--default-transition);
+  text-decoration: none;
 
   &:hover {
     background-color: var(--dark-blue);
   }
 `;
+

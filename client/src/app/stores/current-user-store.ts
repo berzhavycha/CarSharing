@@ -2,36 +2,30 @@ import { flow, Instance, types as t } from 'mobx-state-tree';
 
 import { handleUserResponse, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { fetchCurrentUser, signIn, signOut, signUp, updateUser } from '@/services';
+import { topUp } from '@/services/user/top-up';
 import {
   AuthenticatedUser,
   FieldErrorsState,
   SignInUserDto,
   SignUpUserDto,
+  UpdateUserBalanceDto,
   UpdateUserDto,
 } from '@/types';
+import { UserModel } from '../models';
 
 export type ServiceUserResponse<T extends object> = {
   user?: AuthenticatedUser;
   errors?: FieldErrorsState<T>;
 };
 
-export const User = t.model('User', {
-  id: t.string,
-  email: t.string,
-  firstName: t.string,
-  lastName: t.string,
-  balance: t.maybeNull(t.number),
-  role: t.string,
-  avatarId: t.maybeNull(t.string),
-});
-
 export const CurrentUserStore = t
   .model('CurrentUserStore', {
-    user: t.optional(t.maybeNull(User), null),
+    user: t.optional(t.maybeNull(UserModel), null),
     signInErrors: t.optional(t.frozen<FieldErrorsState<SignInUserDto> | null>(), null),
     signUpErrors: t.optional(t.frozen<FieldErrorsState<SignUpUserDto> | null>(), null),
     signOutErrors: t.optional(t.frozen<FieldErrorsState<AuthenticatedUser> | null>(), null),
     updateErrors: t.optional(t.frozen<FieldErrorsState<UpdateUserDto> | null>(), null),
+    topUpErrors: t.optional(t.frozen<FieldErrorsState<UpdateUserBalanceDto> | null>(), null),
   })
   .views((self) => ({
     get existingImagesIds(): string[] {
@@ -39,6 +33,11 @@ export const CurrentUserStore = t
     },
   }))
   .actions((self) => ({
+    updateBalance: (balance: number): void => {
+      if (self.user) {
+        self.user.balance = balance;
+      }
+    },
     signUp: flow(function* (userDto: SignUpUserDto) {
       self.signUpErrors = null;
 
@@ -46,7 +45,7 @@ export const CurrentUserStore = t
         const response = yield signUp(userDto);
         handleUserResponse<SignUpUserDto>(
           response,
-          (user) => (self.user = User.create(user)),
+          (user) => (self.user = UserModel.create(user)),
           (errors) => (self.signUpErrors = errors),
         );
       } catch (error) {
@@ -59,7 +58,7 @@ export const CurrentUserStore = t
         const response = yield signIn(userDto);
         handleUserResponse<SignInUserDto>(
           response,
-          (user) => (self.user = User.create(user)),
+          (user) => (self.user = UserModel.create(user)),
           (errors) => (self.signInErrors = errors),
         );
       } catch (error) {
@@ -94,6 +93,22 @@ export const CurrentUserStore = t
         }
       } catch (error) {
         self.updateErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
+      }
+    }),
+    topUp: flow(function* (userDto: UpdateUserBalanceDto) {
+      self.topUpErrors = null;
+
+      try {
+        if (self.user) {
+          const response = yield topUp(self.user?.id, userDto);
+          handleUserResponse<UpdateUserDto>(
+            response,
+            (user) => (self.user = user),
+            (errors) => (self.topUpErrors = errors),
+          );
+        }
+      } catch (error) {
+        self.topUpErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
       }
     }),
     fetchCurrentUser: flow(function* () {

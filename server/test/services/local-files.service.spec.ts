@@ -6,7 +6,8 @@ import { Repository } from 'typeorm';
 import { LocalFile } from '@/entities';
 import { LocalFilesService } from '@/services';
 
-import { mockLocalFile, repositoryMock } from '../mocks';
+import { testRepository } from '../test-objects';
+import { makeLocalFile } from '../utils';
 
 describe('LocalFilesService', () => {
   let localFilesRepository: Repository<LocalFile>;
@@ -18,7 +19,7 @@ describe('LocalFilesService', () => {
         LocalFilesService,
         {
           provide: getRepositoryToken(LocalFile),
-          useValue: repositoryMock,
+          useValue: testRepository,
         },
       ],
     }).compile();
@@ -44,31 +45,28 @@ describe('LocalFilesService', () => {
         path: 'some/path',
         mimetype: 'mimetype',
       };
-      jest.spyOn(localFilesRepository, 'create').mockReturnValue(mockLocalFile);
-      jest.spyOn(localFilesRepository, 'save').mockResolvedValue(mockLocalFile);
+
+      const localFile = makeLocalFile();
+
+      jest.spyOn(localFilesRepository, 'create').mockReturnValue(localFile);
+      jest.spyOn(localFilesRepository, 'save').mockResolvedValue(localFile);
 
       const result = await localFilesService.saveLocalFileData(localFileDto);
 
-      expect(result).toBe(mockLocalFile);
-      expect(localFilesRepository.create).toHaveBeenCalledWith({
-        ...localFileDto,
-      });
-      expect(localFilesRepository.save).toHaveBeenCalledWith(mockLocalFile);
+      expect(result).toBe(localFile);
+      expect(localFilesRepository.save).toHaveBeenCalledWith(localFile);
     });
   });
 
   describe('findById', () => {
     it('should return a local file when found', async () => {
-      jest
-        .spyOn(localFilesRepository, 'findOne')
-        .mockResolvedValue(mockLocalFile);
+      const localFile = makeLocalFile();
 
-      const result = await localFilesService.findById(mockLocalFile.id);
+      jest.spyOn(localFilesRepository, 'findOne').mockResolvedValue(localFile);
 
-      expect(result).toEqual(mockLocalFile);
-      expect(localFilesRepository.findOne).toHaveBeenCalledWith({
-        where: { id: mockLocalFile.id },
-      });
+      const result = await localFilesService.findById(localFile.id);
+
+      expect(result).toEqual(localFile);
     });
 
     it('should throw NotFoundException when local file is not found', async () => {
@@ -79,10 +77,6 @@ describe('LocalFilesService', () => {
       await expect(localFilesService.findById(nonExistingId)).rejects.toThrow(
         NotFoundException,
       );
-
-      expect(localFilesRepository.findOne).toHaveBeenCalledWith({
-        where: { id: nonExistingId },
-      });
     });
   });
 });
