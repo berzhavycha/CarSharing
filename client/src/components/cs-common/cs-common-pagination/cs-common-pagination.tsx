@@ -1,3 +1,4 @@
+import { device } from '@/styles';
 import { FC } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import styled from 'styled-components';
@@ -75,6 +76,16 @@ const PageButton = styled.button<{ $active?: boolean }>`
     cursor: not-allowed;
     box-shadow: none;
   }
+
+  @media ${device.md} {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+
+  @media ${device.sm} {
+    padding: 4px 10px;
+    font-size: 10px;
+  }
 `;
 
 const IconButton = styled(PageButton)`
@@ -82,4 +93,8 @@ const IconButton = styled(PageButton)`
   align-items: center;
   justify-content: center;
   padding: 8px;
+
+   @media ${device.sm} {
+    padding: 6px;
+  }
 `;
