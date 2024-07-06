@@ -69,7 +69,7 @@ export const CSCommonFormInputImage: FC<Props> = ({
   };
 
   return (
-    <InputImageContainer>
+    <div>
       <PicturesContainer>
         {previews.map((preview, index) => (
           <CSCommonFormImagePreview
@@ -100,23 +100,11 @@ export const CSCommonFormInputImage: FC<Props> = ({
         {...props}
         hidden
       />
-      <ErrorMessageWrapper>
-        <CSCommonErrorMessage>{errorText}</CSCommonErrorMessage>
-      </ErrorMessageWrapper>
-    </InputImageContainer>
+      <CSCommonErrorMessage>{errorText}</CSCommonErrorMessage>
+    </div>
   );
 };
 
-const InputImageContainer = styled.div`
-  position: relative;
-`;
-
-const ErrorMessageWrapper = styled.div`
-  width: 100%;
-  position: absolute;
-  bottom: -40px;
-  left: 0;
-`;
 
 const PicturesContainer = styled.div`
   display: flex;
