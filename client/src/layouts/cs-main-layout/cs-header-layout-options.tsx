@@ -120,8 +120,8 @@ const NavOptions = styled.div<{ $isOpen: boolean }>`
   @media ${device.lg} {
     position: absolute;
     z-index: 100;
-    top: 120px;
-    right: 25px;
+    top: 80px;
+    right: 20px;
     background-color: white;
     padding: 20px;
     border-radius: 8px;

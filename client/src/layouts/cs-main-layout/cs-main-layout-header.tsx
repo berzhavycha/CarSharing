@@ -15,7 +15,7 @@ export const CSMainLayoutHeader: FC = () => {
   return (
     <Section>
       <CSCommonContainer>
-        <HeaderContent>
+        <HeaderContent $isSearchBarEnabled={isSearchBarEnabled}>
           <Logo to="/">CARRENT</Logo>
           <Nav>
             {isSearchBarEnabled && <CSHeaderLayoutCarSearch />}
@@ -33,15 +33,17 @@ const Section = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
-const HeaderContent = styled.div`
+const HeaderContent = styled.div<{ $isSearchBarEnabled: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 15px;
+  @media  ${device.sm} {
+    ${(props): string => props.$isSearchBarEnabled ? `
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+      ` : ''}
   }
 `;
 
