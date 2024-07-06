@@ -29,8 +29,6 @@ export const CSCommonPrimaryButton = <C extends React.ElementType = 'button'>({
     if (onClick) onClick();
   };
 
-  console.log(as)
-
   return (
     <Button as={as} onClick={handleClick} $style={style} {...rest}>
       {content}
