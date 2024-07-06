@@ -29,6 +29,8 @@ export const CSCommonPrimaryButton = <C extends React.ElementType = 'button'>({
     if (onClick) onClick();
   };
 
+  console.log(as)
+
   return (
     <Button as={as} onClick={handleClick} $style={style} {...rest}>
       {content}
@@ -40,7 +42,7 @@ type ButtonProps = {
   $style: string;
 };
 
-const Button = styled.button<ButtonProps>`
+export const Button = styled.button<ButtonProps>`
   background-color: ${(props): string => (props.$style === 'main' ? '#3563e9' : '#6b90ff')};
   color: white;
   border: none;

@@ -1,14 +1,15 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
-import { CSCommonPrimaryButton } from '@/components/cs-common';
+import { Button } from '@/components/cs-common';
 import { Env } from '@/core';
 import { defaultSearchParams } from '@/helpers';
 import { Car } from '@/types';
 
 import { CSCommonTableList } from '../../../cs-common';
-
 import { CSDashboardCarTable } from './cs-dashboard-car-table';
+import { device } from '@/styles';
 
 const carsDefaultSearchParams = {
   ...defaultSearchParams,
@@ -30,7 +31,23 @@ export const CSDashboardCarReport: FC = () => {
       renderTable={(data, onSortChange) => (
         <CSDashboardCarTable cars={data.cars} onSortChange={onSortChange} />
       )}
-      extraHeaderContent={<CSCommonPrimaryButton as={Link} to="/dashboard/add-car" content="Add Car" />}
+      extraHeaderContent={
+        <ResponsivePrimaryButton as={Link} to="/dashboard/add-car" $style="main">
+          Add Car
+        </ResponsivePrimaryButton>
+      }
     />
   );
 };
+
+const ResponsivePrimaryButton = styled(Button)`
+  @media ${device.lg} {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  @media ${device.sm} {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+`;
