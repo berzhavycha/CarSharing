@@ -180,4 +180,12 @@ const CarHeaderWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 50px;
+
+  @media ${device.md} {
+    margin-bottom: 20px;
+  }
+
+  @media ${device.sm} {
+    margin-bottom: 10px;
+  }
 `;

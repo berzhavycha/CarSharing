@@ -72,13 +72,13 @@ export const HiddenSMTableHeader = styled(TableHeader)`
 `;
 
 export const HiddenXSTableHeader = styled(TableHeader)`
-  @media ${device.sm} {
+  @media ${device.xs} {
     display: none;
   }
 `;
 
 export const HiddenMDTableHeader = styled(TableHeader)`
-  @media ${device.sm} {
+  @media ${device.md} {
     display: none;
   }
 `;
@@ -90,13 +90,13 @@ export const HiddenSMTableCell = styled(TableCell)`
 `;
 
 export const HiddenXSTableCell = styled(TableCell)`
-  @media ${device.sm} {
+  @media ${device.xs} {
     display: none;
   }
 `;
 
 export const HiddenMDTableCell = styled(TableCell)`
-  @media ${device.sm} {
+  @media ${device.md} {
     display: none;
   }
 `;
