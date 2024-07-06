@@ -153,6 +153,11 @@ const ProfileHeaderWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+
+  @media ${device.sm} {
+    flex-direction: column;
+    text-align: center;
+  }
 `;
 
 const UserInfo = styled.div`
@@ -189,5 +194,7 @@ const UserInfo = styled.div`
      span {
       font-size: 10px;
     }
+
+    margin-left: 0;
   }
 `;
