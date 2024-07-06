@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { CSCommonCheckIcon } from '../cs-common-check-icon';
 import { CSCommonErrorIcon } from '../cs-common-error-icon';
 import { CSCommonErrorMessage } from '../cs-common-error-message';
+import { device } from '@/styles';
 
 export interface TextAreasProps extends React.InputHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
@@ -40,6 +41,10 @@ const Label = styled.label`
   font-size: 14px;
   color: #666;
   margin-bottom: 5px;
+
+  @media ${device.md} {
+    font-size: 12px;
+  }
 `;
 
 const TextArea = styled.textarea`
@@ -51,4 +56,9 @@ const TextArea = styled.textarea`
   resize: none;
   min-height: 120px;
   font-family: 'Plus Jakarta Sans', sans-serif;
+
+  @media ${device.md} {
+    font-size: 14px;
+    padding: 8px;
+  }
 `;
