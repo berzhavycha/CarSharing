@@ -30,6 +30,10 @@ const SearchContainer = styled.div`
   width: 400px;
   border: var(--default-border);
 
+  @media ${device.lg} {
+    width: 300px;
+  }
+
   @media ${device.md} {
     width: 300px;
   }
@@ -50,10 +54,6 @@ const SearchInput = styled.input`
 
   @media ${device.lg} {
     font-size: 14px;
-  }
-
-  @media ${device.md} {
-    font-size: 12px;
   }
 
   @media ${device.sm} {
