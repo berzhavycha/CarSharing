@@ -7,6 +7,7 @@ import { useStore } from '@/context';
 import { Env } from '@/core';
 
 import { SectionDescription, SectionTitle } from './cs-main-rental-payment';
+import { device } from '@/styles';
 
 export const CSMainRentalPaymentSummary: FC = observer(() => {
   const {
@@ -41,13 +42,17 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
 });
 
 const SummaryWrapper = styled.div`
-  width: 100%;
+  width: 35%;
   height: 50%;
   background-color: white;
   border-radius: 20px;
   padding: 25px;
   margin-bottom: 20px;
   box-shadow: var(--default-box-shadow);
+  
+  @media ${device.md} {
+    width: 100%;
+  }
 `;
 
 const CarInfoWrapper = styled.div`
@@ -58,7 +63,7 @@ const CarInfoWrapper = styled.div`
 `;
 
 const CarImage = styled.img`
-  width: 150px;
+  width: 40%;
   height: 120px;
   padding: 5px;
   object-fit: contain;
@@ -74,12 +79,28 @@ const CarDetails = styled.div`
 
 const CarName = styled.h2`
   color: var(--dark);
+
+  @media ${device.lg} {
+    font-size: 20px;
+  }
+
+  @media ${device.md} {
+    font-size: 18px;
+  }
 `;
 
 const CarType = styled.h4`
   color: var(--dark);
   font-weight: 300;
   margin-bottom: 10px;
+
+  @media ${device.lg} {
+    font-size: 14px;
+  }
+
+  @media ${device.md} {
+    font-size: 12px;
+  }
 `;
 
 const Total = styled.div`
@@ -91,15 +112,39 @@ const Total = styled.div`
 
 const TotalInfo = styled.div`
   width: 65%;
+
+  @media ${device.lg} {
+    h3 {
+      font-size: 18px;
+    }
+  }
+
+  @media ${device.sm} {
+    h3 {
+      font-size: 16px;
+    }
+  }
 `;
 
 const TotalDescription = styled.div`
   font-size: 14px;
   color: var(--dark);
   margin-top: 5px;
+
+  @media ${device.lg} {
+    font-size: 12px;
+  }
 `;
 
 const PriceWrapper = styled.h1`
   font-weight: bold;
   color: var(--dark);
+
+  @media ${device.lg} {
+    font-size: 24px;
+  }  
+
+  @media ${device.lg} {
+    font-size: 20px;
+  }  
 `;
