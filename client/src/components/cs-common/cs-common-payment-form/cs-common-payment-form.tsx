@@ -34,7 +34,7 @@ const FormInfoWrapper = styled.div`
   box-shadow: var(--default-box-shadow);
 
   @media ${device.sm} {
-    padding: 25px;
+    padding: 25px 35px 25px 25px;
   }
 `;
 
