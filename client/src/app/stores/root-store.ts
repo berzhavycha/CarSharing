@@ -9,7 +9,9 @@ const RootStore = t.model('RootStore', {
 });
 
 export const rootStore = RootStore.create({
-  currentUserStore: CurrentUserStore.create({}),
+  currentUserStore: CurrentUserStore.create({
+    errors: {}
+  }),
   rentalStore: RentalStore.create({
     rentals: undefined,
     refund: undefined,

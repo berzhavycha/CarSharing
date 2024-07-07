@@ -37,41 +37,42 @@ export const CSAuthSignUp: FC = observer(() => {
         </Span>
         <ErrorMessageWrapper>
           <CSCommonErrorMessage>
-            {currentUserStore.signUpErrors?.unexpectedError ?? ''}
+            {currentUserStore.errors?.signUp?.unexpectedError ?? ''}
           </CSCommonErrorMessage>
         </ErrorMessageWrapper>
         <CSCommonForm<SignUpUserDto>
           validationSchema={getUserSchema(AuthType.SIGN_UP, userRole)}
           onSubmit={onSubmit}
+          showReset={false}
         >
           <FormBlocks>
             <CSCommonForm.Input
               label="First Name"
               name="firstName"
-              error={currentUserStore.signUpErrors?.firstName}
+              error={currentUserStore.errors.signUp?.firstName}
             />
             <CSCommonForm.Input
               label="Last Name"
               name="lastName"
-              error={currentUserStore.signUpErrors?.lastName}
+              error={currentUserStore.errors.signUp?.lastName}
             />
             <CSCommonForm.Input
               label="Email"
               name="email"
-              error={currentUserStore.signUpErrors?.email}
+              error={currentUserStore.errors.signUp?.email}
             />
             <PasswordWrapper>
               <CSCommonForm.Input
                 label="Password"
                 name="password"
                 isSecured
-                error={currentUserStore.signUpErrors?.password}
+                error={currentUserStore.errors.signUp?.password}
               />
               <CSCommonForm.Input
                 label="Confirm Password"
                 name="confirmPassword"
                 isSecured
-                error={currentUserStore.signUpErrors?.confirmPassword}
+                error={currentUserStore.errors.signUp?.confirmPassword}
               />
             </PasswordWrapper>
             <RoleWrapper>
@@ -89,7 +90,7 @@ export const CSAuthSignUp: FC = observer(() => {
                   label="Invitation Code"
                   name="invitationCode"
                   isSecured
-                  error={currentUserStore.signUpErrors?.invitationCode}
+                  error={currentUserStore.errors.signUp?.invitationCode}
                 />
               )}
             </RoleWrapper>

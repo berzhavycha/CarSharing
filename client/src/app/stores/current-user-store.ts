@@ -1,8 +1,6 @@
-import { flow, Instance, types as t } from 'mobx-state-tree';
-
+import { flow, Instance, t } from 'mobx-state-tree';
 import { handleUserResponse, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
-import { fetchCurrentUser, signIn, signOut, signUp, updateUser } from '@/services';
-import { topUp } from '@/services/user/top-up';
+import { fetchCurrentUser, signIn, signOut, signUp, updateUser, topUp } from '@/services';
 import {
   AuthenticatedUser,
   FieldErrorsState,
@@ -18,93 +16,77 @@ export type ServiceUserResponse<T extends object> = {
   errors?: FieldErrorsState<T>;
 };
 
+type ErrorTypes = SignInUserDto | SignUpUserDto | AuthenticatedUser | UpdateUserDto | UpdateUserBalanceDto;
+
 export const CurrentUserStore = t
   .model('CurrentUserStore', {
     user: t.optional(t.maybeNull(UserModel), null),
-    signInErrors: t.optional(t.frozen<FieldErrorsState<SignInUserDto> | null>(), null),
-    signUpErrors: t.optional(t.frozen<FieldErrorsState<SignUpUserDto> | null>(), null),
-    signOutErrors: t.optional(t.frozen<FieldErrorsState<AuthenticatedUser> | null>(), null),
-    updateErrors: t.optional(t.frozen<FieldErrorsState<UpdateUserDto> | null>(), null),
-    topUpErrors: t.optional(t.frozen<FieldErrorsState<UpdateUserBalanceDto> | null>(), null),
+    errors: t.model({
+      signIn: t.maybeNull(t.frozen<FieldErrorsState<SignInUserDto> | null>(null)),
+      signUp: t.maybeNull(t.frozen<FieldErrorsState<SignUpUserDto> | null>(null)),
+      signOut: t.maybeNull(t.frozen<FieldErrorsState<AuthenticatedUser> | null>(null)),
+      update: t.maybeNull(t.frozen<FieldErrorsState<UpdateUserDto> | null>(null)),
+      topUp: t.maybeNull(t.frozen<FieldErrorsState<UpdateUserBalanceDto> | null>(null)),
+    }),
   })
   .views((self) => ({
     get existingImagesIds(): string[] {
-      return self.user?.avatarId ? [self.user?.avatarId] : [];
+      return self.user?.avatarId ? [self.user.avatarId] : [];
     },
   }))
   .actions((self) => ({
-    updateBalance: (balance: number): void => {
+    setUser(user: AuthenticatedUser | null): void {
+      self.user = user ? UserModel.create(user) : null;
+    },
+    setError<T extends ErrorTypes>(type: keyof typeof self.errors, error: FieldErrorsState<T> | null): void {
+      self.errors[type] = error;
+    },
+    clearError(type: keyof typeof self.errors): void {
+      self.errors[type] = null;
+    },
+    updateBalance(balance: number): void {
       if (self.user) {
         self.user.balance = balance;
       }
     },
-    signUp: flow(function* (userDto: SignUpUserDto) {
-      self.signUpErrors = null;
-
+  }))
+  .actions((self) => ({
+    performUserAction: flow(function* <T extends ErrorTypes>(
+      actionType: keyof typeof self.errors,
+      action: () => Promise<ServiceUserResponse<T> | void>,
+    ) {
+      self.clearError(actionType);
       try {
-        const response = yield signUp(userDto);
-        handleUserResponse<SignUpUserDto>(
+        const response = yield action();
+        handleUserResponse<T>(
           response,
-          (user) => (self.user = UserModel.create(user)),
-          (errors) => (self.signUpErrors = errors),
+          (user) => self.setUser(user),
+          (errors) => self.setError<T>(actionType, errors),
         );
       } catch (error) {
-        self.signUpErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
+        self.setError<T>(actionType, { unexpectedError: UNEXPECTED_ERROR_MESSAGE });
       }
+    }),
+  }))
+  .actions((self) => ({
+    signUp: flow(function* (userDto: SignUpUserDto) {
+      yield self.performUserAction<SignUpUserDto>('signUp', () => signUp(userDto));
     }),
     signIn: flow(function* (userDto: SignInUserDto) {
-      self.signInErrors = null;
-      try {
-        const response = yield signIn(userDto);
-        handleUserResponse<SignInUserDto>(
-          response,
-          (user) => (self.user = UserModel.create(user)),
-          (errors) => (self.signInErrors = errors),
-        );
-      } catch (error) {
-        self.signInErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
-      }
+      yield self.performUserAction<SignInUserDto>('signIn', () => signIn(userDto));
     }),
     signOut: flow(function* () {
-      self.signOutErrors = null;
-
-      try {
-        yield signOut();
-        self.user = null
-      } catch (error) {
-        self.signOutErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
-      }
+      yield self.performUserAction<AuthenticatedUser>('signOut', signOut);
+      self.setUser(null);
     }),
     updateUser: flow(function* (userDto: UpdateUserDto) {
-      self.updateErrors = null;
-
-      try {
-        if (self.user) {
-          const response = yield updateUser(self.user?.id, userDto);
-          handleUserResponse<UpdateUserDto>(
-            response,
-            (user) => (self.user = user),
-            (errors) => (self.updateErrors = errors),
-          );
-        }
-      } catch (error) {
-        self.updateErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
+      if (self.user) {
+        yield self.performUserAction<UpdateUserDto>('update', () => updateUser(self.user!.id, userDto));
       }
     }),
     topUp: flow(function* (userDto: UpdateUserBalanceDto) {
-      self.topUpErrors = null;
-
-      try {
-        if (self.user) {
-          const response = yield topUp(self.user?.id, userDto);
-          handleUserResponse<UpdateUserDto>(
-            response,
-            (user) => (self.user = user),
-            (errors) => (self.topUpErrors = errors),
-          );
-        }
-      } catch (error) {
-        self.topUpErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
+      if (self.user) {
+        yield self.performUserAction<UpdateUserBalanceDto>('topUp', () => topUp(self.user!.id, userDto));
       }
     }),
     fetchCurrentUser: flow(function* () {
@@ -112,11 +94,11 @@ export const CurrentUserStore = t
         const response = yield fetchCurrentUser();
         handleUserResponse(
           response,
-          (user) => (self.user = user),
+          (user) => self.setUser(user),
           () => { },
         );
       } catch (error) {
-        self.user = null;
+        self.setUser(null);
       }
     }),
   }));
