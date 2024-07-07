@@ -28,3 +28,4 @@ export * from './cs-common-car-card';
 export * from './cs-common-table-list'
 export * from './cs-common-details-feature'
 export * from './cs-common-title'
+export * from './cs-common-table-actions'
