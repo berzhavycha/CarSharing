@@ -14,6 +14,7 @@ export const RentalStore = t
     carReturn: t.optional(CarReturnModel, {}),
     rentalPayment: t.optional(RentalPaymentModel, {}),
     singleRental: t.optional(SingleRentalModel, {}),
+    errorMessage: t.optional(t.string, ''),
   })
   .actions((self) => ({
     setRentals(rentals: Rental[]): void {
@@ -22,10 +23,11 @@ export const RentalStore = t
   }))
   .actions((self) => ({
     fetchSingleRental: flow(function* (id: string) {
+      self.singleRental.setErrorMessage('');
+
       try {
         const data = yield getRental(id);
         self.singleRental.setRental(data);
-        self.singleRental.setErrorMessage('');
       } catch (error) {
         self.singleRental.setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
       }
@@ -36,7 +38,7 @@ export const RentalStore = t
         const { rentals } = yield fetchRentalHistory(params);
         self.setRentals(rentals);
       } catch (error) {
-        self.carReturn.setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
+        self.errorMessage = UNEXPECTED_ERROR_MESSAGE;
       }
     }),
 
@@ -67,4 +69,4 @@ export const RentalStore = t
     }),
   }));
 
-export interface RentalStoreType extends Instance<typeof RentalStore> {}
+export interface RentalStoreType extends Instance<typeof RentalStore> { }
