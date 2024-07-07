@@ -20,6 +20,14 @@ export const TableHeader = styled.th`
   @media ${device.md} {
     font-size: 12px;
   }
+
+  @media ${device.sm} {
+    font-size: 11px;
+  }
+
+  @media ${device.xs} {
+    font-size: 10px;
+  }
 `;
 
 export const TableRow = styled.tr`

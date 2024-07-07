@@ -1,12 +1,13 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { TableCell, TableRow } from '@/components/cs-common';
+import { CSCommonTableActions, HiddenMDTableCell, HiddenSMTableCell, HiddenXSTableCell, TableCell, TableRow } from '@/components/cs-common';
 import { Env } from '@/core';
 import { formatDate, uppercaseFirstLetter, RentalStatus } from '@/helpers';
-import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { RentalType } from '@/app/models';
+import { device } from '@/styles';
+import { FaCar, FaInfoCircle } from 'react-icons/fa';
 
 type Props = {
   rental: RentalType;
@@ -19,31 +20,45 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({
   index,
   onCarReturn
 }) => {
+  const actions = [
+    {
+      label: 'Details',
+      icon: <FaInfoCircle />,
+      to: `/rental-history/${rental.id}`,
+    },
+    ...(rental.status === RentalStatus.ACTIVE ? [{
+      label: 'Return',
+      icon: <FaCar />,
+      onClick: onCarReturn,
+    }] : [])
+  ];
+
   return (
     <TableRow key={rental.id}>
       <TableCell>{index + 1}</TableCell>
-      <TableCell>
+      <HiddenMDTableCell>
         <img src={`${Env.API_BASE_URL}/local-files/${rental.originalCar?.pictures?.[0]?.id}`} alt="Car Image" />
-      </TableCell>
+      </HiddenMDTableCell>
       <TableCell>{rental.originalCar?.model}</TableCell>
-      <TableCell>{rental.requestedHours}</TableCell>
-      <TableCell>{rental.totalPrice}</TableCell>
-      <TableCell>{formatDate(rental.rentalStart)}</TableCell>
-      <TableCell>{rental.rentalEnd ? formatDate(rental.rentalEnd) : '-'}</TableCell>
+      <HiddenXSTableCell>{rental.requestedHours}</HiddenXSTableCell>
+      <HiddenSMTableCell>{rental.totalPrice}</HiddenSMTableCell>
+      <HiddenSMTableCell>
+        {formatDate(rental.rentalStart)}
+      </HiddenSMTableCell>
+      <HiddenSMTableCell>{rental.rentalEnd ? formatDate(rental.rentalEnd) : '-'}</HiddenSMTableCell>
       <TableCell>
         <StatusBadge $status={rental.status as RentalStatus}>{uppercaseFirstLetter(rental.status)}</StatusBadge>
       </TableCell>
-      <TableCell>
-        <Buttons>
-          {rental.status === RentalStatus.ACTIVE && (
-            <ReturnButton onClick={onCarReturn}>Return Car</ReturnButton>
-          )}
-          <DetailsButton to={`/rental-history/${rental.id}`} >Details</DetailsButton>
-        </Buttons>
-      </TableCell>
-    </TableRow>
+      <ActionsCell>
+        <CSCommonTableActions actions={actions} />
+      </ActionsCell>
+    </TableRow >
   );
 });
+
+const ActionsCell = styled(TableCell)`
+  position: relative;
+`;
 
 const StatusBadge = styled.div<{ $status: RentalStatus }>`
   width: 100%;
@@ -92,41 +107,24 @@ const StatusBadge = styled.div<{ $status: RentalStatus }>`
         return 'var(--default-border)';
     }
   }};
-`;
 
-const Buttons = styled.div`
-  display: flex;
-  gap: 10px;
-  align-items: center;
-`;
 
-const ReturnButton = styled.button`
-  padding: 7px 12px;
-  border: none;
-  border-radius: 4px;
-  background-color: var(--main-blue);
-  color: white;
-  cursor: pointer;
-  font-size: 12px;
-  transition: background-color 0.2s ease-in-out;
-
-  &:hover {
-    background-color: var(--dark-blue);
+  @media ${device.lg} {
+    font-size: 12px;
+    padding: 5px 10px;
   }
-`;
 
-const DetailsButton = styled(Link)`
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  background-color: var(--main-blue);
-  color: white;
-  cursor: pointer;
-  font-size: 12px;
-  text-decoration: none;
-  transition: background-color 0.2s ease-in-out;
+  @media ${device.md} {
+    font-size: 11px;
+  }
 
-  &:hover {
-    background-color: var(--dark-blue);
+  @media ${device.sm} {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  @media ${device.xs} {
+    font-size: 8px;
+    padding: 2px 4px;
   }
 `;
