@@ -10,6 +10,7 @@ import { UpdateUserDto } from '@/types';
 import DefaultImage from '../../../../public/avatar.webp';
 
 import { useProfileUpdate } from './hooks';
+import { device } from '@/styles';
 
 export const CSCommonProfileSettings: FC = observer(() => {
   const {
@@ -114,16 +115,19 @@ const ProfileContainer = styled.div`
 `;
 
 const ContentContainer = styled.div`
-  max-height: calc(100vh - 40px);
-  padding: 30px;
+  padding: 30px 30px 0 30px;
   background-color: white;
-  margin: 20px;
+  margin: 15px;
   border-radius: 10px;
   box-shadow: var(--default-box-shadow);
 `;
 
 const Title = styled.h3`
   margin-bottom: 30px;
+
+  @media ${device.md} {
+    font-size: 16px;
+  }
 `;
 
 const ProfileSection = styled.div`
@@ -131,6 +135,11 @@ const ProfileSection = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 0 40px;
   margin-right: 10px;
+
+  @media ${device.sm} {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const PasswordSection = styled.div`
@@ -144,6 +153,11 @@ const ProfileHeaderWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+
+  @media ${device.sm} {
+    flex-direction: column;
+    text-align: center;
+  }
 `;
 
 const UserInfo = styled.div`
@@ -160,5 +174,27 @@ const UserInfo = styled.div`
   span {
     font-size: 14px;
     color: #666;
+  }
+
+  @media ${device.md} {
+    h2 {
+      font-size: 20px;
+    }
+
+     span {
+      font-size: 12px;
+    }
+  }
+
+  @media ${device.sm} {
+    h2 {
+      font-size: 16px;
+    }
+
+     span {
+      font-size: 10px;
+    }
+
+    margin-left: 0;
   }
 `;

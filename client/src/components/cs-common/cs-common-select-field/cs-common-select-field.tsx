@@ -5,6 +5,7 @@ import { CSCommonCheckIcon } from '../cs-common-check-icon';
 import { CSCommonErrorIcon } from '../cs-common-error-icon';
 import { CSCommonErrorMessage } from '../cs-common-error-message';
 import { Label } from '../cs-common-input-field';
+import { device } from '@/styles';
 
 export type Option = {
   value: string;
@@ -46,4 +47,9 @@ const SelectElement = styled.select`
   outline: none;
   border: var(--input-border);
   margin-top: 5px;
+
+  @media ${device.md} {
+    font-size: 14px;
+    padding: 8px;
+  }
 `;

@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { CSCommonCheckIcon } from '../cs-common-check-icon';
 import { CSCommonErrorIcon } from '../cs-common-error-icon';
 import { CSCommonErrorMessage } from '../cs-common-error-message';
+import { device } from '@/styles';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -70,6 +71,10 @@ export const Label = styled.label`
   font-size: 14px;
   color: #666;
   margin-bottom: 5px;
+
+  @media ${device.md} {
+    font-size: 12px;
+  }
 `;
 
 const Input = styled.input`
@@ -78,4 +83,9 @@ const Input = styled.input`
   border-radius: 5px;
   font-size: 16px;
   outline: none;
+
+  @media ${device.md} {
+    font-size: 14px;
+    padding: 8px;
+  }
 `;

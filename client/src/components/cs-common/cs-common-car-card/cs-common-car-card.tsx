@@ -43,7 +43,7 @@ export const CSCommonCarCard: FC<CarCardProps> = ({
 };
 
 const CardWrapper = styled.div`
-  width: 300px;
+  width: 100%;
   height: auto;
   background-color: white;
   border-radius: 10px;

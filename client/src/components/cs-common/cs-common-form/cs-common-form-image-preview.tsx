@@ -1,10 +1,11 @@
+import { device } from '@/styles';
 import { FC } from 'react';
 import styled from 'styled-components';
 
 type PictureWrapperProps = {
   $circled?: boolean;
-  $width?: number;
-  $height?: number;
+  $width: number;
+  $height: number;
 };
 
 type ImagePreviewProps = {
@@ -22,8 +23,8 @@ export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
   src,
   alt,
   circled,
-  width,
-  height,
+  width = 100,
+  height = 100,
   onRemove,
   onClick,
   isRemovable = true,
@@ -57,6 +58,20 @@ const PictureWrapper = styled.div<PictureWrapperProps>`
     width: ${(props): string => `${props.$width}`}px;
     height: ${(props): string => `${props.$height}`}px;
     object-fit: contain;
+  }
+
+  @media ${device.md} {
+    img {
+      width: ${(props): string => `${props.$width - 20}`}px;
+      height: ${(props): string => `${props.$height - 20}`}px;
+    }
+  }
+
+  @media ${device.sm} {
+    img {
+      width: ${(props): string => `${props.$width - 30}`}px;
+      height: ${(props): string => `${props.$height - 30}`}px;
+    }
   }
 `;
 

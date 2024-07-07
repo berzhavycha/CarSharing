@@ -7,6 +7,7 @@ import { PaymentDto, RentalDto } from '@/types';
 
 import { SectionDescription, SectionTitle } from './cs-main-rental-payment';
 import { useRental } from './hooks';
+import { device } from '@/styles';
 
 type Props = {
   onSuccess: () => void;
@@ -44,8 +45,11 @@ export const CSMainRentalPaymentForm: FC<Props> = ({ onSuccess, onError }) => {
 };
 
 const FormWrapper = styled.div`
-  display: flex;
   width: 65%;
+
+  @media ${device.md} {
+    width: 100%;
+  }
 `;
 
 const FormInfoWrapper = styled.div`
@@ -62,4 +66,14 @@ const RentalFormBlocks = styled.div`
   grid-column: span 3;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 0px 40px;
+
+  @media ${device.lg} {
+    grid-column: span 2;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media ${device.sm} {
+    grid-column: span 1;
+    grid-template-columns: 1fr;
+  }
 `;

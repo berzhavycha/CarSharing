@@ -1,3 +1,4 @@
+import { device } from '@/styles';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -39,7 +40,7 @@ type ButtonProps = {
   $style: string;
 };
 
-const Button = styled.button<ButtonProps>`
+export const Button = styled.button<ButtonProps>`
   background-color: ${(props): string => (props.$style === 'main' ? '#3563e9' : '#6b90ff')};
   color: white;
   border: none;
@@ -52,6 +53,14 @@ const Button = styled.button<ButtonProps>`
 
   &:hover {
     background-color: var(--dark-blue);
+  }
+
+  @media ${device.lg} {
+    font-size: 14px;
+  }
+
+  @media ${device.sm} {
+    font-size: 12px;
   }
 `;
 

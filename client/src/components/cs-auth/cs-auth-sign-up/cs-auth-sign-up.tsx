@@ -5,10 +5,11 @@ import styled from 'styled-components';
 
 import { CSCommonErrorMessage, CSCommonForm } from '@/components';
 import { useStore } from '@/context';
-import { AuthType, getUserSchema, Roles } from '@/helpers';
+import { authCedirectPages, AuthType, getUserSchema, Roles } from '@/helpers';
 import { SignUpUserDto } from '@/types';
 
 import { useUserRole } from './hooks';
+import { device } from '@/styles';
 
 export const CSAuthSignUp: FC = observer(() => {
   const { userRole, handleUserTypeChange, showSecretCodeInput } = useUserRole();
@@ -19,83 +20,84 @@ export const CSAuthSignUp: FC = observer(() => {
   const onSubmit = async (data: SignUpUserDto): Promise<void> => {
     await currentUserStore.signUp(data);
     if (currentUserStore.user) {
-      const navigatePath = currentUserStore.user.role === Roles.ADMIN ? '/dashboard' : '/';
-      navigate(navigatePath);
+      navigate(authCedirectPages[currentUserStore.user.role as Roles]);
     }
   };
 
   return (
-    <FormInner>
-      <Title>Register</Title>
-      <Span>
-        Already have an account?
-        <Link to="/sign-in" >
-          Login here
-        </Link>{' '}
-        instead
-      </Span>
-      <ErrorMessageWrapper>
-        <CSCommonErrorMessage>
-          {currentUserStore.signUpErrors?.unexpectedError ?? ''}
-        </CSCommonErrorMessage>
-      </ErrorMessageWrapper>
-      <CSCommonForm<SignUpUserDto>
-        validationSchema={getUserSchema(AuthType.SIGN_UP, userRole)}
-        onSubmit={onSubmit}
-      >
-        <FormBlocks>
-          <CSCommonForm.Input
-            label="First Name"
-            name="firstName"
-            error={currentUserStore.signUpErrors?.firstName}
-          />
-          <CSCommonForm.Input
-            label="Last Name"
-            name="lastName"
-            error={currentUserStore.signUpErrors?.lastName}
-          />
-          <CSCommonForm.Input
-            label="Email"
-            name="email"
-            error={currentUserStore.signUpErrors?.email}
-          />
-          <PasswordWrapper>
+    <FormContainer>
+      <FormInner>
+        <Title>Register</Title>
+        <Span>
+          Already have an account?
+          <Link to="/sign-in" >
+            Login here
+          </Link>{' '}
+          instead
+        </Span>
+        <ErrorMessageWrapper>
+          <CSCommonErrorMessage>
+            {currentUserStore.signUpErrors?.unexpectedError ?? ''}
+          </CSCommonErrorMessage>
+        </ErrorMessageWrapper>
+        <CSCommonForm<SignUpUserDto>
+          validationSchema={getUserSchema(AuthType.SIGN_UP, userRole)}
+          onSubmit={onSubmit}
+        >
+          <FormBlocks>
             <CSCommonForm.Input
-              label="Password"
-              name="password"
-              isSecured
-              error={currentUserStore.signUpErrors?.password}
+              label="First Name"
+              name="firstName"
+              error={currentUserStore.signUpErrors?.firstName}
             />
             <CSCommonForm.Input
-              label="Confirm Password"
-              name="confirmPassword"
-              isSecured
-              error={currentUserStore.signUpErrors?.confirmPassword}
+              label="Last Name"
+              name="lastName"
+              error={currentUserStore.signUpErrors?.lastName}
             />
-          </PasswordWrapper>
-          <RoleWrapper>
-            <CSCommonForm.Select
-              onChange={handleUserTypeChange}
-              label="Role"
-              name="role"
-              options={[
-                { label: 'User', value: 'user' },
-                { label: 'Admin', value: 'admin' },
-              ]}
+            <CSCommonForm.Input
+              label="Email"
+              name="email"
+              error={currentUserStore.signUpErrors?.email}
             />
-            {showSecretCodeInput && (
+            <PasswordWrapper>
               <CSCommonForm.Input
-                label="Invitation Code"
-                name="invitationCode"
+                label="Password"
+                name="password"
                 isSecured
-                error={currentUserStore.signUpErrors?.invitationCode}
+                error={currentUserStore.signUpErrors?.password}
               />
-            )}
-          </RoleWrapper>
-        </FormBlocks>
-        <CSCommonForm.SubmitButton content="Register" />
-      </CSCommonForm>
-    </FormInner>
+              <CSCommonForm.Input
+                label="Confirm Password"
+                name="confirmPassword"
+                isSecured
+                error={currentUserStore.signUpErrors?.confirmPassword}
+              />
+            </PasswordWrapper>
+            <RoleWrapper>
+              <CSCommonForm.Select
+                onChange={handleUserTypeChange}
+                label="Role"
+                name="role"
+                options={[
+                  { label: 'User', value: 'user' },
+                  { label: 'Admin', value: 'admin' },
+                ]}
+              />
+              {showSecretCodeInput && (
+                <CSCommonForm.Input
+                  label="Invitation Code"
+                  name="invitationCode"
+                  isSecured
+                  error={currentUserStore.signUpErrors?.invitationCode}
+                />
+              )}
+            </RoleWrapper>
+          </FormBlocks>
+          <CSCommonForm.SubmitButton content="Register" />
+        </CSCommonForm>
+      </FormInner>
+    </FormContainer>
   );
 });
 
@@ -104,6 +106,15 @@ const PasswordWrapper = styled.div`
   display: grid;
   grid-template-columns: 2fr 2fr;
   gap: 10px 40px;
+
+  @media ${device.md} {
+    gap: 10px 30px;
+  }
+
+  @media ${device.sm} {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const RoleWrapper = styled.div`
@@ -111,6 +122,16 @@ const RoleWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 3fr;
   gap: 10px 40px;
+
+  @media ${device.md} {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 30px;
+  }
+
+  @media ${device.sm} {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 export const ErrorMessageWrapper = styled.div`
@@ -118,29 +139,61 @@ export const ErrorMessageWrapper = styled.div`
 `;
 
 const FormInner = styled.div`
-  width: 900px;
+  width: 70%;
   padding: 40px;
-  position: absolute;
   border-radius: 10px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   background-color: white;
   box-shadow: var(--default-box-shadow);
+
+  @media ${device.lg} {
+    width: 90%;
+  }
+
+  @media ${device.sm} {
+    width: 80%;
+  }
 `;
+
+const FormContainer = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media ${device.sm} {
+    min-height: 100vh;
+    margin: 80px 0;
+  }
+`
 
 export const Title = styled.span`
   font-size: 24px;
   display: block;
   margin-bottom: 10px;
+
+  @media ${device.md} {
+    font-size: 20px;
+  }
 `;
 
 export const Span = styled.span`
   font-size: 18px;
+
+  @media ${device.md} {
+    font-size: 16px;
+  }
 `;
 
 const FormBlocks = styled.div`
   display: grid;
   gap: 0px 40px;
   margin-bottom: 30px;
+
+  @media ${device.md} {
+    margin-bottom: 20px;
+    gap: 0px 20px;
+    display: flex;
+    flex-direction: column;
+  }
 `;

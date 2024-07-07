@@ -1,3 +1,4 @@
+import { device } from '@/styles';
 import styled from 'styled-components';
 
 export const Table = styled.table`
@@ -11,6 +12,22 @@ export const TableHeader = styled.th`
   background-color: #f8f9fa;
   border-bottom: 2px solid #dee2e6;
   cursor: pointer;
+
+  @media ${device.lg} {
+    font-size: 14px;
+  }
+
+  @media ${device.md} {
+    font-size: 12px;
+  }
+
+  @media ${device.sm} {
+    font-size: 11px;
+  }
+
+  @media ${device.xs} {
+    font-size: 10px;
+  }
 `;
 
 export const TableRow = styled.tr`
@@ -28,5 +45,66 @@ export const TableCell = styled.td`
     height: 50px;
     object-fit: contain;
     border-radius: 50%;
+  }
+
+  @media ${device.lg} {
+    font-size: 14px;
+    img {
+      width: 70px;
+      height: 40px;
+    }
+  }
+
+  @media ${device.md} {
+    font-size: 12px;
+    img {
+      width: 60px;
+      height: 30px;
+    }
+  }
+
+  @media ${device.sm} {
+    font-size: 10px;
+    img {
+      width: 40px;
+      height: 20px;
+    }
+  }
+`;
+
+
+export const HiddenSMTableHeader = styled(TableHeader)`
+  @media ${device.sm} {
+    display: none;
+  }
+`;
+
+export const HiddenXSTableHeader = styled(TableHeader)`
+  @media ${device.xs} {
+    display: none;
+  }
+`;
+
+export const HiddenMDTableHeader = styled(TableHeader)`
+  @media ${device.md} {
+    display: none;
+  }
+`;
+
+export const HiddenSMTableCell = styled(TableCell)`
+  @media ${device.sm} {
+    display: none;
+  }
+`;
+
+export const HiddenXSTableCell = styled(TableCell)`
+  @media ${device.xs} {
+    display: none;
+  }
+`;
+
+export const HiddenMDTableCell = styled(TableCell)`
+  @media ${device.md} {
+    display: none;
   }
 `;

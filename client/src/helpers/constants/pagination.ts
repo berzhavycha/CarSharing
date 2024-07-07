@@ -14,3 +14,6 @@ export const defaultSearchParams = {
   sort: '',
   order: OrderOptions.ASC,
 };
+
+export const ELLIPSIS = '...';
+export const DEFAULT_MAX_VISIBLE_PAGE_BTNS = 5
