@@ -7,6 +7,7 @@ import { CSCommonContainer, CSCommonError, CSCommonSlides, CSCommonSpinner } fro
 import { LocalFile, Rental } from '@/types';
 import { Await, useLoaderData } from 'react-router-dom';
 import { CSMainSingleRentalDetails } from './cs-main-single-rental-details';
+import { device } from '@/styles';
 
 export const CSMainSingleRental: FC = observer(() => {
     const data = useLoaderData() as { data: Rental };
@@ -25,7 +26,7 @@ export const CSMainSingleRental: FC = observer(() => {
 
                         return (
                             <RentalDetailsContainer>
-                                <CSCommonSlides images={carImages} width='600px' height='300px' />
+                                <CSCommonSlides images={carImages} width='100%' height='300px' />
                                 <CSMainSingleRentalDetails rental={rental} />
                             </RentalDetailsContainer>
                         );
@@ -42,5 +43,9 @@ const RentalDetailsContainer = styled.div`
   align-items: center;
   gap: 60px;
   margin: 50px 0;
+
+  @media ${device.lg} {
+    flex-direction: column;
+  }
 `
 
