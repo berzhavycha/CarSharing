@@ -6,6 +6,7 @@ import { CSCommonContainer } from '@/components';
 
 import { CSHeaderLayoutCarSearch } from './cs-header-layout-car-search';
 import { CSHeaderLayoutOptions } from './cs-header-layout-options';
+import { device } from '@/styles';
 
 export const CSMainLayoutHeader: FC = () => {
   const { pathname } = useLocation();
@@ -14,41 +15,70 @@ export const CSMainLayoutHeader: FC = () => {
   return (
     <Section>
       <CSCommonContainer>
-        <Nav>
-          <LeftSection>
-            <Logo to="/">CARRENT</Logo>
+        <HeaderContent $isSearchBarEnabled={isSearchBarEnabled}>
+          <Logo to="/">CARRENT</Logo>
+          <Nav>
             {isSearchBarEnabled && <CSHeaderLayoutCarSearch />}
-          </LeftSection>
-          <CSHeaderLayoutOptions />
-        </Nav>
+            <CSHeaderLayoutOptions />
+          </Nav>
+        </HeaderContent>
       </CSCommonContainer>
     </Section>
   );
 };
 
+
 const Section = styled.div`
-  padding: 30px;
+  padding: 20px 5px;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
-const LeftSection = styled.div`
-  width: 60%;
+const HeaderContent = styled.div<{ $isSearchBarEnabled: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media  ${device.sm} {
+    ${(props): string => props.$isSearchBarEnabled ? `
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+      ` : ''}
+  }
 `;
 
 const Nav = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 60px;
+
+  @media ${device.sm} {
+    justify-content: space-between;
+  }
 `;
 
-const Logo = styled(Link)`
+export const Logo = styled(Link)`
   font-size: 32px;
   font-weight: bold;
   color: var(--main-blue);
   cursor: pointer;
   text-decoration: none;
+
+  @media ${device.lg} {
+    font-size: 28px;
+  }
+
+  @media ${device.md} {
+    font-size: 24px;
+  }
+
+  @media ${device.sm} {
+    font-size: 20px;
+  }
+
+  @media (max-width: 600px) {
+    align-self: center;
+  }
 `;

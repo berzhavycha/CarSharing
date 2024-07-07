@@ -1,85 +1,69 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import styled from 'styled-components';
+import { BaseButton, CSCommonPaginationItem } from './cs-common-pagination-item';
+import { DEFAULT_MAX_VISIBLE_PAGE_BTNS, generatePageNumbers } from '@/helpers';
 
-type PaginationProps = {
+type Props = {
   totalPages: number;
   currentPage: number;
   onPageChange: (page: number) => void;
-};
+  maxVisiblePages?: number;
+}
 
-export const Pagination: FC<PaginationProps> = ({ totalPages, currentPage, onPageChange }) => {
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+export const Pagination: FC<Props> = ({
+  totalPages,
+  currentPage,
+  onPageChange,
+  maxVisiblePages = DEFAULT_MAX_VISIBLE_PAGE_BTNS
+}) => {
+  const pageNumbers = useMemo(() =>
+    generatePageNumbers(currentPage, totalPages, maxVisiblePages),
+    [currentPage, totalPages, maxVisiblePages]
+  );
 
   const handlePrevClick = (): void => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
-    }
+    if (currentPage > 1) onPageChange(currentPage - 1);
   };
 
   const handleNextClick = (): void => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
-    }
+    if (currentPage < totalPages) onPageChange(currentPage + 1);
   };
 
   return (
     <PaginationContainer>
-      <IconButton onClick={handlePrevClick} disabled={currentPage === 1}>
+      <NavigationButton onClick={handlePrevClick} disabled={currentPage === 1}>
         <FaChevronLeft />
-      </IconButton>
-      {pages.map((page) => (
-        <PageButton key={page} $active={currentPage === page} onClick={() => onPageChange(page)}>
-          {page}
-        </PageButton>
+      </NavigationButton>
+      {pageNumbers.map((page, index) => (
+        <CSCommonPaginationItem
+          key={`${page}-${index}`}
+          page={page}
+          currentPage={currentPage}
+          onPageChange={onPageChange}
+        />
       ))}
-      <IconButton onClick={handleNextClick} disabled={currentPage === totalPages}>
+      <NavigationButton onClick={handleNextClick} disabled={currentPage === totalPages}>
         <FaChevronRight />
-      </IconButton>
+      </NavigationButton>
     </PaginationContainer>
   );
 };
 
+
 const PaginationContainer = styled.div`
-  width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 20px;
 `;
 
-const PageButton = styled.button<{ $active?: boolean }>`
-  padding: 8px 16px;
-  margin: 0 5px;
-  border: none;
-  border-radius: 4px;
-  background-color: ${({ $active }): string => ($active ? '#007bff' : '#cadbf5')};
-  color: ${({ $active }): string => ($active ? 'white' : 'black')};
-  cursor: pointer;
-  box-shadow: ${({ $active }): string =>
-    $active ? '0 4px 8px rgba(0, 123, 255, 0.2)' : '0 2px 4px rgba(0, 0, 0, 0.1)'};
-  transition:
-    background-color 0.3s,
-    box-shadow 0.3s,
-    transform 0.3s;
+const NavigationButton = styled(BaseButton)`
+  background-color: transparent;
+  color: var(--main-blue);
 
-  &:hover {
-    background-color: ${({ $active }): string => ($active ? 'var(--main-blue)' : '#cadbf5')};
-    box-shadow: ${({ $active }): string =>
-      $active ? '0 6px 12px rgba(0, 123, 255, 0.3)' : '0 4px 8px rgba(0, 0, 0, 0.2)'};
-    transform: translateY(-2px);
-  }
-
-  &:disabled {
-    background-color: #8ca3c7;
-    color: white;
-    cursor: not-allowed;
-    box-shadow: none;
+  &:hover:not(:disabled) {
+    background-color: #f0f0f0;
   }
 `;
 
-const IconButton = styled(PageButton)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-`;

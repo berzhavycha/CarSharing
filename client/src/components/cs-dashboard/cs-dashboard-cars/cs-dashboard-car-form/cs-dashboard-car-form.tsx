@@ -14,6 +14,7 @@ import { Car, CarDto, FieldErrorsState } from '@/types';
 import DefaultImage from '../../../../../public/car-upload.png';
 
 import { useCarForm } from './hooks';
+import { device } from '@/styles';
 
 export type onCarSubmit = (
   car: CarDto,
@@ -78,11 +79,13 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
             />
           </Section>
 
-          <CSCommonForm.TextArea
-            label="Description"
-            name="description"
-            error={errors?.description}
-          />
+          <DescriptionSection>
+            <CSCommonForm.TextArea
+              label="Description"
+              name="description"
+              error={errors?.description}
+            />
+          </DescriptionSection>
 
           <Title>Characteristics</Title>
           <Section>
@@ -149,6 +152,11 @@ const ContentContainer = styled.div`
 
 const Title = styled.h3`
   margin-bottom: 30px;
+
+  @media ${device.md} {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
 `;
 
 const Section = styled.section`
@@ -156,11 +164,28 @@ const Section = styled.section`
   grid-template-columns: 1fr 1fr;
   gap: 0 40px;
   margin-right: 10px;
+
+  @media ${device.sm} {
+    display: flex;
+    flex-direction: column;
+  }
 `;
+
+const DescriptionSection = styled.section`
+  margin-right: 10px;
+`
 
 const CarHeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 50px;
+
+  @media ${device.md} {
+    margin-bottom: 20px;
+  }
+
+  @media ${device.sm} {
+    margin-bottom: 10px;
+  }
 `;

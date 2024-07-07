@@ -6,6 +6,7 @@ import { CSCommonContainer, CSCommonModal } from '@/components/cs-common';
 
 import { CSMainRentalPaymentForm } from './cs-main-rental-payment-form';
 import { CSMainRentalPaymentSummary } from './cs-main-rental-payment-summary';
+import { device } from '@/styles';
 
 export const CSMainRentalPayment: FC = observer(() => {
   const [isRentSuccessful, setIsRentSuccessful] = useState<boolean>(false);
@@ -47,10 +48,15 @@ export const CSMainRentalPayment: FC = observer(() => {
 });
 
 const RentalForm = styled.div`
-  width: 100%;
   display: flex;
-  gap: 40px;
-  margin-top: 50px;
+  gap: 20px;
+  margin: 50px 0;
+
+  @media ${device.md} {
+    flex-direction: column;
+    gap: 20px;
+    margin: 50px 0;
+  }
 `;
 
 export const SectionTitle = styled.h3`
@@ -63,4 +69,8 @@ export const SectionDescription = styled.p`
   font-size: 14px;
   font-weight: 300;
   margin-bottom: 30px;
+
+  @media ${device.sm} {
+    font-size: 12px;
+  }
 `;

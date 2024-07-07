@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react';
 
-import { CSCommonModal, CSCommonNoData, Table, TableHeader } from '@/components/cs-common';
+import { CSCommonModal, CSCommonNoData, HiddenMDTableHeader, HiddenSMTableHeader, HiddenXSTableHeader, Table, TableHeader } from '@/components/cs-common';
 import { Car } from '@/types';
 
 import { CSDashboardCarTableRow } from './cs-dashboard-car-table-row';
@@ -34,24 +34,24 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
       <Table>
         <thead>
           <tr>
-            <TableHeader style={{ width: '5%' }}>No.</TableHeader>
-            <TableHeader style={{ width: '10%' }}>Image</TableHeader>
+            <TableHeader style={{ width: '2%' }}>No.</TableHeader>
+            <HiddenXSTableHeader style={{ width: '10%' }}>Image</HiddenXSTableHeader>
             <TableHeader style={{ width: '15%' }} onClick={() => onSortChange('model')}>
               Model
             </TableHeader>
-            <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('year')}>
+            <HiddenMDTableHeader style={{ width: '10%' }} onClick={() => onSortChange('year')}>
               Year
-            </TableHeader>
+            </HiddenMDTableHeader>
             <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('pricePerHour')}>
               Price / Hour
             </TableHeader>
-            <TableHeader style={{ width: '8%' }} onClick={() => onSortChange('type')}>
+            <HiddenMDTableHeader style={{ width: '8%' }} onClick={() => onSortChange('type')}>
               Type
-            </TableHeader>
-            <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('status')}>
+            </HiddenMDTableHeader>
+            <HiddenSMTableHeader style={{ width: '10%' }} onClick={() => onSortChange('status')}>
               Status
-            </TableHeader>
-            <TableHeader style={{ width: '15%' }}>Actions</TableHeader>
+            </HiddenSMTableHeader>
+            <TableHeader style={{ width: '4%' }}>Actions</TableHeader>
           </tr>
         </thead>
         <tbody>

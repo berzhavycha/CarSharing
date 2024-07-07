@@ -7,6 +7,7 @@ import { CSCommonDetailsFeature, CSCommonPrimaryButton, CSCommonTitle } from "@/
 import { useStore } from "@/context";
 import { observer } from "mobx-react-lite";
 import { useParams } from "react-router-dom";
+import { device } from "@/styles";
 
 type Props = {
     rental: Rental
@@ -29,7 +30,7 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
 
     return (
         <RentalDetailsWrapper>
-            <CSCommonTitle>Rental Details</CSCommonTitle>
+            <Title>Rental Details</Title>
             <FeaturesWrapper>
                 <CSCommonDetailsFeature label="Car Model" text={usedRental.originalCar?.model} />
                 <CSCommonDetailsFeature label="Rental Status" component={
@@ -45,7 +46,7 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
                 <CSCommonDetailsFeature label="Drop-off Location" text={usedRental.dropOffLocation} />
             </FeaturesWrapper>
             <CSMainSingleRentalTransaction rental={usedRental} />
-            {rental.status === RentalStatus.ACTIVE && (
+            {usedRental.status === RentalStatus.ACTIVE && (
                 <ReturnCarWrapper>
                     <CSCommonPrimaryButton content="Return Car" onClick={onCarReturn} />
                 </ReturnCarWrapper>
@@ -54,14 +55,27 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
     )
 })
 
+export const Title = styled(CSCommonTitle)`
+    @media ${device.xs} {
+        font-size: 16px;
+    }
+`
+
 const RentalDetailsWrapper = styled.div`
-  width: 50%;
+  width: 70%;
   background-color: white;
   padding: 30px;
   border-radius: 20px;
   box-shadow: var(--default-box-shadow);
-`;
 
+  @media ${device.lg} {
+    width: 100%;
+  }
+
+  @media ${device.sm} {
+    padding: 20px;
+  }
+`;
 
 const FeaturesWrapper = styled.div`
   display: flex;
@@ -71,11 +85,14 @@ const FeaturesWrapper = styled.div`
 `;
 
 const ReturnCarWrapper = styled.div`
-  margin-bottom: 30px;
+  margin-top: 30px;
+
+  @media ${device.sm} {
+    margin-top: 20px;
+  }
 `;
 
 const StatusBadge = styled.div<{ $status: RentalStatus }>`
-  width: 100px;
   display: inline-block;
   padding: 4px 10px;
   border-radius: 5px;

@@ -1,4 +1,4 @@
-import { FC, Suspense } from 'react';
+import { FC, Suspense, useState } from 'react';
 import { Await, useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -8,13 +8,31 @@ import { AvailableCarsLoaderData } from '@/pages';
 
 import { CSMainAvailableCarsFilter } from './cs-main-available-cars-filter';
 import { CSMainAvailableCarsList } from './cs-main-available-cars-list';
+import { device } from '@/styles';
+import { FaFilter, FaTimes } from 'react-icons/fa';
+import { useClickOutside } from '@/hooks';
 
 export const CSMainAvailableCars: FC = () => {
   const data = useLoaderData() as AvailableCarsLoaderData;
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const ref = useClickOutside(() => setIsSidebarOpen(false))
+  const toggleSidebar = (): void => setIsSidebarOpen(!isSidebarOpen);
+  const onSidebarClose = (): void => setIsSidebarOpen(false)
+
   return (
     <AvailableCarsWrapper>
-      <SidebarContainer>
+      <FilterButtonWrapper>
+        <FilterButton onClick={toggleSidebar}>
+          <FaFilter />
+        </FilterButton>
+      </FilterButtonWrapper>
+
+      <SidebarContainer $isOpen={isSidebarOpen} ref={ref}>
+        <CloseButton onClick={onSidebarClose}>
+          <FaTimes />
+        </CloseButton>
         <Suspense fallback={<CSCommonSpinner />}>
           <Await
             resolve={data.filterOptions}
@@ -45,24 +63,101 @@ export const CSMainAvailableCars: FC = () => {
 
 const AvailableCarsWrapper = styled.div`
   display: flex;
-  gap: 40px;
+  gap: 20px;
   min-height: 74vh;
+  position: relative;
+
+  @media ${device.sm} {
+    flex-direction: column;
+  }
+`;
+const FilterButtonWrapper = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--main-blue);
+  padding: 10px 0;
+  display: none;
+
+  @media ${device.sm} {
+    display: block;
+  }
 `;
 
-const SidebarContainer = styled.div`
+const FilterButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+
+  svg {
+    margin-right: 8px;
+  }
+`;
+
+const SidebarContainer = styled.div<{ $isOpen: boolean }>`
   flex: 0 0 24%;
   padding: 35px;
   background-color: white;
   min-height: 100%;
   margin-top: 5px;
+  position: relative;
+
+  @media ${device.sm} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80%;
+    height: 100%;
+    z-index: 1001;
+    transform: translateX(${(props): string => props.$isOpen ? '0' : '-100%'});
+    transition: transform 0.3s ease-in-out;
+    overflow-y: auto;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--main-blue);
+  display: none;
+
+  @media ${device.sm} {
+    display: block;
+  }
 `;
 
 const CarsWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.25rem;
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-  margin: 40px 8% 60px 0;
+  margin: 40px;
+
+  @media ${device.lg} {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media ${device.md} {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  @media ${device.sm} {
+    margin: 20px;
+    width: auto;
+  }
 `;
 
 const CarsErrorWrapper = styled.div`

@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { CSCommonNoData, Table, TableHeader } from '@/components/cs-common';
+import { CSCommonNoData, HiddenMDTableHeader, HiddenSMTableHeader, HiddenXSTableHeader, Table, TableHeader } from '@/components/cs-common';
 import { Rental } from '@/types';
 import { CSMainRentalHistoryTableRow } from './cs-main-rental-history-table-row';
 import { useStore } from '@/context';
@@ -37,27 +37,29 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
             <Table>
                 <thead>
                     <tr>
-                        <TableHeader style={{ width: '5%' }}>No.</TableHeader>
-                        <TableHeader style={{ width: '10%' }}>Image</TableHeader>
+                        <TableHeader style={{ width: '1%' }}>No.</TableHeader>
+                        <HiddenMDTableHeader style={{ width: '8%' }}>
+                            Image
+                        </HiddenMDTableHeader>
                         <TableHeader style={{ width: '15%' }}>
                             Model
                         </TableHeader>
-                        <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('requestedHours')}>
+                        <HiddenXSTableHeader style={{ width: '4%' }} onClick={() => onSortChange('requestedHours')}>
                             Hours
-                        </TableHeader>
-                        <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('totalPrice')}>
+                        </HiddenXSTableHeader>
+                        <HiddenSMTableHeader style={{ width: '8%' }} onClick={() => onSortChange('totalPrice')}>
                             Total Price
-                        </TableHeader>
-                        <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('rentalStart')}>
+                        </HiddenSMTableHeader>
+                        <HiddenSMTableHeader style={{ width: '10%' }} onClick={() => onSortChange('rentalStart')}>
                             Start Time
-                        </TableHeader>
-                        <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('rentalEnd')}>
+                        </HiddenSMTableHeader>
+                        <HiddenSMTableHeader style={{ width: '10%' }} onClick={() => onSortChange('rentalEnd')}>
                             End Time
-                        </TableHeader>
-                        <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('status')}>
+                        </HiddenSMTableHeader>
+                        <TableHeader style={{ width: '8%' }} onClick={() => onSortChange('status')}>
                             Status
                         </TableHeader>
-                        <TableHeader style={{ width: '15%' }}>Actions</TableHeader>
+                        <TableHeader style={{ width: '6%' }}>Actions</TableHeader>
                     </tr>
                 </thead>
                 <tbody>

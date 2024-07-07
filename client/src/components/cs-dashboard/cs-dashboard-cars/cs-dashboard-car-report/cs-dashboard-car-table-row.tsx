@@ -1,11 +1,12 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { TableCell, TableRow } from '@/components/cs-common';
+import { CSCommonTableActions, HiddenMDTableCell, HiddenSMTableCell, HiddenXSTableCell, TableCell, TableRow } from '@/components/cs-common';
 import { Env } from '@/core';
 import { uppercaseFirstLetter } from '@/helpers';
 import { Car } from '@/types';
-import { Link } from 'react-router-dom';
+import { device } from '@/styles';
+import { FaInfoCircle, FaTrash } from 'react-icons/fa';
 
 type Props = {
   car: Car;
@@ -18,28 +19,43 @@ export const CSDashboardCarTableRow: FC<Props> = ({
   index,
   onRemoveClick,
 }) => {
+  const actions = [
+    {
+      label: 'Details',
+      icon: <FaInfoCircle />,
+      to: `/dashboard/edit-car?carId=${car.id}`,
+    },
+    {
+      label: 'Remove',
+      icon: <FaTrash />,
+      onClick: (): void => onRemoveClick(car),
+    },
+  ];
+
+
   return (
     <TableRow key={car.id}>
       <TableCell>{index + 1}</TableCell>
-      <TableCell>
+      <HiddenXSTableCell>
         <img src={`${Env.API_BASE_URL}/local-files/${car.pictures[0]?.id}`} alt="Car Image" />
-      </TableCell>
+      </HiddenXSTableCell>
       <TableCell>{car.model}</TableCell>
-      <TableCell>{car.year}</TableCell>
+      <HiddenMDTableCell>{car.year} </HiddenMDTableCell>
       <TableCell>${car.pricePerHour}</TableCell>
-      <TableCell>{car.type}</TableCell>
-      <TableCell>
+      <HiddenMDTableCell>{car.type}</HiddenMDTableCell>
+      <HiddenSMTableCell>
         <StatusBadge $status={car.status}>{uppercaseFirstLetter(car.status)}</StatusBadge>
-      </TableCell>
-      <TableCell>
-        <Buttons>
-          <DetailsButton to={`/dashboard/edit-car?carId=${car.id}`}>Details</DetailsButton>
-          <RemoveButton onClick={() => onRemoveClick(car)}>Remove</RemoveButton>
-        </Buttons>
-      </TableCell>
+      </HiddenSMTableCell>
+      <ActionsCell>
+        <CSCommonTableActions actions={actions} />
+      </ActionsCell>
     </TableRow>
   );
 };
+
+const ActionsCell = styled(TableCell)`
+  position: relative;
+`;
 
 const StatusBadge = styled.div<{ $status: string }>`
   width: 100%;
@@ -86,41 +102,20 @@ const StatusBadge = styled.div<{ $status: string }>`
         return 'var(--default-border)';
     }
   }};
-`;
 
-const Buttons = styled.div`
-  display: flex;
-  align-items: center;
-`
+  @media ${device.lg} {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
 
-const DetailsButton = styled(Link)`
-  font-size: 14px;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  background-color: var(--main-blue);
-  color: white;
-  cursor: pointer;
-  margin-right: 5px;
-  transition: var(--default-transition);
-  text-decoration: none;
+  @media ${device.md} {
+    font-size: 11px;
+  }
 
-  &:hover {
-    background-color: var(--dark-blue);
+  @media ${device.sm} {
+    font-size: 10px;
+    padding: 4px 8px;
   }
 `;
 
-const RemoveButton = styled.button`
-  padding: 7px 12px;
-  border: none;
-  border-radius: 4px;
-  background-color: var(--red-status-text);
-  color: white;
-  cursor: pointer;
-  margin-right: 5px;
-  transition: var(--default-transition);
 
-  &:hover {
-    background-color: #aa2633;
-  }
-`;

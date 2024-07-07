@@ -9,6 +9,7 @@ import BannerImage2 from '../../../../public/banner 2.png';
 import DefaultCar from '../../../../public/default-car.png';
 
 import { CSMainInitialCarList } from './cs-main-initial-car-list';
+import { device } from '@/styles';
 
 export const CSMain: FC = () => {
   return (
@@ -46,6 +47,10 @@ const BannerWrappers = styled.div`
   gap: 20px;
   margin-top: 50px;
   margin-bottom: 30px;
+
+  @media ${device.sm} {
+    flex-direction: column;
+  }
 `;
 
 const ShowMoreWrapper = styled.div`
