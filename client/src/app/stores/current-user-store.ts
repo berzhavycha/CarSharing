@@ -1,6 +1,7 @@
 import { flow, Instance, t } from 'mobx-state-tree';
+
 import { handleUserResponse, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
-import { fetchCurrentUser, signIn, signOut, signUp, updateUser, topUp } from '@/services';
+import { fetchCurrentUser, signIn, signOut, signUp, topUp, updateUser } from '@/services';
 import {
   AuthenticatedUser,
   FieldErrorsState,
@@ -9,6 +10,7 @@ import {
   UpdateUserBalanceDto,
   UpdateUserDto,
 } from '@/types';
+
 import { ErrorModel, UserModel } from '../models';
 
 export type ServiceUserResponse<T extends object> = {
@@ -16,7 +18,12 @@ export type ServiceUserResponse<T extends object> = {
   errors?: FieldErrorsState<T>;
 };
 
-type ErrorTypes = SignInUserDto | SignUpUserDto | AuthenticatedUser | UpdateUserDto | UpdateUserBalanceDto;
+type ErrorTypes =
+  | SignInUserDto
+  | SignUpUserDto
+  | AuthenticatedUser
+  | UpdateUserDto
+  | UpdateUserBalanceDto;
 
 export const CurrentUserStore = t
   .model('CurrentUserStore', {
@@ -32,16 +39,19 @@ export const CurrentUserStore = t
     setUser(user: AuthenticatedUser | null): void {
       self.user = user ? UserModel.create(user) : null;
     },
-    setError<T extends ErrorTypes>(type: keyof typeof self.errors, error: FieldErrorsState<T> | null): void {
+    setError<T extends ErrorTypes>(
+      type: keyof typeof self.errors,
+      error: FieldErrorsState<T> | null,
+    ): void {
       self.errors = {
         ...self.errors,
-        [type]: error
+        [type]: error,
       };
     },
     clearError(type: keyof typeof self.errors): void {
       self.errors = {
         ...self.errors,
-        [type]: null
+        [type]: null,
       };
     },
     updateBalance(balance: number): void {
@@ -81,12 +91,16 @@ export const CurrentUserStore = t
     }),
     updateUser: flow(function* (userDto: UpdateUserDto) {
       if (self.user) {
-        yield self.performUserAction<UpdateUserDto>('update', () => updateUser(self.user!.id, userDto));
+        yield self.performUserAction<UpdateUserDto>('update', () =>
+          updateUser(self.user!.id, userDto),
+        );
       }
     }),
     topUp: flow(function* (userDto: UpdateUserBalanceDto) {
       if (self.user) {
-        yield self.performUserAction<UpdateUserBalanceDto>('topUp', () => topUp(self.user!.id, userDto));
+        yield self.performUserAction<UpdateUserBalanceDto>('topUp', () =>
+          topUp(self.user!.id, userDto),
+        );
       }
     }),
     fetchCurrentUser: flow(function* () {
@@ -95,7 +109,7 @@ export const CurrentUserStore = t
         handleUserResponse(
           response,
           (user) => self.setUser(user),
-          () => { },
+          () => {},
         );
       } catch (error) {
         self.setUser(null);

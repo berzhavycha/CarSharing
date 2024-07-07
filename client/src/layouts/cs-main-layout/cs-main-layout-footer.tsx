@@ -35,7 +35,7 @@ const FooterWrapper = styled.div`
 
   @media ${device.sm} {
     flex-direction: column;
-    justify-content: center; 
+    justify-content: center;
   }
 `;
 
@@ -58,9 +58,9 @@ const Links = styled.div`
 
     @media ${device.md} {
       font-size: 12px;
-      }
-      
-    @media ${device.sm}{
+    }
+
+    @media ${device.sm} {
       margin-left: 0px;
       &:last-child {
         margin-left: 10px;

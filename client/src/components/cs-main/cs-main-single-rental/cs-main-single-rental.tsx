@@ -1,42 +1,48 @@
-import { FC, Suspense } from 'react';
 import { observer } from 'mobx-react-lite';
+import { FC, Suspense } from 'react';
+import { Await, useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
+
+import {
+  CSCommonContainer,
+  CSCommonError,
+  CSCommonSlides,
+  CSCommonSpinner,
+} from '@/components/cs-common';
 import { Env } from '@/core';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
-import { CSCommonContainer, CSCommonError, CSCommonSlides, CSCommonSpinner } from '@/components/cs-common';
-import { LocalFile, Rental } from '@/types';
-import { Await, useLoaderData } from 'react-router-dom';
-import { CSMainSingleRentalDetails } from './cs-main-single-rental-details';
 import { device } from '@/styles';
+import { LocalFile, Rental } from '@/types';
+
+import { CSMainSingleRentalDetails } from './cs-main-single-rental-details';
 
 export const CSMainSingleRental: FC = observer(() => {
-    const data = useLoaderData() as { data: Rental };
+  const data = useLoaderData() as { data: Rental };
 
-    return (
-        <CSCommonContainer>
-            <Suspense fallback={<CSCommonSpinner />}>
-                <Await
-                    resolve={data.data}
-                    errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
-                >
-                    {(rental) => {
-                        const carImages = rental.originalCar?.pictures?.map(
-                            (pic: LocalFile) => `${Env.API_BASE_URL}/local-files/${pic?.id}`,
-                        );
+  return (
+    <CSCommonContainer>
+      <Suspense fallback={<CSCommonSpinner />}>
+        <Await
+          resolve={data.data}
+          errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
+        >
+          {(rental) => {
+            const carImages = rental.originalCar?.pictures?.map(
+              (pic: LocalFile) => `${Env.API_BASE_URL}/local-files/${pic?.id}`,
+            );
 
-                        return (
-                            <RentalDetailsContainer>
-                                <CSCommonSlides images={carImages} width='100%' height='300px' />
-                                <CSMainSingleRentalDetails rental={rental} />
-                            </RentalDetailsContainer>
-                        );
-                    }}
-                </Await>
-            </Suspense>
-        </CSCommonContainer>
-    );
+            return (
+              <RentalDetailsContainer>
+                <CSCommonSlides images={carImages} width="100%" height="300px" />
+                <CSMainSingleRentalDetails rental={rental} />
+              </RentalDetailsContainer>
+            );
+          }}
+        </Await>
+      </Suspense>
+    </CSCommonContainer>
+  );
 });
-
 
 const RentalDetailsContainer = styled.div`
   display: flex;
@@ -47,5 +53,4 @@ const RentalDetailsContainer = styled.div`
   @media ${device.lg} {
     flex-direction: column;
   }
-`
-
+`;

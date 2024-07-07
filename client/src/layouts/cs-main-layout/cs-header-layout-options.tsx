@@ -1,17 +1,17 @@
 import { observer } from 'mobx-react-lite';
 import { FC, useRef, useState } from 'react';
-import { FaDollarSign, FaSignOutAlt, FaHistory, FaBars } from 'react-icons/fa';
+import { FaBars, FaDollarSign, FaHistory, FaSignOutAlt } from 'react-icons/fa';
 import { FaGear } from 'react-icons/fa6';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { CSCommonCloseButton } from '@/components';
 import { useStore } from '@/context';
 import { Env } from '@/core';
 import { useClickOutside, useSignOut } from '@/hooks';
+import { device } from '@/styles';
 
 import DefaultImage from '../../../public/avatar.webp';
-import { device } from '@/styles';
-import { CSCommonCloseButton } from '@/components';
 
 export const CSHeaderLayoutOptions: FC = observer(() => {
   const {
@@ -32,7 +32,7 @@ export const CSHeaderLayoutOptions: FC = observer(() => {
   const signOutHandler = async (): Promise<void> => {
     onSignOut();
     closeMenu();
-  }
+  };
 
   return (
     <Container>
@@ -132,11 +132,14 @@ const NavOptions = styled.div<{ $isOpen: boolean }>`
     flex-direction: column;
     text-align: left;
     align-items: start;
-    
+
     opacity: ${({ $isOpen }): number => ($isOpen ? 1 : 0)};
     visibility: ${({ $isOpen }): string => ($isOpen ? 'visible' : 'hidden')};
     transform: ${({ $isOpen }): string => ($isOpen ? 'translateY(0)' : 'translateY(-20px)')};
-    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    transition:
+      opacity 0.3s ease,
+      visibility 0.3s ease,
+      transform 0.3s ease;
   }
 
   @media ${device.md} {
@@ -161,16 +164,15 @@ const StyledNavLink = styled(NavLink)`
 
   span {
     display: none;
- 
+
     @media ${device.lg} {
       display: flex;
     }
   }
 
-   &:hover {
+  &:hover {
     color: #1e3a8a;
   }
-
 `;
 
 const SignOutButton = styled.button`
@@ -230,7 +232,7 @@ const UserInfoMobile = styled.div`
   margin-bottom: 20px;
   width: 100%;
 
-  @media ${device.md}  {
+  @media ${device.md} {
     display: flex;
   }
 `;
@@ -251,4 +253,3 @@ const Balance = styled.h4`
   font-size: 14px;
   margin: 0;
 `;
-

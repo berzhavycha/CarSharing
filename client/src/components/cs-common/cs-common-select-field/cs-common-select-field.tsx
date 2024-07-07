@@ -1,11 +1,12 @@
 import React, { FC, forwardRef } from 'react';
 import styled from 'styled-components';
 
+import { device } from '@/styles';
+
 import { CSCommonCheckIcon } from '../cs-common-check-icon';
 import { CSCommonErrorIcon } from '../cs-common-error-icon';
 import { CSCommonErrorMessage } from '../cs-common-error-message';
 import { Label } from '../cs-common-input-field';
-import { device } from '@/styles';
 
 export type Option = {
   value: string;

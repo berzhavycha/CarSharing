@@ -1,6 +1,7 @@
-import { device } from '@/styles';
 import { FC } from 'react';
 import styled from 'styled-components';
+
+import { device } from '@/styles';
 
 type Props = {
   amount: number;

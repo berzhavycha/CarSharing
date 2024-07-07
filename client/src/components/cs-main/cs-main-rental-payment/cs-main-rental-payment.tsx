@@ -3,10 +3,10 @@ import { FC, useState } from 'react';
 import styled from 'styled-components';
 
 import { CSCommonContainer, CSCommonModal } from '@/components/cs-common';
+import { device } from '@/styles';
 
 import { CSMainRentalPaymentForm } from './cs-main-rental-payment-form';
 import { CSMainRentalPaymentSummary } from './cs-main-rental-payment-summary';
-import { device } from '@/styles';
 
 export const CSMainRentalPayment: FC = observer(() => {
   const [isRentSuccessful, setIsRentSuccessful] = useState<boolean>(false);
@@ -58,4 +58,3 @@ const RentalForm = styled.div`
     margin: 50px 0;
   }
 `;
-

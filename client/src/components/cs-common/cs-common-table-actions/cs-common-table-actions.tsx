@@ -1,7 +1,8 @@
 import React, { FC, useRef, useState } from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { FaEllipsisV } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
 import { useClickOutside } from '@/hooks';
 import { device } from '@/styles';
 
@@ -18,7 +19,7 @@ type Props = {
 
 export const CSCommonTableActions: FC<Props> = ({ actions }) => {
   const [showActions, setShowActions] = useState<boolean>(false);
-  const actionButtonRef = useRef<HTMLButtonElement>(null)
+  const actionButtonRef = useRef<HTMLButtonElement>(null);
 
   const toggleActions = (): void => {
     setShowActions(!showActions);
@@ -29,33 +30,40 @@ export const CSCommonTableActions: FC<Props> = ({ actions }) => {
   return (
     <ActionsWrapper>
       <DesktopActions>
-        {actions.map((action, index) => (
+        {actions.map((action, index) =>
           action.to ? (
-            <ActionButton key={index} as={Link} to={action.to}>{action.label}</ActionButton>
+            <ActionButton key={index} as={Link} to={action.to}>
+              {action.label}
+            </ActionButton>
           ) : (
-            <ActionButton key={index} onClick={action.onClick}>{action.label}</ActionButton>
-          )
-        ))}
+            <ActionButton key={index} onClick={action.onClick}>
+              {action.label}
+            </ActionButton>
+          ),
+        )}
       </DesktopActions>
       <MobileActions>
         <ActionToggle onClick={toggleActions} ref={actionButtonRef}>
           <FaEllipsisV />
         </ActionToggle>
         <ActionMenu $show={showActions} ref={ref}>
-          {actions.map((action, index) => (
+          {actions.map((action, index) =>
             action.to ? (
               <ActionMenuItem key={index} to={action.to} onClick={toggleActions}>
                 {action.icon} {action.label}
               </ActionMenuItem>
             ) : (
-              <ActionMenuButton key={index} onClick={() => {
-                action.onClick?.();
-                toggleActions();
-              }}>
+              <ActionMenuButton
+                key={index}
+                onClick={() => {
+                  action.onClick?.();
+                  toggleActions();
+                }}
+              >
                 {action.icon} {action.label}
               </ActionMenuButton>
-            )
-          ))}
+            ),
+          )}
         </ActionMenu>
       </MobileActions>
     </ActionsWrapper>
@@ -112,7 +120,10 @@ const ActionMenu = styled.div<{ $show: boolean }>`
   opacity: ${({ $show }): number => ($show ? 1 : 0)};
   transform: ${({ $show }): string => ($show ? 'translateY(0)' : 'translateY(-10px)')};
   visibility: ${({ $show }): string => ($show ? 'visible' : 'hidden')};
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    visibility 0.3s ease;
   z-index: 10;
 `;
 
@@ -150,7 +161,7 @@ const ActionMenuButton = styled.button`
   text-align: left;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  
+
   &:hover {
     background-color: #f0f0f0;
   }

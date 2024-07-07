@@ -16,4 +16,4 @@ export const defaultSearchParams = {
 };
 
 export const ELLIPSIS = '...';
-export const DEFAULT_MAX_VISIBLE_PAGE_BTNS = 5
+export const DEFAULT_MAX_VISIBLE_PAGE_BTNS = 5;

@@ -32,7 +32,7 @@ export const useImagePreviews = (
   const handleUploadedFiles = (event: ChangeEvent<HTMLInputElement>): void => {
     const files = Array.from(event.target.files || []);
     const previewUrls = files.map((file) => URL.createObjectURL(file));
-    
+
     setPreviews((prevPreviews) => {
       if (multiple) {
         return [
@@ -48,9 +48,7 @@ export const useImagePreviews = (
   const removeImage = (index: number): void => {
     setPreviews((prevPreviews) => {
       const updatedPreviews = prevPreviews.filter((_, i) => i !== index);
-      return updatedPreviews.length > 0
-        ? updatedPreviews
-        : [{ url: defaultImage }];
+      return updatedPreviews.length > 0 ? updatedPreviews : [{ url: defaultImage }];
     });
   };
 

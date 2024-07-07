@@ -29,5 +29,5 @@ export const signInFieldMappings: Record<string, keyof SignInUserDto> = {
 
 export const authCedirectPages = {
   [Roles.ADMIN]: '/dashboard/profile-settings',
-  [Roles.USER]: '/'
-}
+  [Roles.USER]: '/',
+};

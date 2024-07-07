@@ -1,5 +1,6 @@
-import { device } from '@/styles';
 import styled from 'styled-components';
+
+import { device } from '@/styles';
 
 export const CSCommonErrorMessage = styled.div`
   color: red;

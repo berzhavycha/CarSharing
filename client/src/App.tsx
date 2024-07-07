@@ -1,5 +1,7 @@
-import { GlobalStyles } from '@/styles';
 import { RouterProvider } from 'react-router-dom';
+
+import { GlobalStyles } from '@/styles';
+
 import { CSStoreProvider } from './context';
 import { router } from './router';
 

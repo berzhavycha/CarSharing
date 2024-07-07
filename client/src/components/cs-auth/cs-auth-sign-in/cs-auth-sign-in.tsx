@@ -6,10 +6,10 @@ import styled from 'styled-components';
 import { CSCommonErrorMessage, CSCommonForm } from '@/components/cs-common';
 import { useStore } from '@/context';
 import { authCedirectPages, AuthType, getUserSchema, Roles } from '@/helpers';
+import { device } from '@/styles';
 import { SignInUserDto } from '@/types';
 
 import { BaseFormInner, ErrorMessageWrapper, FormContainer, Span, Title } from '../cs-auth-sign-up';
-import { device } from '@/styles';
 
 export const CSAuthSignIn: FC = observer(() => {
   const { currentUserStore } = useStore();
@@ -31,10 +31,7 @@ export const CSAuthSignIn: FC = observer(() => {
         <Title>Login</Title>
         <Span>
           Don't Have an Account?
-          <Link to="/sign-up">
-            Register here
-          </Link>{' '}
-          instead
+          <Link to="/sign-up">Register here</Link> instead
         </Span>
         <ErrorMessageWrapper>
           <CSCommonErrorMessage>

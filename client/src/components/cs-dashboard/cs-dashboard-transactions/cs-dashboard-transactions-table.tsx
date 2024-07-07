@@ -51,4 +51,3 @@ export const CSDashboardTransactionsTable: FC<Props> = ({ transactions, onSortCh
     </>
   );
 };
-

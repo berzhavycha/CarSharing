@@ -1,11 +1,13 @@
 import { FC, Fragment, useState } from 'react';
-import { FaCar, FaSignOutAlt, FaBars } from 'react-icons/fa';
+import { FaBars, FaCar, FaSignOutAlt } from 'react-icons/fa';
 import { NavLink, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-import { useClickOutside, useSignOut } from '@/hooks';
-import { menuItems } from './constants';
-import { device } from '@/styles';
+
 import { CSCommonCloseButton } from '@/components';
+import { useClickOutside, useSignOut } from '@/hooks';
+import { device } from '@/styles';
+
+import { menuItems } from './constants';
 
 export const CSDashboardSidebar: FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -16,7 +18,7 @@ export const CSDashboardSidebar: FC = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const ref = useClickOutside(() => setIsSidebarOpen(false))
+  const ref = useClickOutside(() => setIsSidebarOpen(false));
 
   return (
     <DashboardWrapper>
@@ -24,7 +26,7 @@ export const CSDashboardSidebar: FC = () => {
         <FaBars />
       </SidebarToggle>
       <Sidebar $isOpen={isSidebarOpen} ref={ref}>
-        <CSCommonCloseButton onClose={toggleSidebar} color='white' />
+        <CSCommonCloseButton onClose={toggleSidebar} color="white" />
         <Logo>
           <FaCar /> CARRENT
         </Logo>
@@ -56,7 +58,6 @@ export const CSDashboardSidebar: FC = () => {
     </DashboardWrapper>
   );
 };
-
 
 const DashboardWrapper = styled.div`
   display: flex;
@@ -115,7 +116,9 @@ const Sidebar = styled.div<{ $isOpen: boolean }>`
   color: white;
   height: 100vh;
   padding: 40px 0;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  transition:
+    transform 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out;
   box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
 
   @media ${device.lg} {
@@ -148,11 +151,11 @@ const Logo = styled.div`
   padding: 0 40px;
 
   @media ${device.lg} {
-    font-size: 20px; 
+    font-size: 20px;
   }
 
   @media ${device.sm} {
-    font-size: 18px; 
+    font-size: 18px;
   }
 `;
 
@@ -185,11 +188,11 @@ const MenuItem = styled(NavLink)`
   }
 
   @media ${device.lg} {
-    font-size: 15px; 
+    font-size: 15px;
   }
 
   @media ${device.sm} {
-    font-size: 14px; 
+    font-size: 14px;
   }
 `;
 
@@ -225,10 +228,10 @@ const LogoutButton = styled.button`
   }
 
   @media ${device.lg} {
-    font-size: 15px; 
+    font-size: 15px;
   }
 
   @media ${device.sm} {
-    font-size: 14px; 
+    font-size: 14px;
   }
 `;

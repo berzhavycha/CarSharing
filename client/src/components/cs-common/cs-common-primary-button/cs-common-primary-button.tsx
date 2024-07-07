@@ -1,6 +1,7 @@
-import { device } from '@/styles';
 import React from 'react';
 import styled from 'styled-components';
+
+import { device } from '@/styles';
 
 type Props = {
   onClick?: () => Promise<void> | void;
@@ -15,7 +16,6 @@ export type AsProp<C extends React.ElementType = React.ElementType> = {
 export type PropsWithAs<P, C extends React.ElementType> = P &
   AsProp<C> &
   Omit<React.ComponentPropsWithoutRef<C>, keyof (P & AsProp<C>)>;
-
 
 export const CSCommonPrimaryButton = <C extends React.ElementType = 'button'>({
   as,
@@ -63,4 +63,3 @@ export const Button = styled.button<ButtonProps>`
     font-size: 12px;
   }
 `;
-

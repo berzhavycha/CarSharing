@@ -75,7 +75,6 @@ export const CSCommonTableList = <T,>({
   );
 };
 
-
 const ListViewContainer = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -89,13 +88,13 @@ const Header = styled.div`
   margin-bottom: 30px;
 
   @media ${device.lg} {
-    h3{
+    h3 {
       font-size: 16px;
     }
   }
 
   @media ${device.sm} {
-    h3{
+    h3 {
       display: none;
     }
   }
@@ -110,10 +109,10 @@ const ContentContainer = styled.div`
   height: 94%;
 
   @media ${device.md} {
-      padding: 20px;
+    padding: 20px;
   }
 
   @media ${device.sm} {
-      padding: 15px;
+    padding: 15px;
   }
 `;

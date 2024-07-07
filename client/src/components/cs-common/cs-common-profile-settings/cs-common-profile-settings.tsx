@@ -5,12 +5,12 @@ import styled from 'styled-components';
 import { CSCommonErrorMessage, CSCommonForm, CSCommonModal } from '@/components/cs-common';
 import { useStore } from '@/context';
 import { updateUserSchema, uppercaseFirstLetter } from '@/helpers';
+import { device } from '@/styles';
 import { UpdateUserDto } from '@/types';
 
 import DefaultImage from '../../../../public/avatar.webp';
 
 import { useProfileUpdate } from './hooks';
-import { device } from '@/styles';
 
 export const CSCommonProfileSettings: FC = observer(() => {
   const {
@@ -181,7 +181,7 @@ const UserInfo = styled.div`
       font-size: 20px;
     }
 
-     span {
+    span {
       font-size: 12px;
     }
   }
@@ -191,7 +191,7 @@ const UserInfo = styled.div`
       font-size: 16px;
     }
 
-     span {
+    span {
       font-size: 10px;
     }
 

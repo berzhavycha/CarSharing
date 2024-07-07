@@ -25,10 +25,10 @@ export * from './cs-common-payment-form';
 export * from './cs-common-profile-settings';
 export * from './cs-common-slides';
 export * from './cs-common-car-card';
-export * from './cs-common-table-list'
-export * from './cs-common-details-feature'
-export * from './cs-common-table-actions'
-export * from './cs-common-close-button'
-export * from './cs-common-section'
-export * from './cs-common-rental-status-badge'
-export * from './cs-common-base-status-badge'
+export * from './cs-common-table-list';
+export * from './cs-common-details-feature';
+export * from './cs-common-table-actions';
+export * from './cs-common-close-button';
+export * from './cs-common-section';
+export * from './cs-common-rental-status-badge';
+export * from './cs-common-base-status-badge';

@@ -1,24 +1,21 @@
 import { FC } from 'react';
 import { FaCog, FaGasPump, FaUsers } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
+import { Env } from '@/core';
 import { CarFuelType, extractBracketContent, getFuelUnit } from '@/helpers';
+import { Car } from '@/types';
 
 import { CarFeature } from './cs-common-car-feature';
-import { Link } from 'react-router-dom';
-import { Car } from '@/types';
-import { Env } from '@/core';
 
 type CarCardProps = {
-  carDetails: Car
+  carDetails: Car;
   onClick: () => void;
 };
 
-export const CSCommonCarCard: FC<CarCardProps> = ({
-  carDetails,
-  onClick,
-}) => {
+export const CSCommonCarCard: FC<CarCardProps> = ({ carDetails, onClick }) => {
   return (
     <CardWrapper onClick={onClick}>
       <Header>
@@ -27,16 +24,27 @@ export const CSCommonCarCard: FC<CarCardProps> = ({
       </Header>
       <CarImageWrapper>
         <ShadowImage src="../../../../public/shadow.png" alt="" />
-        <CarImage src={`${Env.API_BASE_URL}/local-files/${carDetails.pictures[0]?.id}`} alt={carDetails.model} />
+        <CarImage
+          src={`${Env.API_BASE_URL}/local-files/${carDetails.pictures[0]?.id}`}
+          alt={carDetails.model}
+        />
       </CarImageWrapper>
       <Features>
-        <CarFeature icon={<FaGasPump />} text={`${carDetails.fuelCapacity} ${getFuelUnit(carDetails.fuelType as CarFuelType)}`} />
+        <CarFeature
+          icon={<FaGasPump />}
+          text={`${carDetails.fuelCapacity} ${getFuelUnit(carDetails.fuelType as CarFuelType)}`}
+        />
         <CarFeature icon={<FaCog />} text={extractBracketContent(carDetails.steering)} />
         <CarFeature icon={<FaUsers />} text={`${carDetails.capacity} People`} />
       </Features>
       <Footer>
         <CSCommonPrice amount={carDetails.pricePerHour} metric="hour" />
-        <CSCommonPrimaryButton as={Link} to="/rental-form" content="Rent Now" state={{ car: carDetails }} />
+        <CSCommonPrimaryButton
+          as={Link}
+          to="/rental-form"
+          content="Rent Now"
+          state={{ car: carDetails }}
+        />
       </Footer>
     </CardWrapper>
   );

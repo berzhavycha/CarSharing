@@ -1,10 +1,12 @@
-import { RentalStatus } from "@/helpers";
-import { device } from "@/styles";
-import styled from "styled-components";
-import { CSCommonBaseStatusBadge } from "../cs-common-base-status-badge";
+import styled from 'styled-components';
 
-export const CSCommonRentalStatusBadge = styled(CSCommonBaseStatusBadge) <{ $status: RentalStatus }>`
-   color: ${(props): string => {
+import { RentalStatus } from '@/helpers';
+import { device } from '@/styles';
+
+import { CSCommonBaseStatusBadge } from '../cs-common-base-status-badge';
+
+export const CSCommonRentalStatusBadge = styled(CSCommonBaseStatusBadge)<{ $status: RentalStatus }>`
+  color: ${(props): string => {
     switch (props.$status) {
       case RentalStatus.ACTIVE:
         return 'var(--green-status-text)';
@@ -30,18 +32,17 @@ export const CSCommonRentalStatusBadge = styled(CSCommonBaseStatusBadge) <{ $sta
   }};
   border: 2px solid
     ${(props): string => {
-    switch (props.$status) {
-      case RentalStatus.ACTIVE:
-        return 'var(--green-status-border)';
-      case RentalStatus.CLOSED:
-        return 'var(--yellow-status-border)';
-      case RentalStatus.CANCELLED:
-        return 'var(--red-status-border)';
-      default:
-        return 'var(--default-border)';
-    }
-  }};
-
+      switch (props.$status) {
+        case RentalStatus.ACTIVE:
+          return 'var(--green-status-border)';
+        case RentalStatus.CLOSED:
+          return 'var(--yellow-status-border)';
+        case RentalStatus.CANCELLED:
+          return 'var(--red-status-border)';
+        default:
+          return 'var(--default-border)';
+      }
+    }};
 
   @media ${device.lg} {
     font-size: 12px;

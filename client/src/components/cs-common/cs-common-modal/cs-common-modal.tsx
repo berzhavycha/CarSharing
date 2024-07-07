@@ -1,8 +1,9 @@
 import { FC, MouseEvent } from 'react';
 import styled from 'styled-components';
 
-import { iconMap } from './icon-map';
 import { CSCommonCloseButton } from '../cs-common-close-button';
+
+import { iconMap } from './icon-map';
 
 type ModalProps = {
   type: 'error' | 'confirm' | 'warning';

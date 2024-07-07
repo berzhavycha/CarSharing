@@ -10,10 +10,10 @@ import {
 } from '@/components/cs-common';
 import { Env } from '@/core';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
+import { device } from '@/styles';
 import { Car, LocalFile } from '@/types';
 
 import { CSMainSingleCarDetails } from './cs-main-single-car-details';
-import { device } from '@/styles';
 
 export const CSMainSingleCar: FC = () => {
   const data = useLoaderData() as { data: Car };

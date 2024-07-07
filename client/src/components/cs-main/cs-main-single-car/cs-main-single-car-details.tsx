@@ -1,12 +1,18 @@
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { BaseSection, CSCommonDetailsFeature, CSCommonPrice, CSCommonPrimaryButton, SectionDescription, SectionTitle } from '@/components/cs-common';
+import {
+  BaseSection,
+  CSCommonDetailsFeature,
+  CSCommonPrice,
+  CSCommonPrimaryButton,
+  SectionDescription,
+  SectionTitle,
+} from '@/components/cs-common';
 import { CarFuelType, getFuelUnit } from '@/helpers';
-import { Car } from '@/types';
-
-import { Link } from 'react-router-dom';
 import { device } from '@/styles';
+import { Car } from '@/types';
 
 type Props = {
   car: Car;
@@ -51,7 +57,7 @@ const Title = styled(SectionTitle)`
   @media ${device.xs} {
     font-size: 16px;
   }
-`
+`;
 
 const Description = styled(SectionDescription)`
   color: var(--dark);
@@ -71,7 +77,7 @@ const FeaturesWrapper = styled.div`
   flex-wrap: wrap;
   margin-bottom: 30px;
   gap: 20px 0;
-  
+
   @media ${device.sm} {
     flex-direction: column;
     gap: 15px 0;

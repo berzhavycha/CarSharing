@@ -1,25 +1,27 @@
 import { FC, useMemo } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import styled from 'styled-components';
-import { BaseButton, CSCommonPaginationItem } from './cs-common-pagination-item';
+
 import { DEFAULT_MAX_VISIBLE_PAGE_BTNS, generatePageNumbers } from '@/helpers';
+
+import { BaseButton, CSCommonPaginationItem } from './cs-common-pagination-item';
 
 type Props = {
   totalPages: number;
   currentPage: number;
   onPageChange: (page: number) => void;
   maxVisiblePages?: number;
-}
+};
 
 export const Pagination: FC<Props> = ({
   totalPages,
   currentPage,
   onPageChange,
-  maxVisiblePages = DEFAULT_MAX_VISIBLE_PAGE_BTNS
+  maxVisiblePages = DEFAULT_MAX_VISIBLE_PAGE_BTNS,
 }) => {
-  const pageNumbers = useMemo(() =>
-    generatePageNumbers(currentPage, totalPages, maxVisiblePages),
-    [currentPage, totalPages, maxVisiblePages]
+  const pageNumbers = useMemo(
+    () => generatePageNumbers(currentPage, totalPages, maxVisiblePages),
+    [currentPage, totalPages, maxVisiblePages],
   );
 
   const handlePrevClick = (): void => {
@@ -50,7 +52,6 @@ export const Pagination: FC<Props> = ({
   );
 };
 
-
 const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -66,4 +67,3 @@ const NavigationButton = styled(BaseButton)`
     background-color: #f0f0f0;
   }
 `;
-

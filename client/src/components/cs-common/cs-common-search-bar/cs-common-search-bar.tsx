@@ -1,7 +1,8 @@
-import { device } from '@/styles';
 import { ChangeEvent, FC, InputHTMLAttributes } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import styled from 'styled-components';
+
+import { device } from '@/styles';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   search: string;

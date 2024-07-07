@@ -49,15 +49,23 @@ export const router = createBrowserRouter(
           <Route path="rental-form" element={<CSMainRentalPaymentPage />} />
           <Route path="top-up" element={<CSMainUserTopUpPage />} />
           <Route path="profile-settings" element={<CSMainUserProfileSettingsPage />} />
-          <Route path="rental-history" element={<CSMainRentalHistoryPage />} loader={rentalHistoryLoader} />
-          <Route path="rental-history/:rentalId" element={<CSMainSingleRentalPage />} loader={singleRentalLoader} />
+          <Route
+            path="rental-history"
+            element={<CSMainRentalHistoryPage />}
+            loader={rentalHistoryLoader}
+          />
+          <Route
+            path="rental-history/:rentalId"
+            element={<CSMainSingleRentalPage />}
+            loader={singleRentalLoader}
+          />
         </Route>
       </Route>
       <Route
         element={<CSProtectedRoute isAllowed={isAdmin} errorMessage={ONLY_ADMIN_PAGE_ERROR} />}
       >
         <Route path="dashboard" element={<CSDashboardSidebar />}>
-          <Route path='profile-settings' element={<CSDashboardProfileSettingsPage />} />
+          <Route path="profile-settings" element={<CSDashboardProfileSettingsPage />} />
           <Route
             path="transactions"
             element={<CSDashboardTransactionsPage />}

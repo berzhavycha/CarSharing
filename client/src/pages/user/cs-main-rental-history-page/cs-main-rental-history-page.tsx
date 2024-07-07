@@ -1,6 +1,7 @@
-import { CSMainRentalHistory } from "@/components";
-import { FC } from "react";
+import { FC } from 'react';
+
+import { CSMainRentalHistory } from '@/components';
 
 export const CSMainRentalHistoryPage: FC = () => {
-    return <CSMainRentalHistory />
-}
+  return <CSMainRentalHistory />;
+};

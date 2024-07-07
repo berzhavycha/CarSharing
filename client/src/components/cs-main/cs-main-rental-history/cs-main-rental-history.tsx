@@ -5,31 +5,29 @@ import { defaultSearchParams } from '@/helpers';
 import { Rental } from '@/types';
 
 import { CSCommonTableList } from '../../cs-common';
+
 import { CSMainRentalHistoryTable } from './cs-main-rental-history-table';
 
 const rentalsDefaultSearchParams = {
-    ...defaultSearchParams,
-    limit: Env.USER_RENTAL_HISTORY_PAGINATION_LIMIT,
+  ...defaultSearchParams,
+  limit: Env.USER_RENTAL_HISTORY_PAGINATION_LIMIT,
 };
 
 type LoadedData = {
-    rentals: Rental[];
-    count: number;
+  rentals: Rental[];
+  count: number;
 };
 
 export const CSMainRentalHistory: FC = () => {
-    return (
-        <CSCommonTableList<LoadedData>
-            title="Rental History"
-            searchPlaceholder="Search by car name"
-            defaultSearchParams={rentalsDefaultSearchParams}
-            paginationLimit={Env.USER_RENTAL_HISTORY_PAGINATION_LIMIT}
-            renderTable={(data, onSortChange) => (
-                <CSMainRentalHistoryTable
-                    loadedRentals={data.rentals}
-                    onSortChange={onSortChange}
-                />
-            )}
-        />
-    );
+  return (
+    <CSCommonTableList<LoadedData>
+      title="Rental History"
+      searchPlaceholder="Search by car name"
+      defaultSearchParams={rentalsDefaultSearchParams}
+      paginationLimit={Env.USER_RENTAL_HISTORY_PAGINATION_LIMIT}
+      renderTable={(data, onSortChange) => (
+        <CSMainRentalHistoryTable loadedRentals={data.rentals} onSortChange={onSortChange} />
+      )}
+    />
+  );
 };

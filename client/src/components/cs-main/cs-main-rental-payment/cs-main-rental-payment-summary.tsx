@@ -3,11 +3,10 @@ import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { BaseSection, SectionDescription, SectionTitle } from '@/components/cs-common';
 import { useStore } from '@/context';
 import { Env } from '@/core';
-
 import { device } from '@/styles';
-import { BaseSection, SectionDescription, SectionTitle } from '@/components/cs-common';
 
 export const CSMainRentalPaymentSummary: FC = observer(() => {
   const {
@@ -45,7 +44,7 @@ const SummaryWrapper = styled(BaseSection)`
   width: 35%;
   height: 50%;
   margin-bottom: 20px;
-  
+
   @media ${device.md} {
     width: 100%;
   }
@@ -138,9 +137,9 @@ const PriceWrapper = styled.h1`
 
   @media ${device.lg} {
     font-size: 24px;
-  }  
+  }
 
   @media ${device.lg} {
     font-size: 20px;
-  }  
+  }
 `;

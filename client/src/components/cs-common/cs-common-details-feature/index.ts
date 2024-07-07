@@ -1,1 +1,1 @@
-export * from './cs-common-details-feature'
+export * from './cs-common-details-feature';

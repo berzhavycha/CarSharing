@@ -1,5 +1,6 @@
-import { device } from "@/styles";
-import styled from "styled-components";
+import styled from 'styled-components';
+
+import { device } from '@/styles';
 
 export const BaseSection = styled.div`
   width: 100%;
@@ -8,7 +9,6 @@ export const BaseSection = styled.div`
   padding: 35px;
   box-shadow: var(--default-box-shadow);
 `;
-
 
 export const SectionTitle = styled.h3`
   color: var(--dark);

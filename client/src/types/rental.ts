@@ -1,7 +1,8 @@
-import { RentalStatus } from "@/helpers";
-import { Car, OriginalCar } from "./car";
-import { Transaction } from "./transaction";
-import { PaginationDto } from "./pagination";
+import { RentalStatus } from '@/helpers';
+
+import { Car, OriginalCar } from './car';
+import { PaginationDto } from './pagination';
+import { Transaction } from './transaction';
 
 export type Rental = {
   id: string;
@@ -32,7 +33,6 @@ export type UserRentalErrors = {
   money: string;
   car: string;
 };
-
 
 export type QueryRentalsDto = PaginationDto & {
   search?: string;

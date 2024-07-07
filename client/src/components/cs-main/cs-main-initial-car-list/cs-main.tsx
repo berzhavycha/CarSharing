@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonBanner, CSCommonContainer, CSCommonPrimaryButton } from '@/components';
+import { device } from '@/styles';
 
 import BannerImage1 from '../../../../public/banner 1.png';
 import BannerImage2 from '../../../../public/banner 2.png';
 import DefaultCar from '../../../../public/default-car.png';
 
 import { CSMainInitialCarList } from './cs-main-initial-car-list';
-import { device } from '@/styles';
 
 export const CSMain: FC = () => {
   return (
@@ -22,7 +22,7 @@ export const CSMain: FC = () => {
           image={DefaultCar}
           buttonType="main"
           linkContent="Rent Car"
-          onLinkRedirect='/available-cars'
+          onLinkRedirect="/available-cars"
         />
         <CSCommonBanner
           title="Easy way to rent a car at a low price"
@@ -31,7 +31,7 @@ export const CSMain: FC = () => {
           image={DefaultCar}
           buttonType="light"
           linkContent="Rent Car"
-          onLinkRedirect='/available-cars'
+          onLinkRedirect="/available-cars"
         />
       </BannerWrappers>
       <CSMainInitialCarList />
@@ -57,4 +57,3 @@ const ShowMoreWrapper = styled.div`
   margin: 40px 0;
   text-align: center;
 `;
-
