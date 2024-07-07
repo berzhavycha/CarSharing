@@ -69,12 +69,8 @@ export const CurrentUserStore = t
       self.signOutErrors = null;
 
       try {
-        const response = yield signOut();
-        handleUserResponse(
-          response,
-          () => (self.user = null),
-          (errors) => (self.signOutErrors = errors),
-        );
+        yield signOut();
+        self.user = null
       } catch (error) {
         self.signOutErrors = { unexpectedError: UNEXPECTED_ERROR_MESSAGE };
       }
@@ -117,7 +113,7 @@ export const CurrentUserStore = t
         handleUserResponse(
           response,
           (user) => (self.user = user),
-          () => {},
+          () => { },
         );
       } catch (error) {
         self.user = null;
