@@ -3,7 +3,7 @@ import { Rental } from "@/types";
 import { FC, useEffect } from "react";
 import styled from "styled-components";
 import { CSMainSingleRentalTransaction } from "./cs-main-single-rental-transactions";
-import { BaseSection, CSCommonDetailsFeature, CSCommonPrimaryButton, SectionTitle } from "@/components/cs-common";
+import { BaseSection, CSCommonDetailsFeature, CSCommonPrimaryButton, CSCommonRentalStatusBadge, SectionTitle } from "@/components/cs-common";
 import { useStore } from "@/context";
 import { observer } from "mobx-react-lite";
 import { useParams } from "react-router-dom";
@@ -96,50 +96,16 @@ const ReturnCarWrapper = styled.div`
   }
 `;
 
-const StatusBadge = styled.div<{ $status: RentalStatus }>`
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  font-weight: bold;
-  text-align: center;
-  text-transform: capitalize;
+const StatusBadge = styled(CSCommonRentalStatusBadge)`
+    width: auto;
 
-   color: ${(props): string => {
-        switch (props.$status) {
-            case RentalStatus.ACTIVE:
-                return 'var(--green-status-text)';
-            case RentalStatus.CLOSED:
-                return 'var(--yellow-status-text)';
-            case RentalStatus.CANCELLED:
-                return 'var(--red-status-text)';
-            default:
-                return 'var(--default-text)';
-        }
-    }};
-  background-color: ${(props): string => {
-        switch (props.$status) {
-            case RentalStatus.ACTIVE:
-                return 'var(--green-status-bg)';
-            case RentalStatus.CLOSED:
-                return 'var(--yellow-status-bg)';
-            case RentalStatus.CANCELLED:
-                return 'var(--red-status-bg)';
-            default:
-                return 'var(--default-bg)';
-        }
-    }};
-  border: 2px solid
-    ${(props): string => {
-        switch (props.$status) {
-            case RentalStatus.ACTIVE:
-                return 'var(--green-status-border)';
-            case RentalStatus.CLOSED:
-                return 'var(--yellow-status-border)';
-            case RentalStatus.CANCELLED:
-                return 'var(--red-status-border)';
-            default:
-                return 'var(--default-border)';
-        }
-    }};
+    @media ${device.sm} {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+
+     @media ${device.xs} {
+        font-size: 10px;
+        padding: 4px 10px;
+    }
 `;
