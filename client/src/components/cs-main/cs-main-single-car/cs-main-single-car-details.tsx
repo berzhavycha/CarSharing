@@ -6,6 +6,7 @@ import { CarFuelType, getFuelUnit } from '@/helpers';
 import { Car } from '@/types';
 
 import { Link } from 'react-router-dom';
+import { device } from '@/styles';
 
 type Props = {
   car: Car;
@@ -41,6 +42,10 @@ const CarDetailsWrapper = styled.div`
   padding: 30px;
   border-radius: 20px;
   box-shadow: var(--default-box-shadow);
+
+  @media ${device.lg} {
+    width: 100%;
+  }
 `;
 
 const Description = styled.h2`
@@ -48,13 +53,26 @@ const Description = styled.h2`
   font-weight: 300;
   color: var(--dark);
   margin-bottom: 30px;
+
+  @media ${device.sm} {
+    font-size: 14px;
+  }
+
+  @media ${device.xs} {
+    font-size: 12px;
+  }
 `;
 
 const FeaturesWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 20px 0;
   margin-bottom: 30px;
+  gap: 20px 0;
+  
+  @media ${device.sm} {
+    flex-direction: column;
+    gap: 15px 0;
+  }
 `;
 
 const CarFooter = styled.div`
