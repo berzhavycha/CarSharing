@@ -27,48 +27,54 @@ export const CSMainUserTopUp: FC = () => {
 
   return (
     <CSCommonContainer>
-      <CSCommonForm<UpdateUserBalanceDto>
-        validationSchema={updateUserBalanceSchema}
-        onSubmit={onSubmit}
-      >
-        <FormInfoWrapper>
-          <SectionTitle>Balance Form</SectionTitle>
-          <CSCommonErrorMessage>{topUpErrors?.unexpectedError ?? ''}</CSCommonErrorMessage>
-          <CSCommonForm.Input
-            label="Amount"
-            name="amount"
-            error={topUpErrors?.amount ?? ''}
-            type="number"
+      <TopUpContainer>
+        <CSCommonForm<UpdateUserBalanceDto>
+          validationSchema={updateUserBalanceSchema}
+          onSubmit={onSubmit}
+        >
+          <FormInfoWrapper>
+            <SectionTitle>Balance Form</SectionTitle>
+            <CSCommonErrorMessage>{topUpErrors?.unexpectedError ?? ''}</CSCommonErrorMessage>
+            <CSCommonForm.Input
+              label="Amount"
+              name="amount"
+              error={topUpErrors?.amount ?? ''}
+              type="number"
+            />
+          </FormInfoWrapper>
+          <CSCommonPaymentForm
+            title="Top Up Details"
+            description="Please enter your payment details"
+            submitButtonContent="Top Up"
           />
-        </FormInfoWrapper>
-        <CSCommonPaymentForm
-          title="Top Up Details"
-          description="Please enter your payment details"
-          submitButtonContent="Top Up"
-        />
-      </CSCommonForm>
+        </CSCommonForm>
 
-      {isTopUpSuccessful && (
-        <CSCommonModal
-          type="confirm"
-          title="Success"
-          message="You have successfully updated your balance!"
-          onClose={onCloseSuccessModal}
-          onOk={onCloseSuccessModal}
-        />
-      )}
+        {isTopUpSuccessful && (
+          <CSCommonModal
+            type="confirm"
+            title="Success"
+            message="You have successfully updated your balance!"
+            onClose={onCloseSuccessModal}
+            onOk={onCloseSuccessModal}
+          />
+        )}
 
-      {unexpectedError && (
-        <CSCommonModal
-          type="error"
-          title="Error"
-          message={unexpectedError}
-          onClose={onCloseErrorModal}
-        />
-      )}
+        {unexpectedError && (
+          <CSCommonModal
+            type="error"
+            title="Error"
+            message={unexpectedError}
+            onClose={onCloseErrorModal}
+          />
+        )}
+      </TopUpContainer>
     </CSCommonContainer>
   );
 };
+
+const TopUpContainer = styled.div`
+  margin-bottom: 50px;
+`
 
 const FormInfoWrapper = styled.div`
   width: 100%;
@@ -79,7 +85,7 @@ const FormInfoWrapper = styled.div`
   box-shadow: var(--default-box-shadow);
 
   @media ${device.sm} {
-    padding: 25px 25px 5px 25px;
+    padding: 25px 35px 5px 25px;
   }
 `;
 

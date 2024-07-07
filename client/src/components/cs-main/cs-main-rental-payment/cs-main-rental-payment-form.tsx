@@ -65,7 +65,7 @@ const RentalFormBlocks = styled.div`
   display: grid;
   grid-column: span 3;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 0px 20px;
+  gap: 0px 40px;
 
   @media ${device.lg} {
     grid-column: span 2;

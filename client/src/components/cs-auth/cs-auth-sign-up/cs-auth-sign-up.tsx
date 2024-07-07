@@ -108,7 +108,7 @@ const PasswordWrapper = styled.div`
   gap: 10px 40px;
 
   @media ${device.md} {
-    gap: 10px 20px;
+    gap: 10px 30px;
   }
 
   @media ${device.sm} {
@@ -125,7 +125,7 @@ const RoleWrapper = styled.div`
 
   @media ${device.md} {
     grid-template-columns: 1fr 1fr;
-    gap: 10px 20px;
+    gap: 10px 30px;
   }
 
   @media ${device.sm} {
