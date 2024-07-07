@@ -59,18 +59,3 @@ const RentalForm = styled.div`
   }
 `;
 
-export const SectionTitle = styled.h3`
-  color: var(--dark);
-  margin-bottom: 10px;
-`;
-
-export const SectionDescription = styled.p`
-  color: var(--dark);
-  font-size: 14px;
-  font-weight: 300;
-  margin-bottom: 30px;
-
-  @media ${device.sm} {
-    font-size: 12px;
-  }
-`;

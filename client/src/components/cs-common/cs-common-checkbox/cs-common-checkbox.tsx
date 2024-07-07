@@ -22,7 +22,7 @@ export const CSCommonCheckbox: FC<Props> = ({ type, option, checked, onCheck }) 
 };
 
 const Count = styled.span`
-  color: #6c757d;
+  color: var(--gray);
   margin-left: 4px;
 `;
 
@@ -60,8 +60,8 @@ const CustomCheckbox = styled.span`
   transition: all 150ms;
 
   ${HiddenCheckbox}:checked + & {
-    background: #3f81f8;
-    border: 2px solid #3f81f8;
+    background: var(--main-blue);
+    border: 2px solid var(--main-blue);
   }
 
   ${HiddenCheckbox}:checked + &::after {

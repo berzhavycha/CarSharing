@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { CSCommonDetailsFeature, CSCommonPrice, CSCommonPrimaryButton, CSCommonTitle } from '@/components/cs-common';
+import { BaseSection, CSCommonDetailsFeature, CSCommonPrice, CSCommonPrimaryButton, SectionDescription, SectionTitle } from '@/components/cs-common';
 import { CarFuelType, getFuelUnit } from '@/helpers';
 import { Car } from '@/types';
 
@@ -15,7 +15,7 @@ type Props = {
 export const CSMainSingleCarDetails: FC<Props> = ({ car }) => {
   return (
     <CarDetailsWrapper>
-      <CSCommonTitle>{car.model}</CSCommonTitle>
+      <Title>{car.model}</Title>
       <Description>{car.description}</Description>
       <FeaturesWrapper>
         <CSCommonDetailsFeature label="Type" text={car.type} />
@@ -36,21 +36,24 @@ export const CSMainSingleCarDetails: FC<Props> = ({ car }) => {
   );
 };
 
-const CarDetailsWrapper = styled.div`
+const CarDetailsWrapper = styled(BaseSection)`
   width: 50%;
-  background-color: white;
   padding: 30px;
-  border-radius: 20px;
-  box-shadow: var(--default-box-shadow);
 
   @media ${device.lg} {
     width: 100%;
   }
 `;
 
-const Description = styled.h2`
-  font-size: 15px;
-  font-weight: 300;
+const Title = styled(SectionTitle)`
+  font-size: 20px;
+
+  @media ${device.xs} {
+    font-size: 16px;
+  }
+`
+
+const Description = styled(SectionDescription)`
   color: var(--dark);
   margin-bottom: 30px;
 

@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import { useStore } from '@/context';
 import { Env } from '@/core';
 
-import { SectionDescription, SectionTitle } from './cs-main-rental-payment';
 import { device } from '@/styles';
+import { BaseSection, SectionDescription, SectionTitle } from '@/components/cs-common';
 
 export const CSMainRentalPaymentSummary: FC = observer(() => {
   const {
@@ -41,14 +41,10 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
   );
 });
 
-const SummaryWrapper = styled.div`
+const SummaryWrapper = styled(BaseSection)`
   width: 35%;
   height: 50%;
-  background-color: white;
-  border-radius: 20px;
-  padding: 25px;
   margin-bottom: 20px;
-  box-shadow: var(--default-box-shadow);
   
   @media ${device.md} {
     width: 100%;

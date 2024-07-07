@@ -2,11 +2,13 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import {
+  BaseSection,
   CSCommonContainer,
   CSCommonErrorMessage,
   CSCommonForm,
   CSCommonModal,
   CSCommonPaymentForm,
+  SectionTitle,
 } from '@/components/cs-common';
 import { useStore } from '@/context';
 import { updateUserBalanceSchema } from '@/helpers';
@@ -76,24 +78,11 @@ const TopUpContainer = styled.div`
   margin-bottom: 50px;
 `
 
-const FormInfoWrapper = styled.div`
-  width: 100%;
-  background-color: white;
-  border-radius: 20px;
+const FormInfoWrapper = styled(BaseSection)`
   padding: 35px 35px 10px 35px;
   margin: 50px 0;
-  box-shadow: var(--default-box-shadow);
 
   @media ${device.sm} {
     padding: 25px 35px 5px 25px;
-  }
-`;
-
-const SectionTitle = styled.h3`
-  color: var(--dark);
-  margin-bottom: 10px;
-
-  @media ${device.sm} {
-    font-size: 16px;
   }
 `;

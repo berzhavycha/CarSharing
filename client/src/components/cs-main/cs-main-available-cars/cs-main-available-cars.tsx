@@ -2,14 +2,14 @@ import { FC, Suspense, useState } from 'react';
 import { Await, useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { CSCommonError, CSCommonSpinner } from '@/components/cs-common';
+import { CSCommonCloseButton, CSCommonError, CSCommonSpinner } from '@/components/cs-common';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { AvailableCarsLoaderData } from '@/pages';
 
 import { CSMainAvailableCarsFilter } from './cs-main-available-cars-filter';
 import { CSMainAvailableCarsList } from './cs-main-available-cars-list';
 import { device } from '@/styles';
-import { FaFilter, FaTimes } from 'react-icons/fa';
+import { FaFilter } from 'react-icons/fa';
 import { useClickOutside } from '@/hooks';
 
 export const CSMainAvailableCars: FC = () => {
@@ -30,9 +30,7 @@ export const CSMainAvailableCars: FC = () => {
       </FilterButtonWrapper>
 
       <SidebarContainer $isOpen={isSidebarOpen} ref={ref}>
-        <CloseButton onClick={onSidebarClose}>
-          <FaTimes />
-        </CloseButton>
+        <CSCommonCloseButton onClose={onSidebarClose} color='var(--main-blue)' />
         <Suspense fallback={<CSCommonSpinner />}>
           <Await
             resolve={data.filterOptions}
@@ -57,7 +55,7 @@ export const CSMainAvailableCars: FC = () => {
           </Await>
         </Suspense>
       </CarsWrapper>
-    </AvailableCarsWrapper>
+    </AvailableCarsWrapper >
   );
 };
 
@@ -123,21 +121,6 @@ const SidebarContainer = styled.div<{ $isOpen: boolean }>`
   }
 `;
 
-const CloseButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: var(--main-blue);
-  display: none;
-
-  @media ${device.sm} {
-    display: block;
-  }
-`;
 
 const CarsWrapper = styled.div`
   display: grid;

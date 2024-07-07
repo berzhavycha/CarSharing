@@ -3,7 +3,7 @@ import { Rental } from "@/types";
 import { FC, useEffect } from "react";
 import styled from "styled-components";
 import { CSMainSingleRentalTransaction } from "./cs-main-single-rental-transactions";
-import { CSCommonDetailsFeature, CSCommonPrimaryButton, CSCommonTitle } from "@/components/cs-common";
+import { BaseSection, CSCommonDetailsFeature, CSCommonPrimaryButton, SectionTitle } from "@/components/cs-common";
 import { useStore } from "@/context";
 import { observer } from "mobx-react-lite";
 import { useParams } from "react-router-dom";
@@ -55,18 +55,22 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
     )
 })
 
-export const Title = styled(CSCommonTitle)`
+export const Title = styled(SectionTitle)`
+    margin-bottom: 25px;
+
+    @media ${device.sm} {
+        font-size: 20px;
+    }
+
     @media ${device.xs} {
         font-size: 16px;
     }
 `
 
-const RentalDetailsWrapper = styled.div`
+const RentalDetailsWrapper = styled(BaseSection)`
   width: 70%;
-  background-color: white;
   padding: 30px;
   border-radius: 20px;
-  box-shadow: var(--default-box-shadow);
 
   @media ${device.lg} {
     width: 100%;

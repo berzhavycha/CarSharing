@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { FC, useRef, useState } from 'react';
-import { FaDollarSign, FaSignOutAlt, FaHistory, FaBars, FaTimes } from 'react-icons/fa';
+import { FaDollarSign, FaSignOutAlt, FaHistory, FaBars } from 'react-icons/fa';
 import { FaGear } from 'react-icons/fa6';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
@@ -11,6 +11,7 @@ import { useClickOutside, useSignOut } from '@/hooks';
 
 import DefaultImage from '../../../public/avatar.webp';
 import { device } from '@/styles';
+import { CSCommonCloseButton } from '@/components';
 
 export const CSHeaderLayoutOptions: FC = observer(() => {
   const {
@@ -39,9 +40,7 @@ export const CSHeaderLayoutOptions: FC = observer(() => {
         <FaBars />
       </MenuButton>
       <NavOptions $isOpen={isMenuOpen} ref={ref}>
-        <CloseButton onClick={closeMenu}>
-          <FaTimes />
-        </CloseButton>
+        {isMenuOpen && <CSCommonCloseButton onClose={closeMenu} />}
         <UserInfoMobile>
           <UserAvatar src={profilePicture} alt="User Avatar" />
           {user && (
@@ -92,27 +91,6 @@ export const CSHeaderLayoutOptions: FC = observer(() => {
     </Container>
   );
 });
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 1200;
-  background: transparent;
-  border: none;
-  color: var(--main-blue);
-  font-size: 24px;
-  cursor: pointer;
-  display: none;
-
-  @media ${device.lg} {
-    display: block;
-  }
-
-  @media ${device.sm} {
-    font-size: 18px; 
-  }
-`;
 
 const Container = styled.div`
   display: flex;

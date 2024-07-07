@@ -1,8 +1,8 @@
 import { FC, MouseEvent } from 'react';
-import { FaTimes } from 'react-icons/fa';
 import styled from 'styled-components';
 
 import { iconMap } from './icon-map';
+import { CSCommonCloseButton } from '../cs-common-close-button';
 
 type ModalProps = {
   type: 'error' | 'confirm' | 'warning';
@@ -36,9 +36,7 @@ export const CSCommonModal: FC<ModalProps> = ({
           <ModalTitle>
             {Icon && <Icon />} {title}
           </ModalTitle>
-          <CloseButton onClick={onClose}>
-            <FaTimes />
-          </CloseButton>
+          <CSCommonCloseButton onClose={onClose} />
         </ModalHeader>
         <ModalMessage>{message}</ModalMessage>
         <ModalActions>
@@ -85,18 +83,6 @@ const ModalTitle = styled.h2`
   display: flex;
   font-size: 20px;
   margin: 0;
-`;
-
-const CloseButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: var(--light-dark);
-
-  &:hover {
-    color: var(--dark);
-  }
 `;
 
 const ModalMessage = styled.p`

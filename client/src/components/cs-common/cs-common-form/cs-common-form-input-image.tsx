@@ -117,7 +117,7 @@ const UpdatePicture = styled.button`
   position: relative;
   cursor: pointer;
   font-size: 12px;
-  color: #007bff;
+  color: var(--main-blue);
   border: none;
   background: none;
   outline: none;

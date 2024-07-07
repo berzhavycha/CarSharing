@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { CSCommonForm } from '@/components/cs-common';
 import { device } from '@/styles';
+import { BaseSection, SectionDescription, SectionTitle } from '../cs-common-section';
 
 type Props = {
   title: string;
@@ -26,35 +27,9 @@ export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButto
   );
 };
 
-const FormInfoWrapper = styled.div`
-  width: 100%;
-  background-color: white;
-  border-radius: 20px;
-  padding: 35px;
-  box-shadow: var(--default-box-shadow);
-
+const FormInfoWrapper = styled(BaseSection)`
   @media ${device.sm} {
     padding: 25px 35px 25px 25px;
-  }
-`;
-
-const SectionTitle = styled.h3`
-  color: var(--dark);
-  margin-bottom: 10px;
-
-  @media ${device.sm} {
-    font-size: 16px;
-  }
-`;
-
-const SectionDescription = styled.p`
-  color: var(--dark);
-  font-size: 14px;
-  font-weight: 300;
-  margin-bottom: 30px;
-
-  @media ${device.sm} {
-    font-size: 12px;
   }
 `;
 

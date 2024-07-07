@@ -22,9 +22,9 @@ const ErrorContainer = styled.div`
   display: flex;
   align-items: center;
   padding: 8px;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  color: #721c24;
+  background-color: var(--red-status-bg);
+  border: 1px solid var(--red-status-border);
+  color: var(--red-status-text);
   border-radius: 4px;
 `;
 
