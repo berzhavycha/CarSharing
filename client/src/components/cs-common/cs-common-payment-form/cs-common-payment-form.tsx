@@ -41,6 +41,10 @@ const FormInfoWrapper = styled.div`
 const SectionTitle = styled.h3`
   color: var(--dark);
   margin-bottom: 10px;
+
+  @media ${device.sm} {
+    font-size: 16px;
+  }
 `;
 
 const SectionDescription = styled.p`
