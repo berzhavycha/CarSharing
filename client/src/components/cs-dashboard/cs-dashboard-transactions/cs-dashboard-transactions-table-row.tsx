@@ -1,10 +1,9 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { HiddenSMTableCell, TableCell, TableRow } from '@/components/cs-common';
+import { CSCommonBaseStatusBadge, HiddenSMTableCell, TableCell, TableRow } from '@/components/cs-common';
 import { convertToTitleCase, formatDate } from '@/helpers';
 import { Transaction, TransactionType } from '@/types';
-import { device } from '@/styles';
 
 type Props = {
   transaction: Transaction;
@@ -28,14 +27,7 @@ export const CSDashboardTransactionsTableRow: FC<Props> = ({ transaction, index 
   );
 };
 
-const TypeBadge = styled.div<{ $status: TransactionType }>`
-  width: 100%;
-  display: inline-block;
-  padding: 6px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  font-weight: bold;
-  text-align: center;
+const TypeBadge = styled(CSCommonBaseStatusBadge) <{ $status: TransactionType }>`
   color: ${(props): string => {
     switch (props.$status) {
       case TransactionType.TOP_UP:
@@ -79,15 +71,4 @@ const TypeBadge = styled.div<{ $status: TransactionType }>`
         return 'var(--default-border)';
     }
   }};
-
-
-    @media ${device.lg} {
-       padding: 4px 8px;
-       font-size: 10px;
-    }
-
-     @media ${device.sm} {
-       padding: 2px 4px;
-       font-size: 8px;
-    }
 `;
