@@ -12,14 +12,7 @@ export const rootStore = RootStore.create({
   currentUserStore: CurrentUserStore.create({
     errors: {}
   }),
-  rentalStore: RentalStore.create({
-    rentals: undefined,
-    refund: undefined,
-    penalty: undefined,
-    isReturnedInTime: false,
-    errorMessage: '',
-    potentialRentalPrice: 0
-  }),
+  rentalStore: RentalStore.create(),
 });
 
 export type RootStoreType = Instance<typeof RootStore>;
