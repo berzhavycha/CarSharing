@@ -13,6 +13,7 @@ import { updateUserBalanceSchema } from '@/helpers';
 import { UpdateUserBalanceDto } from '@/types';
 
 import { useTopUp } from './hooks';
+import { device } from '@/styles';
 
 export const CSMainUserTopUp: FC = () => {
   const {
@@ -76,9 +77,17 @@ const FormInfoWrapper = styled.div`
   padding: 35px 35px 10px 35px;
   margin: 50px 0;
   box-shadow: var(--default-box-shadow);
+
+  @media ${device.sm} {
+    padding: 25px 25px 5px 25px;
+  }
 `;
 
 const SectionTitle = styled.h3`
   color: var(--dark);
   margin-bottom: 10px;
+
+  @media ${device.sm} {
+    font-size: 16px;
+  }
 `;
