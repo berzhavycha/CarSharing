@@ -31,7 +31,7 @@ export const CSAuthSignUp: FC = observer(() => {
         <Span>
           Already have an account?
           <Link to="/sign-in" >
-            Login here
+            Sign In here
           </Link>{' '}
           instead
         </Span>
@@ -139,12 +139,15 @@ export const ErrorMessageWrapper = styled.div`
   margin: 15px 0;
 `;
 
-const FormInner = styled.div`
-  width: 70%;
+export const BaseFormInner = styled.div`
   padding: 40px;
   border-radius: 10px;
   background-color: white;
   box-shadow: var(--default-box-shadow);
+`;
+
+const FormInner = styled(BaseFormInner)`
+  width: 70%;
 
   @media ${device.lg} {
     width: 90%;
@@ -155,7 +158,7 @@ const FormInner = styled.div`
   }
 `;
 
-const FormContainer = styled.div`
+export const FormContainer = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;

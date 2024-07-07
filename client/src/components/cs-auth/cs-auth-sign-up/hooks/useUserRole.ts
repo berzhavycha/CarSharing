@@ -9,7 +9,7 @@ type HookReturn = {
 };
 
 export const useUserRole = (): HookReturn => {
-  const [userRole, setUserRole] = useState<string>('user');
+  const [userRole, setUserRole] = useState<string>(Roles.USER);
   const [showSecretCodeInput, setShowSecretCodeInput] = useState<boolean>(false);
 
   const handleUserTypeChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
