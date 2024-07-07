@@ -58,6 +58,14 @@ const TogglePasswordButton = styled.button`
   transform: translateY(-40%);
   right: 5px;
   color: #666;
+
+  @media ${device.md} {
+    top: 47%;
+  }
+
+  @media ${device.sm} {
+    top: 50%;
+  }
 `;
 
 const InputGroup = styled.div`

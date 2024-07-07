@@ -8,7 +8,7 @@ import { useStore } from '@/context';
 import { authCedirectPages, AuthType, getUserSchema, Roles } from '@/helpers';
 import { SignInUserDto } from '@/types';
 
-import { ErrorMessageWrapper, Span, Title } from '../cs-auth-sign-up';
+import { BaseFormInner, ErrorMessageWrapper, FormContainer, Span, Title } from '../cs-auth-sign-up';
 import { device } from '@/styles';
 
 export const CSAuthSignIn: FC = observer(() => {
@@ -16,7 +16,7 @@ export const CSAuthSignIn: FC = observer(() => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const errorMessage = location.state?.errorMessage;
+  const errorMessage = location.state?.errorMessage ?? '';
 
   const onSubmit = async (data: SignInUserDto): Promise<void> => {
     await currentUserStore.signIn(data);
@@ -26,54 +26,48 @@ export const CSAuthSignIn: FC = observer(() => {
   };
 
   return (
-    <FormInner>
-      <Title>Login</Title>
-      <Span>
-        Don't Have an Account?
-        <Link to="/sign-up">
-          Register here
-        </Link>{' '}
-        instead
-      </Span>
-      <ErrorMessageWrapper>
-        <CSCommonErrorMessage>
-          {currentUserStore.errors.signIn?.unexpectedError ?? errorMessage ?? ''}
-        </CSCommonErrorMessage>
-      </ErrorMessageWrapper>
-      <CSCommonForm<SignInUserDto>
-        validationSchema={getUserSchema(AuthType.SIGN_IN, 'none')}
-        onSubmit={onSubmit}
-        showReset={false}
-      >
-        <FormBlocks>
-          <CSCommonForm.Input
-            label="Email"
-            name="email"
-            error={currentUserStore.errors.signIn?.email}
-          />
-          <CSCommonForm.Input
-            label="Password"
-            name="password"
-            error={currentUserStore.errors.signIn?.password}
-            isSecured
-          />
-        </FormBlocks>
-        <CSCommonForm.SubmitButton content="Log In" />
-      </CSCommonForm>
-    </FormInner>
+    <FormContainer>
+      <FormInner>
+        <Title>Login</Title>
+        <Span>
+          Don't Have an Account?
+          <Link to="/sign-up">
+            Register here
+          </Link>{' '}
+          instead
+        </Span>
+        <ErrorMessageWrapper>
+          <CSCommonErrorMessage>
+            {currentUserStore.errors.signIn?.unexpectedError ?? errorMessage}
+          </CSCommonErrorMessage>
+        </ErrorMessageWrapper>
+        <CSCommonForm<SignInUserDto>
+          validationSchema={getUserSchema(AuthType.SIGN_IN)}
+          onSubmit={onSubmit}
+          showReset={false}
+        >
+          <FormBlocks>
+            <CSCommonForm.Input
+              label="Email"
+              name="email"
+              error={currentUserStore.errors.signIn?.email}
+            />
+            <CSCommonForm.Input
+              label="Password"
+              name="password"
+              error={currentUserStore.errors.signIn?.password}
+              isSecured
+            />
+          </FormBlocks>
+          <CSCommonForm.SubmitButton content="Sign In" />
+        </CSCommonForm>
+      </FormInner>
+    </FormContainer>
   );
 });
 
-const FormInner = styled.div`
+const FormInner = styled(BaseFormInner)`
   width: 35%;
-  padding: 40px;
-  position: absolute;
-  border-radius: 10px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  box-shadow: var(--default-box-shadow);
 
   @media ${device.lg} {
     width: 40%;
