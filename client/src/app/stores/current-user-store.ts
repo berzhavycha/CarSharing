@@ -9,7 +9,7 @@ import {
   UpdateUserBalanceDto,
   UpdateUserDto,
 } from '@/types';
-import { UserModel } from '../models';
+import { ErrorModel, UserModel } from '../models';
 
 export type ServiceUserResponse<T extends object> = {
   user?: AuthenticatedUser;
@@ -21,13 +21,7 @@ type ErrorTypes = SignInUserDto | SignUpUserDto | AuthenticatedUser | UpdateUser
 export const CurrentUserStore = t
   .model('CurrentUserStore', {
     user: t.optional(t.maybeNull(UserModel), null),
-    errors: t.model({
-      signIn: t.maybeNull(t.frozen<FieldErrorsState<SignInUserDto> | null>(null)),
-      signUp: t.maybeNull(t.frozen<FieldErrorsState<SignUpUserDto> | null>(null)),
-      signOut: t.maybeNull(t.frozen<FieldErrorsState<AuthenticatedUser> | null>(null)),
-      update: t.maybeNull(t.frozen<FieldErrorsState<UpdateUserDto> | null>(null)),
-      topUp: t.maybeNull(t.frozen<FieldErrorsState<UpdateUserBalanceDto> | null>(null)),
-    }),
+    errors: ErrorModel,
   })
   .views((self) => ({
     get existingImagesIds(): string[] {
@@ -39,10 +33,16 @@ export const CurrentUserStore = t
       self.user = user ? UserModel.create(user) : null;
     },
     setError<T extends ErrorTypes>(type: keyof typeof self.errors, error: FieldErrorsState<T> | null): void {
-      self.errors[type] = error;
+      self.errors = {
+        ...self.errors,
+        [type]: error
+      };
     },
     clearError(type: keyof typeof self.errors): void {
-      self.errors[type] = null;
+      self.errors = {
+        ...self.errors,
+        [type]: null
+      };
     },
     updateBalance(balance: number): void {
       if (self.user) {
