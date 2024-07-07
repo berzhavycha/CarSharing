@@ -1,10 +1,11 @@
 import { FC, Fragment, useState } from 'react';
-import { FaCar, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
+import { FaCar, FaSignOutAlt, FaBars } from 'react-icons/fa';
 import { NavLink, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import { useClickOutside, useSignOut } from '@/hooks';
 import { menuItems } from './constants';
 import { device } from '@/styles';
+import { CSCommonCloseButton } from '@/components';
 
 export const CSDashboardSidebar: FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -23,9 +24,7 @@ export const CSDashboardSidebar: FC = () => {
         <FaBars />
       </SidebarToggle>
       <Sidebar $isOpen={isSidebarOpen} ref={ref}>
-        <CloseButton onClick={toggleSidebar}>
-          <FaTimes />
-        </CloseButton>
+        <CSCommonCloseButton onClose={toggleSidebar} color='white' />
         <Logo>
           <FaCar /> CARRENT
         </Logo>
@@ -102,26 +101,6 @@ const SidebarToggle = styled.button<{ $isSidebarOpen: boolean }>`
     width: 25px;
     height: 25px;
     font-size: 14px;
-  }
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  display: none;
-
-  @media ${device.lg} {
-    display: block;
-  }
-
-  @media ${device.sm} {
-    font-size: 14px; 
   }
 `;
 

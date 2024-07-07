@@ -22,14 +22,16 @@ export const CSCommonCheckboxFilter: FC<Props> = ({ title, type, options }) => {
       <CheckBoxesWrapper>
         {options.map((option) => {
           const label = `${option.originalValue || option.label}`;
+          const onCheck = (): void => onFilter(type, label)
+          const isChecked = searchParams.getAll(type).includes(label)
 
           return (
             <CSCommonCheckbox
               key={option.label}
               type={type}
               option={option}
-              checked={searchParams.getAll(type).includes(label)}
-              onCheck={() => onFilter(type, label)}
+              checked={isChecked}
+              onCheck={onCheck}
             />
           );
         })}

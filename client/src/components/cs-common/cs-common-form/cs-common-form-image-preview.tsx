@@ -28,22 +28,26 @@ export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
   onRemove,
   onClick,
   isRemovable = true,
-}) => (
-  <PictureWrapper onClick={onClick} $circled={circled} $width={width} $height={height}>
-    <img src={src} alt={alt} />
-    {isRemovable && (
-      <RemoveButton
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onRemove?.();
-        }}
-      >
-        &times;
-      </RemoveButton>
-    )}
-  </PictureWrapper>
-);
+}) => {
+  const onRemoveClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+    e.stopPropagation();
+    onRemove?.();
+  }
+
+  return (
+    <PictureWrapper onClick={onClick} $circled={circled} $width={width} $height={height}>
+      <img src={src} alt={alt} />
+      {isRemovable && (
+        <RemoveButton
+          type="button"
+          onClick={onRemoveClick}
+        >
+          &times;
+        </RemoveButton>
+      )}
+    </PictureWrapper>
+  )
+}
 
 const PictureWrapper = styled.div<PictureWrapperProps>`
   position: relative;

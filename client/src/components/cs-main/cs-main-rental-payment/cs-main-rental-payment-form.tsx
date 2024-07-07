@@ -1,11 +1,10 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { CSCommonForm, CSCommonPaymentForm } from '@/components/cs-common';
+import { BaseSection, CSCommonForm, CSCommonPaymentForm, SectionDescription, SectionTitle } from '@/components/cs-common';
 import { rentalSchema } from '@/helpers';
 import { PaymentDto, RentalDto } from '@/types';
 
-import { SectionDescription, SectionTitle } from './cs-main-rental-payment';
 import { useRental } from './hooks';
 import { device } from '@/styles';
 
@@ -52,13 +51,8 @@ const FormWrapper = styled.div`
   }
 `;
 
-const FormInfoWrapper = styled.div`
-  width: 100%;
-  background-color: white;
-  border-radius: 20px;
-  padding: 35px 35px 10px 35px;
+const FormInfoWrapper = styled(BaseSection)`
   margin-bottom: 20px;
-  box-shadow: var(--default-box-shadow);
 `;
 
 const RentalFormBlocks = styled.div`

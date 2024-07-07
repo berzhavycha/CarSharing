@@ -4,26 +4,26 @@ import { FC } from "react";
 import styled from "styled-components";
 
 type Props = {
-    page: number | typeof ELLIPSIS;
-    currentPage: number;
-    onPageChange: (page: number) => void;
+  page: number | typeof ELLIPSIS;
+  currentPage: number;
+  onPageChange: (page: number) => void;
 }
 
 export const CSCommonPaginationItem: FC<Props> = ({ page, currentPage, onPageChange }) => {
-    return (
-        <>
-            {page === ELLIPSIS ? (
-                <Ellipsis>{ELLIPSIS}</Ellipsis>
-            ) : (
-                <PageButton
-                    $active={currentPage === page}
-                    onClick={() => onPageChange(page)}
-                >
-                    {page}
-                </PageButton >
-            )}
-        </>
-    );
+  return (
+    <>
+      {page === ELLIPSIS ? (
+        <Ellipsis>{ELLIPSIS}</Ellipsis>
+      ) : (
+        <PageButton
+          $active={currentPage === page}
+          onClick={() => onPageChange(page)}
+        >
+          {page}
+        </PageButton >
+      )}
+    </>
+  );
 };
 
 const Ellipsis = styled.span`
@@ -59,7 +59,7 @@ const PageButton = styled(BaseButton) <{ $active?: boolean }>`
   background-color: ${({ $active }): string => ($active ? 'var(--main-blue)' : '#cadbf5')};
   color: ${({ $active }): string => ($active ? 'white' : 'black')};
   box-shadow: ${({ $active }): string =>
-        $active ? '0 4px 8px rgba(0, 123, 255, 0.2)' : '0 2px 4px rgba(0, 0, 0, 0.1)'};
+    $active ? '0 4px 8px rgba(0, 123, 255, 0.2)' : '0 2px 4px rgba(0, 0, 0, 0.1)'};
 
   &:hover:not(:disabled) {
     color: ${({ $active }): string => ($active ? 'black' : 'white')};
