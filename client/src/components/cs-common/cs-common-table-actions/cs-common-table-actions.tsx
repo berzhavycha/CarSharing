@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FaEllipsisV } from 'react-icons/fa';
@@ -6,59 +6,60 @@ import { useClickOutside } from '@/hooks';
 import { device } from '@/styles';
 
 type Action = {
-    label: string;
-    icon: React.ReactNode;
-    onClick?: () => void;
-    to?: string;
+  label: string;
+  icon: React.ReactNode;
+  onClick?: () => void;
+  to?: string;
 };
 
 type Props = {
-    actions: Action[];
+  actions: Action[];
 };
 
 export const CSCommonTableActions: FC<Props> = ({ actions }) => {
-    const [showActions, setShowActions] = useState<boolean>(false);
+  const [showActions, setShowActions] = useState<boolean>(false);
+  const actionButtonRef = useRef<HTMLButtonElement>(null)
 
-    const toggleActions = (): void => {
-        setShowActions(!showActions);
-    };
+  const toggleActions = (): void => {
+    setShowActions(!showActions);
+  };
 
-    const ref = useClickOutside(() => setShowActions(false));
+  const ref = useClickOutside(() => setShowActions(false), actionButtonRef);
 
-    return (
-        <ActionsWrapper>
-            <DesktopActions>
-                {actions.map((action, index) => (
-                    action.to ? (
-                        <ActionButton key={index} as={Link} to={action.to}>{action.label}</ActionButton>
-                    ) : (
-                        <ActionButton key={index} onClick={action.onClick}>{action.label}</ActionButton>
-                    )
-                ))}
-            </DesktopActions>
-            <MobileActions>
-                <ActionToggle onClick={toggleActions}>
-                    <FaEllipsisV />
-                </ActionToggle>
-                <ActionMenu $show={showActions} ref={ref}>
-                    {actions.map((action, index) => (
-                        action.to ? (
-                            <ActionMenuItem key={index} to={action.to} onClick={toggleActions}>
-                                {action.icon} {action.label}
-                            </ActionMenuItem>
-                        ) : (
-                            <ActionMenuButton key={index} onClick={() => {
-                                action.onClick?.();
-                                toggleActions();
-                            }}>
-                                {action.icon} {action.label}
-                            </ActionMenuButton>
-                        )
-                    ))}
-                </ActionMenu>
-            </MobileActions>
-        </ActionsWrapper>
-    );
+  return (
+    <ActionsWrapper>
+      <DesktopActions>
+        {actions.map((action, index) => (
+          action.to ? (
+            <ActionButton key={index} as={Link} to={action.to}>{action.label}</ActionButton>
+          ) : (
+            <ActionButton key={index} onClick={action.onClick}>{action.label}</ActionButton>
+          )
+        ))}
+      </DesktopActions>
+      <MobileActions>
+        <ActionToggle onClick={toggleActions} ref={actionButtonRef}>
+          <FaEllipsisV />
+        </ActionToggle>
+        <ActionMenu $show={showActions} ref={ref}>
+          {actions.map((action, index) => (
+            action.to ? (
+              <ActionMenuItem key={index} to={action.to} onClick={toggleActions}>
+                {action.icon} {action.label}
+              </ActionMenuItem>
+            ) : (
+              <ActionMenuButton key={index} onClick={() => {
+                action.onClick?.();
+                toggleActions();
+              }}>
+                {action.icon} {action.label}
+              </ActionMenuButton>
+            )
+          ))}
+        </ActionMenu>
+      </MobileActions>
+    </ActionsWrapper>
+  );
 };
 
 const ActionsWrapper = styled.div`

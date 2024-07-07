@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { FaDollarSign, FaSignOutAlt, FaHistory, FaBars, FaTimes } from 'react-icons/fa';
 import { FaGear } from 'react-icons/fa6';
 import { NavLink } from 'react-router-dom';
@@ -18,12 +18,13 @@ export const CSHeaderLayoutOptions: FC = observer(() => {
   } = useStore();
   const { onSignOut } = useSignOut();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const profilePicture = user?.avatarId
     ? `${Env.API_BASE_URL}/local-files/${user?.avatarId}`
     : DefaultImage;
 
-  const ref = useClickOutside(() => setIsMenuOpen(false));
+  const ref = useClickOutside(() => setIsMenuOpen(false), menuButtonRef);
   const toggleMenu = (): void => setIsMenuOpen(!isMenuOpen);
   const closeMenu = (): void => setIsMenuOpen(false);
 
@@ -34,7 +35,7 @@ export const CSHeaderLayoutOptions: FC = observer(() => {
 
   return (
     <Container>
-      <MenuButton onClick={toggleMenu}>
+      <MenuButton onClick={toggleMenu} ref={menuButtonRef}>
         <FaBars />
       </MenuButton>
       <NavOptions $isOpen={isMenuOpen} ref={ref}>
@@ -102,14 +103,14 @@ const CloseButton = styled.button`
   color: var(--main-blue);
   font-size: 24px;
   cursor: pointer;
-  display: block;
+  display: none;
 
   @media ${device.lg} {
     display: block;
   }
 
   @media ${device.sm} {
-    font-size: 14px; 
+    font-size: 18px; 
   }
 `;
 
@@ -144,7 +145,7 @@ const NavOptions = styled.div<{ $isOpen: boolean }>`
   @media ${device.lg} {
     position: absolute;
     z-index: 100;
-    top: 80px;
+    top: 100px;
     right: 20px;
     background-color: white;
     padding: 20px 50px 20px 20px;
@@ -158,6 +159,10 @@ const NavOptions = styled.div<{ $isOpen: boolean }>`
     visibility: ${({ $isOpen }): string => ($isOpen ? 'visible' : 'hidden')};
     transform: ${({ $isOpen }): string => ($isOpen ? 'translateY(0)' : 'translateY(-20px)')};
     transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  }
+
+  @media ${device.md} {
+    top: 80px;
   }
 `;
 
