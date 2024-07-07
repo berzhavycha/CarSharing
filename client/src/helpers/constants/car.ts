@@ -92,3 +92,10 @@ export const PRICE_ROUNDING_INTERVAL = 5;
 export const MIN_PRICE = 0;
 
 export const INITIAL_CARS_LIMIT = 8;
+
+export const sortingOptions = [
+  { label: 'Price: Low to High', value: 'price_asc' },
+  { label: 'Price: High to Low', value: 'price_desc' },
+  { label: 'Capacity: Low to High', value: 'capacity_asc' },
+  { label: 'Capacity: High to Low', value: 'capacity_desc' },
+];

@@ -1,2 +1,2 @@
 export * from './update-user';
-export * from './top-up'
+export * from './top-up';

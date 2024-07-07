@@ -2,10 +2,11 @@ import { forwardRef, useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import styled from 'styled-components';
 
+import { device } from '@/styles';
+
 import { CSCommonCheckIcon } from '../cs-common-check-icon';
 import { CSCommonErrorIcon } from '../cs-common-error-icon';
 import { CSCommonErrorMessage } from '../cs-common-error-message';
-import { device } from '@/styles';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;

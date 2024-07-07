@@ -1,6 +1,7 @@
-import { device } from '@/styles';
 import { FC } from 'react';
 import styled from 'styled-components';
+
+import { device } from '@/styles';
 
 type PictureWrapperProps = {
   $circled?: boolean;
@@ -32,22 +33,19 @@ export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
   const onRemoveClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     e.stopPropagation();
     onRemove?.();
-  }
+  };
 
   return (
     <PictureWrapper onClick={onClick} $circled={circled} $width={width} $height={height}>
       <img src={src} alt={alt} />
       {isRemovable && (
-        <RemoveButton
-          type="button"
-          onClick={onRemoveClick}
-        >
+        <RemoveButton type="button" onClick={onRemoveClick}>
           &times;
         </RemoveButton>
       )}
     </PictureWrapper>
-  )
-}
+  );
+};
 
 const PictureWrapper = styled.div<PictureWrapperProps>`
   position: relative;

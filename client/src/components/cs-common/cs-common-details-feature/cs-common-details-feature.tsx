@@ -1,21 +1,22 @@
-import { device } from '@/styles';
 import { FC } from 'react';
 import styled from 'styled-components';
 
+import { device } from '@/styles';
+
 type Props = {
-    label: string;
-    text?: string | number;
-    component?: JSX.Element
+  label: string;
+  text?: string | number;
+  component?: JSX.Element;
 };
 
 export const CSCommonDetailsFeature: FC<Props> = ({ label, text, component }) => {
-    return (
-        <FeatureWrapper>
-            <FeatureLabel>{label}:</FeatureLabel>
-            {text && <FeatureText>{text}</FeatureText>}
-            {component}
-        </FeatureWrapper>
-    );
+  return (
+    <FeatureWrapper>
+      <FeatureLabel>{label}:</FeatureLabel>
+      {text && <FeatureText>{text}</FeatureText>}
+      {component}
+    </FeatureWrapper>
+  );
 };
 
 const FeatureWrapper = styled.div`

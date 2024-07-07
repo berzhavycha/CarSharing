@@ -1,10 +1,11 @@
 import { forwardRef } from 'react';
 import styled from 'styled-components';
 
+import { device } from '@/styles';
+
 import { CSCommonCheckIcon } from '../cs-common-check-icon';
 import { CSCommonErrorIcon } from '../cs-common-error-icon';
 import { CSCommonErrorMessage } from '../cs-common-error-message';
-import { device } from '@/styles';
 
 export interface TextAreasProps extends React.InputHTMLAttributes<HTMLTextAreaElement> {
   label?: string;

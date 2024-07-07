@@ -1,11 +1,19 @@
 import { FC } from 'react';
+import { FaInfoCircle, FaTrash } from 'react-icons/fa';
 import styled from 'styled-components';
 
-import { CSCommonBaseStatusBadge, CSCommonTableActions, HiddenMDTableCell, HiddenSMTableCell, HiddenXSTableCell, TableCell, TableRow } from '@/components/cs-common';
+import {
+  CSCommonBaseStatusBadge,
+  CSCommonTableActions,
+  HiddenMDTableCell,
+  HiddenSMTableCell,
+  HiddenXSTableCell,
+  TableCell,
+  TableRow,
+} from '@/components/cs-common';
 import { Env } from '@/core';
 import { uppercaseFirstLetter } from '@/helpers';
 import { Car } from '@/types';
-import { FaInfoCircle, FaTrash } from 'react-icons/fa';
 
 type Props = {
   car: Car;
@@ -13,11 +21,7 @@ type Props = {
   onRemoveClick: (car: Car) => void;
 };
 
-export const CSDashboardCarTableRow: FC<Props> = ({
-  car,
-  index,
-  onRemoveClick,
-}) => {
+export const CSDashboardCarTableRow: FC<Props> = ({ car, index, onRemoveClick }) => {
   const actions = [
     {
       label: 'Details',
@@ -30,7 +34,6 @@ export const CSDashboardCarTableRow: FC<Props> = ({
       onClick: (): void => onRemoveClick(car),
     },
   ];
-
 
   return (
     <TableRow key={car.id}>
@@ -56,7 +59,7 @@ const ActionsCell = styled(TableCell)`
   position: relative;
 `;
 
-const StatusBadge = styled(CSCommonBaseStatusBadge) <{ $status: string }>`
+const StatusBadge = styled(CSCommonBaseStatusBadge)<{ $status: string }>`
   color: ${(props): string => {
     switch (props.$status) {
       case 'available':
@@ -83,17 +86,15 @@ const StatusBadge = styled(CSCommonBaseStatusBadge) <{ $status: string }>`
   }};
   border: 2px solid
     ${(props): string => {
-    switch (props.$status) {
-      case 'available':
-        return 'var(--green-status-border)';
-      case 'booked':
-        return 'var(--yellow-status-border)';
-      case 'maintained':
-        return 'var(--red-status-border)';
-      default:
-        return 'var(--default-border)';
-    }
-  }};
+      switch (props.$status) {
+        case 'available':
+          return 'var(--green-status-border)';
+        case 'booked':
+          return 'var(--yellow-status-border)';
+        case 'maintained':
+          return 'var(--red-status-border)';
+        default:
+          return 'var(--default-border)';
+      }
+    }};
 `;
-
-

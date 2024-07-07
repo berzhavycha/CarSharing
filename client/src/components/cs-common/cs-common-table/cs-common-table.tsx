@@ -1,5 +1,6 @@
-import { device } from '@/styles';
 import styled from 'styled-components';
+
+import { device } from '@/styles';
 
 export const Table = styled.table`
   width: 100%;
@@ -71,7 +72,6 @@ export const TableCell = styled.td`
     }
   }
 `;
-
 
 export const HiddenSMTableHeader = styled(TableHeader)`
   @media ${device.sm} {

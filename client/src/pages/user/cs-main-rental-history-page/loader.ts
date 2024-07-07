@@ -6,26 +6,26 @@ import { fetchRentalHistory } from '@/services';
 import { Rental } from '@/types';
 
 export type RentalHistoryLoaderData = {
-    transactions: Rental[];
-    totalPages: number;
+  transactions: Rental[];
+  totalPages: number;
 };
 
 export const rentalHistoryLoader = async ({
-    request,
+  request,
 }: LoaderFunctionArgs): Promise<Response | ReturnType<typeof defer>> => {
-    const url = new URL(request.url);
-    const { queryDto, defaultSearchParams } = extractPaginationParams(
-        url,
-        Env.USER_RENTAL_HISTORY_PAGINATION_LIMIT,
-    );
+  const url = new URL(request.url);
+  const { queryDto, defaultSearchParams } = extractPaginationParams(
+    url,
+    Env.USER_RENTAL_HISTORY_PAGINATION_LIMIT,
+  );
 
-    if (defaultSearchParams) {
-        return redirect(`${url.pathname}?${defaultSearchParams}`);
-    }
+  if (defaultSearchParams) {
+    return redirect(`${url.pathname}?${defaultSearchParams}`);
+  }
 
-    const data = fetchRentalHistory(queryDto);
+  const data = fetchRentalHistory(queryDto);
 
-    return defer({
-        data,
-    });
+  return defer({
+    data,
+  });
 };

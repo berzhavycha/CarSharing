@@ -1,13 +1,14 @@
-import { ELLIPSIS } from "@/helpers";
-import { device } from "@/styles";
-import { FC } from "react";
-import styled from "styled-components";
+import { FC } from 'react';
+import styled from 'styled-components';
+
+import { ELLIPSIS } from '@/helpers';
+import { device } from '@/styles';
 
 type Props = {
   page: number | typeof ELLIPSIS;
   currentPage: number;
   onPageChange: (page: number) => void;
-}
+};
 
 export const CSCommonPaginationItem: FC<Props> = ({ page, currentPage, onPageChange }) => {
   return (
@@ -15,12 +16,9 @@ export const CSCommonPaginationItem: FC<Props> = ({ page, currentPage, onPageCha
       {page === ELLIPSIS ? (
         <Ellipsis>{ELLIPSIS}</Ellipsis>
       ) : (
-        <PageButton
-          $active={currentPage === page}
-          onClick={() => onPageChange(page)}
-        >
+        <PageButton $active={currentPage === page} onClick={() => onPageChange(page)}>
           {page}
-        </PageButton >
+        </PageButton>
       )}
     </>
   );
@@ -55,7 +53,7 @@ export const BaseButton = styled.button`
   }
 `;
 
-const PageButton = styled(BaseButton) <{ $active?: boolean }>`
+const PageButton = styled(BaseButton)<{ $active?: boolean }>`
   background-color: ${({ $active }): string => ($active ? 'var(--main-blue)' : '#cadbf5')};
   color: ${({ $active }): string => ($active ? 'white' : 'black')};
   box-shadow: ${({ $active }): string =>

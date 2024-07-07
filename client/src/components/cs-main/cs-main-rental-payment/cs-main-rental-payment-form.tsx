@@ -1,12 +1,18 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { BaseSection, CSCommonForm, CSCommonPaymentForm, SectionDescription, SectionTitle } from '@/components/cs-common';
+import {
+  BaseSection,
+  CSCommonForm,
+  CSCommonPaymentForm,
+  SectionDescription,
+  SectionTitle,
+} from '@/components/cs-common';
 import { rentalSchema } from '@/helpers';
+import { device } from '@/styles';
 import { PaymentDto, RentalDto } from '@/types';
 
 import { useRental } from './hooks';
-import { device } from '@/styles';
 
 type Props = {
   onSuccess: () => void;

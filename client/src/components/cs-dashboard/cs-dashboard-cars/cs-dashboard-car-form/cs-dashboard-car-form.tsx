@@ -9,12 +9,12 @@ import {
   CarTypeSelect,
   createCarSchema,
 } from '@/helpers';
+import { device } from '@/styles';
 import { Car, CarDto, FieldErrorsState } from '@/types';
 
 import DefaultImage from '../../../../../public/car-upload.png';
 
 import { useCarForm } from './hooks';
-import { device } from '@/styles';
 
 export type onCarSubmit = (
   car: CarDto,
@@ -173,7 +173,7 @@ const Section = styled.section`
 
 const DescriptionSection = styled.section`
   margin-right: 10px;
-`
+`;
 
 const CarHeaderWrapper = styled.div`
   display: flex;

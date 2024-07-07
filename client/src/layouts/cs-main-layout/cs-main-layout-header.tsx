@@ -3,10 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonContainer } from '@/components';
+import { device } from '@/styles';
 
 import { CSHeaderLayoutCarSearch } from './cs-header-layout-car-search';
 import { CSHeaderLayoutOptions } from './cs-header-layout-options';
-import { device } from '@/styles';
 
 export const CSMainLayoutHeader: FC = () => {
   const { pathname } = useLocation();
@@ -27,7 +27,6 @@ export const CSMainLayoutHeader: FC = () => {
   );
 };
 
-
 const Section = styled.div`
   padding: 20px 5px;
   background-color: #fff;
@@ -39,12 +38,15 @@ const HeaderContent = styled.div<{ $isSearchBarEnabled: boolean }>`
   align-items: center;
   justify-content: space-between;
 
-  @media  ${device.sm} {
-    ${(props): string => props.$isSearchBarEnabled ? `
+  @media ${device.sm} {
+    ${(props): string =>
+      props.$isSearchBarEnabled
+        ? `
         flex-direction: column;
         align-items: stretch;
         gap: 15px;
-      ` : ''}
+      `
+        : ''}
   }
 `;
 

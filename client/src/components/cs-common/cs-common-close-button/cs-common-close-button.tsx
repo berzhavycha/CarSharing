@@ -1,23 +1,23 @@
-import { FC } from "react";
-import { FaTimes } from "react-icons/fa";
-import styled from "styled-components";
+import { FC } from 'react';
+import { FaTimes } from 'react-icons/fa';
+import styled from 'styled-components';
 
 type Props = {
   onClose: () => void;
   color?: string;
-}
+};
 
 export const CSCommonCloseButton: FC<Props> = ({ onClose, color = 'var(--light-dark)' }) => {
   return (
     <CloseButton onClick={onClose} $color={color}>
       <FaTimes />
     </CloseButton>
-  )
-}
+  );
+};
 
 type ButtonProps = {
-  $color: string
-}
+  $color: string;
+};
 
 export const CloseButton = styled.button<ButtonProps>`
   position: absolute;

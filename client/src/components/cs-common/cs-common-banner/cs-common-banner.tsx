@@ -1,8 +1,8 @@
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Button } from '@/components/cs-common';
-import { Link } from 'react-router-dom';
 import { device } from '@/styles';
 
 type Props = {
@@ -22,7 +22,7 @@ export const CSCommonBanner: FC<Props> = ({
   image,
   linkContent,
   onLinkRedirect,
-  buttonType = "main",
+  buttonType = 'main',
 }) => {
   return (
     <BannerWrapper $backgroundImage={backgroundImage}>

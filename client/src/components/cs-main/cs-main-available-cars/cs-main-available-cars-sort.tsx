@@ -2,14 +2,8 @@ import { ChangeEvent, FC } from 'react';
 import styled from 'styled-components';
 
 import { CSCommonSelectField } from '@/components/cs-common';
+import { sortingOptions } from '@/helpers';
 import { useSearchParamsWithDefaults } from '@/hooks';
-
-const sortingOptions = [
-  { label: 'Price: Low to High', value: 'price_asc' },
-  { label: 'Price: High to Low', value: 'price_desc' },
-  { label: 'Capacity: Low to High', value: 'capacity_asc' },
-  { label: 'Capacity: High to Low', value: 'capacity_desc' },
-];
 
 export const CSMainAvailableCarsSort: FC = () => {
   const { setParams } = useSearchParamsWithDefaults();

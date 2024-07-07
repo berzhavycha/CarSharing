@@ -1,2 +1,2 @@
-export * from './cs-main-rental-history-page'
-export * from './loader'
+export * from './cs-main-rental-history-page';
+export * from './loader';

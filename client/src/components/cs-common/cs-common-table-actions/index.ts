@@ -1,1 +1,1 @@
-export * from './cs-common-table-actions'
+export * from './cs-common-table-actions';

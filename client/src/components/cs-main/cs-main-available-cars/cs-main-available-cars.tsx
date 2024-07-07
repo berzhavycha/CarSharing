@@ -1,25 +1,25 @@
 import { FC, Suspense, useState } from 'react';
+import { FaFilter } from 'react-icons/fa';
 import { Await, useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonCloseButton, CSCommonError, CSCommonSpinner } from '@/components/cs-common';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
+import { useClickOutside } from '@/hooks';
 import { AvailableCarsLoaderData } from '@/pages';
+import { device } from '@/styles';
 
 import { CSMainAvailableCarsFilter } from './cs-main-available-cars-filter';
 import { CSMainAvailableCarsList } from './cs-main-available-cars-list';
-import { device } from '@/styles';
-import { FaFilter } from 'react-icons/fa';
-import { useClickOutside } from '@/hooks';
 
 export const CSMainAvailableCars: FC = () => {
   const data = useLoaderData() as AvailableCarsLoaderData;
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const ref = useClickOutside(() => setIsSidebarOpen(false))
+  const ref = useClickOutside(() => setIsSidebarOpen(false));
   const toggleSidebar = (): void => setIsSidebarOpen(!isSidebarOpen);
-  const onSidebarClose = (): void => setIsSidebarOpen(false)
+  const onSidebarClose = (): void => setIsSidebarOpen(false);
 
   return (
     <AvailableCarsWrapper>
@@ -30,7 +30,7 @@ export const CSMainAvailableCars: FC = () => {
       </FilterButtonWrapper>
 
       <SidebarContainer $isOpen={isSidebarOpen} ref={ref}>
-        <CSCommonCloseButton onClose={onSidebarClose} color='var(--main-blue)' />
+        <CSCommonCloseButton onClose={onSidebarClose} color="var(--main-blue)" />
         <Suspense fallback={<CSCommonSpinner />}>
           <Await
             resolve={data.filterOptions}
@@ -55,7 +55,7 @@ export const CSMainAvailableCars: FC = () => {
           </Await>
         </Suspense>
       </CarsWrapper>
-    </AvailableCarsWrapper >
+    </AvailableCarsWrapper>
   );
 };
 
@@ -115,12 +115,11 @@ const SidebarContainer = styled.div<{ $isOpen: boolean }>`
     width: 80%;
     height: 100%;
     z-index: 1001;
-    transform: translateX(${(props): string => props.$isOpen ? '0' : '-100%'});
+    transform: translateX(${(props): string => (props.$isOpen ? '0' : '-100%')});
     transition: transform 0.3s ease-in-out;
     overflow-y: auto;
   }
 `;
-
 
 const CarsWrapper = styled.div`
   display: grid;

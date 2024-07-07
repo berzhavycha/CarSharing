@@ -1,8 +1,11 @@
+import { flow, getParent, Instance, t } from 'mobx-state-tree';
+
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { fetchRentalHistory, getRental, returnCar } from '@/services';
-import { Instance, flow, getParent, t } from 'mobx-state-tree';
-import { CarReturnModel, RentalModel, RentalPaymentModel, SingleRentalModel } from '../models';
 import { QueryRentalsDto, Rental } from '@/types';
+
+import { CarReturnModel, RentalModel, RentalPaymentModel, SingleRentalModel } from '../models';
+
 import { CurrentUserStoreType } from './current-user-store';
 
 export const RentalStore = t
@@ -12,10 +15,10 @@ export const RentalStore = t
     rentalPayment: t.optional(RentalPaymentModel, {}),
     singleRental: t.optional(SingleRentalModel, {}),
   })
-  .actions(self => ({
+  .actions((self) => ({
     setRentals(rentals: Rental[]): void {
-      self.rentals.replace(rentals.map(rental => RentalModel.create(rental)));
-    }
+      self.rentals.replace(rentals.map((rental) => RentalModel.create(rental)));
+    },
   }))
   .actions((self) => ({
     fetchSingleRental: flow(function* (id: string) {
@@ -40,7 +43,8 @@ export const RentalStore = t
     returnCar: flow(function* (id: string) {
       try {
         const { rental, refund, penalty, error } = yield returnCar(id);
-        const userStore = (getParent(self) as { currentUserStore: CurrentUserStoreType }).currentUserStore;
+        const userStore = (getParent(self) as { currentUserStore: CurrentUserStoreType })
+          .currentUserStore;
 
         if (userStore.user?.balance) {
           if (refund) {
@@ -63,4 +67,4 @@ export const RentalStore = t
     }),
   }));
 
-export interface RentalStoreType extends Instance<typeof RentalStore> { }
+export interface RentalStoreType extends Instance<typeof RentalStore> {}

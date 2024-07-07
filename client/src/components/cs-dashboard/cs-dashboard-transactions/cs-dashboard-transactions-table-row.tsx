@@ -1,7 +1,12 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { CSCommonBaseStatusBadge, HiddenSMTableCell, TableCell, TableRow } from '@/components/cs-common';
+import {
+  CSCommonBaseStatusBadge,
+  HiddenSMTableCell,
+  TableCell,
+  TableRow,
+} from '@/components/cs-common';
 import { convertToTitleCase, formatDate } from '@/helpers';
 import { Transaction, TransactionType } from '@/types';
 
@@ -27,7 +32,7 @@ export const CSDashboardTransactionsTableRow: FC<Props> = ({ transaction, index 
   );
 };
 
-const TypeBadge = styled(CSCommonBaseStatusBadge) <{ $status: TransactionType }>`
+const TypeBadge = styled(CSCommonBaseStatusBadge)<{ $status: TransactionType }>`
   color: ${(props): string => {
     switch (props.$status) {
       case TransactionType.TOP_UP:
@@ -58,17 +63,17 @@ const TypeBadge = styled(CSCommonBaseStatusBadge) <{ $status: TransactionType }>
   }};
   border: 2px solid
     ${(props): string => {
-    switch (props.$status) {
-      case TransactionType.TOP_UP:
-        return 'var(--top-up-border)';
-      case TransactionType.RENTAL_PAYMENT:
-        return 'var(--rental-payment-border)';
-      case TransactionType.REFUND:
-        return 'var(--refund-border)';
-      case TransactionType.PENALTY:
-        return 'var(--penalty-border)';
-      default:
-        return 'var(--default-border)';
-    }
-  }};
+      switch (props.$status) {
+        case TransactionType.TOP_UP:
+          return 'var(--top-up-border)';
+        case TransactionType.RENTAL_PAYMENT:
+          return 'var(--rental-payment-border)';
+        case TransactionType.REFUND:
+          return 'var(--refund-border)';
+        case TransactionType.PENALTY:
+          return 'var(--penalty-border)';
+        default:
+          return 'var(--default-border)';
+      }
+    }};
 `;

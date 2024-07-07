@@ -22,8 +22,8 @@ export const CSCommonCheckboxFilter: FC<Props> = ({ title, type, options }) => {
       <CheckBoxesWrapper>
         {options.map((option) => {
           const label = `${option.originalValue || option.label}`;
-          const onCheck = (): void => onFilter(type, label)
-          const isChecked = searchParams.getAll(type).includes(label)
+          const onCheck = (): void => onFilter(type, label);
+          const isChecked = searchParams.getAll(type).includes(label);
 
           return (
             <CSCommonCheckbox

@@ -12,10 +12,10 @@ import {
 } from '@/components/cs-common';
 import { useStore } from '@/context';
 import { updateUserBalanceSchema } from '@/helpers';
+import { device } from '@/styles';
 import { UpdateUserBalanceDto } from '@/types';
 
 import { useTopUp } from './hooks';
-import { device } from '@/styles';
 
 export const CSMainUserTopUp: FC = () => {
   const {
@@ -76,7 +76,7 @@ export const CSMainUserTopUp: FC = () => {
 
 const TopUpContainer = styled.div`
   margin-bottom: 50px;
-`
+`;
 
 const FormInfoWrapper = styled(BaseSection)`
   padding: 35px 35px 10px 35px;

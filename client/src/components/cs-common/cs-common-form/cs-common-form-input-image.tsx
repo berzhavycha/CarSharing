@@ -105,7 +105,6 @@ export const CSCommonFormInputImage: FC<Props> = ({
   );
 };
 
-
 const PicturesContainer = styled.div`
   display: flex;
   flex-wrap: wrap;

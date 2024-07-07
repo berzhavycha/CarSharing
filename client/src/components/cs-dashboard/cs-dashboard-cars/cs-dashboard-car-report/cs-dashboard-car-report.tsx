@@ -5,11 +5,12 @@ import styled from 'styled-components';
 import { Button } from '@/components/cs-common';
 import { Env } from '@/core';
 import { defaultSearchParams } from '@/helpers';
+import { device } from '@/styles';
 import { Car } from '@/types';
 
 import { CSCommonTableList } from '../../../cs-common';
+
 import { CSDashboardCarTable } from './cs-dashboard-car-table';
-import { device } from '@/styles';
 
 const carsDefaultSearchParams = {
   ...defaultSearchParams,

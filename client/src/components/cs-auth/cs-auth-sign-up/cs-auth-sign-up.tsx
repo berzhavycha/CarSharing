@@ -6,10 +6,10 @@ import styled from 'styled-components';
 import { CSCommonErrorMessage, CSCommonForm } from '@/components';
 import { useStore } from '@/context';
 import { authCedirectPages, AuthType, getUserSchema, Roles } from '@/helpers';
+import { device } from '@/styles';
 import { SignUpUserDto } from '@/types';
 
 import { useUserRole } from './hooks';
-import { device } from '@/styles';
 
 export const CSAuthSignUp: FC = observer(() => {
   const { userRole, handleUserTypeChange, showSecretCodeInput } = useUserRole();
@@ -30,10 +30,7 @@ export const CSAuthSignUp: FC = observer(() => {
         <Title>Register</Title>
         <Span>
           Already have an account?
-          <Link to="/sign-in" >
-            Sign In here
-          </Link>{' '}
-          instead
+          <Link to="/sign-in">Sign In here</Link> instead
         </Span>
         <ErrorMessageWrapper>
           <CSCommonErrorMessage>
@@ -169,7 +166,7 @@ export const FormContainer = styled.div`
     min-height: 100vh;
     margin: 80px 0;
   }
-`
+`;
 
 export const Title = styled.span`
   font-size: 24px;
