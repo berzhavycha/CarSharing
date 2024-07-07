@@ -14,7 +14,7 @@ import { device } from '@/styles';
 
 export const CSCommonProfileSettings: FC = observer(() => {
   const {
-    currentUserStore: { user, updateErrors, updateUser, existingImagesIds: viewImagesIds },
+    currentUserStore: { user, errors, updateUser, existingImagesIds: viewImagesIds },
   } = useStore();
 
   const {
@@ -23,7 +23,7 @@ export const CSCommonProfileSettings: FC = observer(() => {
     existingImagesIds,
     onSubmit,
     onPreviewRemove,
-  } = useProfileUpdate(updateUser, viewImagesIds, updateErrors);
+  } = useProfileUpdate(updateUser, viewImagesIds, errors?.update);
 
   const defaultValues = {
     firstName: user?.firstName,
@@ -61,21 +61,21 @@ export const CSCommonProfileSettings: FC = observer(() => {
               <CSCommonForm.SubmitButton content="Save" />
             </ProfileHeaderWrapper>
 
-            <CSCommonErrorMessage>{updateErrors?.unexpectedError}</CSCommonErrorMessage>
+            <CSCommonErrorMessage>{errors.update?.unexpectedError}</CSCommonErrorMessage>
 
             <Title>General Information</Title>
             <ProfileSection>
               <CSCommonForm.Input
                 label="First Name"
                 name="firstName"
-                error={updateErrors?.firstName}
+                error={errors.update?.firstName}
               />
               <CSCommonForm.Input
                 label="Last Name"
                 name="lastName"
-                error={updateErrors?.lastName}
+                error={errors.update?.lastName}
               />
-              <CSCommonForm.Input label="Email" name="email" error={updateErrors?.email} />
+              <CSCommonForm.Input label="Email" name="email" error={errors?.update?.email} />
             </ProfileSection>
 
             <Title>Change Password</Title>
@@ -84,13 +84,13 @@ export const CSCommonProfileSettings: FC = observer(() => {
                 label="Old Password"
                 name="oldPassword"
                 isSecured
-                error={updateErrors?.oldPassword}
+                error={errors.update?.oldPassword}
               />
               <CSCommonForm.Input
                 label="New Password"
                 name="newPassword"
                 isSecured
-                error={updateErrors?.newPassword}
+                error={errors.update?.newPassword}
               />
             </PasswordSection>
           </CSCommonForm>

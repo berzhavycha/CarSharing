@@ -17,7 +17,7 @@ import { device } from '@/styles';
 
 export const CSMainUserTopUp: FC = () => {
   const {
-    currentUserStore: { topUpErrors },
+    currentUserStore: { errors },
   } = useStore();
   const { onSubmit, isTopUpSuccessful, setIsTopUpSuccessful, unexpectedError, setUnexpectedError } =
     useTopUp();
@@ -34,11 +34,11 @@ export const CSMainUserTopUp: FC = () => {
         >
           <FormInfoWrapper>
             <SectionTitle>Balance Form</SectionTitle>
-            <CSCommonErrorMessage>{topUpErrors?.unexpectedError ?? ''}</CSCommonErrorMessage>
+            <CSCommonErrorMessage>{errors?.topUp?.unexpectedError ?? ''}</CSCommonErrorMessage>
             <CSCommonForm.Input
               label="Amount"
               name="amount"
-              error={topUpErrors?.amount ?? ''}
+              error={errors.topUp?.amount ?? ''}
               type="number"
             />
           </FormInfoWrapper>

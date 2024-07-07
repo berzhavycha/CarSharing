@@ -13,23 +13,23 @@ type HookReturn = {
 
 export const useTopUp = (): HookReturn => {
   const {
-    currentUserStore: { topUpErrors, topUp },
+    currentUserStore: { errors, topUp },
   } = useStore();
 
   const [isTopUpSuccessful, setIsTopUpSuccessful] = useState<boolean>(false);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [unexpectedError, setUnexpectedError] = useState<string>(
-    topUpErrors?.unexpectedError ?? '',
+    errors?.topUp?.unexpectedError ?? '',
   );
 
   useEffect(() => {
     if (isSubmitted) {
-      if (!topUpErrors) {
+      if (!errors?.topUp) {
         setIsTopUpSuccessful(true);
       }
       setIsSubmitted(false);
     }
-  }, [isSubmitted, topUpErrors]);
+  }, [isSubmitted, errors?.topUp]);
 
   const onSubmit = async (topUpDto: UpdateUserBalanceDto): Promise<void> => {
     await topUp(topUpDto);

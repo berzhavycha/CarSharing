@@ -37,23 +37,24 @@ export const CSAuthSignIn: FC = observer(() => {
       </Span>
       <ErrorMessageWrapper>
         <CSCommonErrorMessage>
-          {currentUserStore.signInErrors?.unexpectedError ?? errorMessage ?? ''}
+          {currentUserStore.errors.signIn?.unexpectedError ?? errorMessage ?? ''}
         </CSCommonErrorMessage>
       </ErrorMessageWrapper>
       <CSCommonForm<SignInUserDto>
         validationSchema={getUserSchema(AuthType.SIGN_IN, 'none')}
         onSubmit={onSubmit}
+        showReset={false}
       >
         <FormBlocks>
           <CSCommonForm.Input
             label="Email"
             name="email"
-            error={currentUserStore.signInErrors?.email}
+            error={currentUserStore.errors.signIn?.email}
           />
           <CSCommonForm.Input
             label="Password"
             name="password"
-            error={currentUserStore.signInErrors?.password}
+            error={currentUserStore.errors.signIn?.password}
             isSecured
           />
         </FormBlocks>
