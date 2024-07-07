@@ -14,11 +14,11 @@ type Props = {
 }
 
 export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
-    const { rentalStore: { singleRental, setSingleRental, fetchSingleRental, returnCar } } = useStore()
+    const { rentalStore: { singleRental, fetchSingleRental, returnCar } } = useStore()
     const { rentalId } = useParams() as { rentalId: string }
 
     useEffect(() => {
-        setSingleRental(rental)
+        singleRental.setRental(rental)
     }, [])
 
     const onCarReturn = async (): Promise<void> => {
@@ -26,7 +26,7 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
         await fetchSingleRental(rentalId)
     }
 
-    const usedRental = singleRental ?? rental
+    const usedRental = singleRental.rental ?? rental
 
     return (
         <RentalDetailsWrapper>

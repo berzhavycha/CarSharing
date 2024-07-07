@@ -6,14 +6,16 @@ import { FC } from "react";
 export const CSMainRentalHistoryModals: FC = observer(() => {
     const { rentalStore } = useStore();
     const {
-        isReturnedInTime,
-        refund,
-        penalty,
-        errorMessage,
-        setRefund,
-        setPenalty,
-        setErrorMessage,
-        setIsReturnedInTime
+        carReturn: {
+            isReturnedInTime,
+            refund,
+            penalty,
+            errorMessage,
+            setRefund,
+            setPenalty,
+            setErrorMessage,
+            setIsReturnedInTime
+        }
     } = rentalStore;
 
     const handleCloseRefundWindow = (): void => setRefund(undefined)

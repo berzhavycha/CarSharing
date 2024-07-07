@@ -1,59 +1,42 @@
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { fetchRentalHistory, getRental, returnCar } from '@/services';
 import { Instance, flow, getParent, t } from 'mobx-state-tree';
-import { RentalModel } from '../models';
+import { CarReturnModel, RentalModel, RentalPaymentModel, SingleRentalModel } from '../models';
 import { QueryRentalsDto, Rental } from '@/types';
 import { CurrentUserStoreType } from './current-user-store';
 
 export const RentalStore = t
   .model('RentalStore', {
     rentals: t.optional(t.array(RentalModel), []),
-    refund: t.maybe(t.number),
-    penalty: t.maybe(t.number),
-    isReturnedInTime: t.optional(t.boolean, false),
-    errorMessage: t.optional(t.string, ''),
-    potentialRentalPrice: t.optional(t.number, 0),
-    singleRental: t.optional(t.maybeNull(RentalModel), null),
-    singleRentalErrorMessage: t.optional(t.string, ''),
+    carReturn: t.optional(CarReturnModel, {}),
+    rentalPayment: t.optional(RentalPaymentModel, {}),
+    singleRental: t.optional(SingleRentalModel, {}),
   })
-  .actions((self) => ({
-    setPotentialRentalPrice(price: number): void {
-      self.potentialRentalPrice = price;
-    },
+  .actions(self => ({
     setRentals(rentals: Rental[]): void {
       self.rentals.replace(rentals.map(rental => RentalModel.create(rental)));
-    },
-    setRefund(refund?: number): void {
-      self.refund = refund;
-    },
-    setPenalty(penalty?: number): void {
-      self.penalty = penalty;
-    },
-    setErrorMessage(error: string): void {
-      self.errorMessage = error;
-    },
-    setIsReturnedInTime(inTime: boolean): void {
-      self.isReturnedInTime = inTime;
-    },
-    setSingleRental(rental: Rental): void {
-      self.singleRental = RentalModel.create(rental)
-    },
+    }
+  }))
+  .actions((self) => ({
     fetchSingleRental: flow(function* (id: string) {
       try {
         const data = yield getRental(id);
-        self.singleRental = RentalModel.create(data);
+        self.singleRental.setRental(data);
+        self.singleRental.setErrorMessage('');
       } catch (error) {
-        self.singleRentalErrorMessage = UNEXPECTED_ERROR_MESSAGE;
+        self.singleRental.setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
       }
     }),
+
     fetchRentals: flow(function* (params: QueryRentalsDto) {
       try {
         const { rentals } = yield fetchRentalHistory(params);
-        self.rentals = rentals.map((rental: Rental) => RentalModel.create(rental));
+        self.setRentals(rentals);
       } catch (error) {
-        self.errorMessage = UNEXPECTED_ERROR_MESSAGE;
+        self.carReturn.setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
       }
     }),
+
     returnCar: flow(function* (id: string) {
       try {
         const { rental, refund, penalty, error } = yield returnCar(id);
@@ -61,21 +44,21 @@ export const RentalStore = t
 
         if (userStore.user?.balance) {
           if (refund) {
-            self.refund = refund;
+            self.carReturn.setRefund(refund);
             userStore.updateBalance(userStore.user.balance + refund);
           } else if (penalty) {
-            self.penalty = penalty;
+            self.carReturn.setPenalty(penalty);
             userStore.updateBalance(userStore.user.balance - penalty);
           } else if (rental) {
-            self.isReturnedInTime = true;
+            self.carReturn.setIsReturnedInTime(true);
           }
         }
 
         if (error) {
-          self.errorMessage = error;
+          self.carReturn.setErrorMessage(error);
         }
       } catch (error) {
-        self.errorMessage = UNEXPECTED_ERROR_MESSAGE;
+        self.carReturn.setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
       }
     }),
   }));
