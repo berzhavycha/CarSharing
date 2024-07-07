@@ -1,9 +1,11 @@
 import { RentalType } from "@/app/models";
-import { CSCommonDetailsFeature, CSCommonNoData, CSCommonTitle } from "@/components/cs-common";
+import { CSCommonDetailsFeature, CSCommonNoData } from "@/components/cs-common";
 import { formatDate, convertToTitleCase } from "@/helpers";
+import { device } from "@/styles";
 import { Rental } from "@/types";
 import { FC } from "react";
 import styled from "styled-components";
+import { Title } from "./cs-main-single-rental-details";
 
 type Props = {
   rental: Rental | RentalType
@@ -16,7 +18,7 @@ export const CSMainSingleRentalTransaction: FC<Props> = ({ rental }) => {
 
   return (
     <TransactionsSection>
-      <CSCommonTitle>Transactions</CSCommonTitle>
+      <Title>Transactions</Title>
       {rental?.transactions?.length > 0 ? (
         <TransactionsList>
           {rental.transactions.map((transaction) => (
@@ -57,6 +59,14 @@ const TransactionItem = styled.li`
   background-color: var(--light-gray);
   border-radius: 10px;
   margin-bottom: 10px;
+
+  @media ${device.sm} {
+    font-size: 14px
+  }
+
+  @media ${device.xs} {
+    font-size: 12px
+  }
 `;
 
 const TransactionType = styled.span`
