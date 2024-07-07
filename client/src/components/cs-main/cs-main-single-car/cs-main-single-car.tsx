@@ -13,6 +13,7 @@ import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { Car, LocalFile } from '@/types';
 
 import { CSMainSingleCarDetails } from './cs-main-single-car-details';
+import { device } from '@/styles';
 
 export const CSMainSingleCar: FC = () => {
   const data = useLoaderData() as { data: Car };
@@ -31,7 +32,7 @@ export const CSMainSingleCar: FC = () => {
               );
               return (
                 <>
-                  <CSCommonSlides images={carImages} width="600px" height="270px" />
+                  <CSCommonSlides images={carImages} width="100%" height="270px" />
                   <CSMainSingleCarDetails car={car} />
                 </>
               );
@@ -47,4 +48,11 @@ const SingleCarWrapper = styled.div`
   margin-top: 50px;
   display: flex;
   gap: 30px;
+
+  @media ${device.lg} {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 50px 0;
+  }
 `;

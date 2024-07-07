@@ -1,3 +1,4 @@
+import { device } from '@/styles';
 import { FC } from 'react';
 import styled from 'styled-components';
 
@@ -22,6 +23,14 @@ const FeatureWrapper = styled.div`
   align-items: center;
   width: 48%;
   gap: 10px;
+
+  @media ${device.sm} {
+    width: 100%;
+  }
+
+  @media ${device.xs} {
+    font-size: 14px;
+  }
 `;
 
 const FeatureLabel = styled.p`
