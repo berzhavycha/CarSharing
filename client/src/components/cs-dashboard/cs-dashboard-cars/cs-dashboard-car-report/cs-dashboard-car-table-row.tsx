@@ -1,11 +1,10 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { CSCommonTableActions, HiddenMDTableCell, HiddenSMTableCell, HiddenXSTableCell, TableCell, TableRow } from '@/components/cs-common';
+import { CSCommonBaseStatusBadge, CSCommonTableActions, HiddenMDTableCell, HiddenSMTableCell, HiddenXSTableCell, TableCell, TableRow } from '@/components/cs-common';
 import { Env } from '@/core';
 import { uppercaseFirstLetter } from '@/helpers';
 import { Car } from '@/types';
-import { device } from '@/styles';
 import { FaInfoCircle, FaTrash } from 'react-icons/fa';
 
 type Props = {
@@ -57,14 +56,7 @@ const ActionsCell = styled(TableCell)`
   position: relative;
 `;
 
-const StatusBadge = styled.div<{ $status: string }>`
-  width: 100%;
-  display: inline-block;
-  padding: 6px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  font-weight: bold;
-  text-align: center;
+const StatusBadge = styled(CSCommonBaseStatusBadge) <{ $status: string }>`
   color: ${(props): string => {
     switch (props.$status) {
       case 'available':
@@ -102,20 +94,6 @@ const StatusBadge = styled.div<{ $status: string }>`
         return 'var(--default-border)';
     }
   }};
-
-  @media ${device.lg} {
-    font-size: 12px;
-    padding: 5px 10px;
-  }
-
-  @media ${device.md} {
-    font-size: 11px;
-  }
-
-  @media ${device.sm} {
-    font-size: 10px;
-    padding: 4px 8px;
-  }
 `;
 
 
