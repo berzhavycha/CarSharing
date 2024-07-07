@@ -27,6 +27,7 @@ export const CSMainLayoutHeader: FC = () => {
   );
 };
 
+
 const Section = styled.div`
   padding: 20px 5px;
   background-color: #fff;

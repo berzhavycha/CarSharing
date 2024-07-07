@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { FC, useState } from 'react';
-import { FaDollarSign, FaSignOutAlt, FaHistory, FaBars } from 'react-icons/fa';
+import { FaDollarSign, FaSignOutAlt, FaHistory, FaBars, FaTimes } from 'react-icons/fa';
 import { FaGear } from 'react-icons/fa6';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
@@ -38,6 +38,9 @@ export const CSHeaderLayoutOptions: FC = observer(() => {
         <FaBars />
       </MenuButton>
       <NavOptions $isOpen={isMenuOpen} ref={ref}>
+        <CloseButton onClick={closeMenu}>
+          <FaTimes />
+        </CloseButton>
         <UserInfoMobile>
           <UserAvatar src={profilePicture} alt="User Avatar" />
           {user && (
@@ -89,6 +92,27 @@ export const CSHeaderLayoutOptions: FC = observer(() => {
   );
 });
 
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1200;
+  background: transparent;
+  border: none;
+  color: var(--main-blue);
+  font-size: 24px;
+  cursor: pointer;
+  display: block;
+
+  @media ${device.lg} {
+    display: block;
+  }
+
+  @media ${device.sm} {
+    font-size: 14px; 
+  }
+`;
+
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -123,7 +147,7 @@ const NavOptions = styled.div<{ $isOpen: boolean }>`
     top: 80px;
     right: 20px;
     background-color: white;
-    padding: 20px;
+    padding: 20px 50px 20px 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     flex-direction: column;
@@ -160,6 +184,10 @@ const StyledNavLink = styled(NavLink)`
     }
   }
 
+   &:hover {
+    color: #1e3a8a;
+  }
+
 `;
 
 const SignOutButton = styled.button`
@@ -178,6 +206,10 @@ const SignOutButton = styled.button`
     @media ${device.lg} {
       display: flex;
     }
+  }
+
+  &:hover {
+    color: #1e3a8a;
   }
 `;
 
