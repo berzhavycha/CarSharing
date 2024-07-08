@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import { CSCommonErrorMessage, CSCommonForm, CSCommonModal } from '@/components/cs-common';
 import {
   CarFuelTypeSelect,
+  carSchema,
   CarStatusSelect,
   CarSteeringTypeSelect,
   CarTypeSelect,
-  carSchema,
 } from '@/helpers';
 import { device } from '@/styles';
 import { Car, CarDto, FieldErrorsState } from '@/types';

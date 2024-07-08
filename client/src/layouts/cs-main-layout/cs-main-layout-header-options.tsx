@@ -10,8 +10,9 @@ import { useClickOutside, useSignOut } from '@/hooks';
 import { device } from '@/styles';
 
 import DefaultImage from '../../../public/avatar.webp';
-import { IconWrapper, NavItem } from './cs-main-layout-nav-item';
+
 import { menuItems } from './constants';
+import { IconWrapper, NavItem } from './cs-main-layout-nav-item';
 
 export const CSMainLayoutHeaderOptions: FC = observer(() => {
   const {
@@ -53,7 +54,13 @@ export const CSMainLayoutHeaderOptions: FC = observer(() => {
           )}
         </UserInfoMobile>
         {menuItems.map((item) => (
-          <NavItem key={item.label} to={item.path} icon={item.icon} text={item.label} onClick={closeMenu} />
+          <NavItem
+            key={item.label}
+            to={item.path}
+            icon={item.icon}
+            text={item.label}
+            onClick={closeMenu}
+          />
         ))}
         <SignOutButton onClick={signOutHandler}>
           <IconWrapper>
@@ -154,7 +161,6 @@ const SignOutButton = styled.button`
     color: #1e3a8a;
   }
 `;
-
 
 const UserInfoDesktop = styled.div`
   display: flex;

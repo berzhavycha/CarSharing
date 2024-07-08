@@ -69,4 +69,4 @@ export const RentalStore = t
     }),
   }));
 
-export interface RentalStoreType extends Instance<typeof RentalStore> { }
+export interface RentalStoreType extends Instance<typeof RentalStore> {}

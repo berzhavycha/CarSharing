@@ -1,2 +1,2 @@
-export * from './payment'
-export * from './bracket-content'
+export * from './payment';
+export * from './bracket-content';

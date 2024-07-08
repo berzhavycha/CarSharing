@@ -14,8 +14,9 @@ import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { device } from '@/styles';
 import { LocalFile, Rental } from '@/types';
 
-import { CSMainSingleRentalDetails } from './cs-main-single-rental-details';
 import { CSMainRentalHistoryModals } from '../cs-main-rental-history/cs-main-rental-history-modals';
+
+import { CSMainSingleRentalDetails } from './cs-main-single-rental-details';
 
 export const CSMainSingleRental: FC = observer(() => {
   const data = useLoaderData() as { data: Rental };

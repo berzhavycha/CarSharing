@@ -33,7 +33,7 @@ export const useRental = (onSuccess: () => void, onError: (error: string) => voi
       updateBalance(user.balance - rentalPayment.potentialRentalPrice);
       onSuccess();
     } else if (error) {
-      rentalPayment.setPotentialRentalPrice(rentedCar.pricePerHour)
+      rentalPayment.setPotentialRentalPrice(rentedCar.pricePerHour);
       onError(error);
     }
   };
