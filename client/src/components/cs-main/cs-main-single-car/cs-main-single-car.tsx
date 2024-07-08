@@ -32,7 +32,7 @@ export const CSMainSingleCar: FC = () => {
               );
               return (
                 <>
-                  <CSCommonSlides images={carImages} width="45vw" height="270px" />
+                  <CSCommonSlides images={carImages} width="45vw" height="18vw" />
                   <CSMainSingleCarDetails car={car} />
                 </>
               );
