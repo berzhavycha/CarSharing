@@ -69,7 +69,7 @@ export const CarSteeringTypeSelect: Option[] = [
   { label: 'Drive-by-wire Steering', value: CarSteeringType.DRIVE_BY_WIRE },
 ];
 
-export const addCarFieldMappings: Record<string, keyof CarDto> = {
+export const carFieldMappings: Record<string, keyof CarDto> = {
   pictures: 'pictures',
   year: 'year',
   capacity: 'capacity',

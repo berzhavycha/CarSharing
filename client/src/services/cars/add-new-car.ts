@@ -1,6 +1,6 @@
 import { axiosInstance } from '@/api';
 import { Env } from '@/core';
-import { addCarFieldMappings, createFormData, errorHandler } from '@/helpers';
+import { carFieldMappings, createFormData, errorHandler } from '@/helpers';
 import { Car, CarDto, FieldErrorsState } from '@/types';
 
 type ServiceReturn = {
@@ -24,6 +24,6 @@ export const addNewCar = async (car: CarDto): Promise<ServiceReturn> => {
 
     return { car: data };
   } catch (error) {
-    return { errors: errorHandler<CarDto>(error, addCarFieldMappings) };
+    return { errors: errorHandler<CarDto>(error, carFieldMappings) };
   }
 };
