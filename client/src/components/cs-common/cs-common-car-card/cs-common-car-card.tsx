@@ -52,6 +52,7 @@ export const CSCommonCarCard: FC<CarCardProps> = ({ carDetails, onClick }) => {
 
 const CardWrapper = styled.div`
   width: 100%;
+  max-width: 550px;
   height: 410px;
   background-color: white;
   border-radius: 10px;
