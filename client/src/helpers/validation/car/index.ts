@@ -1,1 +1,1 @@
-export * from './create-car-schema';
+export * from './car-schema';

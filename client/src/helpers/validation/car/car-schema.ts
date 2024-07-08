@@ -3,7 +3,7 @@ import { z, ZodSchema } from 'zod';
 import { Env } from '@/core';
 import { ONE_MB } from '@/helpers/constants';
 
-export const createCarSchema = (existingImagesIds?: string[]): ZodSchema => {
+export const carSchema = (existingImagesIds?: string[]): ZodSchema => {
   const picturesSchema = z.custom<File[]>().transform((fileList) => {
     const filesArray = Array.from(fileList).slice(0, +Env.ALLOWED_CAR_IMAGES_AMOUNT);
     return filesArray.length > 0 ? filesArray : null;
@@ -14,16 +14,16 @@ export const createCarSchema = (existingImagesIds?: string[]): ZodSchema => {
       existingImagesIds && existingImagesIds.length > 0
         ? picturesSchema.optional()
         : picturesSchema.refine(
-            (fileList) => {
-              return fileList?.every(
-                (file) => file.size <= 10 * ONE_MB && file.type?.startsWith('image/'),
-              );
-            },
-            {
-              message:
-                'Invalid pictures format or size. Only up to 3 images allowed, each up to 10MB.',
-            },
-          ),
+          (fileList) => {
+            return fileList?.every(
+              (file) => file.size <= 10 * ONE_MB && file.type?.startsWith('image/'),
+            );
+          },
+          {
+            message:
+              'Invalid pictures format or size. Only up to 3 images allowed, each up to 10MB.',
+          },
+        ),
     model: z.string().min(2, 'Model must be at least 2 characters long'),
     year: z.coerce.number().positive('Year must be positive'),
     description: z.string().min(10, 'Description must be at least 10 characters long'),
