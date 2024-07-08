@@ -58,6 +58,8 @@ const FormWrapper = styled.div`
 `;
 
 const FormInfoWrapper = styled(BaseSection)`
+  padding: 35px 35px 10px 35px;
+
   margin-bottom: 20px;
 `;
 

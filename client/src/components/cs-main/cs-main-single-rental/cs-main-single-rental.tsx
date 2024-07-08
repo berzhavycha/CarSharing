@@ -15,6 +15,7 @@ import { device } from '@/styles';
 import { LocalFile, Rental } from '@/types';
 
 import { CSMainSingleRentalDetails } from './cs-main-single-rental-details';
+import { CSMainRentalHistoryModals } from '../cs-main-rental-history/cs-main-rental-history-modals';
 
 export const CSMainSingleRental: FC = observer(() => {
   const data = useLoaderData() as { data: Rental };
@@ -40,6 +41,8 @@ export const CSMainSingleRental: FC = observer(() => {
           }}
         </Await>
       </Suspense>
+
+      <CSMainRentalHistoryModals />
     </CSCommonContainer>
   );
 });
