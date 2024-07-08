@@ -29,7 +29,7 @@ export class CarsService {
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
     private localFilesService: LocalFilesService,
-  ) { }
+  ) {}
 
   async createCar(
     createCarDto: CreateCarDto,
@@ -104,13 +104,7 @@ export class CarsService {
   }
 
   async findAll(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
-    const {
-      search,
-      page,
-      limit,
-      order,
-      sort,
-    } = listCarsDto;
+    const { search, page, limit, order, sort } = listCarsDto;
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
@@ -149,7 +143,10 @@ export class CarsService {
     return { types, capacities, maxPrice };
   }
 
-  private applyFilters(queryBuilder: SelectQueryBuilder<Car>, listCarsDto: QueryCarsDto): void {
+  private applyFilters(
+    queryBuilder: SelectQueryBuilder<Car>,
+    listCarsDto: QueryCarsDto,
+  ): void {
     const { types, capacities, status, minPrice, maxPrice } = listCarsDto;
     if (types && types.length > 0) {
       queryBuilder.andWhere('car.type IN (:...types)', { types });
@@ -161,7 +158,10 @@ export class CarsService {
       queryBuilder.andWhere('car.status = :status', { status });
     }
     if (minPrice !== undefined && maxPrice !== undefined) {
-      queryBuilder.andWhere('car.pricePerHour BETWEEN :minPrice AND :maxPrice', { minPrice, maxPrice });
+      queryBuilder.andWhere(
+        'car.pricePerHour BETWEEN :minPrice AND :maxPrice',
+        { minPrice, maxPrice },
+      );
     }
   }
 }

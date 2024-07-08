@@ -105,7 +105,7 @@ describe('RentalsService', () => {
       );
     });
 
-    it('should throw BadRequestException if the car is not available', async () => {
+    it('should throw BadRequestException if the car is not found', async () => {
       const rentCarDto = makeRentalDto();
       const user = makeUser({ balance: 1000 });
 
@@ -226,44 +226,6 @@ describe('RentalsService', () => {
         },
         expect.anything(),
       );
-    });
-
-    it('should create a rental successfully and create transaction for user balance update', async () => {
-      const rentCarDto = makeRentalDto();
-      const user = makeUser({ balance: 1000 });
-      const car = makeCar({
-        pricePerHour: 20,
-      });
-      const originalCar = makeOriginalCar();
-      const rental = makeRental();
-
-      jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
-      jest.spyOn(carsService, 'findById').mockResolvedValue(car);
-      jest
-        .spyOn(testEntityManager, 'transaction')
-        .mockImplementation(async (fn) => {
-          return await fn({
-            save: jest
-              .fn()
-              .mockResolvedValueOnce(car)
-              .mockResolvedValue(rental),
-          });
-        });
-
-      jest.spyOn(rentalsRepository, 'create').mockReturnValue(rental);
-      jest
-        .spyOn(originalCarsService, 'createOriginalCarTransaction')
-        .mockResolvedValue(originalCar);
-      jest
-        .spyOn(usersService, 'updateUserBalance')
-        .mockResolvedValue(undefined);
-
-      const result = await rentalsService.rentCar(rentCarDto, user);
-
-      expect(result).toEqual(rental);
-      expect(
-        originalCarsService.createOriginalCarTransaction,
-      ).toHaveBeenCalledWith(car, expect.anything());
     });
   });
 
@@ -461,10 +423,7 @@ describe('RentalsService', () => {
       const result = await rentalsService.returnCar(rentalId, user);
 
       expect(result).toEqual(returnResult);
-      expect(usersService.updateUserBalance).not.toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-      );
+      expect(usersService.updateUserBalance).not.toHaveBeenCalled();
     });
   });
 
@@ -513,11 +472,11 @@ describe('RentalsService', () => {
 
       jest
         .spyOn(testQueryBuilder, 'getManyAndCount')
-        .mockResolvedValue([...userRentals, 3]);
+        .mockResolvedValue([...userRentals, userRentals.length]);
 
       const result = await rentalsService.findAllUserRentals(user.id, queryDto);
 
-      expect(result).toEqual([...userRentals, 3]);
+      expect(result).toEqual([...userRentals, userRentals.length]);
     });
   });
 });

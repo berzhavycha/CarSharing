@@ -9,7 +9,7 @@ import { testUsersService } from '../test-objects';
 import { makeLocalFile, makePicture, makeUser } from '../utils';
 
 jest.mock('@nestjs/config');
-const mockConfigService = {
+const testConfigService = {
   get: jest.fn(),
 };
 
@@ -25,7 +25,7 @@ describe('UsersController', () => {
           provide: UsersService,
           useValue: testUsersService,
         },
-        { provide: ConfigService, useValue: mockConfigService },
+        { provide: ConfigService, useValue: testConfigService },
       ],
     }).compile();
 
@@ -43,7 +43,7 @@ describe('UsersController', () => {
 
   describe('updateUser', () => {
     beforeEach(() => {
-      jest.spyOn(mockConfigService, 'get').mockReturnValue('uploads');
+      jest.spyOn(testConfigService, 'get').mockReturnValue('uploads');
     });
 
     it('should update user details', async () => {

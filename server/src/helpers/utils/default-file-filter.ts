@@ -4,7 +4,7 @@ import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer
 import { localFilesErrors } from '../errors';
 
 export const defaultFileFilter: MulterOptions['fileFilter'] = (
-  request,
+  _request,
   file,
   callback,
 ): void => {

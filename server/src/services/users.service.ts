@@ -30,7 +30,7 @@ export class UsersService {
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
     private localFilesService: LocalFilesService,
-  ) { }
+  ) {}
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -118,7 +118,7 @@ export class UsersService {
 
     if (fileData) {
       const avatar = await this.localFilesService.saveLocalFileData(fileData);
-      user.avatar = avatar
+      user.avatar = avatar;
     }
 
     if (updateUserDto.email) {
@@ -140,7 +140,10 @@ export class UsersService {
     user.avatarId = null;
   }
 
-  async updateUserPassword(user: User, updateUserDto: UpdateUserDto): Promise<void> {
+  async updateUserPassword(
+    user: User,
+    updateUserDto: UpdateUserDto,
+  ): Promise<void> {
     if (!(await bcrypt.compare(updateUserDto.oldPassword, user.passwordHash))) {
       throw new BadRequestException(usersErrorMessages.INVALID_OLD_PASSWORD);
     }
