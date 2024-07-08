@@ -39,7 +39,7 @@ export class AuthController {
   @Post('sign-in')
   @UseGuards(LocalAuthGuard)
   async signIn(
-    @Body() userDto: LoginUserDto,
+    @Body() _userDto: LoginUserDto,
     @Res() res: Response,
     @Req() req: RequestWithUser,
   ): Promise<void> {

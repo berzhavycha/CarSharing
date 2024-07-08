@@ -39,6 +39,7 @@ export class AuthService {
       const invitationCode = this.configService.get<string>(
         'ADMIN_INVITATION_CODE',
       );
+      
       if (
         safeUser.role === Roles.ADMIN &&
         invitationCode !== safeUser.invitationCode
