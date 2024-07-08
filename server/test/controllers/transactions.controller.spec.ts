@@ -10,7 +10,7 @@ import { testTransanctionService } from '../test-objects';
 import { makeTransaction } from '../utils';
 
 jest.mock('@nestjs/config');
-const mockConfigService = {
+const testConfigService = {
   get: jest.fn(),
 };
 
@@ -28,7 +28,7 @@ describe('TransactionsController', () => {
         },
         {
           provide: ConfigService,
-          useValue: mockConfigService,
+          useValue: testConfigService,
         },
       ],
     }).compile();

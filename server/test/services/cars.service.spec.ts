@@ -4,7 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { QueryCarsDto, UpdateCarDto } from '@/dtos';
-import { Car } from '@/entities';
+import { Car, LocalFile } from '@/entities';
 import {
   applySearchAndPagination,
   carErrorMessages,
@@ -115,10 +115,13 @@ describe('CarsService', () => {
         existingImagesIds: ['existing-image-id-1'],
       };
 
-      const car = makeCar();
-      const imagesToDelete = car.pictures.filter(
-        (picture) => !updateCarDtoMock.existingImagesIds.includes(picture.id),
-      );
+      const car = makeCar({
+        id: 'car-id',
+        pictures: [
+          { id: 'existing-image-id-1' } as LocalFile,
+          { id: 'existing-image-id-2' } as LocalFile,
+        ],
+      });
 
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
       jest.spyOn(carsRepository, 'save').mockResolvedValue(car);
@@ -126,8 +129,9 @@ describe('CarsService', () => {
 
       await carsService.updateCar(car.id, updateCarDtoMock, []);
 
-      expect(localFilesService.removeFile).toHaveBeenCalledTimes(
-        imagesToDelete.length,
+      expect(localFilesService.removeFile).toHaveBeenCalledTimes(1);
+      expect(localFilesService.removeFile).toHaveBeenCalledWith(
+        'existing-image-id-2',
       );
     });
 

@@ -274,7 +274,7 @@ describe('UsersService', () => {
 
   describe('removeUserAvatar', () => {
     it('should remove user avatar', async () => {
-      const avatar = makeLocalFile()
+      const avatar = makeLocalFile();
       const user = makeUser({ avatar });
 
       jest.spyOn(localFilesService, 'removeFile').mockResolvedValue(undefined);
