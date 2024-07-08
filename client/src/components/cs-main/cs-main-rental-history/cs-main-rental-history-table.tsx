@@ -40,7 +40,9 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
 
   return (
     <>
-      {errorMessage ? <CSCommonError errorMessage={errorMessage} /> : (
+      {errorMessage ? (
+        <CSCommonError errorMessage={errorMessage} />
+      ) : (
         <Table>
           <thead>
             <tr>
@@ -53,7 +55,10 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
               >
                 Hours
               </HiddenXSTableHeader>
-              <HiddenSMTableHeader style={{ width: '8%' }} onClick={() => onSortChange('totalPrice')}>
+              <HiddenSMTableHeader
+                style={{ width: '8%' }}
+                onClick={() => onSortChange('totalPrice')}
+              >
                 Total Price
               </HiddenSMTableHeader>
               <HiddenSMTableHeader
@@ -62,7 +67,10 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
               >
                 Start Time
               </HiddenSMTableHeader>
-              <HiddenSMTableHeader style={{ width: '10%' }} onClick={() => onSortChange('rentalEnd')}>
+              <HiddenSMTableHeader
+                style={{ width: '10%' }}
+                onClick={() => onSortChange('rentalEnd')}
+              >
                 End Time
               </HiddenSMTableHeader>
               <TableHeader style={{ width: '8%' }} onClick={() => onSortChange('status')}>

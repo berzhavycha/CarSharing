@@ -32,7 +32,12 @@ export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route
-        element={<CSProtectedRoute isAllowed={() => checkUserRole(Roles.USER)} errorMessage={ONLY_USER_PAGE_ERROR} />}
+        element={
+          <CSProtectedRoute
+            isAllowed={() => checkUserRole(Roles.USER)}
+            errorMessage={ONLY_USER_PAGE_ERROR}
+          />
+        }
       >
         <Route path="/" element={<CSMainLayout />}>
           <Route index element={<CSMainUserPage />} loader={initialCarsLoader} />
@@ -62,7 +67,12 @@ export const router = createBrowserRouter(
         </Route>
       </Route>
       <Route
-        element={<CSProtectedRoute isAllowed={() => checkUserRole(Roles.ADMIN)} errorMessage={ONLY_ADMIN_PAGE_ERROR} />}
+        element={
+          <CSProtectedRoute
+            isAllowed={() => checkUserRole(Roles.ADMIN)}
+            errorMessage={ONLY_ADMIN_PAGE_ERROR}
+          />
+        }
       >
         <Route path="dashboard" element={<CSDashboardSidebar />}>
           <Route path="profile-settings" element={<CSDashboardProfileSettingsPage />} />

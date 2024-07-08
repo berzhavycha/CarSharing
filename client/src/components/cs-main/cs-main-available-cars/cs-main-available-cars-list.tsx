@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import styled from 'styled-components';
 
 import { CSCommonCarList, Pagination } from '@/components';
 import { Env } from '@/core';
@@ -6,7 +7,6 @@ import { DEFAULT_PAGINATION_PAGE, defaultSearchParams } from '@/helpers';
 import { usePagination, useSearchParamsWithDefaults } from '@/hooks';
 import { AvailableCarsLoaderData } from '@/pages';
 import { device } from '@/styles';
-import styled from 'styled-components';
 
 type Props = {
   data: AvailableCarsLoaderData['carsData'];
@@ -33,7 +33,7 @@ export const CSMainAvailableCarsList: FC<Props> = ({ data }) => {
         />
       )}
     </CarsListContainer>
-  )
+  );
 };
 
 const CarsListContainer = styled.div`
@@ -41,7 +41,7 @@ const CarsListContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 40px;
-`
+`;
 
 const CarsWrapper = styled.div`
   display: grid;

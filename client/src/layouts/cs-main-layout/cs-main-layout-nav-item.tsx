@@ -1,20 +1,21 @@
-import { device } from "@/styles";
-import { FC, ReactNode } from "react";
-import { NavLink } from "react-router-dom";
-import styled from "styled-components";
+import { FC, ReactNode } from 'react';
+import { NavLink } from 'react-router-dom';
+import styled from 'styled-components';
+
+import { device } from '@/styles';
 
 type Props = {
-    to: string;
-    icon: ReactNode;
-    text: string;
-    onClick: () => void
-}
+  to: string;
+  icon: ReactNode;
+  text: string;
+  onClick: () => void;
+};
 
 export const NavItem: FC<Props> = ({ to, icon, text, onClick }) => (
-    <StyledNavLink to={to} onClick={onClick}>
-        <IconWrapper>{icon}</IconWrapper>
-        <span>{text}</span>
-    </StyledNavLink>
+  <StyledNavLink to={to} onClick={onClick}>
+    <IconWrapper>{icon}</IconWrapper>
+    <span>{text}</span>
+  </StyledNavLink>
 );
 
 const StyledNavLink = styled(NavLink)`

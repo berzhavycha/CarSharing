@@ -14,16 +14,16 @@ export const carSchema = (existingImagesIds?: string[]): ZodSchema => {
       existingImagesIds && existingImagesIds.length > 0
         ? picturesSchema.optional()
         : picturesSchema.refine(
-          (fileList) => {
-            return fileList?.every(
-              (file) => file.size <= 10 * ONE_MB && file.type?.startsWith('image/'),
-            );
-          },
-          {
-            message:
-              'Invalid pictures format or size. Only up to 3 images allowed, each up to 10MB.',
-          },
-        ),
+            (fileList) => {
+              return fileList?.every(
+                (file) => file.size <= 10 * ONE_MB && file.type?.startsWith('image/'),
+              );
+            },
+            {
+              message:
+                'Invalid pictures format or size. Only up to 3 images allowed, each up to 10MB.',
+            },
+          ),
     model: z.string().min(2, 'Model must be at least 2 characters long'),
     year: z.coerce.number().positive('Year must be positive'),
     description: z.string().min(10, 'Description must be at least 10 characters long'),

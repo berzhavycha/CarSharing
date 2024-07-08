@@ -1,14 +1,18 @@
 import { FC, useState } from 'react';
+import { FaFilter } from 'react-icons/fa';
+import styled from 'styled-components';
 
-import { CSCommonCheckboxFilter, CSCommonCloseButton, CSCommonRangeFilter } from '@/components/cs-common';
+import {
+  CSCommonCheckboxFilter,
+  CSCommonCloseButton,
+  CSCommonRangeFilter,
+} from '@/components/cs-common';
 import { MIN_PRICE, PRICE_ROUNDING_INTERVAL } from '@/helpers';
+import { useClickOutside } from '@/hooks';
 import { AvailableCarsLoaderData } from '@/pages';
+import { device } from '@/styles';
 
 import { CSMainAvailableCarsSort } from './cs-main-available-cars-sort';
-import { useClickOutside } from '@/hooks';
-import { FaFilter } from 'react-icons/fa';
-import { device } from '@/styles';
-import styled from 'styled-components';
 
 type Props = {
   data: AvailableCarsLoaderData['filterOptions'];
@@ -38,7 +42,7 @@ export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {
 
       <SidebarContainer $isOpen={isSidebarOpen} ref={ref}>
         {isSidebarOpen && <CSCommonCloseButton onClose={onSidebarClose} color="var(--main-blue)" />}
-        
+
         <CSCommonCheckboxFilter type="types[]" options={typeOptions} title="TYPE" />
         <CSCommonCheckboxFilter type="capacities[]" options={capacityOptions} title="CAPACITY" />
         <CSCommonRangeFilter
