@@ -141,7 +141,7 @@ export class RentalsService {
         penalty =
           rental.car.pricePerHour *
           Math.ceil(hoursDifference - rental.requestedHours);
-
+        
         await this.usersService.updateUserBalance(
           {
             id: user.id,
