@@ -30,7 +30,7 @@ export class UsersService {
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
     private localFilesService: LocalFilesService,
-  ) {}
+  ) { }
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -100,10 +100,7 @@ export class UsersService {
       !updateUserDto.existingImagesIds.length &&
       user.avatar
     ) {
-      await this.localFilesService.removeFile(user.avatar.id);
-      user.avatar = null;
-      user.avatarId = null;
-
+      await this.removeUserAvatar(user);
       delete updateUserDto.existingImagesIds;
     }
 
@@ -113,14 +110,7 @@ export class UsersService {
       ) {
         throw new BadRequestException(usersErrorMessages.INVALID_OLD_PASSWORD);
       }
-
-      if (updateUserDto.newPassword) {
-        const { salt, hash } = await hashValue(updateUserDto.newPassword);
-        user.passwordSalt = salt;
-        user.passwordHash = hash;
-      } else {
-        throw new BadRequestException(usersErrorMessages.NO_NEW_PASSWORD);
-      }
+      await this.updateUserPassword(user, updateUserDto);
 
       delete updateUserDto.oldPassword;
       delete updateUserDto.newPassword;
@@ -128,7 +118,7 @@ export class UsersService {
 
     if (fileData) {
       const avatar = await this.localFilesService.saveLocalFileData(fileData);
-      Object.assign(user, { avatar });
+      user.avatar = avatar
     }
 
     if (updateUserDto.email) {
@@ -142,6 +132,26 @@ export class UsersService {
     Object.assign(user, updateUserDto);
 
     return this.usersRepository.save(user);
+  }
+
+  async removeUserAvatar(user: User): Promise<void> {
+    await this.localFilesService.removeFile(user.avatar.id);
+    user.avatar = null;
+    user.avatarId = null;
+  }
+
+  async updateUserPassword(user: User, updateUserDto: UpdateUserDto): Promise<void> {
+    if (!(await bcrypt.compare(updateUserDto.oldPassword, user.passwordHash))) {
+      throw new BadRequestException(usersErrorMessages.INVALID_OLD_PASSWORD);
+    }
+
+    if (updateUserDto.newPassword) {
+      const { salt, hash } = await hashValue(updateUserDto.newPassword);
+      user.passwordSalt = salt;
+      user.passwordHash = hash;
+    } else {
+      throw new BadRequestException(usersErrorMessages.NO_NEW_PASSWORD);
+    }
   }
 
   async updateUserBalance(

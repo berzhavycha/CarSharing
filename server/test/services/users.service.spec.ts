@@ -254,7 +254,7 @@ describe('UsersService', () => {
       ).rejects.toThrow(BadRequestException);
     });
 
-    it('should throw BadRequestException if provided email if duplicated', async () => {
+    it('should throw BadRequestException if provided email is duplicated', async () => {
       const updateUserDtoStub = {
         email: 'duplicate@gmail.com',
       };
@@ -269,6 +269,19 @@ describe('UsersService', () => {
       await expect(
         usersService.updateUser(user.id, updateUserDtoStub),
       ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('removeUserAvatar', () => {
+    it('should remove user avatar', async () => {
+      const avatar = makeLocalFile()
+      const user = makeUser({ avatar });
+
+      jest.spyOn(localFilesService, 'removeFile').mockResolvedValue(undefined);
+
+      await usersService.removeUserAvatar(user);
+
+      expect(localFilesService.removeFile).toHaveBeenCalledWith(avatar.id);
     });
   });
 
