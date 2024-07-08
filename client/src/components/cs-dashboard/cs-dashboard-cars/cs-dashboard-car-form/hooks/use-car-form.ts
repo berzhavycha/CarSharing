@@ -32,7 +32,6 @@ export const useCarForm = (onFormSubmit: onCarSubmit, carDefaultValues?: Car): H
 
   const onSubmit = async (carDto: CarDto): Promise<void> => {
     const dto = currentCar ? { ...carDto, id: currentCar.id, existingImagesIds } : carDto;
-    console.log(existingImagesIds, carDto)
     const { car, errors } = await onFormSubmit(dto);
     if (car) {
       setIsSuccess(true);

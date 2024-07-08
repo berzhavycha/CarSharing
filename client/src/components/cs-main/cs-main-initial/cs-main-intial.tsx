@@ -11,7 +11,7 @@ import DefaultCar from '../../../../public/default-car.png';
 
 import { CSMainInitialCarList } from './cs-main-initial-car-list';
 
-export const CSMain: FC = () => {
+export const CSMainInitial: FC = () => {
   return (
     <CSCommonContainer>
       <BannerWrappers>
