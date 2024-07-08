@@ -5,6 +5,8 @@ import { Env } from '@/core';
 import { DEFAULT_PAGINATION_PAGE, defaultSearchParams } from '@/helpers';
 import { usePagination, useSearchParamsWithDefaults } from '@/hooks';
 import { AvailableCarsLoaderData } from '@/pages';
+import { device } from '@/styles';
+import styled from 'styled-components';
 
 type Props = {
   data: AvailableCarsLoaderData['carsData'];
@@ -19,8 +21,10 @@ export const CSMainAvailableCarsList: FC<Props> = ({ data }) => {
   );
 
   return (
-    <>
-      <CSCommonCarList cars={data.cars} />
+    <CarsListContainer>
+      <CarsWrapper>
+        <CSCommonCarList cars={data.cars} />
+      </CarsWrapper>
       {totalPages > 1 && (
         <Pagination
           totalPages={totalPages}
@@ -28,6 +32,34 @@ export const CSMainAvailableCarsList: FC<Props> = ({ data }) => {
           onPageChange={onPageChange}
         />
       )}
-    </>
-  );
+    </CarsListContainer>
+  )
 };
+
+const CarsListContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+`
+
+const CarsWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 330px));
+  gap: 1.25rem;
+  margin: 40px;
+
+  @media ${device.lg} {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  @media ${device.md} {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  @media ${device.sm} {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    margin: 20px;
+    width: auto;
+  }
+`;
