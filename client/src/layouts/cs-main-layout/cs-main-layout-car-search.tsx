@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { CSCommonSearchBar } from '@/components/cs-common';
 import { usePagination, useSearchParamsWithDefaults } from '@/hooks';
 
-export const CSHeaderLayoutCarSearch: FC = () => {
+export const CSMainLayoutCarSearch: FC = () => {
   const { searchParams } = useSearchParamsWithDefaults();
   const { onSearchChange } = usePagination();
 

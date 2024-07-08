@@ -5,8 +5,8 @@ import styled from 'styled-components';
 import { CSCommonContainer } from '@/components';
 import { device } from '@/styles';
 
-import { CSHeaderLayoutCarSearch } from './cs-header-layout-car-search';
-import { CSHeaderLayoutOptions } from './cs-header-layout-options';
+import { CSMainLayoutCarSearch } from './cs-main-layout-car-search';
+import { CSMainLayoutHeaderOptions } from './cs-main-layout-header-options';
 
 export const CSMainLayoutHeader: FC = () => {
   const { pathname } = useLocation();
@@ -18,8 +18,8 @@ export const CSMainLayoutHeader: FC = () => {
         <HeaderContent $isSearchBarEnabled={isSearchBarEnabled}>
           <Logo to="/">CARRENT</Logo>
           <Nav>
-            {isSearchBarEnabled && <CSHeaderLayoutCarSearch />}
-            <CSHeaderLayoutOptions />
+            {isSearchBarEnabled && <CSMainLayoutCarSearch />}
+            <CSMainLayoutHeaderOptions />
           </Nav>
         </HeaderContent>
       </CSCommonContainer>

@@ -2,7 +2,6 @@ import { observer } from 'mobx-react-lite';
 import { FC, useRef, useState } from 'react';
 import { FaBars, FaDollarSign, FaHistory, FaSignOutAlt } from 'react-icons/fa';
 import { FaGear } from 'react-icons/fa6';
-import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonCloseButton } from '@/components';
@@ -12,8 +11,9 @@ import { useClickOutside, useSignOut } from '@/hooks';
 import { device } from '@/styles';
 
 import DefaultImage from '../../../public/avatar.webp';
+import { IconWrapper, NavItem } from './cs-main-layout-nav-item';
 
-export const CSHeaderLayoutOptions: FC = observer(() => {
+export const CSMainLayoutHeaderOptions: FC = observer(() => {
   const {
     currentUserStore: { user },
   } = useStore();
@@ -52,24 +52,9 @@ export const CSHeaderLayoutOptions: FC = observer(() => {
             </UserDetails>
           )}
         </UserInfoMobile>
-        <StyledNavLink to="/profile-settings" onClick={closeMenu}>
-          <IconWrapper>
-            <FaGear />
-          </IconWrapper>
-          <span>Settings</span>
-        </StyledNavLink>
-        <StyledNavLink to="/top-up" onClick={closeMenu}>
-          <IconWrapper>
-            <FaDollarSign />
-          </IconWrapper>
-          <span>Top Up</span>
-        </StyledNavLink>
-        <StyledNavLink to="/rental-history" onClick={closeMenu}>
-          <IconWrapper>
-            <FaHistory />
-          </IconWrapper>
-          <span>History</span>
-        </StyledNavLink>
+        <NavItem to="/profile-settings" icon={<FaGear />} text="Settings" onClick={closeMenu} />
+        <NavItem to="/top-up" icon={<FaDollarSign />} text="Top Up" onClick={closeMenu} />
+        <NavItem to="/rental-history" icon={<FaHistory />} text="History" onClick={closeMenu} />
         <SignOutButton onClick={signOutHandler}>
           <IconWrapper>
             <FaSignOutAlt />
@@ -147,34 +132,6 @@ const NavOptions = styled.div<{ $isOpen: boolean }>`
   }
 `;
 
-const StyledNavLink = styled(NavLink)`
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--gray-blue);
-
-  &.active {
-    color: #1e3a8a;
-
-    span {
-      color: #1e3a8a;
-    }
-  }
-
-  span {
-    display: none;
-
-    @media ${device.lg} {
-      display: flex;
-    }
-  }
-
-  &:hover {
-    color: #1e3a8a;
-  }
-`;
-
 const SignOutButton = styled.button`
   background: none;
   border: none;
@@ -198,22 +155,6 @@ const SignOutButton = styled.button`
   }
 `;
 
-const IconWrapper = styled.div`
-  width: 40px;
-  height: 40px;
-  font-size: 18px;
-  border: var(--default-border);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: var(--default-transition);
-
-  &:hover {
-    color: #1e3a8a;
-    border-color: #1e3a8a;
-  }
-`;
 
 const UserInfoDesktop = styled.div`
   display: flex;
