@@ -9,6 +9,6 @@ interface MenuItemType {
 
 export const menuItems: MenuItemType[] = [
   { icon: <FaGear />, label: 'Settings', path: "/profile-settings" },
-  { icon: <FaDollarSign />, label: 'Transactions', path: "/top-up" },
-  { icon: <FaHistory />, label: 'Car Report', path: "/rental-history" },
+  { icon: <FaDollarSign />, label: 'Top Up', path: "/top-up" },
+  { icon: <FaHistory />, label: 'History', path: "/rental-history" },
 ];
