@@ -27,7 +27,7 @@ export const signInFieldMappings: Record<string, keyof SignInUserDto> = {
   password: 'password',
 };
 
-export const authCedirectPages = {
+export const authRedirectPages = {
   [Roles.ADMIN]: '/dashboard/profile-settings',
   [Roles.USER]: '/',
 };

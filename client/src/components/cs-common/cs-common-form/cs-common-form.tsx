@@ -30,7 +30,7 @@ type Props<TEntity extends FieldValues> = PropsWithChildren & {
   validationSchema: ZodSchema<TEntity>;
   onSubmit: (user: TEntity) => void;
   defaultValues?: DefaultValues<TEntity>;
-  showReset?: boolean;
+  shouldReset?: boolean;
 };
 
 export const CSCommonForm = <TEntity extends FieldValues>({
@@ -38,7 +38,7 @@ export const CSCommonForm = <TEntity extends FieldValues>({
   children,
   onSubmit,
   defaultValues,
-  showReset = true,
+  shouldReset = true,
 }: Props<TEntity>): JSX.Element => {
   const formHandle = useForm<TEntity>({
     mode: 'onSubmit',
@@ -56,7 +56,7 @@ export const CSCommonForm = <TEntity extends FieldValues>({
   };
 
   useEffect(() => {
-    if (showReset) {
+    if (shouldReset) {
       formHandle.reset(defaultValues);
     }
   }, [formHandle.formState.isSubmitSuccessful, defaultValues]);

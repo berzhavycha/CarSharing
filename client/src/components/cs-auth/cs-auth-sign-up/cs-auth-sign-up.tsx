@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { CSCommonErrorMessage, CSCommonForm } from '@/components';
 import { useStore } from '@/context';
-import { authCedirectPages, AuthType, getUserSchema, Roles } from '@/helpers';
+import { authRedirectPages, AuthType, getUserSchema, Roles } from '@/helpers';
 import { device } from '@/styles';
 import { SignUpUserDto } from '@/types';
 
@@ -20,7 +20,7 @@ export const CSAuthSignUp: FC = observer(() => {
   const onSubmit = async (data: SignUpUserDto): Promise<void> => {
     await currentUserStore.signUp(data);
     if (currentUserStore.user) {
-      navigate(authCedirectPages[currentUserStore.user.role as Roles]);
+      navigate(authRedirectPages[currentUserStore.user.role as Roles]);
     }
   };
 
@@ -40,7 +40,7 @@ export const CSAuthSignUp: FC = observer(() => {
         <CSCommonForm<SignUpUserDto>
           validationSchema={getUserSchema(AuthType.SIGN_UP, userRole)}
           onSubmit={onSubmit}
-          showReset={false}
+          shouldReset={false}
         >
           <FormBlocks>
             <CSCommonForm.Input
