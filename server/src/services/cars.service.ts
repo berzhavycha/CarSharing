@@ -58,9 +58,9 @@ export class CarsService {
       (picture) => !updateCarDto.existingImagesIds.includes(picture.id),
     );
 
-    for (const img of imagesToDelete) {
-      await this.localFilesService.removeFile(img.id);
-    }
+    await Promise.all(
+      imagesToDelete.map((img) => this.localFilesService.removeFile(img.id)),
+    );
 
     const newCarPictures = await Promise.all(
       newImages.map((file) => this.localFilesService.saveLocalFileData(file)),
