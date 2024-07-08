@@ -45,7 +45,7 @@ const CarsListContainer = styled.div`
 
 const CarsWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 330px));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.25rem;
   margin: 40px;
 
