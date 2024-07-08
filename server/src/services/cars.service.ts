@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { CreateCarDto, LocalFileDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { Car } from '@/entities';
@@ -29,7 +29,7 @@ export class CarsService {
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
     private localFilesService: LocalFilesService,
-  ) {}
+  ) { }
 
   async createCar(
     createCarDto: CreateCarDto,
@@ -110,35 +110,13 @@ export class CarsService {
       limit,
       order,
       sort,
-      types,
-      capacities,
-      status,
-      minPrice,
-      maxPrice,
     } = listCarsDto;
 
     const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
     queryBuilder.leftJoinAndSelect('car.pictures', 'pictures');
 
-    if (types && types.length > 0) {
-      queryBuilder.andWhere('car.type IN (:...types)', { types });
-    }
-
-    if (capacities && capacities.length > 0) {
-      queryBuilder.andWhere('car.capacity IN (:...capacities)', { capacities });
-    }
-
-    if (status) {
-      queryBuilder.andWhere('car.status = :status', { status });
-    }
-
-    if (minPrice !== undefined && maxPrice !== undefined) {
-      queryBuilder.andWhere(
-        'car.pricePerHour BETWEEN :minPrice AND :maxPrice',
-        { minPrice, maxPrice },
-      );
-    }
+    this.applyFilters(queryBuilder, listCarsDto);
 
     applySearchAndPagination(queryBuilder, {
       search,
@@ -169,5 +147,21 @@ export class CarsService {
     const maxPrice = maxPriceResult ? parseFloat(maxPriceResult.maxPrice) : 0;
 
     return { types, capacities, maxPrice };
+  }
+
+  private applyFilters(queryBuilder: SelectQueryBuilder<Car>, listCarsDto: QueryCarsDto): void {
+    const { types, capacities, status, minPrice, maxPrice } = listCarsDto;
+    if (types && types.length > 0) {
+      queryBuilder.andWhere('car.type IN (:...types)', { types });
+    }
+    if (capacities && capacities.length > 0) {
+      queryBuilder.andWhere('car.capacity IN (:...capacities)', { capacities });
+    }
+    if (status) {
+      queryBuilder.andWhere('car.status = :status', { status });
+    }
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      queryBuilder.andWhere('car.pricePerHour BETWEEN :minPrice AND :maxPrice', { minPrice, maxPrice });
+    }
   }
 }
