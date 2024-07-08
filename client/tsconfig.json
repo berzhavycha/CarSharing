@@ -101,6 +101,12 @@
       "@/styles/*": [
         "src/styles/*"
       ],
+      "@/regex": [
+        "src/regex"
+      ],
+      "@/regex/*": [
+        "src/regex/*"
+      ]
     },
   },
   "include": [

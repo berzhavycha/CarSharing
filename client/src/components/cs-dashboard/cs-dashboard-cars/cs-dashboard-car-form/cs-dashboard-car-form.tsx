@@ -7,7 +7,7 @@ import {
   CarStatusSelect,
   CarSteeringTypeSelect,
   CarTypeSelect,
-  createCarSchema,
+  carSchema,
 } from '@/helpers';
 import { device } from '@/styles';
 import { Car, CarDto, FieldErrorsState } from '@/types';
@@ -42,7 +42,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
     <FormContainer>
       <ContentContainer>
         <CSCommonForm<CarDto>
-          validationSchema={createCarSchema(existingImagesIds)}
+          validationSchema={carSchema(existingImagesIds)}
           onSubmit={onSubmit}
           defaultValues={currentCar ? { ...currentCar, pictures: [] } : undefined}
         >
