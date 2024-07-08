@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { FC, useRef, useState } from 'react';
-import { FaBars, FaDollarSign, FaHistory, FaSignOutAlt } from 'react-icons/fa';
-import { FaGear } from 'react-icons/fa6';
+import { FaBars, FaSignOutAlt } from 'react-icons/fa';
 import styled from 'styled-components';
 
 import { CSCommonCloseButton } from '@/components';
@@ -12,6 +11,7 @@ import { device } from '@/styles';
 
 import DefaultImage from '../../../public/avatar.webp';
 import { IconWrapper, NavItem } from './cs-main-layout-nav-item';
+import { menuItems } from './constants';
 
 export const CSMainLayoutHeaderOptions: FC = observer(() => {
   const {
@@ -52,9 +52,9 @@ export const CSMainLayoutHeaderOptions: FC = observer(() => {
             </UserDetails>
           )}
         </UserInfoMobile>
-        <NavItem to="/profile-settings" icon={<FaGear />} text="Settings" onClick={closeMenu} />
-        <NavItem to="/top-up" icon={<FaDollarSign />} text="Top Up" onClick={closeMenu} />
-        <NavItem to="/rental-history" icon={<FaHistory />} text="History" onClick={closeMenu} />
+        {menuItems.map((item) => (
+          <NavItem key={item.label} to={item.path} icon={item.icon} text={item.label} onClick={closeMenu} />
+        ))}
         <SignOutButton onClick={signOutHandler}>
           <IconWrapper>
             <FaSignOutAlt />
