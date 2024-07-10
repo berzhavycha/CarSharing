@@ -1,0 +1,86 @@
+name: Deploy Full-Stack App
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install frontend dependencies
+        working-directory: client
+        run: npm install
+
+      - name: Build the frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync client/dist/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  deploy-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install backend dependencies
+        working-directory: server
+        run: npm install --omit=dev
+
+      - name: Build the backend
+        working-directory: backend
+        run: npm run build
+
+      - name: Create and upload layer
+        run: |
+          mkdir -p layer/nodejs
+          cp -r backend/node_modules layer/nodejs
+          cd layer
+          zip -r layer.zip nodejs
+          aws lambda publish-layer-version --layer-name nestjs-layer --zip-file fileb://layer.zip --region ${{ secrets.AWS_REGION }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Zip the deployment package
+        run: |
+          cd backend
+          zip -r ../function.zip dist
+        working-directory: backend
+
+      - name: Deploy to AWS Lambda
+        run: |
+          aws lambda update-function-code --function-name nestjs-backend-api --zip-file fileb://function.zip --region ${{ secrets.AWS_REGION }}
+          aws lambda update-function-configuration --function-name nestjs-backend-api --layers $(aws lambda list-layer-versions --layer-name nestjs-layer --query 'LayerVersions[0].LayerVersionArn' --output text) --region ${{ secrets.AWS_REGION }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Deploy API Gateway
+        run: |
+          aws apigateway create-deployment --rest-api-id ${{ secrets.API_GATEWAY_ID }} --stage-name ${{ secrets.API_GATEWAY_STAGE }} --region ${{ secrets.AWS_REGION }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
