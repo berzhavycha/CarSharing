@@ -6,11 +6,12 @@ import { CSCommonErrorMessage, InputProps } from '@/components/cs-common';
 import { useCommonForm } from './cs-common-form';
 import { CSCommonFormImagePreview } from './cs-common-form-image-preview';
 import { Preview, useImagePreviews } from './hooks';
+import { PublicFile } from '@/types';
 
 type Props = Omit<InputProps, 'name'> & {
   name: string;
   defaultImage: string;
-  existingImageIds?: string[];
+  existingImages?: PublicFile[];
   onRemove?: (id: string) => Promise<void> | void;
   circled?: boolean;
   width?: number;
@@ -20,7 +21,7 @@ type Props = Omit<InputProps, 'name'> & {
 
 export const CSCommonFormInputImage: FC<Props> = ({
   defaultImage,
-  existingImageIds,
+  existingImages,
   label,
   circled,
   onRemove,
@@ -39,13 +40,13 @@ export const CSCommonFormInputImage: FC<Props> = ({
 
   const { previews, handleUploadedFiles, removeImage, resetPreviews } = useImagePreviews(
     defaultImage,
-    existingImageIds,
+    existingImages,
     multiple,
   );
 
   useEffect(() => {
     resetPreviews();
-  }, [isSubmitSuccessful, existingImageIds]);
+  }, [isSubmitSuccessful, existingImages]);
 
   const { ref: registerRef, onChange, ...rest } = register(name);
 
@@ -63,7 +64,7 @@ export const CSCommonFormInputImage: FC<Props> = ({
 
   const onRemoveImage = (preview: Preview, index: number): void => {
     removeImage(index);
-    if (onRemove && existingImageIds?.length && preview.id) {
+    if (onRemove && existingImages?.length && preview.id) {
       onRemove(preview.id);
     }
   };

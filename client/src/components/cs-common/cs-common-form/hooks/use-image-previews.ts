@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 
-import { Env } from '@/core';
+import { PublicFile } from '@/types';
 
 type HookReturn = {
   previews: Preview[];
@@ -16,15 +16,12 @@ export type Preview = {
 
 export const useImagePreviews = (
   defaultImage: string,
-  actualImages?: string[],
+  actualImages?: PublicFile[],
   multiple?: boolean,
 ): HookReturn => {
   const [previews, setPreviews] = useState<Preview[]>(() => {
     if (actualImages && actualImages.length > 0) {
-      return actualImages.map((img) => ({
-        id: img,
-        url: `${Env.API_BASE_URL}/local-files/${img}`,
-      }));
+      return actualImages;
     }
     return [{ url: defaultImage }];
   });
@@ -55,7 +52,7 @@ export const useImagePreviews = (
   const resetPreviews = (): void => {
     setPreviews(
       actualImages && actualImages.length > 0
-        ? actualImages.map((img) => ({ id: img, url: `${Env.API_BASE_URL}/local-files/${img}` }))
+        ? actualImages
         : [{ url: defaultImage }],
     );
   };

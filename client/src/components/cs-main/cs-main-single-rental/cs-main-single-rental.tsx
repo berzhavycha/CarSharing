@@ -9,10 +9,9 @@ import {
   CSCommonSlides,
   CSCommonSpinner,
 } from '@/components/cs-common';
-import { Env } from '@/core';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { device } from '@/styles';
-import { LocalFile, Rental } from '@/types';
+import { PublicFile, Rental } from '@/types';
 
 import { CSMainRentalHistoryModals } from '../cs-main-rental-history/cs-main-rental-history-modals';
 
@@ -30,7 +29,7 @@ export const CSMainSingleRental: FC = observer(() => {
         >
           {(rental) => {
             const carImages = rental.originalCar?.pictures?.map(
-              (pic: LocalFile) => `${Env.API_BASE_URL}/local-files/${pic?.id}`,
+              (pic: PublicFile) => pic?.url,
             );
 
             return (

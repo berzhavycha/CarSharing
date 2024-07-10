@@ -14,16 +14,16 @@ import { useProfileUpdate } from './hooks';
 
 export const CSCommonProfileSettings: FC = observer(() => {
   const {
-    currentUserStore: { user, errors, updateUser, existingImagesIds: viewImagesIds },
+    currentUserStore: { user, errors, updateUser, existingImages: viewImages },
   } = useStore();
 
   const {
     isUpdateSuccessful,
     setIsUpdateSuccessful,
-    existingImagesIds,
+    existingImages,
     onSubmit,
     onPreviewRemove,
-  } = useProfileUpdate(updateUser, viewImagesIds, errors?.update);
+  } = useProfileUpdate(updateUser, viewImages, errors?.update);
 
   const defaultValues = {
     firstName: user?.firstName,
@@ -47,7 +47,7 @@ export const CSCommonProfileSettings: FC = observer(() => {
             <ProfileHeaderWrapper>
               <CSCommonForm.InputFile
                 defaultImage={DefaultImage}
-                existingImageIds={existingImagesIds}
+                existingImages={existingImages}
                 onRemove={onPreviewRemove}
                 name="picture"
                 label="Update Avatar"

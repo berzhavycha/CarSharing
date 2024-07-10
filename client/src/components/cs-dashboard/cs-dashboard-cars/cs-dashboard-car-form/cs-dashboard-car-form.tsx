@@ -28,7 +28,7 @@ type Props = {
 export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }) => {
   const {
     currentCar,
-    existingImagesIds,
+    existingImages,
     setIsSuccess,
     isSuccess,
     onPreviewRemove,
@@ -42,7 +42,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
     <FormContainer>
       <ContentContainer>
         <CSCommonForm<CarDto>
-          validationSchema={carSchema(existingImagesIds)}
+          validationSchema={carSchema(existingImages)}
           onSubmit={onSubmit}
           defaultValues={currentCar ? { ...currentCar, pictures: [] } : undefined}
         >
@@ -50,7 +50,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
             <CSCommonForm.InputFile
               label="Upload Car Image"
               defaultImage={DefaultImage}
-              existingImageIds={existingImagesIds}
+              existingImages={existingImages}
               onRemove={onPreviewRemove}
               name="pictures"
               multiple
