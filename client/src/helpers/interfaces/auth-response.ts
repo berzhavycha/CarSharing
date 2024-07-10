@@ -1,3 +1,5 @@
+import { PublicFile } from "@/types";
+
 export interface RoleResponse {
   id: string;
   name: string;
@@ -12,5 +14,6 @@ export interface ApiAuthResponse {
   createdAt: string;
   updatedAt: string;
   id: string;
+  avatar: PublicFile;
   avatarId: string;
 }
