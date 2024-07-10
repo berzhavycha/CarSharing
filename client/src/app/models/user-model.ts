@@ -3,6 +3,7 @@ import { t } from 'mobx-state-tree';
 import {
   AuthenticatedUser,
   FieldErrorsState,
+  PublicFile,
   SignInUserDto,
   SignUpUserDto,
   UpdateUserBalanceDto,
@@ -16,6 +17,7 @@ export const UserModel = t.model('UserModel', {
   lastName: t.string,
   balance: t.maybeNull(t.number),
   role: t.string,
+  avatar: t.maybeNull(t.frozen<PublicFile>()),
   avatarId: t.maybeNull(t.string),
 });
 

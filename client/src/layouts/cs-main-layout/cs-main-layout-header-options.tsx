@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 import { CSCommonCloseButton } from '@/components';
 import { useStore } from '@/context';
-import { Env } from '@/core';
 import { useClickOutside, useSignOut } from '@/hooks';
 import { device } from '@/styles';
 
@@ -23,7 +22,7 @@ export const CSMainLayoutHeaderOptions: FC = observer(() => {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const profilePicture = user?.avatarId
-    ? `${Env.API_BASE_URL}/local-files/${user?.avatarId}`
+    ? user?.avatar?.url
     : DefaultImage;
 
   const ref = useClickOutside(() => setIsMenuOpen(false), menuButtonRef);

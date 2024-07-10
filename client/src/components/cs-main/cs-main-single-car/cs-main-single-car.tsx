@@ -8,10 +8,9 @@ import {
   CSCommonSlides,
   CSCommonSpinner,
 } from '@/components/cs-common';
-import { Env } from '@/core';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { device } from '@/styles';
-import { Car, LocalFile } from '@/types';
+import { Car, PublicFile } from '@/types';
 
 import { CSMainSingleCarDetails } from './cs-main-single-car-details';
 
@@ -28,7 +27,7 @@ export const CSMainSingleCar: FC = () => {
           >
             {(car) => {
               const carImages = car.pictures.map(
-                (pic: LocalFile) => `${Env.API_BASE_URL}/local-files/${pic?.id}`,
+                (pic: PublicFile) => pic?.url,
               );
               return (
                 <>

@@ -5,8 +5,8 @@ import styled from 'styled-components';
 
 import { BaseSection, SectionDescription, SectionTitle } from '@/components/cs-common';
 import { useStore } from '@/context';
-import { Env } from '@/core';
 import { device } from '@/styles';
+import { Car } from '@/types';
 
 export const CSMainRentalPaymentSummary: FC = observer(() => {
   const {
@@ -14,7 +14,7 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
   } = useStore();
 
   const location = useLocation();
-  const car = location.state?.car;
+  const car = location.state?.car as Car;
 
   return (
     <SummaryWrapper>
@@ -23,7 +23,7 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
         Prices may change depending on the length of the rental and the price of your rental car.
       </SectionDescription>
       <CarInfoWrapper>
-        <CarImage src={`${Env.API_BASE_URL}/local-files/${car.pictures[0]?.id}`} />
+        <CarImage src={car.pictures[0]?.url} />
         <CarDetails>
           <CarName>{car.model}</CarName>
           <CarType>{car.type}</CarType>

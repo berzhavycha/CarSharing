@@ -13,7 +13,6 @@ import {
   TableCell,
   TableRow,
 } from '@/components/cs-common';
-import { Env } from '@/core';
 import { formatDate, RentalStatus, uppercaseFirstLetter } from '@/helpers';
 
 type Props = {
@@ -45,7 +44,7 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({ rental, index,
       <TableCell>{index + 1}</TableCell>
       <HiddenMDTableCell>
         <img
-          src={`${Env.API_BASE_URL}/local-files/${rental.originalCar?.pictures?.[0]?.id}`}
+          src={rental.originalCar?.pictures?.[0]?.url}
           alt="Car Image"
         />
       </HiddenMDTableCell>

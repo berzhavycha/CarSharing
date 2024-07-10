@@ -34,7 +34,6 @@ export const CSDashboardCarTableRow: FC<Props> = ({ car, index, onRemoveClick })
     },
   ];
 
-  console.log(car)
   return (
     <TableRow key={car.id}>
       <TableCell>{index + 1}</TableCell>
