@@ -61,7 +61,7 @@ jobs:
 
       - name: Zip the deployment package
         run: |
-          cd server
+          cd ../server
           zip -r -9 ../function.zip dist node_modules package.json
         working-directory: server
 
