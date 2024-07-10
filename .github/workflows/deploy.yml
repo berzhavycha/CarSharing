@@ -72,13 +72,13 @@ jobs:
 
       - name: Zip the deployment package
         run: |
-          cd server
-          zip -r ../layer.zip dist
+          cd ../server
+          zip -r ../function.zip dist
         working-directory: server
 
       - name: Deploy to AWS Lambda
         run: |
-          aws lambda update-function-code --function-name nestjs-backend-api --zip-file fileb://layer.zip --region ${{ secrets.AWS_REGION }}
+          aws lambda update-function-code --function-name nestjs-backend-api --zip-file fileb://function.zip --region ${{ secrets.AWS_REGION }}
           aws lambda update-function-configuration --function-name nestjs-backend-api --layers $(aws lambda list-layer-versions --layer-name nestjs-layer --query 'LayerVersions[0].LayerVersionArn' --output text) --region ${{ secrets.AWS_REGION }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
