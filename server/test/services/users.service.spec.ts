@@ -1,13 +1,13 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { EntityManager, Repository } from 'typeorm';
 
 import { User } from '@/entities';
 import { hashValue, usersErrorMessages } from '@/helpers';
 import {
-  LocalFilesService,
+  PublicFilesService,
   RolesService,
   TransactionsService,
   UsersService,
@@ -15,7 +15,7 @@ import {
 
 import {
   testEntityManager,
-  testLocalFilesService,
+  testPublicFilesService,
   testRepository,
   testRoleService,
   testTransanctionService,
@@ -23,7 +23,7 @@ import {
 import {
   makeCreateUserDto,
   makeHash,
-  makeLocalFile,
+  makePublicFile,
   makeRole,
   makeUpdateUserBalanceOptions,
   makeUser,
@@ -33,12 +33,16 @@ jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
   hashValue: jest.fn(),
 }));
 
+jest.mock('bcryptjs', () => ({
+  compare: jest.fn(),
+}));
+
 describe('UsersService', () => {
   let usersService: UsersService;
   let transactionsService: TransactionsService;
   let rolesService: RolesService;
   let usersRepository: Repository<User>;
-  let localFilesService: LocalFilesService;
+  let publicFilesService: PublicFilesService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -57,8 +61,8 @@ describe('UsersService', () => {
           useValue: testRoleService,
         },
         {
-          provide: LocalFilesService,
-          useValue: testLocalFilesService,
+          provide: PublicFilesService,
+          useValue: testPublicFilesService,
         },
       ],
     }).compile();
@@ -67,7 +71,7 @@ describe('UsersService', () => {
     transactionsService = module.get<TransactionsService>(TransactionsService);
     rolesService = module.get<RolesService>(RolesService);
     usersRepository = module.get<Repository<User>>(getRepositoryToken(User));
-    localFilesService = module.get<LocalFilesService>(LocalFilesService);
+    publicFilesService = module.get<PublicFilesService>(PublicFilesService);
   });
 
   afterEach(() => {
@@ -191,23 +195,24 @@ describe('UsersService', () => {
 
     it('should update user with file', async () => {
       const user = makeUser();
-      const localFile = makeLocalFile();
+      const publicFile = makePublicFile();
       const updatedUser = makeUser({
-        avatarId: localFile.id,
-        avatar: localFile,
+        avatarId: publicFile.id,
+        avatar: publicFile,
         ...updateUserDtoStub,
       });
 
       jest
-        .spyOn(localFilesService, 'saveLocalFileData')
-        .mockResolvedValue(localFile);
+        .spyOn(publicFilesService, 'uploadPublicFile')
+        .mockResolvedValue(publicFile);
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
 
+      const file = { imageBuffer: new Buffer('file'), filename: 'name' }
       const result = await usersService.updateUser(
         user.id,
         updateUserDtoStub,
-        localFile,
+        file,
       );
 
       expect(result).toEqual(updatedUser);
@@ -229,7 +234,7 @@ describe('UsersService', () => {
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
-      jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       (hashValue as jest.Mock).mockResolvedValueOnce(hash);
 
       const result = await usersService.updateUser(user.id, updateUserDtoStub);
@@ -247,7 +252,7 @@ describe('UsersService', () => {
       const user = makeUser();
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
-      jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       await expect(
         usersService.updateUser(user.id, updateUserDtoStub),
@@ -274,14 +279,14 @@ describe('UsersService', () => {
 
   describe('removeUserAvatar', () => {
     it('should remove user avatar', async () => {
-      const avatar = makeLocalFile();
+      const avatar = makePublicFile();
       const user = makeUser({ avatar });
 
-      jest.spyOn(localFilesService, 'removeFile').mockResolvedValue(undefined);
+      jest.spyOn(publicFilesService, 'removeFile').mockResolvedValue(undefined);
 
       await usersService.removeUserAvatar(user);
 
-      expect(localFilesService.removeFile).toHaveBeenCalledWith(avatar.id);
+      expect(publicFilesService.removeFile).toHaveBeenCalledWith(avatar.id);
     });
   });
 

@@ -31,7 +31,7 @@ export class RentalsService {
     private originalCarsService: OriginalCarsService,
     private usersService: UsersService,
     private readonly entityManager: EntityManager,
-  ) {}
+  ) { }
 
   async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
     const existingActiveUserRental = await this.rentalsRepository.findOne({
@@ -117,7 +117,7 @@ export class RentalsService {
       const returnDate = new Date();
       const hoursDifference = Math.ceil(
         (returnDate.getTime() - rental.rentalStart.getTime()) /
-          ONE_HOUR_MILLISECONDS,
+        ONE_HOUR_MILLISECONDS,
       );
 
       let refund: number | undefined;
@@ -200,7 +200,7 @@ export class RentalsService {
     const queryBuilder = this.rentalsRepository
       .createQueryBuilder('rental')
       .leftJoinAndSelect('rental.originalCar', 'originalCar')
-      .leftJoinAndSelect('originalCar.pictures', 'localFile')
+      .leftJoinAndSelect('originalCar.pictures', 'publicFile')
       .where('rental.user.id = :userId', { userId });
 
     applySearchAndPagination(queryBuilder, {

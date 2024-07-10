@@ -4,21 +4,21 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { QueryCarsDto, UpdateCarDto } from '@/dtos';
-import { Car, LocalFile } from '@/entities';
+import { Car, PublicFile } from '@/entities';
 import {
   applySearchAndPagination,
   carErrorMessages,
   CarStatus,
   RentalStatus,
 } from '@/helpers';
-import { CarsService, LocalFilesService } from '@/services';
+import { CarsService, PublicFilesService, } from '@/services';
 
 import {
-  testLocalFilesService,
+  testPublicFilesService,
   testQueryBuilder,
   testRepository,
 } from '../test-objects';
-import { makeCar, makeCreateCarDto, makeLocalFile, makeRental } from '../utils';
+import { makeCar, makeCreateCarDto, makePublicFile, makeRental } from '../utils';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
@@ -27,7 +27,7 @@ jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
 describe('CarsService', () => {
   let carsService: CarsService;
   let carsRepository: Repository<Car>;
-  let localFilesService: LocalFilesService;
+  let publicFilesService: PublicFilesService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -38,15 +38,15 @@ describe('CarsService', () => {
           useValue: testRepository,
         },
         {
-          provide: LocalFilesService,
-          useValue: testLocalFilesService,
+          provide: PublicFilesService,
+          useValue: testPublicFilesService,
         },
       ],
     }).compile();
 
     carsService = module.get<CarsService>(CarsService);
     carsRepository = module.get<Repository<Car>>(getRepositoryToken(Car));
-    localFilesService = module.get<LocalFilesService>(LocalFilesService);
+    publicFilesService = module.get<PublicFilesService>(PublicFilesService);
   });
 
   afterEach(() => {
@@ -118,48 +118,47 @@ describe('CarsService', () => {
       const car = makeCar({
         id: 'car-id',
         pictures: [
-          { id: 'existing-image-id-1' } as LocalFile,
-          { id: 'existing-image-id-2' } as LocalFile,
+          { id: 'existing-image-id-1' } as PublicFile,
+          { id: 'existing-image-id-2' } as PublicFile,
         ],
       });
 
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
       jest.spyOn(carsRepository, 'save').mockResolvedValue(car);
-      jest.spyOn(localFilesService, 'removeFile').mockResolvedValue();
+      jest.spyOn(publicFilesService, 'removeFile').mockResolvedValue();
 
       await carsService.updateCar(car.id, updateCarDtoMock, []);
 
-      expect(localFilesService.removeFile).toHaveBeenCalledTimes(1);
-      expect(localFilesService.removeFile).toHaveBeenCalledWith(
+      expect(publicFilesService.removeFile).toHaveBeenCalledTimes(1);
+      expect(publicFilesService.removeFile).toHaveBeenCalledWith(
         'existing-image-id-2',
       );
     });
 
     it('should add new images to the car', async () => {
-      const localFile = makeLocalFile();
+      const publicFile = makePublicFile();
       const updateCarDtoMock = {
-        existingImagesIds: [localFile.id],
+        existingImagesIds: [publicFile.id],
       };
 
       const newImages = [
         {
-          filename: 'new-image.jpg',
-          mimetype: 'image/jpeg',
-          path: '/path/to/new-image.jpg',
+          imageBuffer: new Buffer('string'),
+          filename: 'name'
         },
       ];
 
       const car = makeCar();
-      const updateCar = { ...car, pictures: [localFile] };
+      const updateCar = { ...car, pictures: [publicFile] };
 
       jest.spyOn(carsService, 'findById').mockResolvedValue({ ...updateCar });
       jest.spyOn(carsRepository, 'save').mockResolvedValue({
         ...updateCar,
-        pictures: [localFile, localFile],
+        pictures: [publicFile, publicFile],
       });
       jest
-        .spyOn(localFilesService, 'saveLocalFileData')
-        .mockResolvedValue(localFile);
+        .spyOn(publicFilesService, 'uploadPublicFile')
+        .mockResolvedValue(publicFile);
 
       const result = await carsService.updateCar(
         updateCar.id,
