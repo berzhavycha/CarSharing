@@ -56,7 +56,7 @@ describe('PublicFilesService', () => {
   });
 
   describe('uploadPublicFile', () => {
-    it('should create a local file', async () => {
+    it('should create a file', async () => {
       const publicFile = makePublicFile();
 
       jest.spyOn(publicFilesRepository, 'create').mockReturnValue(publicFile);
@@ -73,7 +73,7 @@ describe('PublicFilesService', () => {
   });
 
   describe('findById', () => {
-    it('should return a local file when found', async () => {
+    it('should return a file when found', async () => {
       const publicFile = makePublicFile();
 
       jest.spyOn(publicFilesRepository, 'findOne').mockResolvedValue(publicFile);
@@ -83,7 +83,7 @@ describe('PublicFilesService', () => {
       expect(result).toEqual(publicFile);
     });
 
-    it('should throw NotFoundException when local file is not found', async () => {
+    it('should throw NotFoundException when file is not found', async () => {
       const nonExistingId = 'non-existing-id';
 
       jest.spyOn(publicFilesRepository, 'findOne').mockResolvedValue(null);
