@@ -5,7 +5,7 @@ on:
     branches:
       - main  
   workflow_dispatch: {}
-  
+
 jobs:
   deploy-frontend:
     runs-on: ubuntu-latest
@@ -24,7 +24,7 @@ jobs:
         run: npm install
 
       - name: Build the frontend
-        working-directory: frontend
+        working-directory: client
         run: npm run build
 
       - name: Deploy to S3
@@ -51,13 +51,13 @@ jobs:
         run: npm install --omit=dev
 
       - name: Build the backend
-        working-directory: backend
+        working-directory: server
         run: npm run build
 
       - name: Create and upload layer
         run: |
           mkdir -p layer/nodejs
-          cp -r backend/node_modules layer/nodejs
+          cp -r server/node_modules layer/nodejs
           cd layer
           zip -r layer.zip nodejs
           aws lambda publish-layer-version --layer-name nestjs-layer --zip-file fileb://layer.zip --region ${{ secrets.AWS_REGION }}
@@ -67,9 +67,9 @@ jobs:
 
       - name: Zip the deployment package
         run: |
-          cd backend
+          cd server
           zip -r ../function.zip dist
-        working-directory: backend
+        working-directory: server
 
       - name: Deploy to AWS Lambda
         run: |
