@@ -49,11 +49,15 @@ jobs:
 
       - name: Install backend dependencies
         working-directory: server
-        run: npm ci --only=production
+        run: npm ci 
 
       - name: Build the backend
         working-directory: server
         run: npm run build
+
+      - name: Install backend dependencies
+        working-directory: server
+        run: npm ci --only=production
 
       - name: Create and upload layer
         run: |
