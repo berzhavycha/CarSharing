@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 
-import { localFilesErrors } from '../errors';
+import { filesErrors } from '../errors';
 
 export const defaultFileFilter: MulterOptions['fileFilter'] = (
   _request,
@@ -10,7 +10,7 @@ export const defaultFileFilter: MulterOptions['fileFilter'] = (
 ): void => {
   if (!file.mimetype.includes('image')) {
     return callback(
-      new BadRequestException(localFilesErrors.INVALID_IMAGE),
+      new BadRequestException(filesErrors.INVALID_IMAGE),
       false,
     );
   }

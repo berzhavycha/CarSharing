@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
-import { Env } from '@/core';
 import { CarFuelType, extractBracketContent, getFuelUnit } from '@/helpers';
 import { Car } from '@/types';
 
@@ -25,7 +24,7 @@ export const CSCommonCarCard: FC<CarCardProps> = ({ carDetails, onClick }) => {
       <CarImageWrapper>
         <ShadowImage src="../../../../public/shadow.png" alt="" />
         <CarImage
-          src={`${Env.API_BASE_URL}/local-files/${carDetails.pictures[0]?.id}`}
+          src={carDetails.pictures[0].url}
           alt={carDetails.model}
         />
       </CarImageWrapper>

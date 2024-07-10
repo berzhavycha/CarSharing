@@ -5,12 +5,12 @@ import { UsersController } from '@/controllers';
 import { Role, User } from '@/entities';
 import { RolesService, UsersService } from '@/services';
 
-import { LocalFilesModule } from './local-files.module';
 import { TransactionsModule } from './transactions.module';
+import { PublicFilesModule } from './public-files.module';
 
 @Module({
   imports: [
-    LocalFilesModule,
+    PublicFilesModule,
     TransactionsModule,
     TypeOrmModule.forFeature([User, Role]),
   ],
@@ -18,4 +18,4 @@ import { TransactionsModule } from './transactions.module';
   providers: [UsersService, RolesService],
   exports: [UsersService],
 })
-export class UsersModule {}
+export class UsersModule { }

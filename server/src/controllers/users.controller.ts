@@ -14,27 +14,21 @@ import { User } from '@/entities';
 import { JwtAuthGuard, RoleGuard } from '@/guards';
 import {
   defaultFileFilter,
-  defaultLocalFileLimits,
+  defaultFileLimits,
   Roles,
   TransactionType,
 } from '@/helpers';
-import { LocalFilesInterceptor } from '@/interceptors';
 import { UsersService } from '@/services';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(
-    LocalFilesInterceptor({
-      fieldName: 'picture',
-      path: '/avatars',
-      fileFilter: defaultFileFilter,
-      limits: defaultLocalFileLimits,
-    }),
-  )
+
+  @UseInterceptors(FileInterceptor('picture', { fileFilter: defaultFileFilter, limits: defaultFileLimits }))
   async updateUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -42,10 +36,9 @@ export class UsersController {
   ): Promise<User> {
     const uploadedFile = file
       ? {
-          path: file?.path,
-          filename: file?.originalname,
-          mimetype: file?.mimetype,
-        }
+        imageBuffer: file?.buffer,
+        filename: file?.originalname,
+      }
       : null;
 
     return this.usersService.updateUser(id, updateUserDto, uploadedFile);
