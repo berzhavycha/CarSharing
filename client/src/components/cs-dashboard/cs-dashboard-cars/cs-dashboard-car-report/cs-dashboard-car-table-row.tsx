@@ -11,7 +11,6 @@ import {
   TableCell,
   TableRow,
 } from '@/components/cs-common';
-import { Env } from '@/core';
 import { uppercaseFirstLetter } from '@/helpers';
 import { Car } from '@/types';
 
@@ -35,11 +34,12 @@ export const CSDashboardCarTableRow: FC<Props> = ({ car, index, onRemoveClick })
     },
   ];
 
+  console.log(car)
   return (
     <TableRow key={car.id}>
       <TableCell>{index + 1}</TableCell>
       <HiddenXSTableCell>
-        <img src={`${Env.API_BASE_URL}/local-files/${car.pictures[0]?.id}`} alt="Car Image" />
+        <img src={car.pictures[0]?.url} alt="Car Image" />
       </HiddenXSTableCell>
       <TableCell>{car.model}</TableCell>
       <HiddenMDTableCell>{car.year} </HiddenMDTableCell>

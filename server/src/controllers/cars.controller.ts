@@ -18,34 +18,32 @@ import { Car } from '@/entities';
 import { JwtAuthGuard, RoleGuard } from '@/guards';
 import {
   defaultFileFilter,
-  defaultLocalFileLimits,
+  defaultFileLimits,
   MAX_CAR_PICTURES,
   Roles,
 } from '@/helpers';
-import { LocalFilesInterceptor } from '@/interceptors';
 import { CarsService } from '@/services';
 import { FilterOption } from '@/types';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('cars')
 export class CarsController {
-  constructor(private readonly carsService: CarsService) {}
+  constructor(private readonly carsService: CarsService) { }
 
   @Post()
   @UseGuards(RoleGuard(Roles.ADMIN))
-  @UseInterceptors(
-    LocalFilesInterceptor({
-      maxCount: MAX_CAR_PICTURES,
-      fieldName: 'pictures',
-      path: '/cars',
-      fileFilter: defaultFileFilter,
-      limits: defaultLocalFileLimits,
-    }),
-  )
+  @UseInterceptors(FilesInterceptor('pictures', MAX_CAR_PICTURES, { fileFilter: defaultFileFilter, limits: defaultFileLimits }))
   async create(
     @Body() createCarDto: CreateCarDto,
     @UploadedFiles() pictures: Express.Multer.File[],
   ): Promise<Car> {
-    return this.carsService.createCar(createCarDto, pictures);
+    const uploadedFiles =
+      pictures?.map((file) => ({
+        imageBuffer: file.buffer,
+        filename: file.originalname,
+      })) || [];
+
+    return this.carsService.createCar(createCarDto, uploadedFiles);
   }
 
   @Get()
@@ -72,25 +70,16 @@ export class CarsController {
 
   @Patch(':id')
   @UseGuards(RoleGuard(Roles.ADMIN))
-  @UseInterceptors(
-    LocalFilesInterceptor({
-      maxCount: MAX_CAR_PICTURES,
-      fieldName: 'pictures',
-      path: '/cars',
-      fileFilter: defaultFileFilter,
-      limits: defaultLocalFileLimits,
-    }),
-  )
+  @UseInterceptors(FilesInterceptor('pictures', MAX_CAR_PICTURES, { fileFilter: defaultFileFilter, limits: defaultFileLimits }))
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateCarDto: UpdateCarDto,
-    @UploadedFiles() files?: Express.Multer.File[],
+    @UploadedFiles() pictures?: Express.Multer.File[],
   ): Promise<Car> {
     const uploadedFiles =
-      files?.map((file) => ({
-        path: file.path,
+      pictures?.map((file) => ({
+        imageBuffer: file.buffer,
         filename: file.originalname,
-        mimetype: file.mimetype,
       })) || [];
 
     return this.carsService.updateCar(id, updateCarDto, uploadedFiles);

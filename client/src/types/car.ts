@@ -1,4 +1,4 @@
-import { LocalFile } from './local-files';
+import { PublicFile } from './public-files';
 import { PaginationDto } from './pagination';
 
 export type CarDto = {
@@ -17,9 +17,9 @@ export type CarDto = {
   fuelCapacity: number;
 };
 
-export type Car = CarDto & {
+export type Car = Omit<CarDto, 'pictures'> & {
   id: string;
-  pictures: LocalFile[];
+  pictures: PublicFile[];
 };
 
 export type QueryCarsDto = PaginationDto & {

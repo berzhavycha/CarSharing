@@ -4,10 +4,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { EntityManager, Repository } from 'typeorm';
 
-import { LocalFileDto, UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
+import { UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
 import { Rental, User } from '@/entities';
 import {
   authErrorMessages,
@@ -19,9 +19,10 @@ import {
 } from '@/helpers';
 import { SafeUser } from '@/interfaces';
 
-import { LocalFilesService } from './local-files.service';
 import { RolesService } from './roles.service';
 import { TransactionsService } from './transactions.service';
+import { PublicFilesService } from './public-files.service';
+import { UploadFile } from '@/types';
 
 @Injectable()
 export class UsersService {
@@ -29,8 +30,8 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
-    private localFilesService: LocalFilesService,
-  ) {}
+    private publicFilesService: PublicFilesService,
+  ) { }
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -91,7 +92,7 @@ export class UsersService {
   async updateUser(
     id: string,
     updateUserDto: UpdateUserDto | Partial<User>,
-    fileData?: LocalFileDto,
+    fileData?: UploadFile,
   ): Promise<User | null> {
     const user = await this.findById(id);
 
@@ -117,7 +118,7 @@ export class UsersService {
     }
 
     if (fileData) {
-      const avatar = await this.localFilesService.saveLocalFileData(fileData);
+      const avatar = await this.publicFilesService.uploadPublicFile(fileData.imageBuffer, fileData.filename);
       user.avatar = avatar;
     }
 
@@ -135,7 +136,7 @@ export class UsersService {
   }
 
   async removeUserAvatar(user: User): Promise<void> {
-    await this.localFilesService.removeFile(user.avatar.id);
+    await this.publicFilesService.removeFile(user.avatar.id);
     user.avatar = null;
     user.avatarId = null;
   }

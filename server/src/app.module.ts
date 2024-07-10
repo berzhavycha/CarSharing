@@ -5,11 +5,11 @@ import {
   CarsModule,
   ConfigModule,
   DatabaseModule,
-  LocalFilesModule,
   OriginalCarsModule,
   RentalsModule,
   TransactionsModule,
   UsersModule,
+  PublicFilesModule
 } from '@/modules';
 
 @Module({
@@ -22,7 +22,7 @@ import {
     RentalsModule,
     TransactionsModule,
     AuthModule,
-    LocalFilesModule,
+    PublicFilesModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }

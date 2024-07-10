@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 
-import { CreateCarDto, LocalFileDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
+import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { Car } from '@/entities';
 import {
   applySearchAndPagination,
@@ -19,24 +19,23 @@ import {
   DEFAULT_PAGINATION_PAGE,
   getFilterOptions,
 } from '@/helpers';
-import { FilterOption } from '@/types';
-
-import { LocalFilesService } from './local-files.service';
+import { FilterOption, UploadFile } from '@/types';
+import { PublicFilesService } from './public-files.service';
 
 @Injectable()
 export class CarsService {
   constructor(
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
-    private localFilesService: LocalFilesService,
-  ) {}
+    private publicFilesService: PublicFilesService,
+  ) { }
 
   async createCar(
     createCarDto: CreateCarDto,
-    fileData: LocalFileDto[],
+    fileData: UploadFile[],
   ): Promise<Car> {
     const carPictures = await Promise.all(
-      fileData.map((file) => this.localFilesService.saveLocalFileData(file)),
+      fileData.map((file) => this.publicFilesService.uploadPublicFile(file.imageBuffer, file.filename)),
     );
 
     const car = this.carsRepository.create({
@@ -50,7 +49,7 @@ export class CarsService {
   async updateCar(
     id: string,
     updateCarDto: UpdateCarDto,
-    newImages: LocalFileDto[],
+    newImages: UploadFile[],
   ): Promise<Car> {
     const car = await this.findById(id);
 
@@ -59,11 +58,11 @@ export class CarsService {
     );
 
     await Promise.all(
-      imagesToDelete.map((img) => this.localFilesService.removeFile(img.id)),
+      imagesToDelete.map((img) => this.publicFilesService.removeFile(img.id)),
     );
 
     const newCarPictures = await Promise.all(
-      newImages.map((file) => this.localFilesService.saveLocalFileData(file)),
+      newImages.map((file) => this.publicFilesService.uploadPublicFile(file.imageBuffer, file.filename)),
     );
 
     car.pictures = [

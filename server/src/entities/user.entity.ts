@@ -17,7 +17,7 @@ import {
   USER_BALANCE_SCALE,
 } from '@/helpers';
 
-import { LocalFile } from './local-file.entity';
+import { PublicFile } from './public-file.entity';
 import { Rental } from './rental.entity';
 import { Role } from './role.entity';
 import { Transaction } from './transaction.entity';
@@ -80,11 +80,11 @@ export class User {
   transactions: Transaction[];
 
   @JoinColumn({ name: 'avatar_id' })
-  @OneToOne(() => LocalFile, {
+  @OneToOne(() => PublicFile, {
     nullable: true,
     cascade: true,
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
-  avatar?: LocalFile;
+  avatar?: PublicFile;
 }

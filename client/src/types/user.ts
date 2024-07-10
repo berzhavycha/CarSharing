@@ -1,4 +1,5 @@
 import { PaymentDto } from './payment';
+import { PublicFile } from './public-files';
 
 export type AuthenticatedUser = {
   id: string;
@@ -7,6 +8,7 @@ export type AuthenticatedUser = {
   lastName: string;
   balance: number | null;
   role: string;
+  avatar: PublicFile;
   avatarId: string | null;
 };
 
