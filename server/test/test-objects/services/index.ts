@@ -6,3 +6,4 @@ export * from './rental-service';
 export * from './roles-service';
 export * from './transaction-service';
 export * from './users-service';
+export * from './public-files-service'

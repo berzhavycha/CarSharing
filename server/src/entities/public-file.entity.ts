@@ -14,7 +14,6 @@ export class PublicFile {
     @Column()
     key: string;
 
-
     @ManyToOne(() => Car, (car) => car.pictures, { onDelete: 'CASCADE' })
     car: Car;
 

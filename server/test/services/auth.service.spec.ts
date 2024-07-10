@@ -6,7 +6,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { plainToClass } from 'class-transformer';
 import { Response } from 'express-serve-static-core';
 
@@ -19,6 +19,10 @@ import { makeHash, makeResponse, makeTokens, makeUser } from '../utils';
 
 jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
   hashValue: jest.fn(),
+}));
+
+jest.mock('bcryptjs', () => ({
+  compare: jest.fn(),
 }));
 
 jest.mock('@nestjs/config');
@@ -215,7 +219,7 @@ describe('AuthService', () => {
       });
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
-      jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(false);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       expect(
         authService.validateRefreshToken(userId, refreshToken),
@@ -425,7 +429,8 @@ describe('AuthService', () => {
       const user = makeUser();
 
       jest.spyOn(usersService, 'findByEmail').mockResolvedValue(user);
-      jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
 
       const result = await authService.validateUserCredentials(
         user.email,
@@ -450,7 +455,7 @@ describe('AuthService', () => {
       const user = makeUser();
 
       jest.spyOn(usersService, 'findByEmail').mockResolvedValue(user);
-      jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
+      jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(false));
 
       await expect(
         authService.validateUserCredentials(user.email, invalidPassword),
