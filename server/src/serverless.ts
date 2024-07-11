@@ -30,7 +30,7 @@ async function bootstrapServer(): Promise<Server> {
         nestApp.useGlobalInterceptors(new ClassSerializerInterceptor(nestApp.get(Reflector)));
 
         nestApp.use((req, res, next) => {
-            res.header('access-control-allow-origin', configService.get<string>('CORS_ORIGIN'));
+            res.header('access-control-allow-origin', 'http://frontend-carsharing.s3-website.eu-north-1.amazonaws.com');
             res.header('access-control-allow-credentials', 'true');
             next();
         })
