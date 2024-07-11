@@ -22,21 +22,20 @@ async function bootstrapServer(): Promise<Server> {
             AppModule,
             new ExpressAdapter(expressApp),
         );
-        const configService = nestApp.get(ConfigService);
 
         nestApp.useGlobalPipes(new ValidationPipe());
         nestApp.useGlobalPipes(new ValidationPipe({ transform: true }));
         nestApp.use(cookieParser());
+        nestApp.useGlobalInterceptors(new ClassSerializerInterceptor(nestApp.get(Reflector)));
+        nestApp.use(eventContext());
+
+        const configService = nestApp.get(ConfigService);
 
         nestApp.enableCors({
             origin: configService.get<string>('CORS_ORIGIN'),
             credentials: true,
         });
 
-        nestApp.useGlobalInterceptors(new ClassSerializerInterceptor(nestApp.get(Reflector)));
-
-
-        nestApp.use(eventContext());
         await nestApp.init();
         cachedServer = createServer(expressApp, undefined, binaryMimeTypes);
     }
