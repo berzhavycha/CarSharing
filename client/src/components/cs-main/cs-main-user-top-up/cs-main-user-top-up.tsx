@@ -8,6 +8,7 @@ import {
   CSCommonForm,
   CSCommonModal,
   CSCommonPaymentForm,
+  CSCommonSpinner,
   SectionTitle,
 } from '@/components/cs-common';
 import { useStore } from '@/context';
@@ -16,10 +17,11 @@ import { device } from '@/styles';
 import { UpdateUserBalanceDto } from '@/types';
 
 import { useTopUp } from './hooks';
+import { observer } from 'mobx-react-lite';
 
-export const CSMainUserTopUp: FC = () => {
+export const CSMainUserTopUp: FC = observer(() => {
   const {
-    currentUserStore: { errors },
+    currentUserStore: { errors, isLoading },
   } = useStore();
   const { onSubmit, isTopUpSuccessful, setIsTopUpSuccessful, unexpectedError, setUnexpectedError } =
     useTopUp();
@@ -29,50 +31,54 @@ export const CSMainUserTopUp: FC = () => {
 
   return (
     <CSCommonContainer>
-      <TopUpContainer>
-        <CSCommonForm<UpdateUserBalanceDto>
-          validationSchema={updateUserBalanceSchema}
-          onSubmit={onSubmit}
-        >
-          <FormInfoWrapper>
-            <SectionTitle>Balance Form</SectionTitle>
-            <CSCommonErrorMessage>{errors?.topUp?.unexpectedError ?? ''}</CSCommonErrorMessage>
-            <CSCommonForm.Input
-              label="Amount"
-              name="amount"
-              error={errors.topUp?.amount ?? ''}
-              type="number"
+      {isLoading ? (
+        <CSCommonSpinner />
+      ) : (
+        <TopUpContainer>
+          <CSCommonForm<UpdateUserBalanceDto>
+            validationSchema={updateUserBalanceSchema}
+            onSubmit={onSubmit}
+          >
+            <FormInfoWrapper>
+              <SectionTitle>Balance Form</SectionTitle>
+              <CSCommonErrorMessage>{errors?.topUp?.unexpectedError ?? ''}</CSCommonErrorMessage>
+              <CSCommonForm.Input
+                label="Amount"
+                name="amount"
+                error={errors.topUp?.amount ?? ''}
+                type="number"
+              />
+            </FormInfoWrapper>
+            <CSCommonPaymentForm
+              title="Top Up Details"
+              description="Please enter your payment details"
+              submitButtonContent="Top Up"
             />
-          </FormInfoWrapper>
-          <CSCommonPaymentForm
-            title="Top Up Details"
-            description="Please enter your payment details"
-            submitButtonContent="Top Up"
-          />
-        </CSCommonForm>
+          </CSCommonForm>
 
-        {isTopUpSuccessful && (
-          <CSCommonModal
-            type="confirm"
-            title="Success"
-            message="You have successfully updated your balance!"
-            onClose={onCloseSuccessModal}
-            onOk={onCloseSuccessModal}
-          />
-        )}
+          {isTopUpSuccessful && (
+            <CSCommonModal
+              type="confirm"
+              title="Success"
+              message="You have successfully updated your balance!"
+              onClose={onCloseSuccessModal}
+              onOk={onCloseSuccessModal}
+            />
+          )}
 
-        {unexpectedError && (
-          <CSCommonModal
-            type="error"
-            title="Error"
-            message={unexpectedError}
-            onClose={onCloseErrorModal}
-          />
-        )}
-      </TopUpContainer>
+          {unexpectedError && (
+            <CSCommonModal
+              type="error"
+              title="Error"
+              message={unexpectedError}
+              onClose={onCloseErrorModal}
+            />
+          )}
+        </TopUpContainer>
+      )}
     </CSCommonContainer>
   );
-};
+});
 
 const TopUpContainer = styled.div`
   margin-bottom: 50px;

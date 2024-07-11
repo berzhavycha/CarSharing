@@ -25,6 +25,7 @@ export const CSAuthSignIn: FC = observer(() => {
     }
   };
 
+
   return (
     <FormContainer>
       <FormInner>
@@ -56,7 +57,9 @@ export const CSAuthSignIn: FC = observer(() => {
               isSecured
             />
           </FormBlocks>
-          <CSCommonForm.SubmitButton content="Sign In" />
+          <CSCommonForm.SubmitButton
+            content={currentUserStore.isLoading ? "Signing In..." : "Sign In"}
+            disabled={currentUserStore.isLoading} />
         </CSCommonForm>
       </FormInner>
     </FormContainer>

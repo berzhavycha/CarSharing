@@ -25,11 +25,15 @@ type ErrorTypes =
   | AuthenticatedUser
   | UpdateUserDto
   | UpdateUserBalanceDto;
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export const CurrentUserStore = t
   .model('CurrentUserStore', {
     user: t.optional(t.maybeNull(UserModel), null),
     errors: ErrorModel,
+    isLoading: t.optional(t.boolean, false),
   })
   .views((self) => ({
     get existingImages(): PublicFile[] {
@@ -67,8 +71,10 @@ export const CurrentUserStore = t
       action: () => Promise<ServiceUserResponse<T> | void>,
     ) {
       self.clearError(actionType);
+      self.isLoading = true;
       try {
         const response = yield action();
+        yield wait(2000)
         handleUserResponse<T>(
           response,
           (user) => self.setUser(user),
@@ -76,6 +82,8 @@ export const CurrentUserStore = t
         );
       } catch (error) {
         self.setError<T>(actionType, { unexpectedError: UNEXPECTED_ERROR_MESSAGE });
+      } finally {
+        self.isLoading = false;
       }
     }),
   }))
