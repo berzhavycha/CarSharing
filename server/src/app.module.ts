@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 
 import {
   AuthModule,
@@ -9,11 +9,14 @@ import {
   RentalsModule,
   TransactionsModule,
   UsersModule,
-  PublicFilesModule
+  PublicFilesModule,
+  LoggerModule
 } from '@/modules';
+import { RequestLoggingMiddleware } from './middlewares';
 
 @Module({
   imports: [
+    LoggerModule,
     DatabaseModule,
     ConfigModule,
     UsersModule,
@@ -25,4 +28,8 @@ import {
     PublicFilesModule,
   ],
 })
-export class AppModule { }
+export class AppModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(RequestLoggingMiddleware).forRoutes('*');
+  }
+}
