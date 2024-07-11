@@ -9,6 +9,7 @@ export const Table = styled.table`
 
 export const TableHeader = styled.th`
   text-align: left;
+  position: relative;
   padding: 12px;
   background-color: #f8f9fa;
   border-bottom: 2px solid #dee2e6;
@@ -30,6 +31,17 @@ export const TableHeader = styled.th`
     font-size: 10px;
   }
 `;
+
+export const SortIcon = styled.span`
+  margin-left: 8px;
+  align-items: center;
+  color: var(--main-blue);
+  position: absolute;
+  top: 55%;
+  transform: translateY(-50%);
+  right: 0px;
+`;
+
 
 export const TableRow = styled.tr`
   &:nth-child(even) {

@@ -6,6 +6,7 @@ import {
   HiddenMDTableHeader,
   HiddenSMTableHeader,
   HiddenXSTableHeader,
+  SortIcon,
   Table,
   TableHeader,
 } from '@/components/cs-common';
@@ -13,6 +14,7 @@ import { Car } from '@/types';
 
 import { CSDashboardCarTableRow } from './cs-dashboard-car-table-row';
 import { useCarRemoval } from './hooks';
+import { useSortColumn } from '@/hooks';
 
 type CarTableProps = {
   cars: Car[];
@@ -30,10 +32,18 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
     handleRemoveCar,
   } = useCarRemoval(cars);
 
+  const { sortState, setSortState, renderSortIcon } = useSortColumn()
+  
   useEffect(() => {
     setCarList(cars);
   }, [cars]);
-
+  
+  const handleSortChange = (sort: string): void => {
+    const direction = sortState.sort === sort && sortState.direction === 'asc' ? 'desc' : 'asc';
+    setSortState({ sort, direction });
+    onSortChange(sort);
+  };
+  
   const onCloseConfirmWindow = (): void => setCarToRemove(null);
   const onCloseErrorWindow = (): void => setErrorMessage(null);
 
@@ -44,20 +54,20 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
           <tr>
             <TableHeader style={{ width: '2%' }}>No.</TableHeader>
             <HiddenXSTableHeader style={{ width: '10%' }}>Image</HiddenXSTableHeader>
-            <TableHeader style={{ width: '15%' }} onClick={() => onSortChange('model')}>
-              Model
+            <TableHeader style={{ width: '15%' }} onClick={() => handleSortChange('model')}>
+              Model<SortIcon>{renderSortIcon('model')}</SortIcon>
             </TableHeader>
-            <HiddenMDTableHeader style={{ width: '10%' }} onClick={() => onSortChange('year')}>
-              Year
+            <HiddenMDTableHeader style={{ width: '10%' }} onClick={() => handleSortChange('year')}>
+              Year<SortIcon>{renderSortIcon('year')}</SortIcon>
             </HiddenMDTableHeader>
-            <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('pricePerHour')}>
-              Price / Hour
+            <TableHeader style={{ width: '10%' }} onClick={() => handleSortChange('pricePerHour')}>
+              Price / Hour<SortIcon>{renderSortIcon('pricePerHour')}</SortIcon>
             </TableHeader>
-            <HiddenMDTableHeader style={{ width: '8%' }} onClick={() => onSortChange('type')}>
-              Type
+            <HiddenMDTableHeader style={{ width: '8%' }} onClick={() => handleSortChange('type')}>
+              Type<SortIcon>{renderSortIcon('type')}</SortIcon>
             </HiddenMDTableHeader>
-            <HiddenSMTableHeader style={{ width: '10%' }} onClick={() => onSortChange('status')}>
-              Status
+            <HiddenSMTableHeader style={{ width: '10%' }} onClick={() => handleSortChange('status')}>
+              Status<SortIcon>{renderSortIcon('status')}</SortIcon>
             </HiddenSMTableHeader>
             <TableHeader style={{ width: '4%' }}>Actions</TableHeader>
           </tr>

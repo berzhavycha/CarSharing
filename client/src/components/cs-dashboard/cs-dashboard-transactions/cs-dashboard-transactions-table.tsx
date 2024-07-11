@@ -1,9 +1,8 @@
 import { FC } from 'react';
-
-import { CSCommonNoData, HiddenSMTableHeader, Table, TableHeader } from '@/components/cs-common';
+import { CSCommonNoData, HiddenSMTableHeader, Table, TableHeader, SortIcon } from '@/components/cs-common';
 import { Transaction } from '@/types';
-
 import { CSDashboardTransactionsTableRow } from './cs-dashboard-transactions-table-row';
+import { useSortColumn } from '@/hooks';
 
 type Props = {
   transactions: Transaction[];
@@ -11,6 +10,14 @@ type Props = {
 };
 
 export const CSDashboardTransactionsTable: FC<Props> = ({ transactions, onSortChange }) => {
+  const { sortState, setSortState, renderSortIcon } = useSortColumn()
+
+  const handleSortChange = (sort: string): void => {
+    const direction = sortState.sort === sort && sortState.direction === 'asc' ? 'desc' : 'asc';
+    setSortState({ sort, direction });
+    onSortChange(sort);
+  };
+
   return (
     <>
       <Table>
@@ -19,14 +26,14 @@ export const CSDashboardTransactionsTable: FC<Props> = ({ transactions, onSortCh
             <TableHeader style={{ width: '2%' }}>No.</TableHeader>
             <HiddenSMTableHeader style={{ width: '30%' }}>Rental Id</HiddenSMTableHeader>
             <TableHeader style={{ width: '20%' }}>User</TableHeader>
-            <TableHeader style={{ width: '5%' }} onClick={() => onSortChange('amount')}>
-              Amount
+            <TableHeader style={{ width: '5%' }} onClick={() => handleSortChange('amount')}>
+              Amount<SortIcon>{renderSortIcon('amount')}</SortIcon>
             </TableHeader>
-            <TableHeader style={{ width: '10%' }} onClick={() => onSortChange('createdAt')}>
-              Time
+            <TableHeader style={{ width: '10%' }} onClick={() => handleSortChange('createdAt')}>
+              Time<SortIcon>{renderSortIcon('createdAt')}</SortIcon>
             </TableHeader>
-            <TableHeader style={{ width: '12%' }} onClick={() => onSortChange('type')}>
-              Type
+            <TableHeader style={{ width: '12%' }} onClick={() => handleSortChange('type')}>
+              Type<SortIcon>{renderSortIcon('type')}</SortIcon>
             </TableHeader>
           </tr>
         </thead>
