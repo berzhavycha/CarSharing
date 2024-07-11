@@ -9,6 +9,7 @@ import { AppModule } from './app.module';
 import express from 'express';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
+import { ConfigService } from '@nestjs/config';
 
 const binaryMimeTypes: string[] = [];
 
@@ -21,9 +22,16 @@ async function bootstrapServer(): Promise<Server> {
             AppModule,
             new ExpressAdapter(expressApp),
         );
+        const configService = nestApp.get(ConfigService);
+
         nestApp.useGlobalPipes(new ValidationPipe());
         nestApp.useGlobalPipes(new ValidationPipe({ transform: true }));
         nestApp.use(cookieParser());
+
+        nestApp.enableCors({
+            origin: configService.get<string>('CORS_ORIGIN'),
+            credentials: true,
+        });
 
         nestApp.useGlobalInterceptors(new ClassSerializerInterceptor(nestApp.get(Reflector)));
 
