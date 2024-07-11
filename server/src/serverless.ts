@@ -22,18 +22,21 @@ async function bootstrapServer(): Promise<Server> {
             AppModule,
             new ExpressAdapter(expressApp),
         );
+        const configService = nestApp.get(ConfigService);
 
         nestApp.useGlobalPipes(new ValidationPipe());
+        nestApp.useGlobalPipes(new ValidationPipe({ transform: true }));
         nestApp.use(cookieParser());
         nestApp.useGlobalInterceptors(new ClassSerializerInterceptor(nestApp.get(Reflector)));
+
+        nestApp.use((req, res, next) => {
+            res.header('access-control-allow-origin', configService.get<string>('CORS_ORIGIN'));
+            res.header('access-control-allow-credentials', 'true');
+            next();
+        })
+
+
         nestApp.use(eventContext());
-
-        const configService = nestApp.get(ConfigService);
-        nestApp.enableCors({
-            origin: configService.get<string>('CORS_ORIGIN'),
-            credentials: true,
-        });
-
         await nestApp.init();
         cachedServer = createServer(expressApp, undefined, binaryMimeTypes);
     }
@@ -43,12 +46,5 @@ async function bootstrapServer(): Promise<Server> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handler: Handler = async (event: any, context: Context) => {
     cachedServer = await bootstrapServer();
-
-    const response = await proxy(cachedServer, event, context, 'PROMISE').promise;
-    response.headers = {
-        ...response.headers,
-        'Access-Control-Allow-Origin': 'http://frontend-carsharing.s3-website.eu-north-1.amazonaws.com', 
-        'Access-Control-Allow-Credentials': 'true',
-    };
-    return response;
+    return proxy(cachedServer, event, context, 'PROMISE').promise;
 };
