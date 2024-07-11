@@ -55,10 +55,6 @@ jobs:
         working-directory: server
         run: npm ci
 
-      - name: Set environment variables for backend
-        run: |
-          echo "CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}" >> client/.env
-
       - name: Build the backend
         working-directory: server
         run: npm run build
