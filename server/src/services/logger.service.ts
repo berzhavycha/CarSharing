@@ -32,7 +32,6 @@ export class LoggerService {
     }
 
     log(message: string): void {
-        console.log('wow')
         this.logger.log('info', message);
     }
 
