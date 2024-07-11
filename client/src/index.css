@@ -52,6 +52,8 @@
     /* Borders */
     --default-border: 1px solid rgba(195, 212, 233, 0.5);
     --input-border: 1px solid #e0e0e0;
+    --input-default-border-color: #e0e0e0;
+    --input-error-border-color: #ff4343;
 
     /* Shadows */
     --default-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

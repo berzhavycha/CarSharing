@@ -32,6 +32,7 @@ export const CSCommonInputField = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           type={inputType}
           placeholder={placeholder || `Enter ${label?.toLowerCase()}`}
+          $isError={Boolean(error)}
           {...props}
         />
         {isSecured && (
@@ -86,9 +87,10 @@ export const Label = styled.label`
   }
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ $isError: boolean }>`
   padding: 10px;
   border: var(--input-border);
+  border-color: ${(props): string => props.$isError ? 'var(--input-error-border-color)' : 'var(--input-default-border-color)'};
   border-radius: 5px;
   font-size: 16px;
   outline: none;
