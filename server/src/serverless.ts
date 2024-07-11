@@ -45,27 +45,9 @@ async function bootstrapServer(): Promise<Server> {
     return cachedServer;
 }
 
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handler: Handler = async (event: any, context: Context) => {
-    if (event.httpMethod === 'OPTIONS') {
-        return {
-            statusCode: 200,
-            headers: {
-                'Access-Control-Allow-Origin': 'http://frontend-carsharing.s3-website.eu-north-1.amazonaws.com', // Replace with your frontend URL
-                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-                'Access-Control-Allow-Credentials': 'true',
-            },
-            body: '',
-        };
-    }
-
     cachedServer = await bootstrapServer();
-    const response = await proxy(cachedServer, event, context, 'PROMISE').promise;
-    response.headers = {
-        ...response.headers,
-        'Access-Control-Allow-Origin': 'http://frontend-carsharing.s3-website.eu-north-1.amazonaws.com', // Replace with your frontend URL
-        'Access-Control-Allow-Credentials': 'true',
-    };
-    return response;
+    return proxy(cachedServer, event, context, 'PROMISE').promise;
 };
