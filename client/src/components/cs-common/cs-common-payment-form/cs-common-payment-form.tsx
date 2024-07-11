@@ -22,9 +22,8 @@ export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButto
     cardNumber: '',
     cardHolder: '',
     expirationDate: '',
-    CVC: '',
+    cvc: '',
   });
-
   const [focused, setFocused] = useState<string>('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -38,7 +37,6 @@ export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButto
     setFocused(e.target.name);
   };
 
-
   return (
     <FormInfoWrapper>
       <SectionTitle>{title}</SectionTitle>
@@ -49,7 +47,7 @@ export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButto
             number={cardDetails.cardNumber}
             name={cardDetails.cardHolder}
             expiry={cardDetails.expirationDate}
-            cvc={cardDetails.CVC}
+            cvc={cardDetails.cvc}
             focused={focused as Focused}
           />
         </CardsWrapper>
@@ -74,7 +72,7 @@ export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButto
               onFocus={handleInputFocus}
             />
             <CSCommonForm.Input
-              name="CVC"
+              name="cvc"
               label="CVC"
               type="number"
               onChange={handleInputChange}
