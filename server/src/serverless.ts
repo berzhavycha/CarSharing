@@ -10,6 +10,7 @@ import express from 'express';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
+import cors from 'cors';
 
 const binaryMimeTypes: string[] = [];
 
@@ -22,23 +23,23 @@ async function bootstrapServer(): Promise<Server> {
             AppModule,
             new ExpressAdapter(expressApp),
         );
+
         const configService = nestApp.get(ConfigService);
+        const allowedOrigin = configService.get<string>('CORS_ORIGIN');
+
+        // CORS setup
+        expressApp.use(cors({
+            origin: allowedOrigin,
+            credentials: true,
+        }));
 
         nestApp.useGlobalPipes(new ValidationPipe());
         nestApp.useGlobalPipes(new ValidationPipe({ transform: true }));
         nestApp.use(cookieParser());
         nestApp.useGlobalInterceptors(new ClassSerializerInterceptor(nestApp.get(Reflector)));
-
         nestApp.use(eventContext());
+
         await nestApp.init();
-
-
-        nestApp.use((req, res, next) => {
-            res.header('Access-Control-Allow-Origin', 'http://frontend-carsharing.s3-website.eu-north-1.amazonaws.com');
-            res.header('Access-Control-Allow-Credentials', 'true');
-            next();
-        })
-
         cachedServer = createServer(expressApp, undefined, binaryMimeTypes);
     }
     return cachedServer;
@@ -46,6 +47,25 @@ async function bootstrapServer(): Promise<Server> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handler: Handler = async (event: any, context: Context) => {
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': 'http://frontend-carsharing.s3-website.eu-north-1.amazonaws.com', // Replace with your frontend URL
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                'Access-Control-Allow-Credentials': 'true',
+            },
+            body: '',
+        };
+    }
+
     cachedServer = await bootstrapServer();
-    return proxy(cachedServer, event, context, 'PROMISE').promise;
+    const response = await proxy(cachedServer, event, context, 'PROMISE').promise;
+    response.headers = {
+        ...response.headers,
+        'Access-Control-Allow-Origin': 'http://frontend-carsharing.s3-website.eu-north-1.amazonaws.com', // Replace with your frontend URL
+        'Access-Control-Allow-Credentials': 'true',
+    };
+    return response;
 };
