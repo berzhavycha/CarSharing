@@ -92,7 +92,10 @@ export const CSAuthSignUp: FC = observer(() => {
               )}
             </RoleWrapper>
           </FormBlocks>
-          <CSCommonForm.SubmitButton content="Register" />
+          <CSCommonForm.SubmitButton
+            content={currentUserStore.isLoading ? "Registering..." : "Register"}
+            disabled={currentUserStore.isLoading}
+          />
         </CSCommonForm>
       </FormInner>
     </FormContainer>
