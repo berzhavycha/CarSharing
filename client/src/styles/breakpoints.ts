@@ -7,7 +7,7 @@ interface Size {
   xxl: string;
 }
 
-const size: Size = {
+export const size: Size = {
   xs: '400px',
   sm: '600px',
   md: '900px',

@@ -32,3 +32,4 @@ export * from './cs-common-close-button';
 export * from './cs-common-section';
 export * from './cs-common-rental-status-badge';
 export * from './cs-common-base-status-badge';
+export * from './cs-common-tooltip'

@@ -2,7 +2,8 @@ import { FC, ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { device } from '@/styles';
+import { device, size } from '@/styles';
+import { CSCommonTooltip } from '@/components';
 
 type Props = {
   to: string;
@@ -12,11 +13,35 @@ type Props = {
 };
 
 export const NavItem: FC<Props> = ({ to, icon, text, onClick }) => (
-  <StyledNavLink to={to} onClick={onClick}>
-    <IconWrapper>{icon}</IconWrapper>
-    <span>{text}</span>
-  </StyledNavLink>
+  <NavItemContainer>
+    <StyledNavLink to={to} onClick={onClick}>
+      <IconWrapper>{icon}</IconWrapper>
+      <span>{text}</span>
+      <Tooltip className="tooltip">{text}</Tooltip>
+    </StyledNavLink>
+  </NavItemContainer>
 );
+
+export const NavItemContainer = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  &:hover .tooltip {
+      @media (min-width: ${size.lg}){
+        opacity: 1;
+        visibility: visible;
+      }
+  }
+`;
+
+
+const Tooltip = styled(CSCommonTooltip)`
+  @media ${device.lg} {
+    opacity: 0;
+    visibility: hidden;
+  }
+`;
 
 const StyledNavLink = styled(NavLink)`
   text-decoration: none;
