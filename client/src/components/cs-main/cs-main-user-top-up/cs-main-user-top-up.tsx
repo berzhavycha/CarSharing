@@ -32,54 +32,56 @@ export const CSMainUserTopUp: FC = observer(() => {
   const onCloseErrorModal = (): void => setUnexpectedError('');
 
   return (
-    <CSCommonContainer>
+    <>
       {isLoading ? (
         <CSCommonSpinner />
       ) : (
-        <TopUpContainer>
-          <CSCommonForm<UpdateUserBalanceDto>
-            validationSchema={updateUserBalanceSchema}
-            onSubmit={onSubmit}
-          >
-            <FormInfoWrapper>
-              <SectionTitle>Balance Form</SectionTitle>
-              <CSCommonErrorMessage>{errors?.topUp?.unexpectedError ?? ''}</CSCommonErrorMessage>
-              <CSCommonForm.Input
-                label="Amount"
-                name="amount"
-                error={errors.topUp?.amount ?? ''}
-                type="number"
-                onKeyDown={preventNegativeInput}
+        <CSCommonContainer>
+          <TopUpContainer>
+            <CSCommonForm<UpdateUserBalanceDto>
+              validationSchema={updateUserBalanceSchema}
+              onSubmit={onSubmit}
+            >
+              <FormInfoWrapper>
+                <SectionTitle>Balance Form</SectionTitle>
+                <CSCommonErrorMessage>{errors?.topUp?.unexpectedError ?? ''}</CSCommonErrorMessage>
+                <CSCommonForm.Input
+                  label="Amount"
+                  name="amount"
+                  error={errors.topUp?.amount ?? ''}
+                  type="number"
+                  onKeyDown={preventNegativeInput}
+                />
+              </FormInfoWrapper>
+              <CSCommonPaymentForm
+                title="Top Up Details"
+                description="Please enter your payment details"
+                submitButtonContent="Top Up"
               />
-            </FormInfoWrapper>
-            <CSCommonPaymentForm
-              title="Top Up Details"
-              description="Please enter your payment details"
-              submitButtonContent="Top Up"
-            />
-          </CSCommonForm>
+            </CSCommonForm>
 
-          {isTopUpSuccessful && (
-            <CSCommonModal
-              type="confirm"
-              title="Success"
-              message="You have successfully updated your balance!"
-              onClose={onCloseSuccessModal}
-              onOk={onCloseSuccessModal}
-            />
-          )}
+            {isTopUpSuccessful && (
+              <CSCommonModal
+                type="confirm"
+                title="Success"
+                message="You have successfully updated your balance!"
+                onClose={onCloseSuccessModal}
+                onOk={onCloseSuccessModal}
+              />
+            )}
 
-          {unexpectedError && (
-            <CSCommonModal
-              type="error"
-              title="Error"
-              message={unexpectedError}
-              onClose={onCloseErrorModal}
-            />
-          )}
-        </TopUpContainer>
+            {unexpectedError && (
+              <CSCommonModal
+                type="error"
+                title="Error"
+                message={unexpectedError}
+                onClose={onCloseErrorModal}
+              />
+            )}
+          </TopUpContainer>
+        </CSCommonContainer>
       )}
-    </CSCommonContainer>
+    </>
   );
 });
 
