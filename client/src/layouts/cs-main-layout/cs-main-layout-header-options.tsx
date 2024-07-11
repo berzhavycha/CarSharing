@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { FC, useRef, useState } from 'react';
-import { FaBars, FaSignOutAlt } from 'react-icons/fa';
+import { FaBars } from 'react-icons/fa';
 import styled from 'styled-components';
 
 import { CSCommonCloseButton } from '@/components';
@@ -11,7 +11,8 @@ import { device } from '@/styles';
 import DefaultImage from '../../../public/avatar.webp';
 
 import { menuItems } from './constants';
-import { IconWrapper, NavItem } from './cs-main-layout-nav-item';
+import { NavItem } from './cs-main-layout-nav-item';
+import { CSMainLayoutSignOutBtn } from './cs-main-layout-sign-out-btn';
 
 export const CSMainLayoutHeaderOptions: FC = observer(() => {
   const {
@@ -61,12 +62,7 @@ export const CSMainLayoutHeaderOptions: FC = observer(() => {
             onClick={closeMenu}
           />
         ))}
-        <SignOutButton onClick={signOutHandler}>
-          <IconWrapper>
-            <FaSignOutAlt />
-          </IconWrapper>
-          <span>Sign Out</span>
-        </SignOutButton>
+        <CSMainLayoutSignOutBtn signOutHandler={signOutHandler} />
       </NavOptions>
       <UserInfoDesktop>
         <UserAvatar src={profilePicture} alt="User Avatar" />
@@ -113,7 +109,7 @@ const NavOptions = styled.div<{ $isOpen: boolean }>`
 
   @media ${device.lg} {
     position: absolute;
-    z-index: 100;
+    z-index: 1001;
     top: 100px;
     right: 20px;
     background-color: white;
@@ -136,28 +132,9 @@ const NavOptions = styled.div<{ $isOpen: boolean }>`
   @media ${device.md} {
     top: 80px;
   }
-`;
 
-const SignOutButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--gray-blue);
-
-  span {
-    font-size: 16px;
-    display: none;
-
-    @media ${device.lg} {
-      display: flex;
-    }
-  }
-
-  &:hover {
-    color: #1e3a8a;
+   @media ${device.sm} {
+    top: 120px;
   }
 `;
 
