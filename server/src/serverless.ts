@@ -30,8 +30,8 @@ async function bootstrapServer(): Promise<Server> {
         nestApp.useGlobalInterceptors(new ClassSerializerInterceptor(nestApp.get(Reflector)));
 
         nestApp.use((req, res, next) => {
-            res.header('access-control-allow-origin', 'http://frontend-carsharing.s3-website.eu-north-1.amazonaws.com');
-            res.header('access-control-allow-credentials', 'true');
+            res.header('Access-Control-Allow-Origin', 'http://frontend-carsharing.s3-website.eu-north-1.amazonaws.com');
+            res.header('Access-Control-Allow-Credentials', 'true');
             next();
         })
 
