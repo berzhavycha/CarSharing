@@ -90,6 +90,12 @@
       ],
       "@/interceptors/*": [
         "src/interceptors/*"
+      ],
+      "@/middlewares": [
+        "src/middlewares"
+      ],
+      "@/middlewares/*": [
+        "src/middlewares/*"
       ]
     }
   }

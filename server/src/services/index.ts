@@ -6,3 +6,4 @@ export * from './rentals.service';
 export * from './transactions.service';
 export * from './roles.service';
 export * from './public-files.service'
+export * from './logger.service'
