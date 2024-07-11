@@ -29,15 +29,16 @@ async function bootstrapServer(): Promise<Server> {
         nestApp.use(cookieParser());
         nestApp.useGlobalInterceptors(new ClassSerializerInterceptor(nestApp.get(Reflector)));
 
+        nestApp.use(eventContext());
+        await nestApp.init();
+
+
         nestApp.use((req, res, next) => {
             res.header('Access-Control-Allow-Origin', 'http://frontend-carsharing.s3-website.eu-north-1.amazonaws.com');
             res.header('Access-Control-Allow-Credentials', 'true');
             next();
         })
 
-
-        nestApp.use(eventContext());
-        await nestApp.init();
         cachedServer = createServer(expressApp, undefined, binaryMimeTypes);
     }
     return cachedServer;
