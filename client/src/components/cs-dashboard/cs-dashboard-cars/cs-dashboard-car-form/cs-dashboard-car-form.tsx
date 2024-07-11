@@ -15,6 +15,7 @@ import { Car, CarDto, FieldErrorsState } from '@/types';
 import DefaultImage from '../../../../../public/car-upload.png';
 
 import { useCarForm } from './hooks';
+import { useNonNegativeInput } from '@/hooks';
 
 export type onCarSubmit = (
   car: CarDto,
@@ -37,6 +38,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
   } = useCarForm(onFormSubmit, carDefaultValues);
 
   const handleCloseModal = (): void => setIsSuccess(false);
+  const { preventNegativeInput } = useNonNegativeInput()
 
   return (
     <FormContainer>
@@ -64,12 +66,13 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
           <Title>General Information</Title>
           <Section>
             <CSCommonForm.Input label="Model Name" name="model" error={errors?.model} />
-            <CSCommonForm.Input label="Year" name="year" type="number" error={errors?.year} />
+            <CSCommonForm.Input label="Year" name="year" type="number" error={errors?.year} onKeyDown={preventNegativeInput} />
             <CSCommonForm.Input
               label="Price / Hour"
               name="pricePerHour"
-              type="text"
+              type="number"
               error={errors?.pricePerHour}
+              onKeyDown={preventNegativeInput}
             />
             <CSCommonForm.Select
               label="Status"
@@ -100,6 +103,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
               name="capacity"
               type="number"
               error={errors?.capacity}
+              onKeyDown={preventNegativeInput}
             />
             <CSCommonForm.Select
               label="Fuel Type"
@@ -112,6 +116,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
               name="fuelCapacity"
               type="number"
               error={errors?.fuelCapacity}
+              onKeyDown={preventNegativeInput}
             />
             <CSCommonForm.Select
               label="Steering"

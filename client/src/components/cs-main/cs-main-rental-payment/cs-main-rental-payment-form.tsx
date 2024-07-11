@@ -13,6 +13,7 @@ import { device } from '@/styles';
 import { PaymentDto, RentalDto } from '@/types';
 
 import { useRental } from './hooks';
+import { useNonNegativeInput } from '@/hooks';
 
 type Props = {
   onSuccess: () => void;
@@ -21,6 +22,7 @@ type Props = {
 
 export const CSMainRentalPaymentForm: FC<Props> = ({ onSuccess, onError }) => {
   const { onSubmit, onRequestedHoursChange } = useRental(onSuccess, onError);
+  const { preventNegativeInput } = useNonNegativeInput()
 
   return (
     <FormWrapper>
@@ -36,6 +38,7 @@ export const CSMainRentalPaymentForm: FC<Props> = ({ onSuccess, onError }) => {
               label="Requested Hours"
               type="number"
               onChange={onRequestedHoursChange}
+              onKeyDown={preventNegativeInput}
             />
           </RentalFormBlocks>
         </FormInfoWrapper>
