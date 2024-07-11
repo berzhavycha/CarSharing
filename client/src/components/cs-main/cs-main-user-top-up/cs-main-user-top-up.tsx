@@ -18,6 +18,7 @@ import { UpdateUserBalanceDto } from '@/types';
 
 import { useTopUp } from './hooks';
 import { observer } from 'mobx-react-lite';
+import { useNonNegativeInput } from '@/hooks';
 
 export const CSMainUserTopUp: FC = observer(() => {
   const {
@@ -25,6 +26,7 @@ export const CSMainUserTopUp: FC = observer(() => {
   } = useStore();
   const { onSubmit, isTopUpSuccessful, setIsTopUpSuccessful, unexpectedError, setUnexpectedError } =
     useTopUp();
+  const { preventNegativeInput } = useNonNegativeInput()
 
   const onCloseSuccessModal = (): void => setIsTopUpSuccessful(false);
   const onCloseErrorModal = (): void => setUnexpectedError('');
@@ -47,6 +49,7 @@ export const CSMainUserTopUp: FC = observer(() => {
                 name="amount"
                 error={errors.topUp?.amount ?? ''}
                 type="number"
+                onKeyDown={preventNegativeInput}
               />
             </FormInfoWrapper>
             <CSCommonPaymentForm

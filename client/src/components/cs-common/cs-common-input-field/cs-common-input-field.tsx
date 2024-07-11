@@ -95,6 +95,19 @@ const Input = styled.input<{ $isError: boolean }>`
   font-size: 16px;
   outline: none;
 
+  -moz-appearance: textfield;
+  appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
+
   @media ${device.md} {
     font-size: 14px;
     padding: 8px;

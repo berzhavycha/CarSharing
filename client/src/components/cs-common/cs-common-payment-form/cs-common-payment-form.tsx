@@ -16,10 +16,10 @@ type Props = {
 
 export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButtonContent }) => {
   const [cardDetails, setCardDetails] = useState({
-    number: '',
-    name: '',
-    expiry: '',
-    cvc: '',
+    cardNumber: '',
+    cardHolder: '',
+    expirationDate: '',
+    CVC: '',
   });
 
   const [focused, setFocused] = useState<string>('');
@@ -40,39 +40,35 @@ export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButto
       <SectionTitle>{title}</SectionTitle>
       <SectionDescription>{description}</SectionDescription>
       <Cards
-        number={cardDetails.number}
-        name={cardDetails.name}
-        expiry={cardDetails.expiry}
-        cvc={cardDetails.cvc}
+        number={cardDetails.cardNumber}
+        name={cardDetails.cardHolder}
+        expiry={cardDetails.expirationDate}
+        cvc={cardDetails.CVC}
         focused={focused as Focused}
       />
       <PaymentFormBlocks>
         <CSCommonForm.Input
-          name="number"
+          name="cardNumber"
           label="Card Number"
-          value={cardDetails.number}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
         />
         <CSCommonForm.Input
-          name="expiry"
+          name="expirationDate"
           label="Expiration Date"
-          value={cardDetails.expiry}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
         />
         <CSCommonForm.Input
-          name="name"
+          name="cardHolder"
           label="Card Holder"
-          value={cardDetails.name}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
         />
         <CSCommonForm.Input
-          name="cvc"
+          name="CVC"
           label="CVC"
           type="number"
-          value={cardDetails.cvc}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
         />
