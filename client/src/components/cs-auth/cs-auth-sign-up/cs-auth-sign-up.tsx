@@ -30,7 +30,7 @@ export const CSAuthSignUp: FC = observer(() => {
         <Title>Register</Title>
         <Span>
           Already have an account?
-          <Link to="/sign-in">Sign In here</Link> instead
+          <RedirectLink to="/sign-in">Sign In here</RedirectLink> instead
         </Span>
         <ErrorMessageWrapper>
           <CSCommonErrorMessage>
@@ -180,11 +180,16 @@ export const Title = styled.span`
 
 export const Span = styled.span`
   font-size: 18px;
+  display: flex;
 
   @media ${device.md} {
     font-size: 16px;
   }
 `;
+
+export const RedirectLink = styled(Link)`
+  margin: 0 5px;
+`
 
 const FormBlocks = styled.div`
   display: grid;

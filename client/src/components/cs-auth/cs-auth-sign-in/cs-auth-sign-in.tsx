@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonErrorMessage, CSCommonForm } from '@/components/cs-common';
@@ -9,7 +9,7 @@ import { authRedirectPages, AuthType, getUserSchema, Roles } from '@/helpers';
 import { device } from '@/styles';
 import { SignInUserDto } from '@/types';
 
-import { BaseFormInner, ErrorMessageWrapper, FormContainer, Span, Title } from '../cs-auth-sign-up';
+import { BaseFormInner, ErrorMessageWrapper, FormContainer, RedirectLink, Span, Title } from '../cs-auth-sign-up';
 
 export const CSAuthSignIn: FC = observer(() => {
   const { currentUserStore } = useStore();
@@ -31,7 +31,7 @@ export const CSAuthSignIn: FC = observer(() => {
         <Title>Login</Title>
         <Span>
           Don't Have an Account?
-          <Link to="/sign-up">Register here</Link> instead
+          <RedirectLink to="/sign-up">Register here</RedirectLink> instead
         </Span>
         <ErrorMessageWrapper>
           <CSCommonErrorMessage>
@@ -78,6 +78,8 @@ const FormInner = styled(BaseFormInner)`
     width: 90%;
   }
 `;
+
+
 
 const FormBlocks = styled.div`
   display: flex;
