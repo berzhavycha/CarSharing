@@ -7,6 +7,7 @@ import {
   HiddenMDTableHeader,
   HiddenSMTableHeader,
   HiddenXSTableHeader,
+  SortIcon,
   Table,
   TableHeader,
 } from '@/components/cs-common';
@@ -16,6 +17,7 @@ import { Rental } from '@/types';
 import { CSMainRentalHistoryModals } from './cs-main-rental-history-modals';
 import { CSMainRentalHistoryTableRow } from './cs-main-rental-history-table-row';
 import { useRentals } from './hooks';
+import { useSortColumn } from '@/hooks';
 
 type Props = {
   loadedRentals: Rental[];
@@ -27,6 +29,8 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
   const { rentals, setRentals, returnCar, errorMessage } = rentalStore;
   const { refetchRentals } = useRentals();
 
+  const { sortState, setSortState, renderSortIcon } = useSortColumn()
+
   useEffect(() => {
     setRentals(loadedRentals);
   }, [loadedRentals]);
@@ -34,6 +38,12 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
   const handleReturnCar = async (id: string): Promise<void> => {
     await returnCar(id);
     await refetchRentals();
+  };
+
+  const handleSortChange = (sort: string): void => {
+    const direction = sortState.sort === sort && sortState.direction === 'asc' ? 'desc' : 'asc';
+    setSortState({ sort, direction });
+    onSortChange(sort);
   };
 
   const displayedRentals = rentals ?? loadedRentals;
@@ -51,30 +61,30 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
               <TableHeader style={{ width: '15%' }}>Model</TableHeader>
               <HiddenXSTableHeader
                 style={{ width: '4%' }}
-                onClick={() => onSortChange('requestedHours')}
+                onClick={() => handleSortChange('requestedHours')}
               >
-                Hours
+                Hours<SortIcon>{renderSortIcon('requestedHours')}</SortIcon>
               </HiddenXSTableHeader>
               <HiddenSMTableHeader
                 style={{ width: '8%' }}
-                onClick={() => onSortChange('totalPrice')}
+                onClick={() => handleSortChange('totalPrice')}
               >
-                Total Price
+                Total Price<SortIcon>{renderSortIcon('totalPrice')}</SortIcon>
               </HiddenSMTableHeader>
               <HiddenSMTableHeader
                 style={{ width: '10%' }}
-                onClick={() => onSortChange('rentalStart')}
+                onClick={() => handleSortChange('rentalStart')}
               >
-                Start Time
+                Start Time<SortIcon>{renderSortIcon('rentalStart')}</SortIcon>
               </HiddenSMTableHeader>
               <HiddenSMTableHeader
                 style={{ width: '10%' }}
-                onClick={() => onSortChange('rentalEnd')}
+                onClick={() => handleSortChange('rentalEnd')}
               >
-                End Time
+                End Time<SortIcon>{renderSortIcon('rentalEnd')}</SortIcon>
               </HiddenSMTableHeader>
-              <TableHeader style={{ width: '8%' }} onClick={() => onSortChange('status')}>
-                Status
+              <TableHeader style={{ width: '8%' }} onClick={() => handleSortChange('status')}>
+                Status<SortIcon>{renderSortIcon('status')}</SortIcon>
               </TableHeader>
               <TableHeader style={{ width: '6%' }}>Actions</TableHeader>
             </tr>
