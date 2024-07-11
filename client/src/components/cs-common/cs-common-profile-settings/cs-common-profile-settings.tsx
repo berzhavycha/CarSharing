@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { CSCommonErrorMessage, CSCommonForm, CSCommonModal } from '@/components/cs-common';
+import { CSCommonErrorMessage, CSCommonForm, CSCommonModal, CSCommonSpinner } from '@/components/cs-common';
 import { useStore } from '@/context';
 import { updateUserSchema, uppercaseFirstLetter } from '@/helpers';
 import { device } from '@/styles';
@@ -14,7 +14,7 @@ import { useProfileUpdate } from './hooks';
 
 export const CSCommonProfileSettings: FC = observer(() => {
   const {
-    currentUserStore: { user, errors, updateUser, existingImages: viewImages },
+    currentUserStore: { user, isLoading, errors, updateUser, existingImages: viewImages },
   } = useStore();
 
   const {
@@ -36,66 +36,70 @@ export const CSCommonProfileSettings: FC = observer(() => {
 
   return (
     <>
-      <ProfileContainer>
-        <ContentContainer>
-          <CSCommonForm<UpdateUserDto>
-            key={user?.id}
-            defaultValues={defaultValues}
-            validationSchema={updateUserSchema}
-            onSubmit={onSubmit}
-          >
-            <ProfileHeaderWrapper>
-              <CSCommonForm.InputFile
-                defaultImage={DefaultImage}
-                existingImages={existingImages}
-                onRemove={onPreviewRemove}
-                name="picture"
-                label="Update Avatar"
-              />
-              <UserInfo>
-                <h2>
-                  {user?.firstName} {user?.lastName}
-                </h2>
-                <span>{user?.role && uppercaseFirstLetter(user.role)}</span>
-              </UserInfo>
-              <CSCommonForm.SubmitButton content="Save" />
-            </ProfileHeaderWrapper>
+      {isLoading ? (
+        <CSCommonSpinner />
+      ) : (
+        <ProfileContainer>
+          <ContentContainer>
+            <CSCommonForm<UpdateUserDto>
+              key={user?.id}
+              defaultValues={defaultValues}
+              validationSchema={updateUserSchema}
+              onSubmit={onSubmit}
+            >
+              <ProfileHeaderWrapper>
+                <CSCommonForm.InputFile
+                  defaultImage={DefaultImage}
+                  existingImages={existingImages}
+                  onRemove={onPreviewRemove}
+                  name="picture"
+                  label="Update Avatar"
+                />
+                <UserInfo>
+                  <h2>
+                    {user?.firstName} {user?.lastName}
+                  </h2>
+                  <span>{user?.role && uppercaseFirstLetter(user.role)}</span>
+                </UserInfo>
+                <CSCommonForm.SubmitButton content="Save" />
+              </ProfileHeaderWrapper>
 
-            <CSCommonErrorMessage>{errors.update?.unexpectedError}</CSCommonErrorMessage>
+              <CSCommonErrorMessage>{errors.update?.unexpectedError}</CSCommonErrorMessage>
 
-            <Title>General Information</Title>
-            <ProfileSection>
-              <CSCommonForm.Input
-                label="First Name"
-                name="firstName"
-                error={errors.update?.firstName}
-              />
-              <CSCommonForm.Input
-                label="Last Name"
-                name="lastName"
-                error={errors.update?.lastName}
-              />
-              <CSCommonForm.Input label="Email" name="email" error={errors?.update?.email} />
-            </ProfileSection>
+              <Title>General Information</Title>
+              <ProfileSection>
+                <CSCommonForm.Input
+                  label="First Name"
+                  name="firstName"
+                  error={errors.update?.firstName}
+                />
+                <CSCommonForm.Input
+                  label="Last Name"
+                  name="lastName"
+                  error={errors.update?.lastName}
+                />
+                <CSCommonForm.Input label="Email" name="email" error={errors?.update?.email} />
+              </ProfileSection>
 
-            <Title>Change Password</Title>
-            <PasswordSection>
-              <CSCommonForm.Input
-                label="Old Password"
-                name="oldPassword"
-                isSecured
-                error={errors.update?.oldPassword}
-              />
-              <CSCommonForm.Input
-                label="New Password"
-                name="newPassword"
-                isSecured
-                error={errors.update?.newPassword}
-              />
-            </PasswordSection>
-          </CSCommonForm>
-        </ContentContainer>
-      </ProfileContainer>
+              <Title>Change Password</Title>
+              <PasswordSection>
+                <CSCommonForm.Input
+                  label="Old Password"
+                  name="oldPassword"
+                  isSecured
+                  error={errors.update?.oldPassword}
+                />
+                <CSCommonForm.Input
+                  label="New Password"
+                  name="newPassword"
+                  isSecured
+                  error={errors.update?.newPassword}
+                />
+              </PasswordSection>
+            </CSCommonForm>
+          </ContentContainer>
+        </ProfileContainer>
+      )}
 
       {isUpdateSuccessful && (
         <CSCommonModal
