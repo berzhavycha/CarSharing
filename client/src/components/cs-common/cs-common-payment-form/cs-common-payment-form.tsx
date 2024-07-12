@@ -78,6 +78,7 @@ export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButto
               onChange={handleInputChange}
               onFocus={handleInputFocus}
               onKeyDown={preventNegativeInput}
+              min={0}
             />
           </FormRow>
         </PaymentFormBlocks>

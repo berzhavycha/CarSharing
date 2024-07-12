@@ -39,6 +39,7 @@ export const CSMainRentalPaymentForm: FC<Props> = ({ onSuccess, onError }) => {
               type="number"
               onChange={onRequestedHoursChange}
               onKeyDown={preventNegativeInput}
+              min={0}
             />
           </RentalFormBlocks>
         </FormInfoWrapper>

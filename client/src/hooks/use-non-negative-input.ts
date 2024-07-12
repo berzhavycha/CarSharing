@@ -1,15 +1,17 @@
+import { useCallback } from 'react';
+
 type HookReturn = {
-    preventNegativeInput: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    preventNegativeInput: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export const useNonNegativeInput = (): HookReturn => {
-    const preventNegativeInput = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-        if (e.key === '-' || e.key === 'e') {
-            e.preventDefault();
+    const preventNegativeInput = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === '-' || event.key === 'e' || event.key === 'E') {
+            event.preventDefault();
         }
-    };
+    }, []);
 
     return {
-        preventNegativeInput
-    }
-}
+        preventNegativeInput,
+    };
+};
