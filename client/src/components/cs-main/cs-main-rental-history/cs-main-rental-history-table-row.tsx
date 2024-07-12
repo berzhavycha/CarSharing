@@ -44,7 +44,8 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({ rental, index,
       <TableCell>{index + 1}</TableCell>
       <HiddenMDTableCell>
         <img
-          src={rental.originalCar?.pictures?.[0]?.url}
+          // src={rental.originalCar?.pictures?.[0]?.url}
+          src=''
           alt="Car Image"
         />
       </HiddenMDTableCell>

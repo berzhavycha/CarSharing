@@ -83,8 +83,6 @@ const FormInner = styled(BaseFormInner)`
   }
 `;
 
-
-
 const FormBlocks = styled.div`
   display: flex;
   flex-direction: column;

@@ -28,9 +28,11 @@ export const CSMainSingleRental: FC = observer(() => {
           errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
         >
           {(rental) => {
-            const carImages = rental.originalCar?.pictures?.map(
-              (pic: PublicFile) => pic?.url,
-            );
+            // const carImages = rental.originalCar?.pictures?.map(
+            //   (pic: PublicFile) => pic?.url,
+            // );
+
+            const carImages: string[] = []
 
             return (
               <RentalDetailsContainer>
