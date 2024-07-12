@@ -16,7 +16,6 @@ import { Rental } from '@/types';
 
 import { CSMainRentalHistoryModals } from './cs-main-rental-history-modals';
 import { CSMainRentalHistoryTableRow } from './cs-main-rental-history-table-row';
-import { useRentals } from './hooks';
 import { useSortColumn } from '@/hooks';
 
 type Props = {
@@ -26,19 +25,13 @@ type Props = {
 
 export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, onSortChange }) => {
   const { rentalStore } = useStore();
-  const { rentals, setRentals, returnCar, errorMessage } = rentalStore;
-  const { refetchRentals } = useRentals();
+  const { rentals, setRentals, errorMessage, carReturn } = rentalStore;
 
   const { sortState, setSortState, renderSortIcon } = useSortColumn()
 
   useEffect(() => {
     setRentals(loadedRentals);
   }, [loadedRentals]);
-
-  const handleReturnCar = async (id: string): Promise<void> => {
-    await returnCar(id);
-    await refetchRentals();
-  };
 
   const handleSortChange = (sort: string): void => {
     const direction = sortState.sort === sort && sortState.direction === 'asc' ? 'desc' : 'asc';
@@ -102,7 +95,7 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
                   key={rental.id}
                   index={index}
                   rental={rental}
-                  onCarReturn={() => handleReturnCar(rental.id)}
+                  onCarReturn={() => carReturn.setRentalToReturn(rental as Rental)}
                 />
               ))
             )}

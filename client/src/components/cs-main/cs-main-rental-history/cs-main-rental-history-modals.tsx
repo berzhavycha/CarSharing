@@ -3,11 +3,14 @@ import { FC } from 'react';
 
 import { CSCommonModal } from '@/components/cs-common';
 import { useStore } from '@/context';
+import { CSMainRentalReturnConfirmModal } from './cs-main-rental-return-confirm-modal';
+import { useRentals } from './hooks';
 
 export const CSMainRentalHistoryModals: FC = observer(() => {
   const { rentalStore } = useStore();
   const {
     carReturn: {
+      rentalToReturn,
       isReturnedInTime,
       refund,
       penalty,
@@ -19,6 +22,8 @@ export const CSMainRentalHistoryModals: FC = observer(() => {
     },
   } = rentalStore;
 
+  const { refetchRentals } = useRentals()
+
   const handleCloseRefundWindow = (): void => setRefund(undefined);
   const handleClosePenaltyWindow = (): void => setPenalty(undefined);
   const handleCloseErrorWindow = (): void => setErrorMessage('');
@@ -26,6 +31,10 @@ export const CSMainRentalHistoryModals: FC = observer(() => {
 
   return (
     <>
+      {rentalToReturn && (
+        <CSMainRentalReturnConfirmModal onSuccessReturn={refetchRentals} />
+      )}
+
       {refund && (
         <CSCommonModal
           type="confirm"

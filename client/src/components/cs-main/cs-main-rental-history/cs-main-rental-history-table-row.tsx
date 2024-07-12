@@ -18,7 +18,7 @@ import { formatDate, RentalStatus, uppercaseFirstLetter } from '@/helpers';
 type Props = {
   rental: RentalType;
   index: number;
-  onCarReturn: () => Promise<void>;
+  onCarReturn: () => void;
 };
 
 export const CSMainRentalHistoryTableRow: FC<Props> = observer(({ rental, index, onCarReturn }) => {
@@ -30,12 +30,12 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({ rental, index,
     },
     ...(rental.status === RentalStatus.ACTIVE
       ? [
-          {
-            label: 'Return',
-            icon: <FaCar />,
-            onClick: onCarReturn,
-          },
-        ]
+        {
+          label: 'Return',
+          icon: <FaCar />,
+          onClick: onCarReturn,
+        },
+      ]
       : []),
   ];
 
