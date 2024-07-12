@@ -5,7 +5,7 @@ import { device } from '@/styles';
 
 type Props = {
   onClick?: () => Promise<void> | void;
-  content: string;
+  content: string | JSX.Element;
   style?: 'main' | 'light';
 } & AsProp;
 

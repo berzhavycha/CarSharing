@@ -40,8 +40,8 @@ export const CSCommonInputField = forwardRef<HTMLInputElement, InputProps>(
             {isPasswordShown ? <FaEyeSlash /> : <FaEye />}
           </TogglePasswordButton>
         )}
-        {formSubmitted &&
-          (!error ? <CSCommonCheckIcon right={-25} /> : <CSCommonErrorIcon right={-25} />)}
+        {formSubmitted && !error && <CSCommonCheckIcon right={-25} />}
+        {error && <CSCommonErrorIcon right={-25} />}
         <CSCommonErrorMessage>{error}</CSCommonErrorMessage>
       </InputGroup>
     );

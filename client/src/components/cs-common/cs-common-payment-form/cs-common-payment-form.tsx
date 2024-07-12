@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 
 import { CSCommonForm } from '@/components/cs-common';
@@ -8,34 +8,17 @@ import Cards, { Focused } from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import { BaseSection, SectionDescription, SectionTitle } from '../cs-common-section';
 import { useNonNegativeInput } from '@/hooks';
+import { useFormCard } from './hooks';
 
 type Props = {
   title: string;
   description: string;
-  submitButtonContent: string;
+  submitButtonContent: string | JSX.Element;
 };
 
 export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButtonContent }) => {
   const { preventNegativeInput } = useNonNegativeInput()
-
-  const [cardDetails, setCardDetails] = useState({
-    cardNumber: '',
-    cardHolder: '',
-    expirationDate: '',
-    cvc: '',
-  });
-  const [focused, setFocused] = useState<string>('');
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setCardDetails({
-      ...cardDetails,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>): void => {
-    setFocused(e.target.name);
-  };
+  const { cardDetails, focused, handleInputChange, handleInputFocus } = useFormCard()
 
   return (
     <FormInfoWrapper>
@@ -83,7 +66,7 @@ export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButto
           </FormRow>
         </PaymentFormBlocks>
       </FormContent>
-      <CSCommonForm.SubmitButton content={submitButtonContent} />
+      <CSCommonForm.SubmitButton buttonContent={submitButtonContent} />
     </FormInfoWrapper>
   );
 };
