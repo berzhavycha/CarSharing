@@ -24,7 +24,8 @@ export const CSCommonCarCard: FC<CarCardProps> = ({ carDetails, onClick }) => {
       <CarImageWrapper>
         <ShadowImage src="../../../../public/shadow.png" alt="" />
         <CarImage
-          src={carDetails.pictures[0]?.url}
+          // src={carDetails.pictures[0]?.url}
+          src=''
           alt={carDetails.model}
         />
       </CarImageWrapper>

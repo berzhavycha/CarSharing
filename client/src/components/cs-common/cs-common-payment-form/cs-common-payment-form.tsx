@@ -94,7 +94,7 @@ const PaymentFormBlocks = styled.div`
   flex: 1 1 auto;
   display: grid;
   grid-template-rows: repeat(3, auto);
-  grid-gap: 20px;
+  grid-gap: 0 20px;
 
   @media ${device.sm} {
     grid-template-columns: 1fr;
@@ -104,6 +104,6 @@ const PaymentFormBlocks = styled.div`
 const FormRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 40px;
+  grid-gap: 0 40px;
 `;
 

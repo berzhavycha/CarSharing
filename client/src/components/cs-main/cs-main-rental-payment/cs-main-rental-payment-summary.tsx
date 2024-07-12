@@ -23,7 +23,10 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
         Prices may change depending on the length of the rental and the price of your rental car.
       </SectionDescription>
       <CarInfoWrapper>
-        <CarImage src={car.pictures[0]?.url} />
+        <CarImage 
+        // src={car.pictures[0]?.url} 
+        src=''
+        />
         <CarDetails>
           <CarName>{car.model}</CarName>
           <CarType>{car.type}</CarType>
