@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { CSCommonCloseButton } from '../cs-common-close-button';
 
 import { iconMap } from './icon-map';
+import { Spinner } from '../cs-common-spinner';
 
 type ModalProps = {
   type: 'error' | 'confirm' | 'warning';
@@ -12,6 +13,7 @@ type ModalProps = {
   onClose: () => void;
   onOk?: () => void;
   onCancel?: () => void;
+  loading?: boolean;
 };
 
 export const CSCommonModal: FC<ModalProps> = ({
@@ -21,6 +23,7 @@ export const CSCommonModal: FC<ModalProps> = ({
   onClose,
   onOk,
   onCancel,
+  loading = false,
 }) => {
   const Icon = iconMap[type];
 
@@ -33,17 +36,33 @@ export const CSCommonModal: FC<ModalProps> = ({
   return (
     <ModalOverlay onClick={handleOverlayClick}>
       <ModalContainer>
-        <ModalHeader>
-          <ModalTitle>
-            {Icon && <Icon />} {title}
-          </ModalTitle>
-          <CSCommonCloseButton onClose={onClose} />
-        </ModalHeader>
-        <ModalMessage>{message}</ModalMessage>
-        <ModalActions>
-          {onCancel && <CancelButton onClick={onCancel}>Cancel</CancelButton>}
-          {onOk && <OkButton onClick={onOk}>Ok</OkButton>}
-        </ModalActions>
+        {loading ? (
+          <SpinnerContainer>
+            <Spinner />
+          </SpinnerContainer>
+        ) : (
+          <>
+            <ModalHeader>
+              <ModalTitle>
+                {Icon && <Icon />} {title}
+              </ModalTitle>
+              <CSCommonCloseButton onClose={onClose} />
+            </ModalHeader>
+            <ModalMessage>{message}</ModalMessage>
+            <ModalActions>
+              {onCancel && (
+                <CancelButton onClick={onCancel} disabled={loading}>
+                  Cancel
+                </CancelButton>
+              )}
+              {onOk && (
+                <OkButton onClick={onOk} disabled={loading}>
+                  Ok
+                </OkButton>
+              )}
+            </ModalActions>
+          </>
+        )}
       </ModalContainer>
     </ModalOverlay>
   );
@@ -71,6 +90,13 @@ const ModalContainer = styled.div`
   max-width: 90%;
   text-align: center;
   position: relative;
+`;
+
+const SpinnerContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ModalHeader = styled.div`
@@ -105,6 +131,10 @@ const Button = styled.button`
   font-size: 16px;
   transition: var(--default-transition);
   margin-left: 10px;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 `;
 
 const OkButton = styled(Button)`
@@ -124,3 +154,4 @@ const CancelButton = styled(Button)`
     background: var(--dark);
   }
 `;
+

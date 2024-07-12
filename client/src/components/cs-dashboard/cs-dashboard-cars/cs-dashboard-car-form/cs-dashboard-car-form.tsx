@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { CSCommonErrorMessage, CSCommonForm, CSCommonModal } from '@/components/cs-common';
+import { CSCommonErrorMessage, CSCommonForm, CSCommonModal, BtnSpinner } from '@/components/cs-common';
 import {
   CarFuelTypeSelect,
   carSchema,
@@ -29,6 +29,7 @@ type Props = {
 export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }) => {
   const {
     currentCar,
+    isLoading,
     existingImages,
     setIsSuccess,
     isSuccess,
@@ -36,9 +37,10 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
     onSubmit,
     errors,
   } = useCarForm(onFormSubmit, carDefaultValues);
+  const { preventNegativeInput } = useNonNegativeInput()
 
   const handleCloseModal = (): void => setIsSuccess(false);
-  const { preventNegativeInput } = useNonNegativeInput()
+  const saveBtnContent = isLoading ? <BtnSpinner /> : 'Save'
 
   return (
     <FormContainer>
@@ -58,7 +60,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
               multiple
               error={errors?.pictures}
             />
-            <CSCommonForm.SubmitButton content="Save" />
+            <CSCommonForm.SubmitButton buttonContent={saveBtnContent} />
           </CarHeaderWrapper>
 
           <CSCommonErrorMessage>{errors?.unexpectedError}</CSCommonErrorMessage>
@@ -70,7 +72,6 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
             <CSCommonForm.Input
               label="Price / Hour"
               name="pricePerHour"
-              type="number"
               error={errors?.pricePerHour}
               onKeyDown={preventNegativeInput}
               min={0}

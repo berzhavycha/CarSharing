@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { CSCommonErrorMessage, CSCommonForm } from '@/components';
+import { BtnSpinner, CSCommonErrorMessage, CSCommonForm } from '@/components';
 import { useStore } from '@/context';
 import { authRedirectPages, AuthType, getUserSchema, Roles } from '@/helpers';
 import { device } from '@/styles';
@@ -23,6 +23,8 @@ export const CSAuthSignUp: FC = observer(() => {
       navigate(authRedirectPages[currentUserStore.user.role as Roles]);
     }
   };
+
+  const btnContent = currentUserStore.isLoading ? <BtnSpinner /> : 'Sign Up'
 
   return (
     <FormContainer>
@@ -93,7 +95,7 @@ export const CSAuthSignUp: FC = observer(() => {
             </RoleWrapper>
           </FormBlocks>
           <CSCommonForm.SubmitButton
-            content={currentUserStore.isLoading ? "Registering..." : "Register"}
+            buttonContent={btnContent}
             disabled={currentUserStore.isLoading}
           />
         </CSCommonForm>

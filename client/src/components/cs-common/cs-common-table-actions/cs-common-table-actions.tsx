@@ -7,7 +7,7 @@ import { useClickOutside } from '@/hooks';
 import { device } from '@/styles';
 
 type Action = {
-  label: string;
+  label: string | JSX.Element;
   icon: React.ReactNode;
   onClick?: () => void;
   to?: string;

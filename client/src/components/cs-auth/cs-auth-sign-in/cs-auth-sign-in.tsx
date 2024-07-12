@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { CSCommonErrorMessage, CSCommonForm } from '@/components/cs-common';
+import { BtnSpinner, CSCommonErrorMessage, CSCommonForm } from '@/components/cs-common';
 import { useStore } from '@/context';
 import { authRedirectPages, AuthType, getUserSchema, Roles } from '@/helpers';
 import { device } from '@/styles';
@@ -25,6 +25,7 @@ export const CSAuthSignIn: FC = observer(() => {
     }
   };
 
+  const btnContent = currentUserStore.isLoading ? <BtnSpinner /> : 'Sign In'
 
   return (
     <FormContainer>
@@ -58,7 +59,7 @@ export const CSAuthSignIn: FC = observer(() => {
             />
           </FormBlocks>
           <CSCommonForm.SubmitButton
-            content={currentUserStore.isLoading ? "Signing In..." : "Sign In"}
+            buttonContent={btnContent}
             disabled={currentUserStore.isLoading} />
         </CSCommonForm>
       </FormInner>

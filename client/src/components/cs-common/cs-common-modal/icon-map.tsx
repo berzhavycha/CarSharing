@@ -19,4 +19,8 @@ export const iconMap = {
     ${iconStyles}
     color: var(--yellow-status-text);
   `,
+  loading: styled(FaCheckCircle)`
+    ${iconStyles}
+    color: var(--green-status-text);
+  `,
 };

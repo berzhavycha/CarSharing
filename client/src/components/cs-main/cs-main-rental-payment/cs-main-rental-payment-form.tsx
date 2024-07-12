@@ -3,7 +3,9 @@ import styled from 'styled-components';
 
 import {
   BaseSection,
+  BtnSpinner,
   CSCommonForm,
+  CSCommonModal,
   CSCommonPaymentForm,
   SectionDescription,
   SectionTitle,
@@ -15,14 +17,14 @@ import { PaymentDto, RentalDto } from '@/types';
 import { useRental } from './hooks';
 import { useNonNegativeInput } from '@/hooks';
 
-type Props = {
-  onSuccess: () => void;
-  onError: (error: string) => void;
-};
-
-export const CSMainRentalPaymentForm: FC<Props> = ({ onSuccess, onError }) => {
-  const { onSubmit, onRequestedHoursChange } = useRental(onSuccess, onError);
+export const CSMainRentalPaymentForm: FC = () => {
+  const { onSubmit, isRentSuccessful, setIsRentSuccessful, isLoading, errorMessage, setErrorMessage, onRequestedHoursChange } = useRental();
   const { preventNegativeInput } = useNonNegativeInput()
+
+  const rentBtnContent = isLoading ? <BtnSpinner /> : 'Rent'
+
+  const onCloseSuccessModal = (): void => setIsRentSuccessful(false)
+  const onCloseErrorWindow = (): void => setErrorMessage('')
 
   return (
     <FormWrapper>
@@ -46,9 +48,28 @@ export const CSMainRentalPaymentForm: FC<Props> = ({ onSuccess, onError }) => {
         <CSCommonPaymentForm
           title="Payment Details"
           description="Please enter your payment details"
-          submitButtonContent="Rent Now"
+          submitButtonContent={rentBtnContent}
         />
       </CSCommonForm>
+
+      {isRentSuccessful && (
+        <CSCommonModal
+          type="confirm"
+          title="Success"
+          message="Your rental was successfully created."
+          onClose={onCloseSuccessModal}
+          onOk={onCloseSuccessModal}
+        />
+      )}
+
+      {errorMessage && (
+        <CSCommonModal
+          type="error"
+          title="Error"
+          message={errorMessage}
+          onClose={onCloseErrorWindow}
+        />
+      )}
     </FormWrapper>
   );
 };

@@ -7,6 +7,7 @@ import { Car } from '@/types';
 
 type HookReturn = {
   carList: Car[];
+  isLoading: boolean;
   setCarList: (cars: Car[]) => void;
   carToRemove: Car | null;
   setCarToRemove: React.Dispatch<React.SetStateAction<Car | null>>;
@@ -18,11 +19,13 @@ type HookReturn = {
 export const useCarRemoval = (initialCars: Car[]): HookReturn => {
   const [carList, setCarList] = useState<Car[]>(initialCars);
   const [carToRemove, setCarToRemove] = useState<Car | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { searchParams, setParams } = useSearchParamsWithDefaults();
 
   const handleRemoveCar = async (): Promise<void> => {
     if (carToRemove) {
+      setIsLoading(true)
       try {
         const { error } = await removeCar(carToRemove.id);
         if (error) {
@@ -39,13 +42,15 @@ export const useCarRemoval = (initialCars: Car[]): HookReturn => {
       } catch (error) {
         setErrorMessage(FAILED_REMOVE_CAR);
       } finally {
-        setCarToRemove(null);
+        setCarToRemove(null)
+        setIsLoading(false)
       }
     }
   };
 
   return {
     carList,
+    isLoading,
     setCarList,
     carToRemove,
     setCarToRemove,
