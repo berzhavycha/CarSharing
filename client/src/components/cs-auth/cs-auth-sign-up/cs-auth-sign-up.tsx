@@ -185,7 +185,6 @@ export const Title = styled.span`
 
 export const Span = styled.span`
   font-size: 18px;
-  display: flex;
 
   @media ${device.md} {
     font-size: 16px;
@@ -193,7 +192,7 @@ export const Span = styled.span`
 `;
 
 export const RedirectLink = styled(Link)`
-  margin: 0 5px;
+  margin-left: 5px; 
 `
 
 const FormBlocks = styled.div`
