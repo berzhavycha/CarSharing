@@ -51,6 +51,7 @@ export const CSMainUserTopUp: FC = observer(() => {
                   error={errors.topUp?.amount ?? ''}
                   type="number"
                   onKeyDown={preventNegativeInput}
+                  min={0}
                 />
               </FormInfoWrapper>
               <CSCommonPaymentForm

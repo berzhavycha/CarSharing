@@ -25,9 +25,6 @@ type ErrorTypes =
   | AuthenticatedUser
   | UpdateUserDto
   | UpdateUserBalanceDto;
-function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 export const CurrentUserStore = t
   .model('CurrentUserStore', {
@@ -74,7 +71,6 @@ export const CurrentUserStore = t
       self.isLoading = true;
       try {
         const response = yield action();
-        yield wait(2000)
         handleUserResponse<T>(
           response,
           (user) => self.setUser(user),

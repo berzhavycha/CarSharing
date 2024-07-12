@@ -73,6 +73,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
               type="number"
               error={errors?.pricePerHour}
               onKeyDown={preventNegativeInput}
+              min={0}
             />
             <CSCommonForm.Select
               label="Status"
@@ -102,6 +103,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
               label="Capacity"
               name="capacity"
               type="number"
+              min={0}
               error={errors?.capacity}
               onKeyDown={preventNegativeInput}
             />
@@ -115,6 +117,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
               label="Fuel Capacity"
               name="fuelCapacity"
               type="number"
+              min={0}
               error={errors?.fuelCapacity}
               onKeyDown={preventNegativeInput}
             />
