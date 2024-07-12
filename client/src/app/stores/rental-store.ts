@@ -44,6 +44,8 @@ export const RentalStore = t
 
     returnCar: flow(function* (id: string) {
       try {
+        self.carReturn.setLoading(true)
+
         const { rental, refund, penalty, error } = yield returnCar(id);
         const userStore = (getParent(self) as { currentUserStore: CurrentUserStoreType })
           .currentUserStore;
@@ -65,8 +67,11 @@ export const RentalStore = t
         }
       } catch (error) {
         self.carReturn.setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
+      } finally {
+        self.carReturn.setLoading(false)
+        self.carReturn.setRentalToReturn(null)
       }
     }),
   }));
 
-export interface RentalStoreType extends Instance<typeof RentalStore> {}
+export interface RentalStoreType extends Instance<typeof RentalStore> { }

@@ -16,6 +16,7 @@ import { device } from '@/styles';
 import { Rental } from '@/types';
 
 import { CSMainSingleRentalTransaction } from './cs-main-single-rental-transactions';
+import { CSMainRentalReturnConfirmModal } from '../cs-main-rental-history';
 
 type Props = {
   rental: Rental;
@@ -23,7 +24,7 @@ type Props = {
 
 export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
   const {
-    rentalStore: { singleRental, fetchSingleRental, returnCar },
+    rentalStore: { singleRental, fetchSingleRental, carReturn },
   } = useStore();
   const { rentalId } = useParams() as { rentalId: string };
 
@@ -32,10 +33,10 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
   }, []);
 
   const onCarReturn = async (): Promise<void> => {
-    await returnCar(rentalId);
-    await fetchSingleRental(rentalId);
+    carReturn.setRentalToReturn(singleRental.rental as Rental)
   };
 
+  const onSuccessReturn = async (): Promise<void> => await fetchSingleRental(rentalId)
   const usedRental = singleRental.rental ?? rental;
 
   return (
@@ -67,6 +68,7 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
           <CSCommonPrimaryButton content="Return Car" onClick={onCarReturn} />
         </ReturnCarWrapper>
       )}
+      <CSMainRentalReturnConfirmModal onSuccessReturn={onSuccessReturn} />
     </RentalDetailsWrapper>
   );
 });
