@@ -1,22 +1,30 @@
-import { flow, getParent, t } from 'mobx-state-tree';
+import { flow, getRoot, t } from 'mobx-state-tree';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { returnCar } from '@/services';
-import { RentalModel, RentalType } from '../models';
+import { RentalType } from '../models';
 import { RootStoreType } from './root-store';
 
 
 export const CarReturnStore = t
     .model('CarReturnStore', {
-        rentalToReturn: t.optional(t.maybeNull(t.reference(RentalModel)), null),
+        rentalToReturnId: t.maybeNull(t.string),
         loading: t.optional(t.boolean, false),
         refund: t.optional(t.maybe(t.number), undefined),
         penalty: t.optional(t.maybe(t.number), undefined),
         isReturnedInTime: t.optional(t.boolean, false),
         errorMessage: t.optional(t.string, ''),
     })
+    .views(self => ({
+        get rentalToReturn(): RentalType | null | undefined {
+            const rentalStore = getRoot<RootStoreType>(self).rentalStore;
+            return self.rentalToReturnId
+                ? rentalStore.rentalList.rentals.find(rental => rental.id === self.rentalToReturnId)
+                : null;
+        }
+    }))
     .actions((self) => ({
-        setRentalToReturn(rental: RentalType | null): void {
-            self.rentalToReturn = rental
+        setRentalToReturnId(id: string | null): void {
+            self.rentalToReturnId = id
         },
         setLoading(loading: boolean): void {
             self.loading = loading;
@@ -39,7 +47,7 @@ export const CarReturnStore = t
             try {
                 self.setLoading(true);
                 const { rental, refund, penalty, error } = yield returnCar(id);
-                const userStore = getParent<RootStoreType>(self, 2).currentUserStore;
+                const userStore = getRoot<RootStoreType>(self).currentUserStore;
 
                 if (userStore.user?.balance) {
                     if (refund) {
@@ -60,7 +68,7 @@ export const CarReturnStore = t
                 self.setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
             } finally {
                 self.setLoading(false);
-                self.setRentalToReturn(null);
+                self.setRentalToReturnId(null);
             }
         }),
     }));

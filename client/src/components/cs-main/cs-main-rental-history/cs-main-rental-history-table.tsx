@@ -95,7 +95,7 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
                   key={rental.id}
                   index={index}
                   rental={rental}
-                  onCarReturn={() => carReturn.setRentalToReturn(rental as Rental)}
+                  onCarReturn={() => carReturn.setRentalToReturnId(rental.id)}
                 />
               ))
             )}

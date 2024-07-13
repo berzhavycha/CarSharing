@@ -13,13 +13,13 @@ export const CSMainRentalReturnConfirmModal: FC<Props> = observer(({ onSuccessRe
     const {
         carReturn: {
             rentalToReturn,
-            setRentalToReturn,
+            setRentalToReturnId,
             loading,
+            returnCar
         },
-        returnCar
     } = rentalStore;
 
-    const handleCloseConfirmReturnWindow = (): void => setRentalToReturn(null);
+    const handleCloseConfirmReturnWindow = (): void => setRentalToReturnId(null);
 
     const handleReturnCar = async (): Promise<void> => {
         if (rentalToReturn) {

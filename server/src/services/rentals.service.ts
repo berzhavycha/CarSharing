@@ -200,6 +200,7 @@ export class RentalsService {
     const queryBuilder = this.rentalsRepository
       .createQueryBuilder('rental')
       .leftJoinAndSelect('rental.originalCar', 'originalCar')
+      .leftJoinAndSelect('rental.transactions', 'transactions')
       .leftJoinAndSelect('originalCar.pictures', 'publicFile')
       .where('rental.user.id = :userId', { userId });
 

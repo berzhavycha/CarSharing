@@ -8,14 +8,14 @@ type HookReturn = {
 
 export const useRentals = (): HookReturn => {
   const {
-    rentalStore: { fetchRentals },
+    rentalStore: { rentalList },
   } = useStore();
 
   const refetchRentals = async (): Promise<void> => {
     const url = new URL(window.location.href);
     const { queryDto } = extractPaginationParams(url, Env.USER_RENTAL_HISTORY_PAGINATION_LIMIT);
 
-    await fetchRentals(queryDto);
+    await rentalList.fetchRentals(queryDto);
   };
 
   return { refetchRentals };
