@@ -25,7 +25,7 @@ type Props = {
 
 export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, onSortChange }) => {
   const { rentalStore } = useStore();
-  const { rentals, setRentals, errorMessage, carReturn } = rentalStore;
+  const { rentalList: { setRentals, rentals, errorMessage }, carReturn } = rentalStore;
 
   const { sortState, setSortState, renderSortIcon } = useSortColumn()
 

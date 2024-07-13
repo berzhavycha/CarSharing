@@ -18,4 +18,4 @@ export const RentalModel = t.model('RentalModel', {
   transactions: t.array(t.frozen<Transaction>()),
 });
 
-export interface RentalType extends Instance<typeof RentalModel> {}
+export interface RentalType extends Instance<typeof RentalModel> { }
