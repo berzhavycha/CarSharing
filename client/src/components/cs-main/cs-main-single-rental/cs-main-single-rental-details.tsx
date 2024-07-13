@@ -24,19 +24,19 @@ type Props = {
 
 export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
   const {
-    rentalStore: { singleRental, fetchSingleRental, carReturn },
+    rentalStore: { singleRental, carReturn },
   } = useStore();
   const { rentalId } = useParams() as { rentalId: string };
 
   useEffect(() => {
-    singleRental.setRental(rental);
+    singleRental.setRentalId(rental.id);
   }, []);
 
   const onCarReturn = async (): Promise<void> => {
-    carReturn.setRentalToReturn(singleRental.rental as Rental)
+    carReturn.setRentalToReturnId(singleRental.rentalId ?? null)
   };
 
-  const onSuccessReturn = async (): Promise<void> => await fetchSingleRental(rentalId)
+  const onSuccessReturn = async (): Promise<void> => await singleRental.fetchSingleRental(rentalId)
   const usedRental = singleRental.rental ?? rental;
 
   return (
