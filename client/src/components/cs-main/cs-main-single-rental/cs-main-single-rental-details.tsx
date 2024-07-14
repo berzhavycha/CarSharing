@@ -32,6 +32,7 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
 
   const onCarReturn = async (): Promise<void> => {
     carReturn.setRentalToReturn(singleRental.rental as Rental)
+    carReturn.setOrigin('single-page')
   };
 
   const onSuccessReturn = async (): Promise<void> => await singleRental.fetchSingleRental(rentalId)

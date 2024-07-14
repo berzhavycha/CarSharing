@@ -18,6 +18,7 @@ export const CSMainRentalHistoryModals: FC = observer(() => {
       setPenalty,
       setErrorMessage,
       setIsReturnedInTime,
+      origin
     },
   } = useStore();
 
@@ -30,7 +31,7 @@ export const CSMainRentalHistoryModals: FC = observer(() => {
 
   return (
     <>
-      {rentalToReturn && (
+      {rentalToReturn && origin === 'table' && (
         <CSMainRentalReturnConfirmModal onSuccessReturn={refetchRentals} />
       )}
 

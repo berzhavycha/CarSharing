@@ -14,6 +14,7 @@ export const CarReturnStore = t
         penalty: t.optional(t.maybe(t.number), undefined),
         isReturnedInTime: t.optional(t.boolean, false),
         errorMessage: t.optional(t.string, ''),
+        origin: t.optional(t.enumeration('ReturnOrigin', ['table', 'single-page']), 'table'),
     })
     .actions((self) => ({
         setRentalToReturn(rental: Rental | null): void {
@@ -38,6 +39,9 @@ export const CarReturnStore = t
         },
         setErrorMessage(error: string): void {
             self.errorMessage = error;
+        },
+        setOrigin(origin: 'table' | 'single-page'): void {
+            self.origin = origin;
         },
     }))
     .actions(self => ({
