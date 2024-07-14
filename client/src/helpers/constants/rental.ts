@@ -20,3 +20,5 @@ export enum RentalStatus {
   CLOSED = 'closed',
   CANCELLED = 'cancelled',
 }
+
+export const MAX_REQUESTED_HOURS = 48
