@@ -1,25 +1,23 @@
-import { UNEXPECTED_ERROR_MESSAGE } from "@/helpers";
+import { UNEXPECTED_ERROR_MESSAGE, findOrCreateRentalModel } from "@/helpers";
 import { getRental } from "@/services";
 import { t, flow, getRoot } from "mobx-state-tree";
-import { RentalType } from "../models";
+import { RentalModel } from "../models";
 import { RootStoreType } from "./root-store";
+import { Rental } from "@/types";
 
 export const SingleRentalStore = t
     .model('SingleRentalStore', {
-        rentalId: t.maybeNull(t.string),
+        rental: t.optional(t.maybeNull(t.safeReference(RentalModel)), null),
         errorMessage: t.optional(t.string, ''),
     })
-    .views(self => ({
-        get rental(): RentalType | null | undefined {
-            const rentalStore = getRoot<RootStoreType>(self).rentalStore;
-            return self.rentalId
-                ? rentalStore.rentalList.rentals.find(rental => rental.id === self.rentalId)
-                : null;
-        }
-    }))
     .actions((self) => ({
-        setRentalId(id: string): void {
-            self.rentalId = id
+        setRental(rental: Rental | null): void {
+            if (rental) {
+                const rootStore = getRoot<RootStoreType>(self);
+                self.rental = findOrCreateRentalModel(rootStore, rental);
+            } else {
+                self.rental = null;
+            }
         },
         setErrorMessage(error: string): void {
             self.errorMessage = error;
@@ -30,7 +28,7 @@ export const SingleRentalStore = t
             self.setErrorMessage('');
             try {
                 const data = yield getRental(id);
-                self.setRentalId(data.id);
+                self.setRental(data);
             } catch (error) {
                 self.setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
             }

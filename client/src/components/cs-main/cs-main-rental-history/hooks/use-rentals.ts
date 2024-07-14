@@ -7,9 +7,7 @@ type HookReturn = {
 };
 
 export const useRentals = (): HookReturn => {
-  const {
-    rentalStore: { rentalList },
-  } = useStore();
+  const { rentalList } = useStore();
 
   const refetchRentals = async (): Promise<void> => {
     const url = new URL(window.location.href);

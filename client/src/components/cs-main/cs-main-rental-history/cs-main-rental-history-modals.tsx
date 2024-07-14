@@ -7,7 +7,6 @@ import { CSMainRentalReturnConfirmModal } from './cs-main-rental-return-confirm-
 import { useRentals } from './hooks';
 
 export const CSMainRentalHistoryModals: FC = observer(() => {
-  const { rentalStore } = useStore();
   const {
     carReturn: {
       rentalToReturn,
@@ -20,7 +19,7 @@ export const CSMainRentalHistoryModals: FC = observer(() => {
       setErrorMessage,
       setIsReturnedInTime,
     },
-  } = rentalStore;
+  } = useStore();
 
   const { refetchRentals } = useRentals()
 
