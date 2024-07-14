@@ -2,7 +2,7 @@ import { UNEXPECTED_ERROR_MESSAGE } from "@/helpers";
 import { fetchRentalHistory } from "@/services";
 import { Rental, QueryRentalsDto } from "@/types";
 import { t, flow } from "mobx-state-tree";
-import { RentalModel } from "../models";
+import { RentalModel, RentalType } from "../models";
 
 export const RentalListStore = t
     .model('RentalListStore', {
@@ -12,6 +12,9 @@ export const RentalListStore = t
     .actions((self) => ({
         setRentals(rentals: Rental[]): void {
             self.rentals.replace(rentals.map((rental) => RentalModel.create(rental)));
+        },
+        addRental(rental: RentalType): void {
+            self.rentals.push(rental);
         },
         setErrorMessage(error: string): void {
             self.errorMessage = error;

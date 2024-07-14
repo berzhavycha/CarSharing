@@ -24,8 +24,7 @@ type Props = {
 };
 
 export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, onSortChange }) => {
-  const { rentalStore } = useStore();
-  const { rentalList: { setRentals, rentals, errorMessage }, carReturn } = rentalStore;
+  const { rentalList: { setRentals, rentals, errorMessage }, carReturn } = useStore();
 
   const { sortState, setSortState, renderSortIcon } = useSortColumn()
 
@@ -95,7 +94,7 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
                   key={rental.id}
                   index={index}
                   rental={rental}
-                  onCarReturn={() => carReturn.setRentalToReturnId(rental.id)}
+                  onCarReturn={() => carReturn.setRentalToReturn(rental as Rental)}
                 />
               ))
             )}

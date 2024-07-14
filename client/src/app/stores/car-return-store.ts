@@ -1,30 +1,28 @@
 import { flow, getRoot, t } from 'mobx-state-tree';
-import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
+import { UNEXPECTED_ERROR_MESSAGE, findOrCreateRentalModel } from '@/helpers';
 import { returnCar } from '@/services';
-import { RentalType } from '../models';
+import { RentalModel } from '../models';
 import { RootStoreType } from './root-store';
+import { Rental } from '@/types';
 
 
 export const CarReturnStore = t
     .model('CarReturnStore', {
-        rentalToReturnId: t.maybeNull(t.string),
+        rentalToReturn: t.optional(t.maybeNull(t.late(() => t.reference(RentalModel))), null),
         loading: t.optional(t.boolean, false),
         refund: t.optional(t.maybe(t.number), undefined),
         penalty: t.optional(t.maybe(t.number), undefined),
         isReturnedInTime: t.optional(t.boolean, false),
         errorMessage: t.optional(t.string, ''),
     })
-    .views(self => ({
-        get rentalToReturn(): RentalType | null | undefined {
-            const rentalStore = getRoot<RootStoreType>(self).rentalStore;
-            return self.rentalToReturnId
-                ? rentalStore.rentalList.rentals.find(rental => rental.id === self.rentalToReturnId)
-                : null;
-        }
-    }))
     .actions((self) => ({
-        setRentalToReturnId(id: string | null): void {
-            self.rentalToReturnId = id
+        setRentalToReturn(rental: Rental | null): void {
+            if (rental) {
+                const rootStore = getRoot<RootStoreType>(self);
+                self.rentalToReturn = findOrCreateRentalModel(rootStore, rental);
+            } else {
+                self.rentalToReturn = null;
+            }
         },
         setLoading(loading: boolean): void {
             self.loading = loading;
@@ -68,7 +66,7 @@ export const CarReturnStore = t
                 self.setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
             } finally {
                 self.setLoading(false);
-                self.setRentalToReturnId(null);
+                self.setRentalToReturn(null);
             }
         }),
     }));

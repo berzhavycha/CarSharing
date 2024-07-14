@@ -24,12 +24,12 @@ export const useRental = (): HookReturn => {
   const rentedCar = location.state.car;
 
   const {
-    rentalStore: { rentalPayment },
+    rentalPayment: { potentialRentalPrice, setPotentialRentalPrice },
     currentUserStore: { user, updateBalance },
   } = useStore();
 
   useEffect(() => {
-    rentalPayment.setPotentialRentalPrice(rentedCar.pricePerHour);
+    setPotentialRentalPrice(rentedCar.pricePerHour);
   }, []);
 
   const onSubmit = async (rentalDto: RentalDto & PaymentDto): Promise<void> => {
@@ -40,11 +40,11 @@ export const useRental = (): HookReturn => {
     });
 
     setIsLoading(false)
-    if (createdRental && user?.balance && rentalPayment.potentialRentalPrice) {
-      updateBalance(user.balance - rentalPayment.potentialRentalPrice);
+    if (createdRental && user?.balance && potentialRentalPrice) {
+      updateBalance(user.balance - potentialRentalPrice);
       setIsRentSuccessful(true);
     } else if (error) {
-      rentalPayment.setPotentialRentalPrice(rentedCar.pricePerHour);
+      setPotentialRentalPrice(rentedCar.pricePerHour);
       setErrorMessage(error)
     }
   };
@@ -52,7 +52,7 @@ export const useRental = (): HookReturn => {
   const onRequestedHoursChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const currentHours = +event.target.value;
     const carPricePerHour = rentedCar.pricePerHour * currentHours;
-    rentalPayment.setPotentialRentalPrice(carPricePerHour);
+    setPotentialRentalPrice(carPricePerHour);
   };
 
   return {

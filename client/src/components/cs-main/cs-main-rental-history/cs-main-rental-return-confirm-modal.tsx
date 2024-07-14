@@ -9,17 +9,16 @@ type Props = {
 }
 
 export const CSMainRentalReturnConfirmModal: FC<Props> = observer(({ onSuccessReturn }) => {
-    const { rentalStore } = useStore();
     const {
         carReturn: {
             rentalToReturn,
-            setRentalToReturnId,
+            setRentalToReturn,
             loading,
             returnCar
         },
-    } = rentalStore;
+    } = useStore();
 
-    const handleCloseConfirmReturnWindow = (): void => setRentalToReturnId(null);
+    const handleCloseConfirmReturnWindow = (): void => setRentalToReturn(null);
 
     const handleReturnCar = async (): Promise<void> => {
         if (rentalToReturn) {

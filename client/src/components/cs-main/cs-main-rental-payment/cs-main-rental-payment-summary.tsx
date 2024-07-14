@@ -9,9 +9,7 @@ import { device } from '@/styles';
 import { Car } from '@/types';
 
 export const CSMainRentalPaymentSummary: FC = observer(() => {
-  const {
-    rentalStore: { rentalPayment },
-  } = useStore();
+  const { rentalPayment } = useStore();
 
   const location = useLocation();
   const car = location.state?.car as Car;
@@ -23,9 +21,9 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
         Prices may change depending on the length of the rental and the price of your rental car.
       </SectionDescription>
       <CarInfoWrapper>
-        <CarImage 
-        // src={car.pictures[0]?.url} 
-        src=''
+        <CarImage
+          // src={car.pictures[0]?.url} 
+          src=''
         />
         <CarDetails>
           <CarName>{car.model}</CarName>
