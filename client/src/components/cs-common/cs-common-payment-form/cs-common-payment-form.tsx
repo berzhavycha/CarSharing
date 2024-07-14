@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 
 import { CSCommonForm } from '@/components/cs-common';
-import { device } from '@/styles';
+import { CreditCardStyles, device } from '@/styles';
 
 import Cards, { Focused } from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
@@ -26,6 +26,7 @@ export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButto
       <SectionDescription>{description}</SectionDescription>
       <FormContent>
         <CardsWrapper>
+          <CreditCardStyles />
           <Cards
             number={cardDetails.cardNumber}
             name={cardDetails.cardHolder}
@@ -72,6 +73,8 @@ export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButto
 };
 
 const FormInfoWrapper = styled(BaseSection)`
+  width: 100%;
+
   @media ${device.sm} {
     padding: 25px 35px 25px 25px;
   }
@@ -79,25 +82,41 @@ const FormInfoWrapper = styled(BaseSection)`
 
 const FormContent = styled.div`
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  gap: 20px;
   flex-wrap: wrap;
+  align-items: center;
+
+  @media ${device.sm} {
+    justify-content: center;
+  }
 `;
 
 const CardsWrapper = styled.div`
   flex: 0 0 30%;
-  margin-right: 20px;
   margin-bottom: 20px;
+
+  @media ${device.sm} {
+    width: 100%
+  }
+
+  @media ${device.md} {
+    max-width: 400px; 
+  }
 `;
 
 const PaymentFormBlocks = styled.div`
-  flex: 1 1 auto;
+  flex: 1;
   display: grid;
   grid-template-rows: repeat(3, auto);
-  grid-gap: 0 20px;
+  grid-gap: 20px;
 
   @media ${device.sm} {
     grid-template-columns: 1fr;
+    grid-gap: 20px 0;
+  }
+
+  @media ${device.md} {
+    grid-gap: 0px;
   }
 `;
 
@@ -105,5 +124,10 @@ const FormRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 0 40px;
+
+  @media ${device.sm} {
+    grid-template-columns: 1fr;
+    grid-gap: 0 0;
+  }
 `;
 

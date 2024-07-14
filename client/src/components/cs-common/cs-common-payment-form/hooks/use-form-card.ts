@@ -45,7 +45,7 @@ export const useFormCard = (): HookReturn => {
             cvc: '',
         })
         setFocused('')
-    }, [formState.isSubmitted])
+    }, [formState.isSubmitSuccessful])
 
     return {
         cardDetails,
