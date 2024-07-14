@@ -14,6 +14,7 @@ import {
 } from '@/helpers';
 import {
   CarsService,
+  LoggerService,
   OriginalCarsService,
   RentalsService,
   UsersService,
@@ -22,6 +23,7 @@ import {
 import {
   testCarsService,
   testEntityManager,
+  testLoggerService,
   testOriginalCarsService,
   testQueryBuilder,
   testRepository,
@@ -70,6 +72,7 @@ describe('RentalsService', () => {
           provide: EntityManager,
           useValue: testEntityManager,
         },
+        { provide: LoggerService, useValue: testLoggerService },
       ],
     }).compile();
 

@@ -7,6 +7,7 @@ import { EntityManager, Repository } from 'typeorm';
 import { User } from '@/entities';
 import { hashValue, usersErrorMessages } from '@/helpers';
 import {
+  LoggerService,
   PublicFilesService,
   RolesService,
   TransactionsService,
@@ -15,6 +16,7 @@ import {
 
 import {
   testEntityManager,
+  testLoggerService,
   testPublicFilesService,
   testRepository,
   testRoleService,
@@ -64,6 +66,7 @@ describe('UsersService', () => {
           provide: PublicFilesService,
           useValue: testPublicFilesService,
         },
+        { provide: LoggerService, useValue: testLoggerService },
       ],
     }).compile();
 

@@ -12,9 +12,9 @@ import { Response } from 'express-serve-static-core';
 
 import { User } from '@/entities';
 import { DUPLICATE_EMAIL_ERROR_CODE, hashValue, Roles } from '@/helpers';
-import { AuthService, UsersService } from '@/services';
+import { AuthService, LoggerService, UsersService } from '@/services';
 
-import { testJwtService, testUsersService } from '../test-objects';
+import { testJwtService, testLoggerService, testUsersService } from '../test-objects';
 import { makeHash, makeResponse, makeTokens, makeUser } from '../utils';
 
 jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
@@ -57,6 +57,7 @@ describe('AuthService', () => {
         { provide: ConfigService, useValue: testConfigService },
         { provide: UsersService, useValue: testUsersService },
         { provide: JwtService, useValue: testJwtService },
+        { provide: LoggerService, useValue: testLoggerService },
       ],
     }).compile();
 

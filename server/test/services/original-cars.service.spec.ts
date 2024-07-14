@@ -6,10 +6,11 @@ import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
 import { QueryCarsDto } from '@/dtos';
 import { OriginalCar } from '@/entities';
 import { applySearchAndPagination } from '@/helpers';
-import { OriginalCarsService } from '@/services';
+import { LoggerService, OriginalCarsService } from '@/services';
 
 import {
   testEntityManager,
+  testLoggerService,
   testQueryBuilder,
   testRepository,
 } from '../test-objects';
@@ -31,6 +32,7 @@ describe('OriginalCarsService', () => {
           provide: getRepositoryToken(OriginalCar),
           useValue: testRepository,
         },
+        { provide: LoggerService, useValue: testLoggerService },
       ],
     }).compile();
 

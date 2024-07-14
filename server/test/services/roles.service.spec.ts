@@ -3,9 +3,9 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Role } from '@/entities';
-import { RolesService } from '@/services';
+import { LoggerService, RolesService } from '@/services';
 
-import { testRepository } from '../test-objects';
+import { testLoggerService, testRepository } from '../test-objects';
 import { makeRole } from '../utils';
 
 describe('RolesService', () => {
@@ -20,6 +20,7 @@ describe('RolesService', () => {
           provide: getRepositoryToken(Role),
           useValue: testRepository,
         },
+        { provide: LoggerService, useValue: testLoggerService },
       ],
     }).compile();
 
