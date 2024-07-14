@@ -29,7 +29,6 @@ export class LoggerService {
         });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     log(message: string): void {
         if (this.logger) {
             this.logger.info(message);
