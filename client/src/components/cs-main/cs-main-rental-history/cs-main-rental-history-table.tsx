@@ -17,6 +17,7 @@ import { Rental } from '@/types';
 import { CSMainRentalHistoryModals } from './cs-main-rental-history-modals';
 import { CSMainRentalHistoryTableRow } from './cs-main-rental-history-table-row';
 import { useSortColumn } from '@/hooks';
+import { RentalReturnOrigin } from '@/helpers';
 
 type Props = {
   loadedRentals: Rental[];
@@ -92,7 +93,7 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
               displayedRentals.map((rental, index) => {
                 const onCarReturn = (): void => {
                   carReturn.setRentalToReturn(rental as Rental)
-                  carReturn.setOrigin('table')
+                  carReturn.setOrigin(RentalReturnOrigin.TABLE)
                 }
                 
                 return (

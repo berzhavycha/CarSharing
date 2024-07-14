@@ -11,7 +11,7 @@ import {
   SectionTitle,
 } from '@/components/cs-common';
 import { useStore } from '@/context';
-import { formatDate, RentalStatus, uppercaseFirstLetter } from '@/helpers';
+import { formatDate, RentalReturnOrigin, RentalStatus, uppercaseFirstLetter } from '@/helpers';
 import { device } from '@/styles';
 import { Rental } from '@/types';
 
@@ -32,7 +32,7 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
 
   const onCarReturn = async (): Promise<void> => {
     carReturn.setRentalToReturn(singleRental.rental as Rental)
-    carReturn.setOrigin('single-page')
+    carReturn.setOrigin(RentalReturnOrigin.SINGLE_PAGE)
   };
 
   const onSuccessReturn = async (): Promise<void> => await singleRental.fetchSingleRental(rentalId)

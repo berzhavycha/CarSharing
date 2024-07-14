@@ -1,5 +1,5 @@
 import { flow, getRoot, t } from 'mobx-state-tree';
-import { UNEXPECTED_ERROR_MESSAGE, findOrCreateRentalModel } from '@/helpers';
+import { RentalReturnOrigin, UNEXPECTED_ERROR_MESSAGE, findOrCreateRentalModel } from '@/helpers';
 import { returnCar } from '@/services';
 import { RentalModel } from '../models';
 import { RootStoreType } from './root-store';
@@ -14,7 +14,7 @@ export const CarReturnStore = t
         penalty: t.optional(t.maybe(t.number), undefined),
         isReturnedInTime: t.optional(t.boolean, false),
         errorMessage: t.optional(t.string, ''),
-        origin: t.optional(t.enumeration('ReturnOrigin', ['table', 'single-page']), 'table'),
+        origin: t.optional(t.enumeration('ReturnOrigin', [RentalReturnOrigin.TABLE, RentalReturnOrigin.SINGLE_PAGE]), RentalReturnOrigin.TABLE),
     })
     .actions((self) => ({
         setRentalToReturn(rental: Rental | null): void {
@@ -40,7 +40,7 @@ export const CarReturnStore = t
         setErrorMessage(error: string): void {
             self.errorMessage = error;
         },
-        setOrigin(origin: 'table' | 'single-page'): void {
+        setOrigin(origin: RentalReturnOrigin): void {
             self.origin = origin;
         },
     }))
