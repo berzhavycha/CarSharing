@@ -23,6 +23,7 @@ import {
 import { AuthResult, ITokens, JwtPayload } from '@/interfaces';
 
 import { UsersService } from './users.service';
+import { LoggerService } from './logger.service';
 
 @Injectable()
 export class AuthService {
@@ -30,7 +31,8 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-  ) {}
+    private readonly loggerService: LoggerService
+  ) { }
 
   async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
     try {
@@ -64,8 +66,10 @@ export class AuthService {
       };
     } catch (error) {
       if (error.code === DUPLICATE_EMAIL_ERROR_CODE) {
+        this.loggerService.warn(`Duplicate email registration attempt: ${registerUserDto.email}`);
         throw new ConflictException(authErrorMessages.DUPLICATE_EMAIL);
       } else {
+        this.loggerService.error(`Error during user registration: ${error.message}`, error.stack);
         throw error;
       }
     }
@@ -86,13 +90,18 @@ export class AuthService {
   }
 
   async refreshAccessToken(refreshToken: string): Promise<ITokens> {
-    const decoded = await this.jwtService.verifyAsync(refreshToken, {
-      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-    });
+    try {
+      const decoded = await this.jwtService.verifyAsync(refreshToken, {
+        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+      });
 
-    await this.validateRefreshToken(decoded.sub, refreshToken);
+      await this.validateRefreshToken(decoded.sub, refreshToken);
 
-    return this.generateTokens(decoded.sub, decoded.email);
+      return this.generateTokens(decoded.sub, decoded.email);
+    } catch (error) {
+      this.loggerService.error(`Error during token refresh: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   async validateRefreshToken(userId: string, token: string): Promise<void> {
@@ -104,11 +113,25 @@ export class AuthService {
 
   async generateTokens(userId: string, email: string): Promise<ITokens> {
     const payload: JwtPayload = { sub: userId, email };
+
     const accessToken = await this.jwtService.signAsync(payload);
+    this.loggerService.log(JSON.stringify({
+      message: 'Generating Access Token',
+      userId,
+      type: 'Access Token',
+      expiresIn: this.configService.get<string>('JWT_ACCESS_TOKEN_TIME'),
+    }));
+
     const refreshToken = await this.jwtService.signAsync(payload, {
       secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
       expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_TIME'),
     });
+    this.loggerService.log(JSON.stringify({
+      message: 'Generating Refresh Token',
+      userId,
+      type: 'Refresh Token',
+      expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_TIME'),
+    }));
 
     const { salt, hash } = await hashValue(refreshToken);
     await this.usersService.updateUser(userId, {
@@ -120,49 +143,71 @@ export class AuthService {
   }
 
   setTokensCookies(response: Response, tokens: ITokens): void {
+    const maxAge = ONE_DAY_MILLISECONDS * this.configService.get<number>('AUTH_COOKIE_EXPIRATION_DAYS_TIME')
+    const secure = this.configService.get<string>('NODE_ENV') === NODE_ENV.production
+
+    this.loggerService.log(JSON.stringify({
+      message: 'Setting Tokens in Cookies',
+      maxAge,
+      secure,
+    }));
+
     response.cookie('tokens', tokens, {
       httpOnly: true,
-      maxAge:
-        ONE_DAY_MILLISECONDS *
-        this.configService.get<number>('AUTH_COOKIE_EXPIRATION_DAYS_TIME'),
+      maxAge,
       sameSite: 'lax',
-      secure:
-        this.configService.get<string>('NODE_ENV') === NODE_ENV.production,
+      secure
     });
   }
 
   clearTokensCookies(response: Response): void {
+    const secure = this.configService.get<string>('NODE_ENV') === NODE_ENV.production
+
+    this.loggerService.log(JSON.stringify({
+      message: 'Clearing Tokens in Cookies',
+      secure,
+    }));
+
     response.clearCookie('tokens', {
       httpOnly: true,
       sameSite: 'lax',
-      secure:
-        this.configService.get<string>('NODE_ENV') === NODE_ENV.production,
+      secure
     });
   }
 
   async validateUserById(id: string): Promise<User> {
-    const user = await this.usersService.findById(id);
+    try {
+      const user = await this.usersService.findById(id);
 
-    if (!user) {
-      throw new UnauthorizedException();
+      if (!user) {
+        throw new UnauthorizedException();
+      }
+
+      return plainToClass(User, user);
+    } catch (error) {
+      this.loggerService.error(`Error during validation of user by id: ${error.message}`, error.stack);
+      throw error
     }
-
-    return plainToClass(User, user);
   }
 
   async validateUserCredentials(
     email: string,
     password: string,
   ): Promise<User | null> {
-    const user = await this.usersService.findByEmail(email);
-    if (!user) {
-      throw new UnauthorizedException(authErrorMessages.INVALID_EMAIL);
-    }
+    try {
+      const user = await this.usersService.findByEmail(email);
+      if (!user) {
+        throw new UnauthorizedException(authErrorMessages.INVALID_EMAIL);
+      }
 
-    if (await bcrypt.compare(password, user.passwordHash)) {
-      return plainToClass(User, user);
-    }
+      if (await bcrypt.compare(password, user.passwordHash)) {
+        return plainToClass(User, user);
+      }
 
-    throw new UnauthorizedException(authErrorMessages.INVALID_PASSWORD);
+      throw new UnauthorizedException(authErrorMessages.INVALID_PASSWORD);
+    } catch (error) {
+      this.loggerService.error(`Error during validation of user credentials: ${error.message}`, error.stack);
+      throw error
+    }
   }
 }

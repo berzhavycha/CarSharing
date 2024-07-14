@@ -29,13 +29,14 @@ export class LoggerService {
         });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     log(message: string): void {
         if (this.logger) {
-            this.logger.log('info', message);
+            this.logger.info(message);
         }
     }
 
-    error(message: string, trace: string): void {
+    error(message: string, trace?: string): void {
         if (this.logger) {
             this.logger.error(message, { trace });
         }

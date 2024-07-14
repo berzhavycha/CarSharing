@@ -9,14 +9,13 @@ export class RequestLoggingMiddleware implements NestMiddleware {
 
     use(req: Request, res: Response, next: NextFunction): void {
         if (this.logger) {
-            const { method, originalUrl, ip, headers, body, query } = req;
+            const { method, originalUrl, headers, body, query } = req;
             const userAgent = req.get('user-agent') || '';
 
             this.logger.log(JSON.stringify({
                 message: 'Incoming Request',
                 method,
                 url: originalUrl,
-                ip,
                 userAgent,
                 headers: this.sanitizeHeaders(headers),
                 query,
