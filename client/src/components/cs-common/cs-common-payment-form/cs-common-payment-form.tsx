@@ -1,13 +1,14 @@
 import { FC } from 'react';
+import Cards, { Focused } from 'react-credit-cards-2';
+import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import styled from 'styled-components';
 
 import { CSCommonForm } from '@/components/cs-common';
+import { useNonNegativeInput } from '@/hooks';
 import { CreditCardStyles, device } from '@/styles';
 
-import Cards, { Focused } from 'react-credit-cards-2';
-import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import { BaseSection, SectionDescription, SectionTitle } from '../cs-common-section';
-import { useNonNegativeInput } from '@/hooks';
+
 import { useFormCard } from './hooks';
 
 type Props = {
@@ -17,8 +18,8 @@ type Props = {
 };
 
 export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButtonContent }) => {
-  const { preventNegativeInput } = useNonNegativeInput()
-  const { cardDetails, focused, handleInputChange, handleInputFocus } = useFormCard()
+  const { preventNegativeInput } = useNonNegativeInput();
+  const { cardDetails, focused, handleInputChange, handleInputFocus } = useFormCard();
 
   return (
     <FormInfoWrapper>
@@ -96,11 +97,11 @@ const CardsWrapper = styled.div`
   margin-bottom: 20px;
 
   @media ${device.sm} {
-    width: 100%
+    width: 100%;
   }
 
   @media ${device.md} {
-    max-width: 400px; 
+    max-width: 400px;
   }
 `;
 
@@ -130,4 +131,3 @@ const FormRow = styled.div`
     grid-gap: 0 0;
   }
 `;
-

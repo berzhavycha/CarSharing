@@ -14,7 +14,11 @@ import { User } from '@/entities';
 import { DUPLICATE_EMAIL_ERROR_CODE, hashValue, Roles } from '@/helpers';
 import { AuthService, LoggerService, UsersService } from '@/services';
 
-import { testJwtService, testLoggerService, testUsersService } from '../test-objects';
+import {
+  testJwtService,
+  testLoggerService,
+  testUsersService,
+} from '../test-objects';
 import { makeHash, makeResponse, makeTokens, makeUser } from '../utils';
 
 jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
@@ -432,7 +436,6 @@ describe('AuthService', () => {
       jest.spyOn(usersService, 'findByEmail').mockResolvedValue(user);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-
       const result = await authService.validateUserCredentials(
         user.email,
         validPassword,
@@ -456,7 +459,9 @@ describe('AuthService', () => {
       const user = makeUser();
 
       jest.spyOn(usersService, 'findByEmail').mockResolvedValue(user);
-      jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(false));
+      jest
+        .spyOn(bcrypt, 'compare')
+        .mockImplementation(() => Promise.resolve(false));
 
       await expect(
         authService.validateUserCredentials(user.email, invalidPassword),

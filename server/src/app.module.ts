@@ -5,13 +5,14 @@ import {
   CarsModule,
   ConfigModule,
   DatabaseModule,
+  LoggerModule,
   OriginalCarsModule,
+  PublicFilesModule,
   RentalsModule,
   TransactionsModule,
   UsersModule,
-  PublicFilesModule,
-  LoggerModule
 } from '@/modules';
+
 import { RequestLoggingMiddleware } from './middlewares';
 
 @Module({

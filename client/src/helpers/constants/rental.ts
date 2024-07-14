@@ -21,9 +21,9 @@ export enum RentalStatus {
   CANCELLED = 'cancelled',
 }
 
-export const MAX_REQUESTED_HOURS = 48
+export const MAX_REQUESTED_HOURS = 48;
 
 export enum RentalReturnOrigin {
   TABLE = 'table',
-  SINGLE_PAGE = 'single-page'
+  SINGLE_PAGE = 'single-page',
 }

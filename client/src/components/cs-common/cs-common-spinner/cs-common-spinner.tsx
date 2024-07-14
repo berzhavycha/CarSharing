@@ -36,11 +36,10 @@ export const Spinner = styled.div`
   animation: ${spinAnimation} 1s ease-in-out infinite;
 `;
 
-
 export const BtnSpinner = styled(Spinner)`
   width: 20px;
   height: 20px;
   margin: 0 8px;
   border-color: var(--light-blue);
   border-top-color: white;
-`
+`;

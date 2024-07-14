@@ -1,1 +1,1 @@
-export * from './find-or-create-rental-model'
+export * from './find-or-create-rental-model';

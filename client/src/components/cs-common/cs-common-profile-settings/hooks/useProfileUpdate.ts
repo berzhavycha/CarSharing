@@ -11,7 +11,6 @@ type HookReturn = {
   setExistingImages: (ids: PublicFile[]) => void;
 };
 
-
 export const useProfileUpdate = (
   updateUser: (user: UpdateUserDto) => Promise<void>,
   viewImages: PublicFile[],
@@ -39,7 +38,10 @@ export const useProfileUpdate = (
       ),
     );
 
-    await updateUser({ ...userDtoWithoutEmptyPasswords, existingImagesIds: existingImages.map(img => img.id) });
+    await updateUser({
+      ...userDtoWithoutEmptyPasswords,
+      existingImagesIds: existingImages.map((img) => img.id),
+    });
     setIsSubmitted(true);
   };
 

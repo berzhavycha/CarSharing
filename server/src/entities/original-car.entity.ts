@@ -18,8 +18,8 @@ import {
   DecimalColumnTransformer,
 } from '@/helpers';
 
-import { Rental } from './rental.entity';
 import { PublicFile } from './public-file.entity';
+import { Rental } from './rental.entity';
 
 @Entity({ schema: 'rental', name: 'original_cars' })
 @Check('"price_per_hour" > 0')

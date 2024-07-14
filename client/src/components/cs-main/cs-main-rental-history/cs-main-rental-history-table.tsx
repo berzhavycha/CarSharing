@@ -12,12 +12,12 @@ import {
   TableHeader,
 } from '@/components/cs-common';
 import { useStore } from '@/context';
+import { RentalReturnOrigin } from '@/helpers';
+import { useSortColumn } from '@/hooks';
 import { Rental } from '@/types';
 
 import { CSMainRentalHistoryModals } from './cs-main-rental-history-modals';
 import { CSMainRentalHistoryTableRow } from './cs-main-rental-history-table-row';
-import { useSortColumn } from '@/hooks';
-import { RentalReturnOrigin } from '@/helpers';
 
 type Props = {
   loadedRentals: Rental[];
@@ -25,9 +25,12 @@ type Props = {
 };
 
 export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, onSortChange }) => {
-  const { rentalList: { setRentals, rentals, errorMessage }, carReturn } = useStore();
+  const {
+    rentalList: { setRentals, rentals, errorMessage },
+    carReturn,
+  } = useStore();
 
-  const { sortState, setSortState, renderSortIcon } = useSortColumn()
+  const { sortState, setSortState, renderSortIcon } = useSortColumn();
 
   useEffect(() => {
     setRentals(loadedRentals);
@@ -92,10 +95,10 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
             ) : (
               displayedRentals.map((rental, index) => {
                 const onCarReturn = (): void => {
-                  carReturn.setRentalToReturn(rental)
-                  carReturn.setOrigin(RentalReturnOrigin.TABLE)
-                }
-                
+                  carReturn.setRentalToReturn(rental);
+                  carReturn.setOrigin(RentalReturnOrigin.TABLE);
+                };
+
                 return (
                   <CSMainRentalHistoryTableRow
                     key={rental.id}
@@ -103,7 +106,7 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
                     rental={rental}
                     onCarReturn={onCarReturn}
                   />
-                )
+                );
               })
             )}
           </tbody>

@@ -50,11 +50,7 @@ export const useImagePreviews = (
   };
 
   const resetPreviews = (): void => {
-    setPreviews(
-      actualImages && actualImages.length > 0
-        ? actualImages
-        : [{ url: defaultImage }],
-    );
+    setPreviews(actualImages && actualImages.length > 0 ? actualImages : [{ url: defaultImage }]);
   };
 
   return { previews, handleUploadedFiles, removeImage, resetPreviews };

@@ -12,6 +12,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { Car } from '@/entities';
@@ -24,15 +25,19 @@ import {
 } from '@/helpers';
 import { CarsService } from '@/services';
 import { FilterOption } from '@/types';
-import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('cars')
 export class CarsController {
-  constructor(private readonly carsService: CarsService) { }
+  constructor(private readonly carsService: CarsService) {}
 
   @Post()
   @UseGuards(RoleGuard(Roles.ADMIN))
-  @UseInterceptors(FilesInterceptor('pictures', MAX_CAR_PICTURES, { fileFilter: defaultFileFilter, limits: defaultFileLimits }))
+  @UseInterceptors(
+    FilesInterceptor('pictures', MAX_CAR_PICTURES, {
+      fileFilter: defaultFileFilter,
+      limits: defaultFileLimits,
+    }),
+  )
   async create(
     @Body() createCarDto: CreateCarDto,
     @UploadedFiles() pictures: Express.Multer.File[],
@@ -70,7 +75,12 @@ export class CarsController {
 
   @Patch(':id')
   @UseGuards(RoleGuard(Roles.ADMIN))
-  @UseInterceptors(FilesInterceptor('pictures', MAX_CAR_PICTURES, { fileFilter: defaultFileFilter, limits: defaultFileLimits }))
+  @UseInterceptors(
+    FilesInterceptor('pictures', MAX_CAR_PICTURES, {
+      fileFilter: defaultFileFilter,
+      limits: defaultFileLimits,
+    }),
+  )
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateCarDto: UpdateCarDto,

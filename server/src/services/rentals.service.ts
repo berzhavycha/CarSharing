@@ -19,9 +19,9 @@ import {
 } from '@/helpers';
 
 import { CarsService } from './cars.service';
+import { LoggerService } from './logger.service';
 import { OriginalCarsService } from './original-cars.service';
 import { UsersService } from './users.service';
-import { LoggerService } from './logger.service';
 
 @Injectable()
 export class RentalsService {
@@ -32,8 +32,8 @@ export class RentalsService {
     private originalCarsService: OriginalCarsService,
     private usersService: UsersService,
     private readonly entityManager: EntityManager,
-    private readonly loggerService: LoggerService
-  ) { }
+    private readonly loggerService: LoggerService,
+  ) {}
 
   async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
     try {
@@ -58,7 +58,9 @@ export class RentalsService {
 
       const rentalCost = car.pricePerHour * rentCarDto.hours;
       if (user.balance < rentalCost) {
-        throw new BadRequestException(rentalsErrorMessages.INSUFFICIENT_BALANCE);
+        throw new BadRequestException(
+          rentalsErrorMessages.INSUFFICIENT_BALANCE,
+        );
       }
 
       return this.entityManager.transaction(async (manager) => {
@@ -98,7 +100,10 @@ export class RentalsService {
         return createdRental;
       });
     } catch (error) {
-      this.loggerService.error(`Error renting car: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error renting car: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -125,7 +130,7 @@ export class RentalsService {
         const returnDate = new Date();
         const hoursDifference = Math.ceil(
           (returnDate.getTime() - rental.rentalStart.getTime()) /
-          ONE_HOUR_MILLISECONDS,
+            ONE_HOUR_MILLISECONDS,
         );
 
         let refund: number | undefined;
@@ -172,7 +177,10 @@ export class RentalsService {
         return { rental: updatedRental, refund, penalty };
       });
     } catch (error) {
-      this.loggerService.error(`Error returning car: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error returning car: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -229,7 +237,10 @@ export class RentalsService {
 
       return queryBuilder.getManyAndCount();
     } catch (error) {
-      this.loggerService.error(`Error finding all user rentals: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error finding all user rentals: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }

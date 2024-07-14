@@ -13,6 +13,7 @@ import {
   TRANSACTION_DEFAULT_SORT_COLUMN,
   TransactionType,
 } from '@/helpers';
+
 import { LoggerService } from './logger.service';
 
 @Injectable()
@@ -20,8 +21,8 @@ export class TransactionsService {
   constructor(
     @InjectRepository(Transaction)
     private readonly transactionsRepository: Repository<Transaction>,
-    private readonly loggerService: LoggerService
-  ) { }
+    private readonly loggerService: LoggerService,
+  ) {}
 
   async createTransaction(
     transactionData: {
@@ -37,7 +38,10 @@ export class TransactionsService {
       const transaction = this.transactionsRepository.create(transactionData);
       return manager.save(transaction);
     } catch (error) {
-      this.loggerService.error(`Error creating transaction: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error creating transaction: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -65,7 +69,10 @@ export class TransactionsService {
 
       return queryBuilder.getManyAndCount();
     } catch (error) {
-      this.loggerService.error(`Error finding all transactions: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error finding all transactions: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }

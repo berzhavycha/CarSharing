@@ -1,7 +1,12 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { CSCommonErrorMessage, CSCommonForm, CSCommonModal, BtnSpinner } from '@/components/cs-common';
+import {
+  BtnSpinner,
+  CSCommonErrorMessage,
+  CSCommonForm,
+  CSCommonModal,
+} from '@/components/cs-common';
 import {
   CarFuelTypeSelect,
   carSchema,
@@ -9,13 +14,13 @@ import {
   CarSteeringTypeSelect,
   CarTypeSelect,
 } from '@/helpers';
+import { useNonNegativeInput } from '@/hooks';
 import { device } from '@/styles';
 import { Car, CarDto, FieldErrorsState } from '@/types';
 
 import DefaultImage from '../../../../../public/car-upload.png';
 
 import { useCarForm } from './hooks';
-import { useNonNegativeInput } from '@/hooks';
 
 export type onCarSubmit = (
   car: CarDto,
@@ -37,10 +42,10 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
     onSubmit,
     errors,
   } = useCarForm(onFormSubmit, carDefaultValues);
-  const { preventNegativeInput } = useNonNegativeInput()
+  const { preventNegativeInput } = useNonNegativeInput();
 
   const handleCloseModal = (): void => setIsSuccess(false);
-  const saveBtnContent = isLoading ? <BtnSpinner /> : 'Save'
+  const saveBtnContent = isLoading ? <BtnSpinner /> : 'Save';
 
   return (
     <FormContainer>
@@ -68,7 +73,13 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
           <Title>General Information</Title>
           <Section>
             <CSCommonForm.Input label="Model Name" name="model" error={errors?.model} />
-            <CSCommonForm.Input label="Year" name="year" type="number" error={errors?.year} onKeyDown={preventNegativeInput} />
+            <CSCommonForm.Input
+              label="Year"
+              name="year"
+              type="number"
+              error={errors?.year}
+              onKeyDown={preventNegativeInput}
+            />
             <CSCommonForm.Input
               label="Price / Hour"
               name="pricePerHour"

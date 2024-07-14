@@ -9,10 +9,7 @@ export const defaultFileFilter: MulterOptions['fileFilter'] = (
   callback,
 ): void => {
   if (!file.mimetype.includes('image')) {
-    return callback(
-      new BadRequestException(filesErrors.INVALID_IMAGE),
-      false,
-    );
+    return callback(new BadRequestException(filesErrors.INVALID_IMAGE), false);
   }
   callback(null, true);
 };

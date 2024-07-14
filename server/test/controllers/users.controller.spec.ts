@@ -6,7 +6,7 @@ import { User } from '@/entities';
 import { UsersService } from '@/services';
 
 import { testUsersService } from '../test-objects';
-import { makePublicFile, makePicture, makeUser } from '../utils';
+import { makePicture, makePublicFile, makeUser } from '../utils';
 
 jest.mock('@nestjs/config');
 const testConfigService = {

@@ -13,5 +13,7 @@ export const CSCommonTooltip = styled.div`
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s;
 `;

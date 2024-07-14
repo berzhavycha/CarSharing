@@ -1,4 +1,4 @@
-import { Car, PublicFile, OriginalCar } from '@/entities';
+import { Car, OriginalCar, PublicFile } from '@/entities';
 
 export const makePublicFile = (details?: Partial<PublicFile>): PublicFile => {
   return {

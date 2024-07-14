@@ -30,12 +30,12 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({ rental, index,
     },
     ...(rental.status === RentalStatus.ACTIVE
       ? [
-        {
-          label: 'Return',
-          icon: <FaCar />,
-          onClick: onCarReturn,
-        },
-      ]
+          {
+            label: 'Return',
+            icon: <FaCar />,
+            onClick: onCarReturn,
+          },
+        ]
       : []),
   ];
 
@@ -45,7 +45,7 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({ rental, index,
       <HiddenMDTableCell>
         <img
           // src={rental.originalCar?.pictures?.[0]?.url}
-          src=''
+          src=""
           alt="Car Image"
         />
       </HiddenMDTableCell>

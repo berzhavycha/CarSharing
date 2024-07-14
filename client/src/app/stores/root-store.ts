@@ -1,7 +1,7 @@
-import { Instance, t, castToSnapshot } from 'mobx-state-tree';
+import { castToSnapshot, Instance, t } from 'mobx-state-tree';
 
-import { CurrentUserStore } from './current-user-store';
 import { CarReturnStore } from './car-return-store';
+import { CurrentUserStore } from './current-user-store';
 import { RentalListStore } from './rental-list-store';
 import { RentalPaymentStore } from './rental-payment-store';
 import { SingleRentalStore } from './single-rental-store';
@@ -14,7 +14,6 @@ const RootStore = t.model('RootStore', {
   rentalList: RentalListStore,
 });
 
-
 export const rootStore = RootStore.create({
   currentUserStore: CurrentUserStore.create({
     errors: {},
@@ -25,7 +24,4 @@ export const rootStore = RootStore.create({
   rentalList: RentalListStore.create({ rentals: [] }),
 });
 
-
 export type RootStoreType = Instance<typeof RootStore>;
-
-

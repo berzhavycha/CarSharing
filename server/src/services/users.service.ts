@@ -18,12 +18,12 @@ import {
   usersErrorMessages,
 } from '@/helpers';
 import { SafeUser } from '@/interfaces';
+import { UploadFile } from '@/types';
 
+import { LoggerService } from './logger.service';
+import { PublicFilesService } from './public-files.service';
 import { RolesService } from './roles.service';
 import { TransactionsService } from './transactions.service';
-import { PublicFilesService } from './public-files.service';
-import { UploadFile } from '@/types';
-import { LoggerService } from './logger.service';
 
 @Injectable()
 export class UsersService {
@@ -32,8 +32,8 @@ export class UsersService {
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
     private publicFilesService: PublicFilesService,
-    private readonly loggerService: LoggerService
-  ) { }
+    private readonly loggerService: LoggerService,
+  ) {}
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -71,7 +71,10 @@ export class UsersService {
 
       return this.usersRepository.save(user);
     } catch (error) {
-      this.loggerService.error(`Error creating user: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error creating user: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -96,7 +99,10 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      this.loggerService.error(`Error finding user by id: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error finding user by id: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -122,7 +128,9 @@ export class UsersService {
         if (
           !(await bcrypt.compare(updateUserDto.oldPassword, user.passwordHash))
         ) {
-          throw new BadRequestException(usersErrorMessages.INVALID_OLD_PASSWORD);
+          throw new BadRequestException(
+            usersErrorMessages.INVALID_OLD_PASSWORD,
+          );
         }
         await this.updateUserPassword(user, updateUserDto);
 
@@ -131,12 +139,17 @@ export class UsersService {
       }
 
       if (fileData) {
-        const avatar = await this.publicFilesService.uploadPublicFile(fileData.imageBuffer, fileData.filename);
+        const avatar = await this.publicFilesService.uploadPublicFile(
+          fileData.imageBuffer,
+          fileData.filename,
+        );
         user.avatar = avatar;
       }
 
       if (updateUserDto.email) {
-        const existingUserWithEmail = await this.findByEmail(updateUserDto.email);
+        const existingUserWithEmail = await this.findByEmail(
+          updateUserDto.email,
+        );
 
         if (existingUserWithEmail && existingUserWithEmail.id !== user.id) {
           throw new BadRequestException(authErrorMessages.DUPLICATE_EMAIL);
@@ -147,7 +160,10 @@ export class UsersService {
 
       return this.usersRepository.save(user);
     } catch (error) {
-      this.loggerService.error(`Error updating user: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error updating user: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -158,7 +174,10 @@ export class UsersService {
       user.avatar = null;
       user.avatarId = null;
     } catch (error) {
-      this.loggerService.error(`Error removing user avatar: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error removing user avatar: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -168,7 +187,9 @@ export class UsersService {
     updateUserDto: UpdateUserDto,
   ): Promise<void> {
     try {
-      if (!(await bcrypt.compare(updateUserDto.oldPassword, user.passwordHash))) {
+      if (
+        !(await bcrypt.compare(updateUserDto.oldPassword, user.passwordHash))
+      ) {
         throw new BadRequestException(usersErrorMessages.INVALID_OLD_PASSWORD);
       }
 
@@ -180,7 +201,10 @@ export class UsersService {
         throw new BadRequestException(usersErrorMessages.NO_NEW_PASSWORD);
       }
     } catch (error) {
-      this.loggerService.error(`Error updating user password: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error updating user password: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -219,7 +243,10 @@ export class UsersService {
 
       return this.usersRepository.manager.transaction(updateBalance);
     } catch (error) {
-      this.loggerService.error(`Error updating user balance: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error updating user balance: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }

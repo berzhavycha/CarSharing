@@ -1,4 +1,4 @@
 export type UploadFile = {
-    imageBuffer: Buffer,
-    filename: string
-}
+  imageBuffer: Buffer;
+  filename: string;
+};

@@ -20,8 +20,9 @@ import {
   getFilterOptions,
 } from '@/helpers';
 import { FilterOption, UploadFile } from '@/types';
-import { PublicFilesService } from './public-files.service';
+
 import { LoggerService } from './logger.service';
+import { PublicFilesService } from './public-files.service';
 
 @Injectable()
 export class CarsService {
@@ -29,8 +30,8 @@ export class CarsService {
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
     private publicFilesService: PublicFilesService,
-    private readonly loggerService: LoggerService
-  ) { }
+    private readonly loggerService: LoggerService,
+  ) {}
 
   async createCar(
     createCarDto: CreateCarDto,
@@ -38,7 +39,12 @@ export class CarsService {
   ): Promise<Car> {
     try {
       const carPictures = await Promise.all(
-        fileData.map((file) => this.publicFilesService.uploadPublicFile(file.imageBuffer, file.filename)),
+        fileData.map((file) =>
+          this.publicFilesService.uploadPublicFile(
+            file.imageBuffer,
+            file.filename,
+          ),
+        ),
       );
 
       const car = this.carsRepository.create({
@@ -48,7 +54,10 @@ export class CarsService {
 
       return this.carsRepository.save(car);
     } catch (error) {
-      this.loggerService.error(`Error creating car: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error creating car: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -70,7 +79,12 @@ export class CarsService {
       );
 
       const newCarPictures = await Promise.all(
-        newImages.map((file) => this.publicFilesService.uploadPublicFile(file.imageBuffer, file.filename)),
+        newImages.map((file) =>
+          this.publicFilesService.uploadPublicFile(
+            file.imageBuffer,
+            file.filename,
+          ),
+        ),
       );
 
       car.pictures = [
@@ -86,7 +100,10 @@ export class CarsService {
 
       return this.carsRepository.save(car);
     } catch (error) {
-      this.loggerService.error(`Error updating car: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error updating car: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -101,7 +118,10 @@ export class CarsService {
 
       await this.carsRepository.remove(car);
     } catch (error) {
-      this.loggerService.error(`Error removing car: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error removing car: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -119,7 +139,10 @@ export class CarsService {
 
       return car;
     } catch (error) {
-      this.loggerService.error(`Error finding car by id: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error finding car by id: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -146,7 +169,10 @@ export class CarsService {
 
       return queryBuilder.getManyAndCount();
     } catch (error) {
-      this.loggerService.error(`Error finding all cars: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error finding all cars: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -158,7 +184,10 @@ export class CarsService {
   }> {
     try {
       const types = await getFilterOptions(this.carsRepository, 'type');
-      const capacities = await getFilterOptions(this.carsRepository, 'capacity');
+      const capacities = await getFilterOptions(
+        this.carsRepository,
+        'capacity',
+      );
 
       const maxPriceResult = await this.carsRepository
         .createQueryBuilder('car')
@@ -169,7 +198,10 @@ export class CarsService {
 
       return { types, capacities, maxPrice };
     } catch (error) {
-      this.loggerService.error(`Error getting filter options: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error getting filter options: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }

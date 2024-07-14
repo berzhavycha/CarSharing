@@ -11,7 +11,7 @@ import {
   CarStatus,
   RentalStatus,
 } from '@/helpers';
-import { CarsService, LoggerService, PublicFilesService, } from '@/services';
+import { CarsService, LoggerService, PublicFilesService } from '@/services';
 
 import {
   testLoggerService,
@@ -19,7 +19,12 @@ import {
   testQueryBuilder,
   testRepository,
 } from '../test-objects';
-import { makeCar, makeCreateCarDto, makePublicFile, makeRental } from '../utils';
+import {
+  makeCar,
+  makeCreateCarDto,
+  makePublicFile,
+  makeRental,
+} from '../utils';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
@@ -146,7 +151,7 @@ describe('CarsService', () => {
       const newImages = [
         {
           imageBuffer: new Buffer('string'),
-          filename: 'name'
+          filename: 'name',
         },
       ];
 

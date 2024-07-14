@@ -2,9 +2,9 @@ import { FC, MouseEvent } from 'react';
 import styled from 'styled-components';
 
 import { CSCommonCloseButton } from '../cs-common-close-button';
+import { Spinner } from '../cs-common-spinner';
 
 import { iconMap } from './icon-map';
-import { Spinner } from '../cs-common-spinner';
 
 type ModalProps = {
   type: 'error' | 'confirm' | 'warning';
@@ -154,4 +154,3 @@ const CancelButton = styled(Button)`
     background: var(--dark);
   }
 `;
-

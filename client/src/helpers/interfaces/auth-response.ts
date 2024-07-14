@@ -1,4 +1,4 @@
-import { PublicFile } from "@/types";
+import { PublicFile } from '@/types';
 
 export interface RoleResponse {
   id: string;

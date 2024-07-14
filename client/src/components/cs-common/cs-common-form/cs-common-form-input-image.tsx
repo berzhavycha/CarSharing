@@ -2,11 +2,11 @@ import { ChangeEvent, FC, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import { CSCommonErrorMessage, InputProps } from '@/components/cs-common';
+import { PublicFile } from '@/types';
 
 import { useCommonForm } from './cs-common-form';
 import { CSCommonFormImagePreview } from './cs-common-form-image-preview';
 import { Preview, useImagePreviews } from './hooks';
-import { PublicFile } from '@/types';
 
 type Props = Omit<InputProps, 'name'> & {
   name: string;

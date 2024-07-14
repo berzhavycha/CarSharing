@@ -32,7 +32,7 @@ export const CSMainSingleRental: FC = observer(() => {
             //   (pic: PublicFile) => pic?.url,
             // );
 
-            const carImages: string[] = []
+            const carImages: string[] = [];
 
             return (
               <RentalDetailsContainer>

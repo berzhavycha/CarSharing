@@ -1,5 +1,6 @@
 import { t } from 'mobx-state-tree';
 
+import { Roles } from '@/helpers';
 import {
   AuthenticatedUser,
   FieldErrorsState,
@@ -9,7 +10,6 @@ import {
   UpdateUserBalanceDto,
   UpdateUserDto,
 } from '@/types';
-import { Roles } from '@/helpers';
 
 export const UserModel = t.model('UserModel', {
   id: t.string,

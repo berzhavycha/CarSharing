@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
 import styled from 'styled-components';
 
@@ -13,12 +14,11 @@ import {
 } from '@/components/cs-common';
 import { useStore } from '@/context';
 import { updateUserBalanceSchema } from '@/helpers';
+import { useNonNegativeInput } from '@/hooks';
 import { device } from '@/styles';
 import { UpdateUserBalanceDto } from '@/types';
 
 import { useTopUp } from './hooks';
-import { observer } from 'mobx-react-lite';
-import { useNonNegativeInput } from '@/hooks';
 
 export const CSMainUserTopUp: FC = observer(() => {
   const {
@@ -26,12 +26,12 @@ export const CSMainUserTopUp: FC = observer(() => {
   } = useStore();
   const { onSubmit, isTopUpSuccessful, setIsTopUpSuccessful, unexpectedError, setUnexpectedError } =
     useTopUp();
-  const { preventNegativeInput } = useNonNegativeInput()
+  const { preventNegativeInput } = useNonNegativeInput();
 
   const onCloseSuccessModal = (): void => setIsTopUpSuccessful(false);
   const onCloseErrorModal = (): void => setUnexpectedError('');
 
-  const topUpBtnContent = isLoading ? <BtnSpinner /> : 'Top Up'
+  const topUpBtnContent = isLoading ? <BtnSpinner /> : 'Top Up';
 
   return (
     <>
