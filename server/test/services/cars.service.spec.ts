@@ -11,9 +11,10 @@ import {
   CarStatus,
   RentalStatus,
 } from '@/helpers';
-import { CarsService, PublicFilesService, } from '@/services';
+import { CarsService, LoggerService, PublicFilesService, } from '@/services';
 
 import {
+  testLoggerService,
   testPublicFilesService,
   testQueryBuilder,
   testRepository,
@@ -41,6 +42,7 @@ describe('CarsService', () => {
           provide: PublicFilesService,
           useValue: testPublicFilesService,
         },
+        { provide: LoggerService, useValue: testLoggerService },
       ],
     }).compile();
 

@@ -5,9 +5,9 @@ import { Repository } from 'typeorm';
 import AWSMock from 'aws-sdk-mock';
 
 import { PublicFile } from '@/entities';
-import { PublicFilesService } from '@/services';
+import { LoggerService, PublicFilesService } from '@/services';
 
-import { testRepository } from '../test-objects';
+import { testLoggerService, testRepository } from '../test-objects';
 import { makePublicFile } from '../utils';
 import { ConfigService } from '@nestjs/config';
 
@@ -29,6 +29,7 @@ describe('PublicFilesService', () => {
             get: jest.fn().mockReturnValue('test-bucket-name'),
           },
         },
+        { provide: LoggerService, useValue: testLoggerService },
       ],
     }).compile();
 

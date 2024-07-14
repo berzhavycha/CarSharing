@@ -5,10 +5,11 @@ import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
 import { QueryTransactionsDto } from '@/dtos';
 import { Transaction } from '@/entities';
 import { applySearchAndPagination } from '@/helpers';
-import { TransactionsService } from '@/services';
+import { LoggerService, TransactionsService } from '@/services';
 
 import {
   testEntityManager,
+  testLoggerService,
   testQueryBuilder,
   testRepository,
 } from '../test-objects';
@@ -30,6 +31,7 @@ describe('TransanctionsService', () => {
           provide: getRepositoryToken(Transaction),
           useValue: testRepository,
         },
+        { provide: LoggerService, useValue: testLoggerService },
       ],
     }).compile();
 
