@@ -21,6 +21,7 @@ import {
 } from '@/helpers';
 import { FilterOption, UploadFile } from '@/types';
 import { PublicFilesService } from './public-files.service';
+import { LoggerService } from './logger.service';
 
 @Injectable()
 export class CarsService {
@@ -28,22 +29,28 @@ export class CarsService {
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
     private publicFilesService: PublicFilesService,
+    private readonly loggerService: LoggerService
   ) { }
 
   async createCar(
     createCarDto: CreateCarDto,
     fileData: UploadFile[],
   ): Promise<Car> {
-    const carPictures = await Promise.all(
-      fileData.map((file) => this.publicFilesService.uploadPublicFile(file.imageBuffer, file.filename)),
-    );
+    try {
+      const carPictures = await Promise.all(
+        fileData.map((file) => this.publicFilesService.uploadPublicFile(file.imageBuffer, file.filename)),
+      );
 
-    const car = this.carsRepository.create({
-      ...createCarDto,
-      pictures: carPictures,
-    });
+      const car = this.carsRepository.create({
+        ...createCarDto,
+        pictures: carPictures,
+      });
 
-    return this.carsRepository.save(car);
+      return this.carsRepository.save(car);
+    } catch (error) {
+      this.loggerService.error(`Error creating car: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   async updateCar(
@@ -51,77 +58,97 @@ export class CarsService {
     updateCarDto: UpdateCarDto,
     newImages: UploadFile[],
   ): Promise<Car> {
-    const car = await this.findById(id);
+    try {
+      const car = await this.findById(id);
 
-    const imagesToDelete = car.pictures.filter(
-      (picture) => !updateCarDto.existingImagesIds.includes(picture.id),
-    );
+      const imagesToDelete = car.pictures.filter(
+        (picture) => !updateCarDto.existingImagesIds.includes(picture.id),
+      );
 
-    await Promise.all(
-      imagesToDelete.map((img) => this.publicFilesService.removeFile(img.id)),
-    );
+      await Promise.all(
+        imagesToDelete.map((img) => this.publicFilesService.removeFile(img.id)),
+      );
 
-    const newCarPictures = await Promise.all(
-      newImages.map((file) => this.publicFilesService.uploadPublicFile(file.imageBuffer, file.filename)),
-    );
+      const newCarPictures = await Promise.all(
+        newImages.map((file) => this.publicFilesService.uploadPublicFile(file.imageBuffer, file.filename)),
+      );
 
-    car.pictures = [
-      ...car.pictures.filter((picture) =>
-        updateCarDto.existingImagesIds.includes(picture.id),
-      ),
-      ...newCarPictures,
-    ];
+      car.pictures = [
+        ...car.pictures.filter((picture) =>
+          updateCarDto.existingImagesIds.includes(picture.id),
+        ),
+        ...newCarPictures,
+      ];
 
-    delete updateCarDto.pictures;
-    delete updateCarDto.existingImagesIds;
-    Object.assign(car, updateCarDto);
+      delete updateCarDto.pictures;
+      delete updateCarDto.existingImagesIds;
+      Object.assign(car, updateCarDto);
 
-    return this.carsRepository.save(car);
+      return this.carsRepository.save(car);
+    } catch (error) {
+      this.loggerService.error(`Error updating car: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   async removeCar(id: string): Promise<void> {
-    const car = await this.findById(id);
+    try {
+      const car = await this.findById(id);
 
-    if (car.status === CarStatus.BOOKED) {
-      throw new BadRequestException(carErrorMessages.CAR_CANNOT_BE_DELETED);
+      if (car.status === CarStatus.BOOKED) {
+        throw new BadRequestException(carErrorMessages.CAR_CANNOT_BE_DELETED);
+      }
+
+      await this.carsRepository.remove(car);
+    } catch (error) {
+      this.loggerService.error(`Error removing car: ${error.message}`, error.stack);
+      throw error;
     }
-
-    await this.carsRepository.remove(car);
   }
 
   async findById(id: string): Promise<Car> {
-    const car = await this.carsRepository.findOne({
-      where: { id },
-      relations: ['rentals', 'pictures'],
-    });
+    try {
+      const car = await this.carsRepository.findOne({
+        where: { id },
+        relations: ['rentals', 'pictures'],
+      });
 
-    if (!car) {
-      throw new NotFoundException(carErrorMessages.CAR_BY_ID_NOT_FOUND(id));
+      if (!car) {
+        throw new NotFoundException(carErrorMessages.CAR_BY_ID_NOT_FOUND(id));
+      }
+
+      return car;
+    } catch (error) {
+      this.loggerService.error(`Error finding car by id: ${error.message}`, error.stack);
+      throw error;
     }
-
-    return car;
   }
 
   async findAll(listCarsDto: QueryCarsDto): Promise<[Car[], number]> {
-    const { search, page, limit, order, sort } = listCarsDto;
+    try {
+      const { search, page, limit, order, sort } = listCarsDto;
 
-    const queryBuilder = this.carsRepository.createQueryBuilder('car');
+      const queryBuilder = this.carsRepository.createQueryBuilder('car');
 
-    queryBuilder.leftJoinAndSelect('car.pictures', 'pictures');
+      queryBuilder.leftJoinAndSelect('car.pictures', 'pictures');
 
-    this.applyFilters(queryBuilder, listCarsDto);
+      this.applyFilters(queryBuilder, listCarsDto);
 
-    applySearchAndPagination(queryBuilder, {
-      search,
-      searchColumn: CAR_DEFAULT_SEARCH_COLUMN,
-      page: page || DEFAULT_PAGINATION_PAGE,
-      limit: limit || DEFAULT_PAGINATION_LIMIT,
-      order: order || DEFAULT_ORDER,
-      sort: sort || CAR_DEFAULT_ORDER_COLUMN,
-      entityAlias: 'car',
-    });
+      applySearchAndPagination(queryBuilder, {
+        search,
+        searchColumn: CAR_DEFAULT_SEARCH_COLUMN,
+        page: page || DEFAULT_PAGINATION_PAGE,
+        limit: limit || DEFAULT_PAGINATION_LIMIT,
+        order: order || DEFAULT_ORDER,
+        sort: sort || CAR_DEFAULT_ORDER_COLUMN,
+        entityAlias: 'car',
+      });
 
-    return queryBuilder.getManyAndCount();
+      return queryBuilder.getManyAndCount();
+    } catch (error) {
+      this.loggerService.error(`Error finding all cars: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   async getFilterOptions(): Promise<{
@@ -129,17 +156,22 @@ export class CarsService {
     capacities: FilterOption<number>[];
     maxPrice: number;
   }> {
-    const types = await getFilterOptions(this.carsRepository, 'type');
-    const capacities = await getFilterOptions(this.carsRepository, 'capacity');
+    try {
+      const types = await getFilterOptions(this.carsRepository, 'type');
+      const capacities = await getFilterOptions(this.carsRepository, 'capacity');
 
-    const maxPriceResult = await this.carsRepository
-      .createQueryBuilder('car')
-      .select('MAX(car.pricePerHour)', 'maxPrice')
-      .getRawOne();
+      const maxPriceResult = await this.carsRepository
+        .createQueryBuilder('car')
+        .select('MAX(car.pricePerHour)', 'maxPrice')
+        .getRawOne();
 
-    const maxPrice = maxPriceResult ? parseFloat(maxPriceResult.maxPrice) : 0;
+      const maxPrice = maxPriceResult ? parseFloat(maxPriceResult.maxPrice) : 0;
 
-    return { types, capacities, maxPrice };
+      return { types, capacities, maxPrice };
+    } catch (error) {
+      this.loggerService.error(`Error getting filter options: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   private applyFilters(
@@ -162,5 +194,7 @@ export class CarsService {
         { minPrice, maxPrice },
       );
     }
+
+    this.loggerService.log(`Filters applied: ${JSON.stringify(listCarsDto)}`);
   }
 }
