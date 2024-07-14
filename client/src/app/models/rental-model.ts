@@ -1,6 +1,7 @@
 import { Instance, t } from 'mobx-state-tree';
 
 import { Car, OriginalCar, Transaction } from '@/types';
+import { RentalStatus } from '@/helpers';
 
 export const RentalModel = t.model('RentalModel', {
   id: t.identifier,
@@ -10,7 +11,7 @@ export const RentalModel = t.model('RentalModel', {
   requestedHours: t.number,
   pickUpLocation: t.string,
   dropOffLocation: t.string,
-  status: t.enumeration('RentalStatus', ['active', 'closed', 'cancelled']),
+  status: t.enumeration('RentalStatus', [RentalStatus.ACTIVE, RentalStatus.CLOSED, RentalStatus.CANCELLED]),
   createdAt: t.string,
   updatedAt: t.string,
   car: t.frozen<Car>(),

@@ -31,7 +31,7 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
   }, [rentalId]);
 
   const onCarReturn = async (): Promise<void> => {
-    carReturn.setRentalToReturn(singleRental.rental as Rental)
+    carReturn.setRentalToReturn(singleRental.rental ?? null)
     carReturn.setOrigin(RentalReturnOrigin.SINGLE_PAGE)
   };
 
@@ -46,7 +46,7 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
         <CSCommonDetailsFeature
           label="Rental Status"
           component={
-            <StatusBadge $status={usedRental.status as RentalStatus}>
+            <StatusBadge $status={usedRental.status}>
               {uppercaseFirstLetter(usedRental.status)}
             </StatusBadge>
           }

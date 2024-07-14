@@ -9,6 +9,7 @@ import {
   UpdateUserBalanceDto,
   UpdateUserDto,
 } from '@/types';
+import { Roles } from '@/helpers';
 
 export const UserModel = t.model('UserModel', {
   id: t.string,
@@ -16,7 +17,7 @@ export const UserModel = t.model('UserModel', {
   firstName: t.string,
   lastName: t.string,
   balance: t.maybeNull(t.number),
-  role: t.string,
+  role: t.enumeration('Roles', [Roles.ADMIN, Roles.USER]),
   avatar: t.maybeNull(t.frozen<PublicFile>()),
   avatarId: t.maybeNull(t.string),
 });

@@ -55,7 +55,7 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({ rental, index,
       <HiddenSMTableCell>{formatDate(rental.rentalStart)}</HiddenSMTableCell>
       <HiddenSMTableCell>{rental.rentalEnd ? formatDate(rental.rentalEnd) : '-'}</HiddenSMTableCell>
       <TableCell>
-        <CSCommonRentalStatusBadge $status={rental.status as RentalStatus}>
+        <CSCommonRentalStatusBadge $status={rental.status}>
           {uppercaseFirstLetter(rental.status)}
         </CSCommonRentalStatusBadge>
       </TableCell>
