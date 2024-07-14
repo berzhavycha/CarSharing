@@ -77,4 +77,6 @@ export const GlobalStyles = createGlobalStyle`
     background-color: var(--main-bg-color);
     font-family: var(--font-family);
   }
+
+  
 `;
