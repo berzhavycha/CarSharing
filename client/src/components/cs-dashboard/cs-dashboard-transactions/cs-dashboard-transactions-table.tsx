@@ -1,8 +1,16 @@
 import { FC } from 'react';
-import { CSCommonNoData, HiddenSMTableHeader, Table, TableHeader, SortIcon } from '@/components/cs-common';
-import { Transaction } from '@/types';
-import { CSDashboardTransactionsTableRow } from './cs-dashboard-transactions-table-row';
+
+import {
+  CSCommonNoData,
+  HiddenSMTableHeader,
+  SortIcon,
+  Table,
+  TableHeader,
+} from '@/components/cs-common';
 import { useSortColumn } from '@/hooks';
+import { Transaction } from '@/types';
+
+import { CSDashboardTransactionsTableRow } from './cs-dashboard-transactions-table-row';
 
 type Props = {
   transactions: Transaction[];
@@ -10,7 +18,7 @@ type Props = {
 };
 
 export const CSDashboardTransactionsTable: FC<Props> = ({ transactions, onSortChange }) => {
-  const { sortState, setSortState, renderSortIcon } = useSortColumn()
+  const { sortState, setSortState, renderSortIcon } = useSortColumn();
 
   const handleSortChange = (sort: string): void => {
     const direction = sortState.sort === sort && sortState.direction === 'asc' ? 'desc' : 'asc';

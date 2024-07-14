@@ -9,4 +9,4 @@ import { OriginalCarsService } from '@/services';
   providers: [OriginalCarsService],
   exports: [OriginalCarsService],
 })
-export class OriginalCarsModule { }
+export class OriginalCarsModule {}

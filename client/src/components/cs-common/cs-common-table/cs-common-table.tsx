@@ -42,7 +42,6 @@ export const SortIcon = styled.span`
   right: 0px;
 `;
 
-
 export const TableRow = styled.tr`
   &:nth-child(even) {
     background-color: #f8f9fa;

@@ -12,6 +12,7 @@ import {
   DEFAULT_PAGINATION_LIMIT,
   DEFAULT_PAGINATION_PAGE,
 } from '@/helpers';
+
 import { LoggerService } from './logger.service';
 
 @Injectable()
@@ -19,8 +20,8 @@ export class OriginalCarsService {
   constructor(
     @InjectRepository(OriginalCar)
     private originalCarsRepository: Repository<OriginalCar>,
-    private readonly loggerService: LoggerService
-  ) { }
+    private readonly loggerService: LoggerService,
+  ) {}
 
   async createOriginalCar(
     createCarDto: CreateOriginalCarDto,
@@ -29,7 +30,10 @@ export class OriginalCarsService {
       const car = this.originalCarsRepository.create(createCarDto);
       return this.originalCarsRepository.save(car);
     } catch (error) {
-      this.loggerService.error(`Error creating original car: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error creating original car: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -42,7 +46,10 @@ export class OriginalCarsService {
       const car = manager.create(OriginalCar, createCarDto);
       return manager.save(car);
     } catch (error) {
-      this.loggerService.error(`Error creating original car: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error creating original car: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -57,7 +64,10 @@ export class OriginalCarsService {
 
       return car;
     } catch (error) {
-      this.loggerService.error(`Error finding original car by id: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error finding original car by id: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -86,7 +96,10 @@ export class OriginalCarsService {
 
       return queryBuilder.getManyAndCount();
     } catch (error) {
-      this.loggerService.error(`Error finding all original cars: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error finding all original cars: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }

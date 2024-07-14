@@ -10,11 +10,11 @@ import {
   Table,
   TableHeader,
 } from '@/components/cs-common';
+import { useSortColumn } from '@/hooks';
 import { Car } from '@/types';
 
 import { CSDashboardCarTableRow } from './cs-dashboard-car-table-row';
 import { useCarRemoval } from './hooks';
-import { useSortColumn } from '@/hooks';
 
 type CarTableProps = {
   cars: Car[];
@@ -33,7 +33,7 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
     handleRemoveCar,
   } = useCarRemoval(cars);
 
-  const { sortState, setSortState, renderSortIcon } = useSortColumn()
+  const { sortState, setSortState, renderSortIcon } = useSortColumn();
 
   useEffect(() => {
     setCarList(cars);
@@ -67,7 +67,10 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
             <HiddenMDTableHeader style={{ width: '8%' }} onClick={() => handleSortChange('type')}>
               Type<SortIcon>{renderSortIcon('type')}</SortIcon>
             </HiddenMDTableHeader>
-            <HiddenSMTableHeader style={{ width: '10%' }} onClick={() => handleSortChange('status')}>
+            <HiddenSMTableHeader
+              style={{ width: '10%' }}
+              onClick={() => handleSortChange('status')}
+            >
               Status<SortIcon>{renderSortIcon('status')}</SortIcon>
             </HiddenSMTableHeader>
             <TableHeader style={{ width: '4%' }}>Actions</TableHeader>

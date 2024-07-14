@@ -3,9 +3,10 @@ import { FC } from 'react';
 
 import { CSCommonModal } from '@/components/cs-common';
 import { useStore } from '@/context';
+import { RentalReturnOrigin } from '@/helpers';
+
 import { CSMainRentalReturnConfirmModal } from './cs-main-rental-return-confirm-modal';
 import { useRentals } from './hooks';
-import { RentalReturnOrigin } from '@/helpers';
 
 export const CSMainRentalHistoryModals: FC = observer(() => {
   const {
@@ -19,11 +20,11 @@ export const CSMainRentalHistoryModals: FC = observer(() => {
       setPenalty,
       setErrorMessage,
       setIsReturnedInTime,
-      origin
+      origin,
     },
   } = useStore();
 
-  const { refetchRentals } = useRentals()
+  const { refetchRentals } = useRentals();
 
   const handleCloseRefundWindow = (): void => setRefund(undefined);
   const handleClosePenaltyWindow = (): void => setPenalty(undefined);

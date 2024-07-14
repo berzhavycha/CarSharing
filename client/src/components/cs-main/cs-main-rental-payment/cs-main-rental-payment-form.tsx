@@ -11,20 +11,28 @@ import {
   SectionTitle,
 } from '@/components/cs-common';
 import { MAX_REQUESTED_HOURS, rentalSchema } from '@/helpers';
+import { useNonNegativeInput } from '@/hooks';
 import { device } from '@/styles';
 import { PaymentDto, RentalDto } from '@/types';
 
 import { useRental } from './hooks';
-import { useNonNegativeInput } from '@/hooks';
 
 export const CSMainRentalPaymentForm: FC = () => {
-  const { onSubmit, isRentSuccessful, setIsRentSuccessful, isLoading, errorMessage, setErrorMessage, onRequestedHoursChange } = useRental();
-  const { preventNegativeInput } = useNonNegativeInput()
+  const {
+    onSubmit,
+    isRentSuccessful,
+    setIsRentSuccessful,
+    isLoading,
+    errorMessage,
+    setErrorMessage,
+    onRequestedHoursChange,
+  } = useRental();
+  const { preventNegativeInput } = useNonNegativeInput();
 
-  const rentBtnContent = isLoading ? <BtnSpinner /> : 'Rent'
+  const rentBtnContent = isLoading ? <BtnSpinner /> : 'Rent';
 
-  const onCloseSuccessModal = (): void => setIsRentSuccessful(false)
-  const onCloseErrorWindow = (): void => setErrorMessage('')
+  const onCloseSuccessModal = (): void => setIsRentSuccessful(false);
+  const onCloseErrorWindow = (): void => setErrorMessage('');
 
   return (
     <FormWrapper>

@@ -2,8 +2,8 @@ import { FC, ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { device, size } from '@/styles';
 import { CSCommonTooltip } from '@/components';
+import { device, size } from '@/styles';
 
 type Props = {
   to: string;
@@ -28,13 +28,12 @@ export const NavItemContainer = styled.div`
   align-items: center;
 
   &:hover .tooltip {
-      @media (min-width: ${size.lg}){
-        opacity: 1;
-        visibility: visible;
-      }
+    @media (min-width: ${size.lg}) {
+      opacity: 1;
+      visibility: visible;
+    }
   }
 `;
-
 
 const Tooltip = styled(CSCommonTooltip)`
   @media ${device.lg} {

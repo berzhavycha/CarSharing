@@ -9,7 +9,14 @@ import { authRedirectPages, AuthType, getUserSchema, Roles } from '@/helpers';
 import { device } from '@/styles';
 import { SignInUserDto } from '@/types';
 
-import { BaseFormInner, ErrorMessageWrapper, FormContainer, RedirectLink, Span, Title } from '../cs-auth-sign-up';
+import {
+  BaseFormInner,
+  ErrorMessageWrapper,
+  FormContainer,
+  RedirectLink,
+  Span,
+  Title,
+} from '../cs-auth-sign-up';
 
 export const CSAuthSignIn: FC = observer(() => {
   const { currentUserStore } = useStore();
@@ -25,7 +32,7 @@ export const CSAuthSignIn: FC = observer(() => {
     }
   };
 
-  const btnContent = currentUserStore.isLoading ? <BtnSpinner /> : 'Sign In'
+  const btnContent = currentUserStore.isLoading ? <BtnSpinner /> : 'Sign In';
 
   return (
     <FormContainer>
@@ -60,7 +67,8 @@ export const CSAuthSignIn: FC = observer(() => {
           </FormBlocks>
           <CSCommonForm.SubmitButton
             buttonContent={btnContent}
-            disabled={currentUserStore.isLoading} />
+            disabled={currentUserStore.isLoading}
+          />
         </CSCommonForm>
       </FormInner>
     </FormContainer>

@@ -2,7 +2,12 @@ import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { BtnSpinner, CSCommonErrorMessage, CSCommonForm, CSCommonModal } from '@/components/cs-common';
+import {
+  BtnSpinner,
+  CSCommonErrorMessage,
+  CSCommonForm,
+  CSCommonModal,
+} from '@/components/cs-common';
 import { useStore } from '@/context';
 import { updateUserSchema, uppercaseFirstLetter } from '@/helpers';
 import { device } from '@/styles';
@@ -17,24 +22,19 @@ export const CSCommonProfileSettings: FC = observer(() => {
     currentUserStore: { user, isLoading, errors, updateUser, existingImages: viewImages },
   } = useStore();
 
-  const {
-    isUpdateSuccessful,
-    setIsUpdateSuccessful,
-    existingImages,
-    onSubmit,
-    onPreviewRemove,
-  } = useProfileUpdate(updateUser, viewImages, errors?.update);
+  const { isUpdateSuccessful, setIsUpdateSuccessful, existingImages, onSubmit, onPreviewRemove } =
+    useProfileUpdate(updateUser, viewImages, errors?.update);
 
   const defaultValues = {
     firstName: user?.firstName,
     lastName: user?.lastName,
     email: user?.email,
     picture: null,
-    ...(isUpdateSuccessful && { oldPassword: '', newPassword: '' })
+    ...(isUpdateSuccessful && { oldPassword: '', newPassword: '' }),
   };
 
   const handleCloseModal = (): void => setIsUpdateSuccessful(false);
-  const saveBtnContent = isLoading ? <BtnSpinner /> : 'Save'
+  const saveBtnContent = isLoading ? <BtnSpinner /> : 'Save';
 
   return (
     <>

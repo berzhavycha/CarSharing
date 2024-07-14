@@ -22,9 +22,7 @@ export const CSMainLayoutHeaderOptions: FC = observer(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-  const profilePicture = user?.avatarId
-    ? user?.avatar?.url
-    : DefaultImage;
+  const profilePicture = user?.avatarId ? user?.avatar?.url : DefaultImage;
 
   const ref = useClickOutside(() => setIsMenuOpen(false), menuButtonRef);
   const toggleMenu = (): void => setIsMenuOpen(!isMenuOpen);
@@ -133,7 +131,7 @@ const NavOptions = styled.div<{ $isOpen: boolean }>`
     top: 80px;
   }
 
-   @media ${device.sm} {
+  @media ${device.sm} {
     top: 120px;
   }
 `;

@@ -19,13 +19,13 @@ type HookReturn = {
 export const useCarRemoval = (initialCars: Car[]): HookReturn => {
   const [carList, setCarList] = useState<Car[]>(initialCars);
   const [carToRemove, setCarToRemove] = useState<Car | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { searchParams, setParams } = useSearchParamsWithDefaults();
 
   const handleRemoveCar = async (): Promise<void> => {
     if (carToRemove) {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
         const { error } = await removeCar(carToRemove.id);
         if (error) {
@@ -42,8 +42,8 @@ export const useCarRemoval = (initialCars: Car[]): HookReturn => {
       } catch (error) {
         setErrorMessage(FAILED_REMOVE_CAR);
       } finally {
-        setCarToRemove(null)
-        setIsLoading(false)
+        setCarToRemove(null);
+        setIsLoading(false);
       }
     }
   };

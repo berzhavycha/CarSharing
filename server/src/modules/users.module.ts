@@ -5,8 +5,8 @@ import { UsersController } from '@/controllers';
 import { Role, User } from '@/entities';
 import { RolesService, UsersService } from '@/services';
 
-import { TransactionsModule } from './transactions.module';
 import { PublicFilesModule } from './public-files.module';
+import { TransactionsModule } from './transactions.module';
 
 @Module({
   imports: [
@@ -18,4 +18,4 @@ import { PublicFilesModule } from './public-files.module';
   providers: [UsersService, RolesService],
   exports: [UsersService],
 })
-export class UsersModule { }
+export class UsersModule {}

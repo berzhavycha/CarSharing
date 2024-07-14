@@ -24,7 +24,7 @@ export const CSAuthSignUp: FC = observer(() => {
     }
   };
 
-  const btnContent = currentUserStore.isLoading ? <BtnSpinner /> : 'Sign Up'
+  const btnContent = currentUserStore.isLoading ? <BtnSpinner /> : 'Sign Up';
 
   return (
     <FormContainer>
@@ -192,8 +192,8 @@ export const Span = styled.span`
 `;
 
 export const RedirectLink = styled(Link)`
-  margin-left: 5px; 
-`
+  margin-left: 5px;
+`;
 
 const FormBlocks = styled.div`
   display: grid;

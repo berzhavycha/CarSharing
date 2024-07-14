@@ -34,7 +34,9 @@ export const useCarForm = (onFormSubmit: onCarSubmit, carDefaultValues?: Car): H
 
   const onSubmit = async (carDto: CarDto): Promise<void> => {
     setIsLoading(true);
-    const dto = currentCar ? { ...carDto, id: currentCar.id, existingImagesIds: existingImages.map(img => img.id) } : carDto;
+    const dto = currentCar
+      ? { ...carDto, id: currentCar.id, existingImagesIds: existingImages.map((img) => img.id) }
+      : carDto;
     const { car, errors } = await onFormSubmit(dto);
     setIsLoading(false);
     if (car) {

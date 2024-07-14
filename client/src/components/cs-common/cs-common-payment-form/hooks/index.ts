@@ -1,1 +1,1 @@
-export * from './use-form-card'
+export * from './use-form-card';

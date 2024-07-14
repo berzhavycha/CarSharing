@@ -1,15 +1,15 @@
 import { NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import AWSMock from 'aws-sdk-mock';
+import { Repository } from 'typeorm';
 
 import { PublicFile } from '@/entities';
 import { LoggerService, PublicFilesService } from '@/services';
 
 import { testLoggerService, testRepository } from '../test-objects';
 import { makePublicFile } from '../utils';
-import { ConfigService } from '@nestjs/config';
 
 describe('PublicFilesService', () => {
   let publicFilesRepository: Repository<PublicFile>;
@@ -77,7 +77,9 @@ describe('PublicFilesService', () => {
     it('should return a file when found', async () => {
       const publicFile = makePublicFile();
 
-      jest.spyOn(publicFilesRepository, 'findOne').mockResolvedValue(publicFile);
+      jest
+        .spyOn(publicFilesRepository, 'findOne')
+        .mockResolvedValue(publicFile);
 
       const result = await publicFilesService.findById(publicFile.id);
 

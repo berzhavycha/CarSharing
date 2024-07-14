@@ -18,7 +18,7 @@ type HookReturn = {
 export const useRental = (): HookReturn => {
   const [isRentSuccessful, setIsRentSuccessful] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const location = useLocation();
   const rentedCar = location.state.car;
@@ -33,19 +33,19 @@ export const useRental = (): HookReturn => {
   }, []);
 
   const onSubmit = async (rentalDto: RentalDto & PaymentDto): Promise<void> => {
-    setIsLoading(true)
+    setIsLoading(true);
     const { rental: createdRental, error } = await createRental({
       carId: rentedCar.id,
       ...rentalDto,
     });
 
-    setIsLoading(false)
+    setIsLoading(false);
     if (createdRental && user?.balance && potentialRentalPrice) {
       updateBalance(user.balance - potentialRentalPrice);
       setIsRentSuccessful(true);
     } else if (error) {
       setPotentialRentalPrice(rentedCar.pricePerHour);
-      setErrorMessage(error)
+      setErrorMessage(error);
     }
   };
 
@@ -62,6 +62,6 @@ export const useRental = (): HookReturn => {
     isLoading,
     errorMessage,
     setErrorMessage,
-    onRequestedHoursChange
+    onRequestedHoursChange,
   };
 };

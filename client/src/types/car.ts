@@ -1,5 +1,5 @@
-import { PublicFile } from './public-files';
 import { PaginationDto } from './pagination';
+import { PublicFile } from './public-files';
 
 export type CarDto = {
   id?: string;

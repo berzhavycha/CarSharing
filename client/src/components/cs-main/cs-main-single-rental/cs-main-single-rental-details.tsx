@@ -15,8 +15,9 @@ import { formatDate, RentalReturnOrigin, RentalStatus, uppercaseFirstLetter } fr
 import { device } from '@/styles';
 import { Rental } from '@/types';
 
-import { CSMainSingleRentalTransaction } from './cs-main-single-rental-transactions';
 import { CSMainRentalReturnConfirmModal } from '../cs-main-rental-history';
+
+import { CSMainSingleRentalTransaction } from './cs-main-single-rental-transactions';
 
 type Props = {
   rental: Rental;
@@ -31,11 +32,11 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
   }, [rentalId]);
 
   const onCarReturn = async (): Promise<void> => {
-    carReturn.setRentalToReturn(singleRental.rental ?? null)
-    carReturn.setOrigin(RentalReturnOrigin.SINGLE_PAGE)
+    carReturn.setRentalToReturn(singleRental.rental ?? null);
+    carReturn.setOrigin(RentalReturnOrigin.SINGLE_PAGE);
   };
 
-  const onSuccessReturn = async (): Promise<void> => await singleRental.fetchSingleRental(rentalId)
+  const onSuccessReturn = async (): Promise<void> => await singleRental.fetchSingleRental(rentalId);
   const usedRental = singleRental.rental ?? rental;
 
   return (

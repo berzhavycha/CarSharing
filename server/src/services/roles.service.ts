@@ -3,14 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Role } from '@/entities';
+
 import { LoggerService } from './logger.service';
 
 @Injectable()
 export class RolesService {
   constructor(
     @InjectRepository(Role) private readonly rolesRepository: Repository<Role>,
-    private readonly loggerService: LoggerService
-  ) { }
+    private readonly loggerService: LoggerService,
+  ) {}
 
   async createRole(name: string): Promise<Role> {
     try {
@@ -20,7 +21,10 @@ export class RolesService {
 
       return this.rolesRepository.save(role);
     } catch (error) {
-      this.loggerService.error(`Error creating a role: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error creating a role: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }

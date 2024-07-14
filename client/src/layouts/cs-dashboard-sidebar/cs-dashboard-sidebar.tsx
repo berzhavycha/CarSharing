@@ -26,7 +26,7 @@ export const CSDashboardSidebar: FC = () => {
         <FaBars />
       </SidebarToggle>
       <Sidebar $isOpen={isSidebarOpen} ref={ref}>
-        {isSidebarOpen  && <CSCommonCloseButton onClose={toggleSidebar} color="white" />}
+        {isSidebarOpen && <CSCommonCloseButton onClose={toggleSidebar} color="white" />}
         <Logo>
           <FaCar /> CARRENT
         </Logo>

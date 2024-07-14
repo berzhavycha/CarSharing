@@ -1,27 +1,29 @@
-import { device } from "@/styles";
-import { FC } from "react";
-import { FaSignOutAlt } from "react-icons/fa";
-import styled from "styled-components";
-import { IconWrapper, NavItemContainer } from "./cs-main-layout-nav-item";
-import { CSCommonTooltip } from "@/components";
+import { FC } from 'react';
+import { FaSignOutAlt } from 'react-icons/fa';
+import styled from 'styled-components';
+
+import { CSCommonTooltip } from '@/components';
+import { device } from '@/styles';
+
+import { IconWrapper, NavItemContainer } from './cs-main-layout-nav-item';
 
 type Props = {
-    signOutHandler: () => Promise<void>
-}
+  signOutHandler: () => Promise<void>;
+};
 
 export const CSMainLayoutSignOutBtn: FC<Props> = ({ signOutHandler }) => {
-    return (
-        <NavItemContainer>
-            <SignOutButton onClick={signOutHandler}>
-                <IconWrapper>
-                    <FaSignOutAlt />
-                </IconWrapper>
-                <span>Sign Out</span>
-                <Tooltip className="tooltip">Sign Out</Tooltip>
-            </SignOutButton>
-        </NavItemContainer>
-    )
-}
+  return (
+    <NavItemContainer>
+      <SignOutButton onClick={signOutHandler}>
+        <IconWrapper>
+          <FaSignOutAlt />
+        </IconWrapper>
+        <span>Sign Out</span>
+        <Tooltip className="tooltip">Sign Out</Tooltip>
+      </SignOutButton>
+    </NavItemContainer>
+  );
+};
 
 const Tooltip = styled(CSCommonTooltip)`
   @media ${device.lg} {
@@ -29,7 +31,6 @@ const Tooltip = styled(CSCommonTooltip)`
     visibility: hidden;
   }
 `;
-
 
 const SignOutButton = styled.button`
   background: none;

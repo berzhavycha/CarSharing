@@ -29,7 +29,7 @@ export const CSMainSingleCar: FC = () => {
               // const carImages = car.pictures.map(
               //   (pic: PublicFile) => pic?.url,
               // );
-              const carImages: string[] = []
+              const carImages: string[] = [];
               return (
                 <>
                   <CSCommonSlides images={carImages} width="45vw" height="18vw" />

@@ -22,8 +22,8 @@ import {
 } from '@/helpers';
 import { AuthResult, ITokens, JwtPayload } from '@/interfaces';
 
-import { UsersService } from './users.service';
 import { LoggerService } from './logger.service';
+import { UsersService } from './users.service';
 
 @Injectable()
 export class AuthService {
@@ -31,8 +31,8 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-    private readonly loggerService: LoggerService
-  ) { }
+    private readonly loggerService: LoggerService,
+  ) {}
 
   async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
     try {
@@ -66,10 +66,15 @@ export class AuthService {
       };
     } catch (error) {
       if (error.code === DUPLICATE_EMAIL_ERROR_CODE) {
-        this.loggerService.warn(`Duplicate email registration attempt: ${registerUserDto.email}`);
+        this.loggerService.warn(
+          `Duplicate email registration attempt: ${registerUserDto.email}`,
+        );
         throw new ConflictException(authErrorMessages.DUPLICATE_EMAIL);
       } else {
-        this.loggerService.error(`Error during user registration: ${error.message}`, error.stack);
+        this.loggerService.error(
+          `Error during user registration: ${error.message}`,
+          error.stack,
+        );
         throw error;
       }
     }
@@ -99,7 +104,10 @@ export class AuthService {
 
       return this.generateTokens(decoded.sub, decoded.email);
     } catch (error) {
-      this.loggerService.error(`Error during token refresh: ${error.message}`, error.stack);
+      this.loggerService.error(
+        `Error during token refresh: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
@@ -115,23 +123,27 @@ export class AuthService {
     const payload: JwtPayload = { sub: userId, email };
 
     const accessToken = await this.jwtService.signAsync(payload);
-    this.loggerService.log(JSON.stringify({
-      message: 'Generating Access Token',
-      userId,
-      type: 'Access Token',
-      expiresIn: this.configService.get<string>('JWT_ACCESS_TOKEN_TIME'),
-    }));
+    this.loggerService.log(
+      JSON.stringify({
+        message: 'Generating Access Token',
+        userId,
+        type: 'Access Token',
+        expiresIn: this.configService.get<string>('JWT_ACCESS_TOKEN_TIME'),
+      }),
+    );
 
     const refreshToken = await this.jwtService.signAsync(payload, {
       secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
       expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_TIME'),
     });
-    this.loggerService.log(JSON.stringify({
-      message: 'Generating Refresh Token',
-      userId,
-      type: 'Refresh Token',
-      expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_TIME'),
-    }));
+    this.loggerService.log(
+      JSON.stringify({
+        message: 'Generating Refresh Token',
+        userId,
+        type: 'Refresh Token',
+        expiresIn: this.configService.get<string>('JWT_REFRESH_TOKEN_TIME'),
+      }),
+    );
 
     const { salt, hash } = await hashValue(refreshToken);
     await this.usersService.updateUser(userId, {
@@ -143,35 +155,43 @@ export class AuthService {
   }
 
   setTokensCookies(response: Response, tokens: ITokens): void {
-    const maxAge = ONE_DAY_MILLISECONDS * this.configService.get<number>('AUTH_COOKIE_EXPIRATION_DAYS_TIME')
-    const secure = this.configService.get<string>('NODE_ENV') === NODE_ENV.production
+    const maxAge =
+      ONE_DAY_MILLISECONDS *
+      this.configService.get<number>('AUTH_COOKIE_EXPIRATION_DAYS_TIME');
+    const secure =
+      this.configService.get<string>('NODE_ENV') === NODE_ENV.production;
 
-    this.loggerService.log(JSON.stringify({
-      message: 'Setting Tokens in Cookies',
-      maxAge,
-      secure,
-    }));
+    this.loggerService.log(
+      JSON.stringify({
+        message: 'Setting Tokens in Cookies',
+        maxAge,
+        secure,
+      }),
+    );
 
     response.cookie('tokens', tokens, {
       httpOnly: true,
       maxAge,
       sameSite: 'lax',
-      secure
+      secure,
     });
   }
 
   clearTokensCookies(response: Response): void {
-    const secure = this.configService.get<string>('NODE_ENV') === NODE_ENV.production
+    const secure =
+      this.configService.get<string>('NODE_ENV') === NODE_ENV.production;
 
-    this.loggerService.log(JSON.stringify({
-      message: 'Clearing Tokens in Cookies',
-      secure,
-    }));
+    this.loggerService.log(
+      JSON.stringify({
+        message: 'Clearing Tokens in Cookies',
+        secure,
+      }),
+    );
 
     response.clearCookie('tokens', {
       httpOnly: true,
       sameSite: 'lax',
-      secure
+      secure,
     });
   }
 
@@ -185,8 +205,11 @@ export class AuthService {
 
       return plainToClass(User, user);
     } catch (error) {
-      this.loggerService.error(`Error during validation of user by id: ${error.message}`, error.stack);
-      throw error
+      this.loggerService.error(
+        `Error during validation of user by id: ${error.message}`,
+        error.stack,
+      );
+      throw error;
     }
   }
 
@@ -206,8 +229,11 @@ export class AuthService {
 
       throw new UnauthorizedException(authErrorMessages.INVALID_PASSWORD);
     } catch (error) {
-      this.loggerService.error(`Error during validation of user credentials: ${error.message}`, error.stack);
-      throw error
+      this.loggerService.error(
+        `Error during validation of user credentials: ${error.message}`,
+        error.stack,
+      );
+      throw error;
     }
   }
 }

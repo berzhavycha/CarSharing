@@ -1,8 +1,8 @@
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
-import cookieParser from 'cookie-parser';
 import { config } from 'aws-sdk';
+import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
 import { LoggerService } from './services';
@@ -17,7 +17,7 @@ async function bootstrap(): Promise<void> {
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
-  const corsOrigin = configService.get<string>('CORS_ORIGIN')
+  const corsOrigin = configService.get<string>('CORS_ORIGIN');
   app.enableCors({
     origin: corsOrigin,
     credentials: true,
@@ -29,7 +29,9 @@ async function bootstrap(): Promise<void> {
     secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
     region: configService.get('AWS_REGION'),
   });
-  loggerService.log(`AWS SDK configured for region: ${configService.get('AWS_REGION')}`);
+  loggerService.log(
+    `AWS SDK configured for region: ${configService.get('AWS_REGION')}`,
+  );
 
   const port = configService.get<number>('PORT');
 
