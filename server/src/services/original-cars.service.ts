@@ -12,60 +12,82 @@ import {
   DEFAULT_PAGINATION_LIMIT,
   DEFAULT_PAGINATION_PAGE,
 } from '@/helpers';
+import { LoggerService } from './logger.service';
 
 @Injectable()
 export class OriginalCarsService {
   constructor(
     @InjectRepository(OriginalCar)
     private originalCarsRepository: Repository<OriginalCar>,
-  ) {}
+    private readonly loggerService: LoggerService
+  ) { }
 
   async createOriginalCar(
     createCarDto: CreateOriginalCarDto,
   ): Promise<OriginalCar> {
-    const car = this.originalCarsRepository.create(createCarDto);
-    return this.originalCarsRepository.save(car);
+    try {
+      const car = this.originalCarsRepository.create(createCarDto);
+      return this.originalCarsRepository.save(car);
+    } catch (error) {
+      this.loggerService.error(`Error creating original car: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   async createOriginalCarTransaction(
     createCarDto: CreateOriginalCarDto,
     manager: EntityManager,
   ): Promise<OriginalCar> {
-    const car = manager.create(OriginalCar, createCarDto);
-    return manager.save(car);
+    try {
+      const car = manager.create(OriginalCar, createCarDto);
+      return manager.save(car);
+    } catch (error) {
+      this.loggerService.error(`Error creating original car: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   async findById(id: string): Promise<OriginalCar> {
-    const car = await this.originalCarsRepository.findOne({ where: { id } });
+    try {
+      const car = await this.originalCarsRepository.findOne({ where: { id } });
 
-    if (!car) {
-      throw new NotFoundException(carErrorMessages.CAR_BY_ID_NOT_FOUND(id));
+      if (!car) {
+        throw new NotFoundException(carErrorMessages.CAR_BY_ID_NOT_FOUND(id));
+      }
+
+      return car;
+    } catch (error) {
+      this.loggerService.error(`Error finding original car by id: ${error.message}`, error.stack);
+      throw error;
     }
-
-    return car;
   }
 
   async findAll(listCarsDto: QueryCarsDto): Promise<[OriginalCar[], number]> {
-    const {
-      search,
-      page = DEFAULT_PAGINATION_PAGE,
-      limit = DEFAULT_PAGINATION_LIMIT,
-      order = DEFAULT_ORDER,
-      sort = CAR_DEFAULT_ORDER_COLUMN,
-    } = listCarsDto;
+    try {
+      const {
+        search,
+        page = DEFAULT_PAGINATION_PAGE,
+        limit = DEFAULT_PAGINATION_LIMIT,
+        order = DEFAULT_ORDER,
+        sort = CAR_DEFAULT_ORDER_COLUMN,
+      } = listCarsDto;
 
-    const queryBuilder =
-      this.originalCarsRepository.createQueryBuilder('original_car');
+      const queryBuilder =
+        this.originalCarsRepository.createQueryBuilder('original_car');
 
-    applySearchAndPagination(queryBuilder, {
-      search,
-      page,
-      limit,
-      order,
-      sort,
-      entityAlias: 'original_car',
-    });
+      applySearchAndPagination(queryBuilder, {
+        search,
+        page,
+        limit,
+        order,
+        sort,
+        entityAlias: 'original_car',
+      });
 
-    return queryBuilder.getManyAndCount();
+      return queryBuilder.getManyAndCount();
+    } catch (error) {
+      this.loggerService.error(`Error finding all original cars: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 }
