@@ -16,6 +16,6 @@ export const RentalModel = t.model('RentalModel', {
   car: t.frozen<Car>(),
   originalCar: t.frozen<OriginalCar>(),
   transactions: t.array(t.frozen<Transaction>()),
-});
+})
 
 export interface RentalType extends Instance<typeof RentalModel> { }

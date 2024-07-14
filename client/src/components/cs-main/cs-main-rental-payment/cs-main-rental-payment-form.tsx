@@ -10,7 +10,7 @@ import {
   SectionDescription,
   SectionTitle,
 } from '@/components/cs-common';
-import { rentalSchema } from '@/helpers';
+import { MAX_REQUESTED_HOURS, rentalSchema } from '@/helpers';
 import { device } from '@/styles';
 import { PaymentDto, RentalDto } from '@/types';
 
@@ -42,6 +42,7 @@ export const CSMainRentalPaymentForm: FC = () => {
               onChange={onRequestedHoursChange}
               onKeyDown={preventNegativeInput}
               min={0}
+              max={MAX_REQUESTED_HOURS}
             />
           </RentalFormBlocks>
         </FormInfoWrapper>

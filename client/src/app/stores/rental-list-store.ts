@@ -1,7 +1,7 @@
 import { UNEXPECTED_ERROR_MESSAGE } from "@/helpers";
 import { fetchRentalHistory } from "@/services";
 import { Rental, QueryRentalsDto } from "@/types";
-import { t, flow } from "mobx-state-tree";
+import { t, flow, applySnapshot } from "mobx-state-tree";
 import { RentalModel, RentalType } from "../models";
 
 export const RentalListStore = t
@@ -15,6 +15,12 @@ export const RentalListStore = t
         },
         addRental(rental: RentalType): void {
             self.rentals.push(rental);
+        },
+        updateRental(rentalId: string, updatedRental: Rental): void {
+            const index = self.rentals.findIndex(rental => rental.id === rentalId);
+            if (index !== -1) {
+                applySnapshot(self.rentals[index], updatedRental);
+            }
         },
         setErrorMessage(error: string): void {
             self.errorMessage = error;
