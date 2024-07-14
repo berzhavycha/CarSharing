@@ -5,6 +5,7 @@ import { CSCommonModal } from '@/components/cs-common';
 import { useStore } from '@/context';
 import { CSMainRentalReturnConfirmModal } from './cs-main-rental-return-confirm-modal';
 import { useRentals } from './hooks';
+import { RentalReturnOrigin } from '@/helpers';
 
 export const CSMainRentalHistoryModals: FC = observer(() => {
   const {
@@ -31,7 +32,7 @@ export const CSMainRentalHistoryModals: FC = observer(() => {
 
   return (
     <>
-      {rentalToReturn && origin === 'table' && (
+      {rentalToReturn && origin === RentalReturnOrigin.TABLE && (
         <CSMainRentalReturnConfirmModal onSuccessReturn={refetchRentals} />
       )}
 
