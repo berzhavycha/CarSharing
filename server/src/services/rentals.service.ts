@@ -21,6 +21,7 @@ import {
 import { CarsService } from './cars.service';
 import { OriginalCarsService } from './original-cars.service';
 import { UsersService } from './users.service';
+import { LoggerService } from './logger.service';
 
 @Injectable()
 export class RentalsService {
@@ -31,138 +32,149 @@ export class RentalsService {
     private originalCarsService: OriginalCarsService,
     private usersService: UsersService,
     private readonly entityManager: EntityManager,
+    private readonly loggerService: LoggerService
   ) { }
 
   async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
-    const existingActiveUserRental = await this.rentalsRepository.findOne({
-      where: {
-        user: { id: user.id },
-        status: RentalStatus.ACTIVE,
-      },
-    });
+    try {
+      const existingActiveUserRental = await this.rentalsRepository.findOne({
+        where: {
+          user: { id: user.id },
+          status: RentalStatus.ACTIVE,
+        },
+      });
 
-    if (existingActiveUserRental) {
-      throw new BadRequestException(
-        rentalsErrorMessages.USER_HAVE_ACTIVE_RENTAL,
-      );
-    }
+      if (existingActiveUserRental) {
+        throw new BadRequestException(
+          rentalsErrorMessages.USER_HAVE_ACTIVE_RENTAL,
+        );
+      }
 
-    const car = await this.carsService.findById(rentCarDto.carId);
+      const car = await this.carsService.findById(rentCarDto.carId);
 
-    if (!car || car.status !== CarStatus.AVAILABLE) {
-      throw new BadRequestException(rentalsErrorMessages.CAR_NOT_AVAILABLE);
-    }
+      if (!car || car.status !== CarStatus.AVAILABLE) {
+        throw new BadRequestException(rentalsErrorMessages.CAR_NOT_AVAILABLE);
+      }
 
-    const rentalCost = car.pricePerHour * rentCarDto.hours;
-    if (user.balance < rentalCost) {
-      throw new BadRequestException(rentalsErrorMessages.INSUFFICIENT_BALANCE);
-    }
+      const rentalCost = car.pricePerHour * rentCarDto.hours;
+      if (user.balance < rentalCost) {
+        throw new BadRequestException(rentalsErrorMessages.INSUFFICIENT_BALANCE);
+      }
 
-    return this.entityManager.transaction(async (manager) => {
-      const originalCar =
-        await this.originalCarsService.createOriginalCarTransaction(
+      return this.entityManager.transaction(async (manager) => {
+        const originalCar =
+          await this.originalCarsService.createOriginalCarTransaction(
+            car,
+            manager,
+          );
+
+        car.status = CarStatus.BOOKED;
+        await manager.save(car);
+
+        const rental = this.rentalsRepository.create({
           car,
+          user,
+          originalCar,
+          pickUpLocation: rentCarDto.pickUpLocation,
+          dropOffLocation: rentCarDto.dropOffLocation,
+          totalPrice: rentalCost,
+          status: RentalStatus.ACTIVE,
+          requestedHours: rentCarDto.hours,
+          rentalStart: new Date(),
+        });
+
+        const createdRental = await manager.save(rental);
+
+        await this.usersService.updateUserBalance(
+          {
+            id: user.id,
+            balanceDto: { amount: -rentalCost },
+            transactionType: TransactionType.RENTAL_PAYMENT,
+            rental: createdRental,
+          },
           manager,
         );
 
-      car.status = CarStatus.BOOKED;
-      await manager.save(car);
-
-      const rental = this.rentalsRepository.create({
-        car,
-        user,
-        originalCar,
-        pickUpLocation: rentCarDto.pickUpLocation,
-        dropOffLocation: rentCarDto.dropOffLocation,
-        totalPrice: rentalCost,
-        status: RentalStatus.ACTIVE,
-        requestedHours: rentCarDto.hours,
-        rentalStart: new Date(),
+        return createdRental;
       });
-
-      const createdRental = await manager.save(rental);
-
-      await this.usersService.updateUserBalance(
-        {
-          id: user.id,
-          balanceDto: { amount: -rentalCost },
-          transactionType: TransactionType.RENTAL_PAYMENT,
-          rental: createdRental,
-        },
-        manager,
-      );
-
-      return createdRental;
-    });
+    } catch (error) {
+      this.loggerService.error(`Error renting car: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   async returnCar(
     rentalId: string,
     user: User,
   ): Promise<{ rental: Rental; penalty?: number; refund?: number }> {
-    const rental = await this.rentalsRepository.findOne({
-      where: { id: rentalId },
-      relations: ['car', 'originalCar', 'user'],
-    });
+    try {
+      const rental = await this.rentalsRepository.findOne({
+        where: { id: rentalId },
+        relations: ['car', 'originalCar', 'user'],
+      });
 
-    if (!rental) {
-      throw new BadRequestException(rentalsErrorMessages.RENTAL_NOT_FOUND);
-    }
-
-    if (rental.rentalEnd !== null) {
-      throw new BadRequestException(rentalsErrorMessages.CAR_IS_RETURNED);
-    }
-
-    return this.entityManager.transaction(async (manager) => {
-      const returnDate = new Date();
-      const hoursDifference = Math.ceil(
-        (returnDate.getTime() - rental.rentalStart.getTime()) /
-        ONE_HOUR_MILLISECONDS,
-      );
-
-      let refund: number | undefined;
-      let penalty: number | undefined;
-
-      if (hoursDifference < rental.requestedHours) {
-        refund =
-          rental.car.pricePerHour *
-          Math.ceil(rental.requestedHours - hoursDifference);
-
-        await this.usersService.updateUserBalance(
-          {
-            id: user.id,
-            balanceDto: { amount: refund },
-            transactionType: TransactionType.REFUND,
-            rental,
-          },
-          manager,
-        );
-      } else if (hoursDifference > rental.requestedHours) {
-        penalty =
-          rental.car.pricePerHour *
-          Math.ceil(hoursDifference - rental.requestedHours);
-
-        await this.usersService.updateUserBalance(
-          {
-            id: user.id,
-            balanceDto: { amount: -penalty },
-            transactionType: TransactionType.PENALTY,
-            rental,
-          },
-          manager,
-        );
+      if (!rental) {
+        throw new BadRequestException(rentalsErrorMessages.RENTAL_NOT_FOUND);
       }
 
-      rental.car.status = CarStatus.AVAILABLE;
-      await manager.save(rental.car);
+      if (rental.rentalEnd !== null) {
+        throw new BadRequestException(rentalsErrorMessages.CAR_IS_RETURNED);
+      }
 
-      rental.rentalEnd = returnDate;
-      rental.status = RentalStatus.CLOSED;
+      return this.entityManager.transaction(async (manager) => {
+        const returnDate = new Date();
+        const hoursDifference = Math.ceil(
+          (returnDate.getTime() - rental.rentalStart.getTime()) /
+          ONE_HOUR_MILLISECONDS,
+        );
 
-      const updatedRental = await manager.save(rental);
+        let refund: number | undefined;
+        let penalty: number | undefined;
 
-      return { rental: updatedRental, refund, penalty };
-    });
+        if (hoursDifference < rental.requestedHours) {
+          refund =
+            rental.car.pricePerHour *
+            Math.ceil(rental.requestedHours - hoursDifference);
+
+          await this.usersService.updateUserBalance(
+            {
+              id: user.id,
+              balanceDto: { amount: refund },
+              transactionType: TransactionType.REFUND,
+              rental,
+            },
+            manager,
+          );
+        } else if (hoursDifference > rental.requestedHours) {
+          penalty =
+            rental.car.pricePerHour *
+            Math.ceil(hoursDifference - rental.requestedHours);
+
+          await this.usersService.updateUserBalance(
+            {
+              id: user.id,
+              balanceDto: { amount: -penalty },
+              transactionType: TransactionType.PENALTY,
+              rental,
+            },
+            manager,
+          );
+        }
+
+        rental.car.status = CarStatus.AVAILABLE;
+        await manager.save(rental.car);
+
+        rental.rentalEnd = returnDate;
+        rental.status = RentalStatus.CLOSED;
+
+        const updatedRental = await manager.save(rental);
+
+        return { rental: updatedRental, refund, penalty };
+      });
+    } catch (error) {
+      this.loggerService.error(`Error returning car: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 
   async findActiveByUserId(userId: string): Promise<Rental | null> {
@@ -195,25 +207,30 @@ export class RentalsService {
     userId: string,
     query: QueryRentalsDto,
   ): Promise<[Rental[], number]> {
-    const { search, page, limit, order, sort } = query;
+    try {
+      const { search, page, limit, order, sort } = query;
 
-    const queryBuilder = this.rentalsRepository
-      .createQueryBuilder('rental')
-      .leftJoinAndSelect('rental.originalCar', 'originalCar')
-      .leftJoinAndSelect('rental.transactions', 'transactions')
-      .leftJoinAndSelect('originalCar.pictures', 'publicFile')
-      .where('rental.user.id = :userId', { userId });
+      const queryBuilder = this.rentalsRepository
+        .createQueryBuilder('rental')
+        .leftJoinAndSelect('rental.originalCar', 'originalCar')
+        .leftJoinAndSelect('rental.transactions', 'transactions')
+        .leftJoinAndSelect('originalCar.pictures', 'publicFile')
+        .where('rental.user.id = :userId', { userId });
 
-    applySearchAndPagination(queryBuilder, {
-      search,
-      searchColumns: RENTAL_DEFAULT_SEARCH_COLUMN,
-      page: page || DEFAULT_PAGINATION_PAGE,
-      limit: limit || DEFAULT_PAGINATION_LIMIT,
-      order: order || DEFAULT_ORDER,
-      sort: sort || RENTAL_DEFAULT_ORDER_COLUMN,
-      entityAlias: 'rental',
-    });
+      applySearchAndPagination(queryBuilder, {
+        search,
+        searchColumns: RENTAL_DEFAULT_SEARCH_COLUMN,
+        page: page || DEFAULT_PAGINATION_PAGE,
+        limit: limit || DEFAULT_PAGINATION_LIMIT,
+        order: order || DEFAULT_ORDER,
+        sort: sort || RENTAL_DEFAULT_ORDER_COLUMN,
+        entityAlias: 'rental',
+      });
 
-    return queryBuilder.getManyAndCount();
+      return queryBuilder.getManyAndCount();
+    } catch (error) {
+      this.loggerService.error(`Error finding all user rentals: ${error.message}`, error.stack);
+      throw error;
+    }
   }
 }
