@@ -89,14 +89,21 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
                 </td>
               </tr>
             ) : (
-              displayedRentals.map((rental, index) => (
-                <CSMainRentalHistoryTableRow
-                  key={rental.id}
-                  index={index}
-                  rental={rental}
-                  onCarReturn={() => carReturn.setRentalToReturn(rental as Rental)}
-                />
-              ))
+              displayedRentals.map((rental, index) => {
+                const onCarReturn = (): void => {
+                  carReturn.setRentalToReturn(rental as Rental)
+                  carReturn.setOrigin('table')
+                }
+                
+                return (
+                  <CSMainRentalHistoryTableRow
+                    key={rental.id}
+                    index={index}
+                    rental={rental}
+                    onCarReturn={onCarReturn}
+                  />
+                )
+              })
             )}
           </tbody>
         </Table>
