@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import {
   BaseSection,
   CSCommonDetailsFeature,
+  CSCommonError,
   CSCommonPrimaryButton,
   CSCommonRentalStatusBadge,
   SectionTitle,
@@ -40,36 +41,42 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
   const usedRental = singleRentalStore.rental ?? rental;
 
   return (
-    <RentalDetailsWrapper>
-      <Title>Rental Details</Title>
-      <FeaturesWrapper>
-        <CSCommonDetailsFeature label="Car Model" text={usedRental.originalCar?.model} />
-        <CSCommonDetailsFeature
-          label="Rental Status"
-          component={
-            <StatusBadge $status={usedRental.status}>
-              {uppercaseFirstLetter(usedRental.status)}
-            </StatusBadge>
-          }
-        />
-        <CSCommonDetailsFeature label="Rental Start" text={formatDate(usedRental.rentalStart)} />
-        <CSCommonDetailsFeature
-          label="Rental End"
-          text={usedRental.rentalEnd ? formatDate(usedRental.rentalEnd) : 'Not returned yet'}
-        />
-        <CSCommonDetailsFeature label="Requested Hours" text={usedRental.requestedHours} />
-        <CSCommonDetailsFeature label="Total Price" text={`$${usedRental.totalPrice.toFixed(2)}`} />
-        <CSCommonDetailsFeature label="Pick-up Location" text={usedRental.pickUpLocation} />
-        <CSCommonDetailsFeature label="Drop-off Location" text={usedRental.dropOffLocation} />
-      </FeaturesWrapper>
-      <CSMainSingleRentalTransaction rental={usedRental} />
-      {usedRental.status === RentalStatus.ACTIVE && (
-        <ReturnCarWrapper>
-          <CSCommonPrimaryButton content="Return Car" onClick={onCarReturn} />
-        </ReturnCarWrapper>
+    <>
+      {carReturnStore.errorMessage ? (
+        <CSCommonError errorMessage={carReturnStore.errorMessage} />
+      ) : (
+        <RentalDetailsWrapper>
+          <Title>Rental Details</Title>
+          <FeaturesWrapper>
+            <CSCommonDetailsFeature label="Car Model" text={usedRental.originalCar?.model} />
+            <CSCommonDetailsFeature
+              label="Rental Status"
+              component={
+                <StatusBadge $status={usedRental.status}>
+                  {uppercaseFirstLetter(usedRental.status)}
+                </StatusBadge>
+              }
+            />
+            <CSCommonDetailsFeature label="Rental Start" text={formatDate(usedRental.rentalStart)} />
+            <CSCommonDetailsFeature
+              label="Rental End"
+              text={usedRental.rentalEnd ? formatDate(usedRental.rentalEnd) : 'Not returned yet'}
+            />
+            <CSCommonDetailsFeature label="Requested Hours" text={usedRental.requestedHours} />
+            <CSCommonDetailsFeature label="Total Price" text={`$${usedRental.totalPrice.toFixed(2)}`} />
+            <CSCommonDetailsFeature label="Pick-up Location" text={usedRental.pickUpLocation} />
+            <CSCommonDetailsFeature label="Drop-off Location" text={usedRental.dropOffLocation} />
+          </FeaturesWrapper>
+          <CSMainSingleRentalTransaction rental={usedRental} />
+          {usedRental.status === RentalStatus.ACTIVE && (
+            <ReturnCarWrapper>
+              <CSCommonPrimaryButton content="Return Car" onClick={onCarReturn} />
+            </ReturnCarWrapper>
+          )}
+          <CSMainRentalReturnConfirmModal onSuccessReturn={onSuccessReturn} />
+        </RentalDetailsWrapper>
       )}
-      <CSMainRentalReturnConfirmModal onSuccessReturn={onSuccessReturn} />
-    </RentalDetailsWrapper>
+    </>
   );
 });
 
