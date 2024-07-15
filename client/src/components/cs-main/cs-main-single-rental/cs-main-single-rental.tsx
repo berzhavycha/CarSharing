@@ -35,7 +35,7 @@ export const CSMainSingleRental: FC = observer(() => {
 
             return (
               <RentalDetailsContainer>
-                <CSCommonSlides images={carImages} width="100%" height="300px" />
+                <CSCommonSlides images={carImages} width="40vw" height="20vw" />
                 <CSMainSingleRentalDetails rental={rental} />
               </RentalDetailsContainer>
             );
