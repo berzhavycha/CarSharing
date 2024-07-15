@@ -65,7 +65,7 @@ export const CSMainRentalPaymentForm: FC = () => {
         </FormInfoWrapper>
         <CSCommonPaymentForm
           title="Payment Details"
-          description="Please enter your payment details"
+          description="Please enter your payment details"  
           submitButtonContent={rentBtnContent}
         />
       </CSCommonForm>

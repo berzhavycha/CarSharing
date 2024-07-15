@@ -8,20 +8,20 @@ import { SingleRentalStore } from './single-rental-store';
 
 const RootStore = t.model('RootStore', {
   currentUserStore: CurrentUserStore,
-  carReturn: CarReturnStore,
-  rentalPayment: RentalPaymentStore,
-  singleRental: SingleRentalStore,
-  rentalList: RentalListStore,
+  carReturnStore: CarReturnStore,
+  rentalPaymentStore: RentalPaymentStore,
+  singleRentalStore: SingleRentalStore,
+  rentalListStore: RentalListStore,
 });
 
 export const rootStore = RootStore.create({
   currentUserStore: CurrentUserStore.create({
     errors: {},
   }),
-  carReturn: castToSnapshot(CarReturnStore.create({})),
-  rentalPayment: RentalPaymentStore.create({}),
-  singleRental: castToSnapshot(SingleRentalStore.create({})),
-  rentalList: RentalListStore.create({ rentals: [] }),
+  carReturnStore: castToSnapshot(CarReturnStore.create({})),
+  rentalPaymentStore: RentalPaymentStore.create({}),
+  singleRentalStore: castToSnapshot(SingleRentalStore.create({})),
+  rentalListStore: RentalListStore.create({ rentals: [] }),
 });
 
 export type RootStoreType = Instance<typeof RootStore>;
