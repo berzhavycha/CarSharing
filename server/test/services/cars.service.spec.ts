@@ -4,25 +4,25 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { QueryCarsDto, UpdateCarDto } from '@/dtos';
-import { Car, PublicFile } from '@/entities';
+import { Car, LocalFile } from '@/entities';
 import {
   applySearchAndPagination,
   carErrorMessages,
   CarStatus,
   RentalStatus,
 } from '@/helpers';
-import { CarsService, LoggerService, PublicFilesService } from '@/services';
+import { CarsService, LoggerService, LocalFilesService } from '@/services';
 
 import {
   testLoggerService,
-  testPublicFilesService,
+  testLocalFilesrService,
   testQueryBuilder,
   testRepository,
 } from '../test-objects';
 import {
   makeCar,
   makeCreateCarDto,
-  makePublicFile,
+  makeLocalFile,
   makeRental,
 } from '../utils';
 
@@ -33,7 +33,7 @@ jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
 describe('CarsService', () => {
   let carsService: CarsService;
   let carsRepository: Repository<Car>;
-  let publicFilesService: PublicFilesService;
+  let localFilesService: LocalFilesService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -44,8 +44,8 @@ describe('CarsService', () => {
           useValue: testRepository,
         },
         {
-          provide: PublicFilesService,
-          useValue: testPublicFilesService,
+          provide: LocalFilesService,
+          useValue: testLocalFilesrService,
         },
         { provide: LoggerService, useValue: testLoggerService },
       ],
@@ -53,7 +53,7 @@ describe('CarsService', () => {
 
     carsService = module.get<CarsService>(CarsService);
     carsRepository = module.get<Repository<Car>>(getRepositoryToken(Car));
-    publicFilesService = module.get<PublicFilesService>(PublicFilesService);
+    localFilesService = module.get<LocalFilesService>(LocalFilesService);
   });
 
   afterEach(() => {
@@ -125,47 +125,48 @@ describe('CarsService', () => {
       const car = makeCar({
         id: 'car-id',
         pictures: [
-          { id: 'existing-image-id-1' } as PublicFile,
-          { id: 'existing-image-id-2' } as PublicFile,
+          { id: 'existing-image-id-1' } as LocalFile,
+          { id: 'existing-image-id-2' } as LocalFile,
         ],
       });
 
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
       jest.spyOn(carsRepository, 'save').mockResolvedValue(car);
-      jest.spyOn(publicFilesService, 'removeFile').mockResolvedValue();
+      jest.spyOn(localFilesService, 'removeFile').mockResolvedValue();
 
       await carsService.updateCar(car.id, updateCarDtoMock, []);
 
-      expect(publicFilesService.removeFile).toHaveBeenCalledTimes(1);
-      expect(publicFilesService.removeFile).toHaveBeenCalledWith(
+      expect(localFilesService.removeFile).toHaveBeenCalledTimes(1);
+      expect(localFilesService.removeFile).toHaveBeenCalledWith(
         'existing-image-id-2',
       );
     });
 
     it('should add new images to the car', async () => {
-      const publicFile = makePublicFile();
+      const localFile = makeLocalFile();
       const updateCarDtoMock = {
-        existingImagesIds: [publicFile.id],
+        existingImagesIds: [localFile.id],
       };
 
       const newImages = [
         {
-          imageBuffer: new Buffer('string'),
+          path: 'path',
           filename: 'name',
+          mimetype: 'mime/type'
         },
       ];
 
       const car = makeCar();
-      const updateCar = { ...car, pictures: [publicFile] };
+      const updateCar = { ...car, pictures: [localFile] };
 
       jest.spyOn(carsService, 'findById').mockResolvedValue({ ...updateCar });
       jest.spyOn(carsRepository, 'save').mockResolvedValue({
         ...updateCar,
-        pictures: [publicFile, publicFile],
+        pictures: [localFile, localFile],
       });
       jest
-        .spyOn(publicFilesService, 'uploadPublicFile')
-        .mockResolvedValue(publicFile);
+        .spyOn(localFilesService, 'saveLocalFileData')
+        .mockResolvedValue(localFile);
 
       const result = await carsService.updateCar(
         updateCar.id,

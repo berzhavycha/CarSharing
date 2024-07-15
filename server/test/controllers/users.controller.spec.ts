@@ -6,7 +6,7 @@ import { User } from '@/entities';
 import { UsersService } from '@/services';
 
 import { testUsersService } from '../test-objects';
-import { makePicture, makePublicFile, makeUser } from '../utils';
+import { makePicture, makeLocalFile, makeUser } from '../utils';
 
 jest.mock('@nestjs/config');
 const testConfigService = {
@@ -79,13 +79,13 @@ describe('UsersController', () => {
         ...updateUserDto,
       });
 
-      const publicFile = makePublicFile();
+      const localFile = makeLocalFile();
       const picture = makePicture();
 
       jest.spyOn(usersService, 'updateUser').mockResolvedValue({
         ...user,
         ...updateUserDto,
-        avatarId: publicFile.id,
+        avatarId: localFile.id,
       });
 
       const result = await usersController.updateUser(

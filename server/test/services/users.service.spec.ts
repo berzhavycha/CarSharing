@@ -8,7 +8,7 @@ import { User } from '@/entities';
 import { hashValue, usersErrorMessages } from '@/helpers';
 import {
   LoggerService,
-  PublicFilesService,
+  LocalFilesService,
   RolesService,
   TransactionsService,
   UsersService,
@@ -17,7 +17,7 @@ import {
 import {
   testEntityManager,
   testLoggerService,
-  testPublicFilesService,
+  testLocalFilesrService,
   testRepository,
   testRoleService,
   testTransanctionService,
@@ -25,7 +25,7 @@ import {
 import {
   makeCreateUserDto,
   makeHash,
-  makePublicFile,
+  makeLocalFile,
   makeRole,
   makeUpdateUserBalanceOptions,
   makeUser,
@@ -44,7 +44,7 @@ describe('UsersService', () => {
   let transactionsService: TransactionsService;
   let rolesService: RolesService;
   let usersRepository: Repository<User>;
-  let publicFilesService: PublicFilesService;
+  let localFilesService: LocalFilesService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -63,8 +63,8 @@ describe('UsersService', () => {
           useValue: testRoleService,
         },
         {
-          provide: PublicFilesService,
-          useValue: testPublicFilesService,
+          provide: LocalFilesService,
+          useValue: testLocalFilesrService,
         },
         { provide: LoggerService, useValue: testLoggerService },
       ],
@@ -74,7 +74,7 @@ describe('UsersService', () => {
     transactionsService = module.get<TransactionsService>(TransactionsService);
     rolesService = module.get<RolesService>(RolesService);
     usersRepository = module.get<Repository<User>>(getRepositoryToken(User));
-    publicFilesService = module.get<PublicFilesService>(PublicFilesService);
+    localFilesService = module.get<LocalFilesService>(LocalFilesService);
   });
 
   afterEach(() => {
@@ -198,20 +198,25 @@ describe('UsersService', () => {
 
     it('should update user with file', async () => {
       const user = makeUser();
-      const publicFile = makePublicFile();
+      const localFile = makeLocalFile();
       const updatedUser = makeUser({
-        avatarId: publicFile.id,
-        avatar: publicFile,
+        avatarId: localFile.id,
+        avatar: localFile,
         ...updateUserDtoStub,
       });
 
       jest
-        .spyOn(publicFilesService, 'uploadPublicFile')
-        .mockResolvedValue(publicFile);
+        .spyOn(localFilesService, 'saveLocalFileData')
+        .mockResolvedValue(localFile);
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
 
-      const file = { imageBuffer: new Buffer('file'), filename: 'name' };
+      const file = {
+        path: 'path',
+        filename: 'name',
+        mimetype: 'mime/type'
+      }
+
       const result = await usersService.updateUser(
         user.id,
         updateUserDtoStub,
@@ -282,14 +287,14 @@ describe('UsersService', () => {
 
   describe('removeUserAvatar', () => {
     it('should remove user avatar', async () => {
-      const avatar = makePublicFile();
+      const avatar = makeLocalFile();
       const user = makeUser({ avatar });
 
-      jest.spyOn(publicFilesService, 'removeFile').mockResolvedValue(undefined);
+      jest.spyOn(localFilesService, 'removeFile').mockResolvedValue(undefined);
 
       await usersService.removeUserAvatar(user);
 
-      expect(publicFilesService.removeFile).toHaveBeenCalledWith(avatar.id);
+      expect(localFilesService.removeFile).toHaveBeenCalledWith(avatar.id);
     });
   });
 

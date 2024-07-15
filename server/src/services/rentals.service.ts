@@ -222,7 +222,7 @@ export class RentalsService {
         .createQueryBuilder('rental')
         .leftJoinAndSelect('rental.originalCar', 'originalCar')
         .leftJoinAndSelect('rental.transactions', 'transactions')
-        .leftJoinAndSelect('originalCar.pictures', 'publicFile')
+        .leftJoinAndSelect('originalCar.pictures', 'localFile')
         .where('rental.user.id = :userId', { userId });
 
       applySearchAndPagination(queryBuilder, {
