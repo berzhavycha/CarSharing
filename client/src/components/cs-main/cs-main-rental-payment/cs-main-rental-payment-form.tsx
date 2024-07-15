@@ -1,4 +1,4 @@
-import { ChangeEvent, FC } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 
 import {
@@ -34,15 +34,6 @@ export const CSMainRentalPaymentForm: FC = () => {
   const onCloseSuccessModal = (): void => setIsRentSuccessful(false);
   const onCloseErrorWindow = (): void => setErrorMessage('');
 
-  const handleRequestedHoursChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const value = Number(e.target.value);
-    if (value <= MAX_REQUESTED_HOURS) {
-      onRequestedHoursChange(e);
-    } else {
-      e.target.value = MAX_REQUESTED_HOURS.toString();
-    }
-  };
-
   return (
     <FormWrapper>
       <CSCommonForm<RentalDto & PaymentDto> validationSchema={rentalSchema} onSubmit={onSubmit}>
@@ -56,7 +47,7 @@ export const CSMainRentalPaymentForm: FC = () => {
               name="hours"
               label="Requested Hours"
               type="number"
-              onChange={handleRequestedHoursChange}
+              onChange={onRequestedHoursChange}
               onKeyDown={preventNegativeInput}
               min={0}
               max={MAX_REQUESTED_HOURS}
@@ -65,7 +56,7 @@ export const CSMainRentalPaymentForm: FC = () => {
         </FormInfoWrapper>
         <CSCommonPaymentForm
           title="Payment Details"
-          description="Please enter your payment details"  
+          description="Please enter your payment details"
           submitButtonContent={rentBtnContent}
         />
       </CSCommonForm>

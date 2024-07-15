@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { useStore } from '@/context';
 import { createRental } from '@/services';
 import { PaymentDto, RentalDto } from '@/types';
+import { MAX_REQUESTED_HOURS } from '@/helpers';
 
 type HookReturn = {
   onSubmit: (rentalDto: RentalDto & PaymentDto) => Promise<void>;
@@ -50,9 +51,14 @@ export const useRental = (): HookReturn => {
   };
 
   const onRequestedHoursChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const currentHours = +event.target.value;
-    const carPricePerHour = rentedCar.pricePerHour * currentHours;
-    setPotentialRentalPrice(carPricePerHour);
+    const value = Number(event.target.value);
+    if (value <= MAX_REQUESTED_HOURS) {
+      const currentHours = +event.target.value;
+      const carPricePerHour = rentedCar.pricePerHour * currentHours;
+      setPotentialRentalPrice(carPricePerHour);
+    } else {
+      event.target.value = MAX_REQUESTED_HOURS.toString();
+    }
   };
 
   return {
