@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 
-import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
+import { CreateCarDto, LocalFileDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { Car } from '@/entities';
 import {
   applySearchAndPagination,
@@ -19,32 +19,27 @@ import {
   DEFAULT_PAGINATION_PAGE,
   getFilterOptions,
 } from '@/helpers';
-import { FilterOption, UploadFile } from '@/types';
+import { FilterOption } from '@/types';
 
 import { LoggerService } from './logger.service';
-import { PublicFilesService } from './public-files.service';
+import { LocalFilesService } from './local-files.service';
 
 @Injectable()
 export class CarsService {
   constructor(
     @InjectRepository(Car)
     private carsRepository: Repository<Car>,
-    private publicFilesService: PublicFilesService,
+    private localFilesService: LocalFilesService,
     private readonly loggerService: LoggerService,
-  ) {}
+  ) { }
 
   async createCar(
     createCarDto: CreateCarDto,
-    fileData: UploadFile[],
+    fileData: LocalFileDto[],
   ): Promise<Car> {
     try {
       const carPictures = await Promise.all(
-        fileData.map((file) =>
-          this.publicFilesService.uploadPublicFile(
-            file.imageBuffer,
-            file.filename,
-          ),
-        ),
+        fileData.map((file) => this.localFilesService.saveLocalFileData(file)),
       );
 
       const car = this.carsRepository.create({
@@ -65,7 +60,7 @@ export class CarsService {
   async updateCar(
     id: string,
     updateCarDto: UpdateCarDto,
-    newImages: UploadFile[],
+    newImages: LocalFileDto[],
   ): Promise<Car> {
     try {
       const car = await this.findById(id);
@@ -75,16 +70,11 @@ export class CarsService {
       );
 
       await Promise.all(
-        imagesToDelete.map((img) => this.publicFilesService.removeFile(img.id)),
+        imagesToDelete.map((img) => this.localFilesService.removeFile(img.id)),
       );
 
       const newCarPictures = await Promise.all(
-        newImages.map((file) =>
-          this.publicFilesService.uploadPublicFile(
-            file.imageBuffer,
-            file.filename,
-          ),
-        ),
+        newImages.map((file) => this.localFilesService.saveLocalFileData(file))
       );
 
       car.pictures = [

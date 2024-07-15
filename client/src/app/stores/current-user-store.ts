@@ -5,7 +5,6 @@ import { fetchCurrentUser, signIn, signOut, signUp, topUp, updateUser } from '@/
 import {
   AuthenticatedUser,
   FieldErrorsState,
-  PublicFile,
   SignInUserDto,
   SignUpUserDto,
   UpdateUserBalanceDto,
@@ -33,8 +32,8 @@ export const CurrentUserStore = t
     isLoading: t.optional(t.boolean, false),
   })
   .views((self) => ({
-    get existingImages(): PublicFile[] {
-      return self.user?.avatar ? [self.user.avatar] : [];
+    get existingImagesIds(): string[] {
+      return self.user?.avatarId ? [self.user?.avatarId] : [];
     },
   }))
   .actions((self) => ({
@@ -114,7 +113,7 @@ export const CurrentUserStore = t
         handleUserResponse(
           response,
           (user) => self.setUser(user),
-          () => {},
+          () => { },
         );
       } catch (error) {
         self.setUser(null);

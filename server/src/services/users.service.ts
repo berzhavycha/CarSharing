@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcryptjs';
 import { EntityManager, Repository } from 'typeorm';
 
-import { UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
+import { LocalFileDto, UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
 import { Rental, User } from '@/entities';
 import {
   authErrorMessages,
@@ -18,12 +18,11 @@ import {
   usersErrorMessages,
 } from '@/helpers';
 import { SafeUser } from '@/interfaces';
-import { UploadFile } from '@/types';
 
 import { LoggerService } from './logger.service';
-import { PublicFilesService } from './public-files.service';
 import { RolesService } from './roles.service';
 import { TransactionsService } from './transactions.service';
+import { LocalFilesService } from './local-files.service';
 
 @Injectable()
 export class UsersService {
@@ -31,9 +30,9 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
-    private publicFilesService: PublicFilesService,
+    private readonly localFilesService: LocalFilesService,
     private readonly loggerService: LoggerService,
-  ) {}
+  ) { }
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -110,7 +109,7 @@ export class UsersService {
   async updateUser(
     id: string,
     updateUserDto: UpdateUserDto | Partial<User>,
-    fileData?: UploadFile,
+    fileData?: LocalFileDto,
   ): Promise<User | null> {
     try {
       const user = await this.findById(id);
@@ -139,10 +138,7 @@ export class UsersService {
       }
 
       if (fileData) {
-        const avatar = await this.publicFilesService.uploadPublicFile(
-          fileData.imageBuffer,
-          fileData.filename,
-        );
+        const avatar = await this.localFilesService.saveLocalFileData(fileData);
         user.avatar = avatar;
       }
 
@@ -170,7 +166,7 @@ export class UsersService {
 
   async removeUserAvatar(user: User): Promise<void> {
     try {
-      await this.publicFilesService.removeFile(user.avatar.id);
+      await this.localFilesService.removeFile(user.avatar.id);
       user.avatar = null;
       user.avatarId = null;
     } catch (error) {

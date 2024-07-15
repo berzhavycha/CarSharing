@@ -1,5 +1,5 @@
 import { PaginationDto } from './pagination';
-import { PublicFile } from './public-files';
+import { LocalFile } from './local-files';
 
 export type CarDto = {
   id?: string;
@@ -19,7 +19,7 @@ export type CarDto = {
 
 export type Car = Omit<CarDto, 'pictures'> & {
   id: string;
-  pictures: PublicFile[];
+  pictures: LocalFile[];
 };
 
 export type QueryCarsDto = PaginationDto & {

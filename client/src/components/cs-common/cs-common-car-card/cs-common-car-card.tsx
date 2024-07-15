@@ -8,6 +8,7 @@ import { CarFuelType, extractBracketContent, getFuelUnit } from '@/helpers';
 import { Car } from '@/types';
 
 import { CarFeature } from './cs-common-car-feature';
+import { Env } from '@/core';
 
 type CarCardProps = {
   carDetails: Car;
@@ -24,8 +25,7 @@ export const CSCommonCarCard: FC<CarCardProps> = ({ carDetails, onClick }) => {
       <CarImageWrapper>
         <ShadowImage src="../../../../public/shadow.png" alt="" />
         <CarImage
-          // src={carDetails.pictures[0]?.url}
-          src=""
+          src={`${Env.API_BASE_URL}/local-files/${carDetails.pictures[0]?.id}`}
           alt={carDetails.model}
         />
       </CarImageWrapper>

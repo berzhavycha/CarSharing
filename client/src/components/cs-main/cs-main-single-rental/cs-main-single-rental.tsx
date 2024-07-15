@@ -11,11 +11,12 @@ import {
 } from '@/components/cs-common';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { device } from '@/styles';
-import { PublicFile, Rental } from '@/types';
+import { LocalFile, Rental } from '@/types';
 
 import { CSMainRentalHistoryModals } from '../cs-main-rental-history/cs-main-rental-history-modals';
 
 import { CSMainSingleRentalDetails } from './cs-main-single-rental-details';
+import { Env } from '@/core';
 
 export const CSMainSingleRental: FC = observer(() => {
   const data = useLoaderData() as { data: Rental };
@@ -28,11 +29,9 @@ export const CSMainSingleRental: FC = observer(() => {
           errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
         >
           {(rental) => {
-            // const carImages = rental.originalCar?.pictures?.map(
-            //   (pic: PublicFile) => pic?.url,
-            // );
-
-            const carImages: string[] = [];
+            const carImages = rental.originalCar?.pictures.map(
+              (pic: LocalFile) => `${Env.API_BASE_URL}/local-files/${pic?.id}`,
+            );
 
             return (
               <RentalDetailsContainer>

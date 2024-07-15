@@ -13,6 +13,7 @@ import DefaultImage from '../../../public/avatar.webp';
 import { menuItems } from './constants';
 import { NavItem } from './cs-main-layout-nav-item';
 import { CSMainLayoutSignOutBtn } from './cs-main-layout-sign-out-btn';
+import { Env } from '@/core';
 
 export const CSMainLayoutHeaderOptions: FC = observer(() => {
   const {
@@ -22,7 +23,9 @@ export const CSMainLayoutHeaderOptions: FC = observer(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-  const profilePicture = user?.avatarId ? user?.avatar?.url : DefaultImage;
+  const profilePicture = user?.avatarId
+    ? `${Env.API_BASE_URL}/local-files/${user?.avatarId}`
+    : DefaultImage;
 
   const ref = useClickOutside(() => setIsMenuOpen(false), menuButtonRef);
   const toggleMenu = (): void => setIsMenuOpen(!isMenuOpen);

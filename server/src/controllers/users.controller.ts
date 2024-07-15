@@ -8,7 +8,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 import { UpdateUserBalanceDto, UpdateUserDto } from '@/dtos';
 import { User } from '@/entities';
@@ -20,6 +19,7 @@ import {
   TransactionType,
 } from '@/helpers';
 import { UsersService } from '@/services';
+import { LocalFilesInterceptor } from '@/interceptors';
 
 @Controller('users')
 export class UsersController {
@@ -28,7 +28,9 @@ export class UsersController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
-    FileInterceptor('picture', {
+    LocalFilesInterceptor({
+      fieldName: 'picture',
+      path: '/avatars',
       fileFilter: defaultFileFilter,
       limits: defaultFileLimits,
     }),
@@ -40,10 +42,12 @@ export class UsersController {
   ): Promise<User> {
     const uploadedFile = file
       ? {
-          imageBuffer: file?.buffer,
-          filename: file?.originalname,
-        }
+        path: file?.path,
+        filename: file?.originalname,
+        mimetype: file?.mimetype,
+      }
       : null;
+
 
     return this.usersService.updateUser(id, updateUserDto, uploadedFile);
   }

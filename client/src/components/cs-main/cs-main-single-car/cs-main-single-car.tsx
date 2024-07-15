@@ -10,9 +10,10 @@ import {
 } from '@/components/cs-common';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { device } from '@/styles';
-import { Car, PublicFile } from '@/types';
+import { Car, LocalFile } from '@/types';
 
 import { CSMainSingleCarDetails } from './cs-main-single-car-details';
+import { Env } from '@/core';
 
 export const CSMainSingleCar: FC = () => {
   const data = useLoaderData() as { data: Car };
@@ -26,10 +27,10 @@ export const CSMainSingleCar: FC = () => {
             errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
           >
             {(car) => {
-              // const carImages = car.pictures.map(
-              //   (pic: PublicFile) => pic?.url,
-              // );
-              const carImages: string[] = [];
+              const carImages = car.pictures.map(
+                (pic: LocalFile) => `${Env.API_BASE_URL}/local-files/${pic?.id}`,
+              );
+
               return (
                 <>
                   <CSCommonSlides images={carImages} width="45vw" height="18vw" />

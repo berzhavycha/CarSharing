@@ -18,8 +18,8 @@ import {
   DecimalColumnTransformer,
 } from '@/helpers';
 
-import { PublicFile } from './public-file.entity';
 import { Rental } from './rental.entity';
+import { LocalFile } from './local-file.entity';
 
 @Entity({ schema: 'rental', name: 'original_cars' })
 @Check('"price_per_hour" > 0')
@@ -81,8 +81,8 @@ export class OriginalCar {
   @OneToMany(() => Rental, (rental) => rental.originalCar)
   rentals: Rental[];
 
-  @OneToMany(() => PublicFile, (file) => file.car, {
+  @OneToMany(() => LocalFile, (file) => file.car, {
     cascade: true,
   })
-  pictures: PublicFile[];
+  pictures: LocalFile[];
 }

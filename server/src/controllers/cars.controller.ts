@@ -12,7 +12,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
 
 import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { Car } from '@/entities';
@@ -25,15 +24,19 @@ import {
 } from '@/helpers';
 import { CarsService } from '@/services';
 import { FilterOption } from '@/types';
+import { LocalFilesInterceptor } from '@/interceptors';
 
 @Controller('cars')
 export class CarsController {
-  constructor(private readonly carsService: CarsService) {}
+  constructor(private readonly carsService: CarsService) { }
 
   @Post()
   @UseGuards(RoleGuard(Roles.ADMIN))
   @UseInterceptors(
-    FilesInterceptor('pictures', MAX_CAR_PICTURES, {
+    LocalFilesInterceptor({
+      maxCount: MAX_CAR_PICTURES,
+      fieldName: 'pictures',
+      path: '/cars',
       fileFilter: defaultFileFilter,
       limits: defaultFileLimits,
     }),
@@ -42,13 +45,7 @@ export class CarsController {
     @Body() createCarDto: CreateCarDto,
     @UploadedFiles() pictures: Express.Multer.File[],
   ): Promise<Car> {
-    const uploadedFiles =
-      pictures?.map((file) => ({
-        imageBuffer: file.buffer,
-        filename: file.originalname,
-      })) || [];
-
-    return this.carsService.createCar(createCarDto, uploadedFiles);
+    return this.carsService.createCar(createCarDto, pictures);
   }
 
   @Get()
@@ -76,7 +73,10 @@ export class CarsController {
   @Patch(':id')
   @UseGuards(RoleGuard(Roles.ADMIN))
   @UseInterceptors(
-    FilesInterceptor('pictures', MAX_CAR_PICTURES, {
+    LocalFilesInterceptor({
+      maxCount: MAX_CAR_PICTURES,
+      fieldName: 'pictures',
+      path: '/cars',
       fileFilter: defaultFileFilter,
       limits: defaultFileLimits,
     }),
@@ -88,8 +88,9 @@ export class CarsController {
   ): Promise<Car> {
     const uploadedFiles =
       pictures?.map((file) => ({
-        imageBuffer: file.buffer,
+        path: file.path,
         filename: file.originalname,
+        mimetype: file.mimetype,
       })) || [];
 
     return this.carsService.updateCar(id, updateCarDto, uploadedFiles);

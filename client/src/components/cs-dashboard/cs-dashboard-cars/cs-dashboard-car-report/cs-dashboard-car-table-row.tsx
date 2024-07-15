@@ -13,6 +13,7 @@ import {
 } from '@/components/cs-common';
 import { uppercaseFirstLetter } from '@/helpers';
 import { Car } from '@/types';
+import { Env } from '@/core';
 
 type Props = {
   car: Car;
@@ -39,8 +40,7 @@ export const CSDashboardCarTableRow: FC<Props> = ({ car, index, onRemoveClick })
       <TableCell>{index + 1}</TableCell>
       <HiddenXSTableCell>
         <img
-          //src={car.pictures[0]?.url}
-          src=""
+          src={`${Env.API_BASE_URL}/local-files/${car.pictures[0]?.id}`}
           alt="Car Image"
         />
       </HiddenXSTableCell>

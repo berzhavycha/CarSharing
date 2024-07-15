@@ -5,12 +5,12 @@ import { CarsController } from '@/controllers';
 import { Car } from '@/entities';
 import { CarsService } from '@/services';
 
-import { PublicFilesModule } from './public-files.module';
+import { LocalFilesModule } from './local-files.module';
 
 @Module({
-  imports: [PublicFilesModule, TypeOrmModule.forFeature([Car])],
+  imports: [LocalFilesModule, TypeOrmModule.forFeature([Car])],
   controllers: [CarsController],
   providers: [CarsService],
   exports: [CarsService],
 })
-export class CarsModule {}
+export class CarsModule { }

@@ -7,6 +7,7 @@ import { BaseSection, SectionDescription, SectionTitle } from '@/components/cs-c
 import { useStore } from '@/context';
 import { device } from '@/styles';
 import { Car } from '@/types';
+import { Env } from '@/core';
 
 export const CSMainRentalPaymentSummary: FC = observer(() => {
   const { rentalPaymentStore } = useStore();
@@ -22,8 +23,7 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
       </SectionDescription>
       <CarInfoWrapper>
         <CarImage
-          // src={car.pictures[0]?.url}
-          src=""
+          src={`${Env.API_BASE_URL}/local-files/${car.pictures[0]?.id}`}
         />
         <CarDetails>
           <CarName>{car.model}</CarName>

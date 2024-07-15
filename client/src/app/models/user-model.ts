@@ -4,7 +4,7 @@ import { Roles } from '@/helpers';
 import {
   AuthenticatedUser,
   FieldErrorsState,
-  PublicFile,
+  LocalFile,
   SignInUserDto,
   SignUpUserDto,
   UpdateUserBalanceDto,
@@ -18,7 +18,7 @@ export const UserModel = t.model('UserModel', {
   lastName: t.string,
   balance: t.maybeNull(t.number),
   role: t.enumeration('Roles', [Roles.ADMIN, Roles.USER]),
-  avatar: t.maybeNull(t.frozen<PublicFile>()),
+  avatar: t.maybeNull(t.frozen<LocalFile>()),
   avatarId: t.maybeNull(t.string),
 });
 

@@ -1,27 +1,28 @@
 import { useEffect, useState } from 'react';
 
-import { FieldErrorsState, PublicFile, UpdateUserDto } from '@/types';
+import { FieldErrorsState, UpdateUserDto } from '@/types';
 
 type HookReturn = {
   isUpdateSuccessful: boolean;
   setIsUpdateSuccessful: (state: boolean) => void;
-  existingImages: PublicFile[];
+  existingImagesIds: string[];
   onSubmit: (user: UpdateUserDto) => Promise<void>;
   onPreviewRemove: (removeId: string) => void;
-  setExistingImages: (ids: PublicFile[]) => void;
+  setExistingImagesIds: (ids: string[]) => void;
 };
 
 export const useProfileUpdate = (
   updateUser: (user: UpdateUserDto) => Promise<void>,
-  viewImages: PublicFile[],
+  viewImagesIds: string[],
   updateErrors?: FieldErrorsState<UpdateUserDto> | null,
 ): HookReturn => {
   const [isUpdateSuccessful, setIsUpdateSuccessful] = useState<boolean>(false);
-  const [existingImages, setExistingImages] = useState<PublicFile[]>([]);
+  const [existingImagesIds, setExistingImagesIds] = useState<string[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
-    setExistingImages(viewImages);
+    setExistingImagesIds(viewImagesIds);
+
 
     if (isSubmitted) {
       if (!updateErrors) {
@@ -29,7 +30,7 @@ export const useProfileUpdate = (
       }
       setIsSubmitted(false);
     }
-  }, [viewImages, isSubmitted, updateErrors]);
+  }, [viewImagesIds, isSubmitted, updateErrors]);
 
   const onSubmit = async (user: UpdateUserDto): Promise<void> => {
     const userDtoWithoutEmptyPasswords = Object.fromEntries(
@@ -40,21 +41,21 @@ export const useProfileUpdate = (
 
     await updateUser({
       ...userDtoWithoutEmptyPasswords,
-      existingImagesIds: existingImages.map((img) => img.id),
+      existingImagesIds
     });
     setIsSubmitted(true);
   };
 
   const onPreviewRemove = (removeId: string): void => {
-    setExistingImages((imgs) => imgs.filter((img) => img.id !== removeId));
+    setExistingImagesIds((ids) => ids.filter((id) => id !== removeId));
   };
 
   return {
     isUpdateSuccessful,
     setIsUpdateSuccessful,
-    existingImages,
+    existingImagesIds,
     onSubmit,
     onPreviewRemove,
-    setExistingImages,
+    setExistingImagesIds,
   };
 };

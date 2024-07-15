@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 
-import { PublicFile } from '@/types';
+import { Env } from '@/core';
 
 type HookReturn = {
   previews: Preview[];
@@ -16,12 +16,15 @@ export type Preview = {
 
 export const useImagePreviews = (
   defaultImage: string,
-  actualImages?: PublicFile[],
+  actualImages?: string[],
   multiple?: boolean,
 ): HookReturn => {
   const [previews, setPreviews] = useState<Preview[]>(() => {
     if (actualImages && actualImages.length > 0) {
-      return actualImages;
+      return actualImages.map((img) => ({
+        id: img,
+        url: `${Env.API_BASE_URL}/local-files/${img}`,
+      }));
     }
     return [{ url: defaultImage }];
   });
@@ -29,7 +32,6 @@ export const useImagePreviews = (
   const handleUploadedFiles = (event: ChangeEvent<HTMLInputElement>): void => {
     const files = Array.from(event.target.files || []);
     const previewUrls = files.map((file) => URL.createObjectURL(file));
-
     setPreviews((prevPreviews) => {
       if (multiple) {
         return [
@@ -45,12 +47,18 @@ export const useImagePreviews = (
   const removeImage = (index: number): void => {
     setPreviews((prevPreviews) => {
       const updatedPreviews = prevPreviews.filter((_, i) => i !== index);
-      return updatedPreviews.length > 0 ? updatedPreviews : [{ url: defaultImage }];
+      return updatedPreviews.length > 0
+        ? updatedPreviews
+        : [{ id: 'default-id', url: defaultImage }];
     });
   };
 
   const resetPreviews = (): void => {
-    setPreviews(actualImages && actualImages.length > 0 ? actualImages : [{ url: defaultImage }]);
+    setPreviews(
+      actualImages && actualImages.length > 0
+        ? actualImages.map((img) => ({ id: img, url: `${Env.API_BASE_URL}/local-files/${img}` }))
+        : [{ url: defaultImage }],
+    );
   };
 
   return { previews, handleUploadedFiles, removeImage, resetPreviews };

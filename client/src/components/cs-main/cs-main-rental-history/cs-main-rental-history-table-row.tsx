@@ -14,6 +14,7 @@ import {
   TableRow,
 } from '@/components/cs-common';
 import { formatDate, RentalStatus, uppercaseFirstLetter } from '@/helpers';
+import { Env } from '@/core';
 
 type Props = {
   rental: RentalType;
@@ -30,12 +31,12 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({ rental, index,
     },
     ...(rental.status === RentalStatus.ACTIVE
       ? [
-          {
-            label: 'Return',
-            icon: <FaCar />,
-            onClick: onCarReturn,
-          },
-        ]
+        {
+          label: 'Return',
+          icon: <FaCar />,
+          onClick: onCarReturn,
+        },
+      ]
       : []),
   ];
 
@@ -44,8 +45,7 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({ rental, index,
       <TableCell>{index + 1}</TableCell>
       <HiddenMDTableCell>
         <img
-          // src={rental.originalCar?.pictures?.[0]?.url}
-          src=""
+          src={`${Env.API_BASE_URL}/local-files/${rental.originalCar?.pictures?.[0]?.id}`}
           alt="Car Image"
         />
       </HiddenMDTableCell>
