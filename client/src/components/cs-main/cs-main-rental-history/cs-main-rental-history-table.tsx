@@ -30,17 +30,11 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
     carReturnStore,
   } = useStore();
 
-  const { sortState, setSortState, renderSortIcon } = useSortColumn();
+  const { handleSortChange, renderSortIcon } = useSortColumn(onSortChange);
 
   useEffect(() => {
     setRentals(loadedRentals);
   }, [loadedRentals]);
-
-  const handleSortChange = (sort: string): void => {
-    const direction = sortState.sort === sort && sortState.direction === 'asc' ? 'desc' : 'asc';
-    setSortState({ sort, direction });
-    onSortChange(sort);
-  };
 
   const displayedRentals = rentals ?? loadedRentals;
 

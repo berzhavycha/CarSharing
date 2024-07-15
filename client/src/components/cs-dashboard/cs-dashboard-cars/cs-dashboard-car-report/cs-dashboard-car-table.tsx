@@ -33,17 +33,11 @@ export const CSDashboardCarTable: FC<CarTableProps> = ({ cars, onSortChange }) =
     handleRemoveCar,
   } = useCarRemoval(cars);
 
-  const { sortState, setSortState, renderSortIcon } = useSortColumn();
+  const { handleSortChange, renderSortIcon } = useSortColumn(onSortChange);
 
   useEffect(() => {
     setCarList(cars);
   }, [cars]);
-
-  const handleSortChange = (sort: string): void => {
-    const direction = sortState.sort === sort && sortState.direction === 'asc' ? 'desc' : 'asc';
-    setSortState({ sort, direction });
-    onSortChange(sort);
-  };
 
   const onCloseConfirmWindow = (): void => setCarToRemove(null);
   const onCloseErrorWindow = (): void => setErrorMessage(null);

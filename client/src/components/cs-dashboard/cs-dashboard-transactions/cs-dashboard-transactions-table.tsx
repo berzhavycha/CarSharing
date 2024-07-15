@@ -18,13 +18,7 @@ type Props = {
 };
 
 export const CSDashboardTransactionsTable: FC<Props> = ({ transactions, onSortChange }) => {
-  const { sortState, setSortState, renderSortIcon } = useSortColumn();
-
-  const handleSortChange = (sort: string): void => {
-    const direction = sortState.sort === sort && sortState.direction === 'asc' ? 'desc' : 'asc';
-    setSortState({ sort, direction });
-    onSortChange(sort);
-  };
+  const { handleSortChange, renderSortIcon } = useSortColumn(onSortChange);
 
   return (
     <>
