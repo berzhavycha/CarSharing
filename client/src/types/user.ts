@@ -1,3 +1,4 @@
+import { Roles } from '@/helpers';
 import { PaymentDto } from './payment';
 import { PublicFile } from './public-files';
 
@@ -7,7 +8,7 @@ export type AuthenticatedUser = {
   firstName: string;
   lastName: string;
   balance: number | null;
-  role: string;
+  role: Roles;
   avatar: PublicFile;
   avatarId: string | null;
 };
