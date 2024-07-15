@@ -9,7 +9,7 @@ import { device } from '@/styles';
 import { Car } from '@/types';
 
 export const CSMainRentalPaymentSummary: FC = observer(() => {
-  const { rentalPayment } = useStore();
+  const { rentalPaymentStore } = useStore();
 
   const location = useLocation();
   const car = location.state?.car as Car;
@@ -35,7 +35,7 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
           <h3>Total Rental Price</h3>
           <TotalDescription>Overall price and includes rental discount</TotalDescription>
         </TotalInfo>
-        <PriceWrapper>${rentalPayment.potentialRentalPrice.toFixed(2)}</PriceWrapper>
+        <PriceWrapper>${rentalPaymentStore.potentialRentalPrice.toFixed(2)}</PriceWrapper>
       </Total>
     </SummaryWrapper>
   );

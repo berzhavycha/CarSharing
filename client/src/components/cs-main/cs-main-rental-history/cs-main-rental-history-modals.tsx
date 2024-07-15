@@ -10,7 +10,7 @@ import { useRentals } from './hooks';
 
 export const CSMainRentalHistoryModals: FC = observer(() => {
   const {
-    carReturn: {
+    carReturnStore: {
       rentalToReturn,
       isReturnedInTime,
       refund,

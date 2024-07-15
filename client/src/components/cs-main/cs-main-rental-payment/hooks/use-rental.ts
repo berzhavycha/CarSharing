@@ -24,7 +24,7 @@ export const useRental = (): HookReturn => {
   const rentedCar = location.state.car;
 
   const {
-    rentalPayment: { potentialRentalPrice, setPotentialRentalPrice },
+    rentalPaymentStore: { potentialRentalPrice, setPotentialRentalPrice },
     currentUserStore: { user, updateBalance },
   } = useStore();
 

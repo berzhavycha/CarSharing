@@ -10,7 +10,7 @@ type Props = {
 
 export const CSMainRentalReturnConfirmModal: FC<Props> = observer(({ onSuccessReturn }) => {
   const {
-    carReturn: { rentalToReturn, setRentalToReturn, loading, returnCar },
+    carReturnStore: { rentalToReturn, setRentalToReturn, loading, returnCar },
   } = useStore();
 
   const handleCloseConfirmReturnWindow = (): void => setRentalToReturn(null);
