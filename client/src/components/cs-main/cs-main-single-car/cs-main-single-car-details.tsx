@@ -75,7 +75,7 @@ const Description = styled(SectionDescription)`
 const FeaturesWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
   gap: 20px 0;
 
   @media ${device.sm} {

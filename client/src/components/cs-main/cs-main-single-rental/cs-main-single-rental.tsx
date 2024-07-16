@@ -35,7 +35,9 @@ export const CSMainSingleRental: FC = observer(() => {
 
             return (
               <RentalDetailsContainer>
-                <CSCommonSlides images={carImages} width="40vw" height="20vw" />
+                <SlideWrapper>
+                  <CSCommonSlides images={carImages} />
+                </SlideWrapper>
                 <CSMainSingleRentalDetails rental={rental} />
               </RentalDetailsContainer>
             );
@@ -57,4 +59,10 @@ const RentalDetailsContainer = styled.div`
   @media ${device.lg} {
     flex-direction: column;
   }
+`;
+
+
+const SlideWrapper = styled.div`
+  width: 100%;
+  max-width: 600px;
 `;

@@ -33,7 +33,9 @@ export const CSMainSingleCar: FC = () => {
 
               return (
                 <>
-                  <CSCommonSlides images={carImages} width="45vw" height="18vw" />
+                  <SlideWrapper>
+                    <CSCommonSlides images={carImages} />
+                  </SlideWrapper>
                   <CSMainSingleCarDetails car={car} />
                 </>
               );
@@ -46,14 +48,17 @@ export const CSMainSingleCar: FC = () => {
 };
 
 const SingleCarWrapper = styled.div`
-  margin-top: 50px;
   display: flex;
-  gap: 30px;
+  align-items: center;
+  gap: 60px;
+  margin: 50px 0;
 
   @media ${device.lg} {
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 50px 0;
   }
+`;
+
+const SlideWrapper = styled.div`
+  width: 100%;
+  max-width: 600px;
 `;

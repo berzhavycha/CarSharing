@@ -4,11 +4,9 @@ import styled from 'styled-components';
 
 type Props = {
   images: string[];
-  width?: string;
-  height?: string;
 };
 
-export const CSCommonSlides: FC<Props> = ({ images, width = '100%', height = '200px' }) => {
+export const CSCommonSlides: FC<Props> = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToPrevious = (): void => {
@@ -24,8 +22,8 @@ export const CSCommonSlides: FC<Props> = ({ images, width = '100%', height = '20
   };
 
   return (
-    <div>
-      <SlideShowContainer width={width} height={height}>
+    <SlideContainer>
+      <SlideShowContainer>
         <SlideImage src={images[currentIndex]} alt={`Slide ${currentIndex}`} />
         <PrevButton onClick={goToPrevious}>
           <FaChevronLeft />
@@ -45,19 +43,23 @@ export const CSCommonSlides: FC<Props> = ({ images, width = '100%', height = '20
           />
         ))}
       </ThumbnailContainer>
-    </div>
+    </SlideContainer>
   );
 };
 
-const SlideShowContainer = styled.div<{ width: string; height: string }>`
+const SlideContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+const SlideShowContainer = styled.div`
   position: relative;
-  width: ${({ width }): string => width};
-  height: ${({ height }): string => height};
+  width: 100%;
+  height: 100%;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
-
 const SlideImage = styled.img`
   width: 100%;
   height: 100%;

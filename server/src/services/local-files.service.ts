@@ -1,10 +1,11 @@
-import { Injectable, LoggerService, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { LocalFileDto } from '@/dtos';
 import { LocalFile } from '@/entities';
 import { filesErrors } from '@/helpers/errors';
+import { LoggerService } from './logger.service';
 
 @Injectable()
 export class LocalFilesService {
