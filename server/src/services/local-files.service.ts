@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, LoggerService, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -11,11 +11,20 @@ export class LocalFilesService {
     constructor(
         @InjectRepository(LocalFile)
         private localFilesRepository: Repository<LocalFile>,
+        private readonly loggerService: LoggerService,
     ) { }
 
     async saveLocalFileData(fileData: LocalFileDto): Promise<LocalFile> {
-        const newFile = this.localFilesRepository.create(fileData);
-        return this.localFilesRepository.save(newFile);
+        try {
+            const newFile = this.localFilesRepository.create(fileData);
+            return this.localFilesRepository.save(newFile);
+        } catch (error) {
+            this.loggerService.error(
+                `Error saving local file: ${error.message}`,
+                error.stack,
+            );
+            throw error;
+        }
     }
 
     async findById(id: string): Promise<LocalFile> {
@@ -27,7 +36,15 @@ export class LocalFilesService {
     }
 
     async removeFile(id: string): Promise<void> {
-        const file = await this.findById(id);
-        await this.localFilesRepository.remove(file);
+        try {
+            const file = await this.findById(id);
+            await this.localFilesRepository.remove(file);
+        } catch (error) {
+            this.loggerService.error(
+                `Error removing local file: ${error.message}`,
+                error.stack,
+            );
+            throw error;
+        }
     }
 }
