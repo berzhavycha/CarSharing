@@ -26,13 +26,12 @@ export const CSMainSingleCar: FC = () => {
             errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
           >
             {(car) => {
-              // const carImages = car.pictures.map(
-              //   (pic: PublicFile) => pic?.url,
-              // );
-              const carImages: string[] = [];
+              const carImagesPublicIds = car.pictures.map(
+                (pic: PublicFile) => pic?.publicId,
+              );
               return (
                 <>
-                  <CSCommonSlides images={carImages} width="45vw" height="18vw" />
+                  <CSCommonSlides publicIds={carImagesPublicIds} width="100%" height="20vw" />
                   <CSMainSingleCarDetails car={car} />
                 </>
               );

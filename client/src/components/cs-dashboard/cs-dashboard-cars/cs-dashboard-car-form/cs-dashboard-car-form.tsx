@@ -61,6 +61,7 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
               defaultImage={DefaultImage}
               existingImages={existingImages}
               onRemove={onPreviewRemove}
+              isPending={isLoading}
               name="pictures"
               multiple
               error={errors?.pictures}

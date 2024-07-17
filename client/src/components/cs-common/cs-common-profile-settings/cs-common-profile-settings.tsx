@@ -53,6 +53,7 @@ export const CSCommonProfileSettings: FC = observer(() => {
                 onRemove={onPreviewRemove}
                 name="picture"
                 label="Update Avatar"
+                isPending={isLoading}
               />
               <UserInfo>
                 <h2>

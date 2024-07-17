@@ -11,6 +11,7 @@ type HookReturn = {
 
 export type Preview = {
   id?: string;
+  publicId?: string;
   url: string;
 };
 

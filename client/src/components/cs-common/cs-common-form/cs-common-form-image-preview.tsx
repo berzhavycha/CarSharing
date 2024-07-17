@@ -1,7 +1,12 @@
 import { FC } from 'react';
 import styled from 'styled-components';
+import { AdvancedImage, lazyload, placeholder, responsive } from '@cloudinary/react';
 
 import { device } from '@/styles';
+import { cld } from '@/app/cloudinary';
+import { Quality } from '@cloudinary/url-gen/qualifiers';
+import { Resize } from '@cloudinary/url-gen/actions';
+import { Spinner } from '../cs-common-spinner';
 
 type PictureWrapperProps = {
   $circled?: boolean;
@@ -11,17 +16,20 @@ type PictureWrapperProps = {
 
 type ImagePreviewProps = {
   src: string;
+  publicId?: string;
   alt: string;
   circled?: boolean;
   width?: number;
   height?: number;
   onRemove?: () => void;
   onClick?: () => void;
+  isPending?: boolean;
   isRemovable?: boolean;
 };
 
 export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
   src,
+  publicId,
   alt,
   circled,
   width = 100,
@@ -29,15 +37,35 @@ export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
   onRemove,
   onClick,
   isRemovable = true,
+  isPending = false,
 }) => {
   const onRemoveClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     e.stopPropagation();
     onRemove?.();
   };
 
+  const cloudinaryImage = publicId
+    ? cld
+      .image(publicId)
+      .resize(Resize.fit().width(width).height(height))
+      .quality(Quality.auto())
+    : null;
+
   return (
     <PictureWrapper onClick={onClick} $circled={circled} $width={width} $height={height}>
-      <img src={src} alt={alt} />
+      {isPending ? (
+        <SpinnerWrapper $width={width} $height={height}>
+          <Spinner />
+        </SpinnerWrapper>
+      ) : cloudinaryImage ? (
+        <StyledAdvancedImage
+          cldImg={cloudinaryImage}
+          plugins={[lazyload(), responsive({ steps: 100 }), placeholder({ mode: 'blur' })]}
+          alt={alt}
+        />
+      ) : (
+        <img src={src} alt={alt} />
+      )}
       {isRemovable && (
         <RemoveButton type="button" onClick={onRemoveClick}>
           &times;
@@ -46,6 +74,19 @@ export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
     </PictureWrapper>
   );
 };
+
+const SpinnerWrapper = styled.div<PictureWrapperProps>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: ${(props): string => `${props.$width}`}px;
+  height: ${(props): string => `${props.$height}`}px;
+
+  @media ${device.md} {
+    width: ${(props): string => `${props.$width - 20}`}px;
+    height: ${(props): string => `${props.$height - 20}`}px;
+  }
+`
 
 const PictureWrapper = styled.div<PictureWrapperProps>`
   position: relative;
@@ -68,13 +109,12 @@ const PictureWrapper = styled.div<PictureWrapperProps>`
       height: ${(props): string => `${props.$height - 20}`}px;
     }
   }
+`;
 
-  @media ${device.sm} {
-    img {
-      width: ${(props): string => `${props.$width - 30}`}px;
-      height: ${(props): string => `${props.$height - 30}`}px;
-    }
-  }
+const StyledAdvancedImage = styled(AdvancedImage)`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 `;
 
 const RemoveButton = styled.button`

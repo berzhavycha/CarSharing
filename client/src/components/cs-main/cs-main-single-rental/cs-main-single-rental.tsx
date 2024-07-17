@@ -28,15 +28,13 @@ export const CSMainSingleRental: FC = observer(() => {
           errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
         >
           {(rental) => {
-            // const carImages = rental.originalCar?.pictures?.map(
-            //   (pic: PublicFile) => pic?.url,
-            // );
-
-            const carImages: string[] = [];
+            const carImagesPublicIds = rental.originalCar?.pictures?.map(
+              (pic: PublicFile) => pic?.publicId,
+            );
 
             return (
               <RentalDetailsContainer>
-                <CSCommonSlides images={carImages} width="100%" height="300px" />
+                <CSCommonSlides publicIds={carImagesPublicIds} width="100%" height="20vw" />
                 <CSMainSingleRentalDetails rental={rental} />
               </RentalDetailsContainer>
             );
@@ -57,5 +55,13 @@ const RentalDetailsContainer = styled.div`
 
   @media ${device.lg} {
     flex-direction: column;
+  }
+
+  @media ${device.md} {
+    gap: 40px;
+  }
+
+  @media ${device.md} {
+    gap: 20px;
   }
 `;
