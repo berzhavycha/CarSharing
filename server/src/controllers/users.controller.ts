@@ -38,14 +38,7 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile() file?: Express.Multer.File,
   ): Promise<User> {
-    const uploadedFile = file
-      ? {
-          imageBuffer: file?.buffer,
-          filename: file?.originalname,
-        }
-      : null;
-
-    return this.usersService.updateUser(id, updateUserDto, uploadedFile);
+    return this.usersService.updateUser(id, updateUserDto, file);
   }
 
   @Patch(':id/top-up')

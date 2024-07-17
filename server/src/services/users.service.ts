@@ -18,7 +18,6 @@ import {
   usersErrorMessages,
 } from '@/helpers';
 import { SafeUser } from '@/interfaces';
-import { UploadFile } from '@/types';
 
 import { LoggerService } from './logger.service';
 import { PublicFilesService } from './public-files.service';
@@ -110,7 +109,7 @@ export class UsersService {
   async updateUser(
     id: string,
     updateUserDto: UpdateUserDto | Partial<User>,
-    fileData?: UploadFile,
+    fileData?: Express.Multer.File,
   ): Promise<User | null> {
     try {
       const user = await this.findById(id);
@@ -139,10 +138,7 @@ export class UsersService {
       }
 
       if (fileData) {
-        const avatar = await this.publicFilesService.uploadPublicFile(
-          fileData.imageBuffer,
-          fileData.filename,
-        );
+        const avatar = await this.publicFilesService.uploadPublicFile(fileData);
         user.avatar = avatar;
       }
 
