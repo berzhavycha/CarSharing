@@ -22,8 +22,7 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
       </SectionDescription>
       <CarInfoWrapper>
         <CarImage
-          // src={car.pictures[0]?.url}
-          src=""
+          src={car.pictures[0]?.url}
         />
         <CarDetails>
           <CarName>{car.model}</CarName>
