@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { FaCog, FaGasPump, FaUsers } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -8,13 +8,18 @@ import { CarFuelType, extractBracketContent, getFuelUnit } from '@/helpers';
 import { Car } from '@/types';
 
 import { CarFeature } from './cs-common-car-feature';
+import { cld } from '@/app/cloudinary';
+import { lazyload, placeholder, AdvancedImage } from '@cloudinary/react';
+import { Quality } from '@cloudinary/url-gen/qualifiers';
 
 type CarCardProps = {
   carDetails: Car;
   onClick: () => void;
 };
 
-export const CSCommonCarCard: FC<CarCardProps> = ({ carDetails, onClick }) => {
+export const CSCommonCarCard: FC<CarCardProps> = memo(({ carDetails, onClick }) => {
+  const carImage = cld.image(carDetails.pictures[0]?.publicId).quality(Quality.auto())
+
   return (
     <CardWrapper onClick={onClick}>
       <Header>
@@ -23,8 +28,9 @@ export const CSCommonCarCard: FC<CarCardProps> = ({ carDetails, onClick }) => {
       </Header>
       <CarImageWrapper>
         <ShadowImage src="../../../../public/shadow.png" alt="" />
-        <CarImage
-          src={carDetails.pictures[0]?.url}
+        <StyledAdvancedImage
+          cldImg={carImage}
+          plugins={[lazyload(), placeholder()]}
           alt={carDetails.model}
         />
       </CarImageWrapper>
@@ -47,7 +53,7 @@ export const CSCommonCarCard: FC<CarCardProps> = ({ carDetails, onClick }) => {
       </Footer>
     </CardWrapper>
   );
-};
+});
 
 const CardWrapper = styled.div`
   width: 100%;
@@ -99,12 +105,13 @@ const ShadowImage = styled.img`
   z-index: 2;
 `;
 
-const CarImage = styled.img`
+const StyledAdvancedImage = styled(AdvancedImage)`
   width: 100%;
   height: 120px;
   object-fit: contain;
   z-index: 1;
 `;
+
 
 const Features = styled.div`
   display: flex;

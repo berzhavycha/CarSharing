@@ -1,32 +1,46 @@
+import { cld } from '@/app/cloudinary';
+import { AdvancedImage, lazyload, placeholder, responsive } from '@cloudinary/react';
+import { CloudinaryImage } from '@cloudinary/url-gen/index';
+import { Quality } from '@cloudinary/url-gen/qualifiers';
 import { FC, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import styled from 'styled-components';
 
 type Props = {
-  images: string[];
+  publicIds: string[];
   width?: string;
   height?: string;
 };
 
-export const CSCommonSlides: FC<Props> = ({ images, width = '100%', height = '200px' }) => {
+export const CSCommonSlides: FC<Props> = ({ publicIds, width = '100%', height = '200px' }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToPrevious = (): void => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? publicIds.length - 1 : prevIndex - 1));
   };
 
   const goToNext = (): void => {
-    setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+    setCurrentIndex((prevIndex) => (prevIndex === publicIds.length - 1 ? 0 : prevIndex + 1));
   };
 
   const goToSlide = (slideIndex: number): void => {
     setCurrentIndex(slideIndex);
   };
 
+  const getCloudinaryImage = (publicId: string): CloudinaryImage => {
+    return cld
+      .image(publicId)
+      .quality(Quality.auto())
+  }
+
   return (
     <div>
       <SlideShowContainer width={width} height={height}>
-        <SlideImage src={images[currentIndex]} alt={`Slide ${currentIndex}`} />
+        <SlideImage
+          cldImg={getCloudinaryImage(publicIds[currentIndex])}
+          plugins={[lazyload(), responsive(), placeholder()]}
+          alt={`Slide ${currentIndex}`}
+        />
         <PrevButton onClick={goToPrevious}>
           <FaChevronLeft />
         </PrevButton>
@@ -35,14 +49,18 @@ export const CSCommonSlides: FC<Props> = ({ images, width = '100%', height = '20
         </NextButton>
       </SlideShowContainer>
       <ThumbnailContainer>
-        {images.map((image, index) => (
-          <Thumbnail
+        {publicIds.map((publicId, index) => (
+          <ThumbnailWrapper
             key={index}
-            src={image}
-            alt={`Thumbnail ${index}`}
             $active={index === currentIndex}
             onClick={() => goToSlide(index)}
-          />
+          >
+            <AdvancedImage
+              cldImg={getCloudinaryImage(publicId)}
+              plugins={[lazyload(), placeholder()]}
+              alt={`Thumbnail ${index}`}
+            />
+          </ThumbnailWrapper>
         ))}
       </ThumbnailContainer>
     </div>
@@ -58,7 +76,7 @@ const SlideShowContainer = styled.div<{ width: string; height: string }>`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
-const SlideImage = styled.img`
+const SlideImage = styled(AdvancedImage)`
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -93,10 +111,9 @@ const NextButton = styled(NavButton)`
   right: 10px;
 `;
 
-const Thumbnail = styled.img<{ $active: boolean }>`
+const ThumbnailWrapper = styled.div<{ $active: boolean }>`
   width: 50px;
   height: 50px;
-  object-fit: contain;
   margin: 0 5px;
   opacity: ${({ $active }): number => ($active ? 1 : 0.6)};
   cursor: pointer;
@@ -108,6 +125,13 @@ const Thumbnail = styled.img<{ $active: boolean }>`
 
   &:hover {
     opacity: 1;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 5px;
   }
 `;
 

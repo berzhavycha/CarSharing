@@ -17,6 +17,7 @@ type Props = Omit<InputProps, 'name'> & {
   width?: number;
   height?: number;
   multiple?: boolean;
+  isPending?: boolean,
 };
 
 export const CSCommonFormInputImage: FC<Props> = ({
@@ -30,6 +31,7 @@ export const CSCommonFormInputImage: FC<Props> = ({
   width = 100,
   height = 100,
   multiple = false,
+  isPending = false,
   ...props
 }) => {
   const {
@@ -75,6 +77,7 @@ export const CSCommonFormInputImage: FC<Props> = ({
         {previews.map((preview, index) => (
           <CSCommonFormImagePreview
             key={index}
+            publicId={preview.publicId}
             src={preview.url}
             alt={`${name}-${index}`}
             circled={circled}
@@ -83,6 +86,7 @@ export const CSCommonFormInputImage: FC<Props> = ({
             onClick={onUpload}
             onRemove={() => onRemoveImage(preview, index)}
             isRemovable={preview.url !== defaultImage}
+            isPending={isPending}
           />
         ))}
       </PicturesContainer>

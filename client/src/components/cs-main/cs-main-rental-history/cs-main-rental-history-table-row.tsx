@@ -14,6 +14,9 @@ import {
   TableRow,
 } from '@/components/cs-common';
 import { formatDate, RentalStatus, uppercaseFirstLetter } from '@/helpers';
+import { cld } from '@/app/cloudinary';
+import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
+import { Quality } from '@cloudinary/url-gen/qualifiers';
 
 type Props = {
   rental: RentalType;
@@ -30,22 +33,26 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({ rental, index,
     },
     ...(rental.status === RentalStatus.ACTIVE
       ? [
-          {
-            label: 'Return',
-            icon: <FaCar />,
-            onClick: onCarReturn,
-          },
-        ]
+        {
+          label: 'Return',
+          icon: <FaCar />,
+          onClick: onCarReturn,
+        },
+      ]
       : []),
   ];
+
+  const cloudinaryImage = cld.image(rental.originalCar.pictures[0].publicId).quality(Quality.auto())
+
 
   return (
     <TableRow key={rental.id}>
       <TableCell>{index + 1}</TableCell>
       <HiddenMDTableCell>
-        <img
-          src={rental.originalCar?.pictures?.[0]?.url}
-          alt="Car Image"
+        <AdvancedImage
+          cldImg={cloudinaryImage}
+          plugins={[lazyload(), placeholder({ mode: 'blur' })]}
+          alt={rental.originalCar.model}
         />
       </HiddenMDTableCell>
       <TableCell>{rental.originalCar?.model}</TableCell>

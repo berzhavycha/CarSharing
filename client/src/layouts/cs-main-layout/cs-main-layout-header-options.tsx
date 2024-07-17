@@ -4,25 +4,18 @@ import { FaBars } from 'react-icons/fa';
 import styled from 'styled-components';
 
 import { CSCommonCloseButton } from '@/components';
-import { useStore } from '@/context';
 import { useClickOutside, useSignOut } from '@/hooks';
 import { device } from '@/styles';
-
-import DefaultImage from '../../../public/avatar.webp';
 
 import { menuItems } from './constants';
 import { NavItem } from './cs-main-layout-nav-item';
 import { CSMainLayoutSignOutBtn } from './cs-main-layout-sign-out-btn';
+import { CSMainLayoutUserInfo } from './cs-main-layout-user-info';
 
 export const CSMainLayoutHeaderOptions: FC = observer(() => {
-  const {
-    currentUserStore: { user },
-  } = useStore();
   const { onSignOut } = useSignOut();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
-
-  const profilePicture = user?.avatarId ? user?.avatar?.url : DefaultImage;
 
   const ref = useClickOutside(() => setIsMenuOpen(false), menuButtonRef);
   const toggleMenu = (): void => setIsMenuOpen(!isMenuOpen);
@@ -41,15 +34,7 @@ export const CSMainLayoutHeaderOptions: FC = observer(() => {
       <NavOptions $isOpen={isMenuOpen} ref={ref}>
         {isMenuOpen && <CSCommonCloseButton onClose={closeMenu} />}
         <UserInfoMobile>
-          <UserAvatar src={profilePicture} alt="User Avatar" />
-          {user && (
-            <UserDetails>
-              <p>
-                {user?.firstName} {user?.lastName}
-              </p>
-              <Balance>Balance: ${user?.balance?.toFixed(2)}</Balance>
-            </UserDetails>
-          )}
+          <CSMainLayoutUserInfo />
         </UserInfoMobile>
         {menuItems.map((item) => (
           <NavItem
@@ -63,19 +48,12 @@ export const CSMainLayoutHeaderOptions: FC = observer(() => {
         <CSMainLayoutSignOutBtn signOutHandler={signOutHandler} />
       </NavOptions>
       <UserInfoDesktop>
-        <UserAvatar src={profilePicture} alt="User Avatar" />
-        {user && (
-          <UserDetails>
-            <p>
-              {user?.firstName} {user?.lastName}
-            </p>
-            <Balance>Balance: ${user?.balance?.toFixed(2)}</Balance>
-          </UserDetails>
-        )}
+        <CSMainLayoutUserInfo />
       </UserInfoDesktop>
     </Container>
   );
 });
+
 
 const Container = styled.div`
   display: flex;
@@ -158,19 +136,3 @@ const UserInfoMobile = styled.div`
   }
 `;
 
-const UserDetails = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-`;
-
-const UserAvatar = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-`;
-
-const Balance = styled.h4`
-  font-size: 14px;
-  margin: 0;
-`;

@@ -45,6 +45,9 @@ export const CSMainSingleCarDetails: FC<Props> = ({ car }) => {
 const CarDetailsWrapper = styled(BaseSection)`
   width: 50%;
   padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   @media ${device.lg} {
     width: 100%;

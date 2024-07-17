@@ -1,5 +1,5 @@
 export type PublicFile = {
   id: string;
-  key: string;
+  publicId: string;
   url: string;
 };
