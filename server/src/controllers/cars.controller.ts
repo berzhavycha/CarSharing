@@ -42,13 +42,7 @@ export class CarsController {
     @Body() createCarDto: CreateCarDto,
     @UploadedFiles() pictures: Express.Multer.File[],
   ): Promise<Car> {
-    const uploadedFiles =
-      pictures?.map((file) => ({
-        imageBuffer: file.buffer,
-        filename: file.originalname,
-      })) || [];
-
-    return this.carsService.createCar(createCarDto, uploadedFiles);
+    return this.carsService.createCar(createCarDto, pictures);
   }
 
   @Get()
@@ -86,13 +80,7 @@ export class CarsController {
     @Body() updateCarDto: UpdateCarDto,
     @UploadedFiles() pictures?: Express.Multer.File[],
   ): Promise<Car> {
-    const uploadedFiles =
-      pictures?.map((file) => ({
-        imageBuffer: file.buffer,
-        filename: file.originalname,
-      })) || [];
-
-    return this.carsService.updateCar(id, updateCarDto, uploadedFiles);
+    return this.carsService.updateCar(id, updateCarDto, pictures);
   }
 
   @Delete(':id')

@@ -19,7 +19,7 @@ import {
   DEFAULT_PAGINATION_PAGE,
   getFilterOptions,
 } from '@/helpers';
-import { FilterOption, UploadFile } from '@/types';
+import { FilterOption } from '@/types';
 
 import { LoggerService } from './logger.service';
 import { PublicFilesService } from './public-files.service';
@@ -31,19 +31,16 @@ export class CarsService {
     private carsRepository: Repository<Car>,
     private publicFilesService: PublicFilesService,
     private readonly loggerService: LoggerService,
-  ) {}
+  ) { }
 
   async createCar(
     createCarDto: CreateCarDto,
-    fileData: UploadFile[],
+    fileData: Express.Multer.File[],
   ): Promise<Car> {
     try {
       const carPictures = await Promise.all(
         fileData.map((file) =>
-          this.publicFilesService.uploadPublicFile(
-            file.imageBuffer,
-            file.filename,
-          ),
+          this.publicFilesService.uploadPublicFile(file),
         ),
       );
 
@@ -65,7 +62,7 @@ export class CarsService {
   async updateCar(
     id: string,
     updateCarDto: UpdateCarDto,
-    newImages: UploadFile[],
+    newImages: Express.Multer.File[],
   ): Promise<Car> {
     try {
       const car = await this.findById(id);
@@ -80,10 +77,7 @@ export class CarsService {
 
       const newCarPictures = await Promise.all(
         newImages.map((file) =>
-          this.publicFilesService.uploadPublicFile(
-            file.imageBuffer,
-            file.filename,
-          ),
+          this.publicFilesService.uploadPublicFile(file),
         ),
       );
 

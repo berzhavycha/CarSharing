@@ -1,14 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { S3 } from 'aws-sdk';
 import { Repository } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 
 import { PublicFile } from '@/entities';
 import { filesErrors } from '@/helpers';
 
 import { LoggerService } from './logger.service';
+import { CloudinaryService } from './cloudinary.service';
 
 @Injectable()
 export class PublicFilesService {
@@ -17,25 +16,16 @@ export class PublicFilesService {
     private publicFilesRepository: Repository<PublicFile>,
     private readonly configService: ConfigService,
     private readonly loggerService: LoggerService,
-  ) {}
+    private readonly cloudinaryService: CloudinaryService
+  ) { }
 
-  async uploadPublicFile(
-    dataBuffer: Buffer,
-    filename: string,
-  ): Promise<PublicFile> {
+  async uploadPublicFile(file: Express.Multer.File): Promise<PublicFile> {
     try {
-      const s3 = new S3();
-      const uploadResult = await s3
-        .upload({
-          Bucket: this.configService.get<string>('AWS_PUBLIC_BUCKET_NAME'),
-          Body: dataBuffer,
-          Key: `${uuid()}-${filename}`,
-        })
-        .promise();
+      const uploadResult = await this.cloudinaryService.uploadFile(file)
 
       const newFile = this.publicFilesRepository.create({
-        key: uploadResult.Key,
-        url: uploadResult.Location,
+        publicId: uploadResult.public_id,
+        url: uploadResult.url,
       });
       return this.publicFilesRepository.save(newFile);
     } catch (error) {
@@ -67,13 +57,7 @@ export class PublicFilesService {
     try {
       const file = await this.findById(id);
 
-      const s3 = new S3();
-      await s3
-        .deleteObject({
-          Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
-          Key: file.key,
-        })
-        .promise();
+      await this.cloudinaryService.deleteFile(file.publicId);
 
       await this.publicFilesRepository.remove(file);
     } catch (error) {
