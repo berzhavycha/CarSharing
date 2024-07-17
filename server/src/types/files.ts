@@ -1,4 +1,3 @@
-export type UploadFile = {
-  imageBuffer: Buffer;
-  filename: string;
-};
+import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
+
+export type CloudinaryResponse = UploadApiResponse | UploadApiErrorResponse;
