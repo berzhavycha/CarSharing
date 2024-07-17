@@ -39,8 +39,7 @@ export const CSDashboardCarTableRow: FC<Props> = ({ car, index, onRemoveClick })
       <TableCell>{index + 1}</TableCell>
       <HiddenXSTableCell>
         <img
-          //src={car.pictures[0]?.url}
-          src=""
+          src={car.pictures[0]?.url}
           alt="Car Image"
         />
       </HiddenXSTableCell>
