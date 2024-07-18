@@ -149,9 +149,7 @@ describe('CarsService', () => {
         existingImagesIds: [publicFile.id],
       };
 
-      const newImages = [
-        makeFile()
-      ];
+      const newImages = [makeFile()];
 
       const car = makeCar();
       const updateCar = { ...car, pictures: [publicFile] };

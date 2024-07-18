@@ -28,7 +28,7 @@ import { RequestLoggingMiddleware } from './middlewares';
     TransactionsModule,
     AuthModule,
     PublicFilesModule,
-    CloudinaryModule
+    CloudinaryModule,
   ],
 })
 export class AppModule {

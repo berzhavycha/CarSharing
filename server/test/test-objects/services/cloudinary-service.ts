@@ -1,4 +1,4 @@
 export const testCloudinaryService = {
-    uploadFile: jest.fn(),
-    deleteFile: jest.fn()
-}
+  uploadFile: jest.fn(),
+  deleteFile: jest.fn(),
+};
