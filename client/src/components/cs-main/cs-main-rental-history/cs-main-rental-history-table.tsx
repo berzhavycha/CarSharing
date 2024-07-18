@@ -111,4 +111,3 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
     </>
   );
 });
-

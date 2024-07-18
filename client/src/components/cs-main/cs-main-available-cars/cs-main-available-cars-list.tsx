@@ -45,7 +45,10 @@ const CarsListContainer = styled.div`
 
 const CarsWrapper = styled.div<{ $totalPages: number }>`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(${(props): string => !props.$totalPages ? '1fr' : '300px'}, 1fr));
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(${(props): string => (!props.$totalPages ? '1fr' : '300px')}, 1fr)
+  );
   gap: 1.25rem;
   margin: 40px;
   flex: 1;
