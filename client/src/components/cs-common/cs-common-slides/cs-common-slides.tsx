@@ -1,4 +1,4 @@
-import { AdvancedImage, lazyload, placeholder, responsive } from '@cloudinary/react';
+import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
 import { CloudinaryImage } from '@cloudinary/url-gen/index';
 import { Quality } from '@cloudinary/url-gen/qualifiers';
 import { FC, useState } from 'react';
@@ -37,7 +37,7 @@ export const CSCommonSlides: FC<Props> = ({ publicIds, width = '100%', height = 
       <SlideShowContainer width={width} height={height}>
         <SlideImage
           cldImg={getCloudinaryImage(publicIds[currentIndex])}
-          plugins={[lazyload(), responsive(), placeholder()]}
+          plugins={[lazyload(), placeholder()]}
           alt={`Slide ${currentIndex}`}
         />
         <PrevButton onClick={goToPrevious}>
