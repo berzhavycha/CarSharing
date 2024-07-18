@@ -1,16 +1,16 @@
+import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
+import { Quality } from '@cloudinary/url-gen/qualifiers';
 import { FC, memo } from 'react';
 import { FaCog, FaGasPump, FaUsers } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { cld } from '@/app/cloudinary';
 import { CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
 import { CarFuelType, extractBracketContent, getFuelUnit } from '@/helpers';
 import { Car } from '@/types';
 
 import { CarFeature } from './cs-common-car-feature';
-import { cld } from '@/app/cloudinary';
-import { lazyload, placeholder, AdvancedImage } from '@cloudinary/react';
-import { Quality } from '@cloudinary/url-gen/qualifiers';
 
 type CarCardProps = {
   carDetails: Car;
@@ -18,7 +18,7 @@ type CarCardProps = {
 };
 
 export const CSCommonCarCard: FC<CarCardProps> = memo(({ carDetails, onClick }) => {
-  const carImage = cld.image(carDetails.pictures[0]?.publicId).quality(Quality.auto())
+  const carImage = cld.image(carDetails.pictures[0]?.publicId).quality(Quality.auto());
 
   return (
     <CardWrapper onClick={onClick}>
@@ -111,7 +111,6 @@ const StyledAdvancedImage = styled(AdvancedImage)`
   object-fit: contain;
   z-index: 1;
 `;
-
 
 const Features = styled.div`
   display: flex;

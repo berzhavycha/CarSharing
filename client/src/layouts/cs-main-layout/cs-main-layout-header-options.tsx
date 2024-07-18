@@ -54,7 +54,6 @@ export const CSMainLayoutHeaderOptions: FC = observer(() => {
   );
 });
 
-
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -135,4 +134,3 @@ const UserInfoMobile = styled.div`
     display: flex;
   }
 `;
-

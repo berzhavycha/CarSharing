@@ -1,15 +1,15 @@
+import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
+import { Quality } from '@cloudinary/url-gen/qualifiers';
 import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { cld } from '@/app/cloudinary';
 import { BaseSection, SectionDescription, SectionTitle } from '@/components/cs-common';
 import { useStore } from '@/context';
 import { device } from '@/styles';
 import { Car } from '@/types';
-import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
-import { cld } from '@/app/cloudinary';
-import { Quality } from '@cloudinary/url-gen/qualifiers';
 
 export const CSMainRentalPaymentSummary: FC = observer(() => {
   const { rentalPaymentStore } = useStore();
@@ -17,8 +17,7 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
   const location = useLocation();
   const car = location.state?.car as Car;
 
-  const carImage = cld.image(car.pictures[0]?.publicId).quality(Quality.auto())
-
+  const carImage = cld.image(car.pictures[0]?.publicId).quality(Quality.auto());
 
   return (
     <SummaryWrapper>

@@ -1,7 +1,10 @@
+import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
+import { Quality } from '@cloudinary/url-gen/qualifiers';
 import { FC } from 'react';
 import { FaInfoCircle, FaTrash } from 'react-icons/fa';
 import styled from 'styled-components';
 
+import { cld } from '@/app/cloudinary';
 import {
   CSCommonBaseStatusBadge,
   CSCommonTableActions,
@@ -13,9 +16,6 @@ import {
 } from '@/components/cs-common';
 import { uppercaseFirstLetter } from '@/helpers';
 import { Car } from '@/types';
-import { cld } from '@/app/cloudinary';
-import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
-import { Quality } from '@cloudinary/url-gen/qualifiers';
 
 type Props = {
   car: Car;
@@ -37,7 +37,7 @@ export const CSDashboardCarTableRow: FC<Props> = ({ car, index, onRemoveClick })
     },
   ];
 
-  const cloudinaryImage = cld.image(car.pictures[0].publicId).quality(Quality.auto())
+  const cloudinaryImage = cld.image(car.pictures[0].publicId).quality(Quality.auto());
 
   return (
     <TableRow key={car.id}>
@@ -67,7 +67,7 @@ const ActionsCell = styled(TableCell)`
   position: relative;
 `;
 
-const StatusBadge = styled(CSCommonBaseStatusBadge) <{ $status: string }>`
+const StatusBadge = styled(CSCommonBaseStatusBadge)<{ $status: string }>`
   color: ${(props): string => {
     switch (props.$status) {
       case 'available':
@@ -94,15 +94,15 @@ const StatusBadge = styled(CSCommonBaseStatusBadge) <{ $status: string }>`
   }};
   border: 2px solid
     ${(props): string => {
-    switch (props.$status) {
-      case 'available':
-        return 'var(--green-status-border)';
-      case 'booked':
-        return 'var(--yellow-status-border)';
-      case 'maintained':
-        return 'var(--red-status-border)';
-      default:
-        return 'var(--default-border)';
-    }
-  }};
+      switch (props.$status) {
+        case 'available':
+          return 'var(--green-status-border)';
+        case 'booked':
+          return 'var(--yellow-status-border)';
+        case 'maintained':
+          return 'var(--red-status-border)';
+        default:
+          return 'var(--default-border)';
+      }
+    }};
 `;

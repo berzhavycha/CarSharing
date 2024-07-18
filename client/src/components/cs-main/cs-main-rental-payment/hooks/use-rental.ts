@@ -2,9 +2,9 @@ import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'reac
 import { useLocation } from 'react-router-dom';
 
 import { useStore } from '@/context';
+import { MAX_REQUESTED_HOURS } from '@/helpers';
 import { createRental } from '@/services';
 import { PaymentDto, RentalDto } from '@/types';
-import { MAX_REQUESTED_HOURS } from '@/helpers';
 
 type HookReturn = {
   onSubmit: (rentalDto: RentalDto & PaymentDto) => Promise<void>;

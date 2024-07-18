@@ -1,6 +1,7 @@
-import { OrderOptions } from '@/helpers';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
+
+import { OrderOptions } from '@/helpers';
 
 type SortState = {
   sort: string;
@@ -11,7 +12,7 @@ type HookReturn = {
   sortState: SortState;
   setSortState: Dispatch<SetStateAction<SortState>>;
   renderSortIcon: (column: string) => JSX.Element;
-  handleSortChange: (sort: string) => void
+  handleSortChange: (sort: string) => void;
 };
 
 export const useSortColumn = (onSortChange: (sort: string) => void): HookReturn => {
@@ -25,7 +26,10 @@ export const useSortColumn = (onSortChange: (sort: string) => void): HookReturn 
   };
 
   const handleSortChange = (sort: string): void => {
-    const direction = sortState.sort === sort && sortState.direction === OrderOptions.ASC ? OrderOptions.DESC : OrderOptions.ASC;
+    const direction =
+      sortState.sort === sort && sortState.direction === OrderOptions.ASC
+        ? OrderOptions.DESC
+        : OrderOptions.ASC;
     setSortState({ sort, direction });
     onSortChange(sort);
   };
@@ -34,6 +38,6 @@ export const useSortColumn = (onSortChange: (sort: string) => void): HookReturn 
     sortState,
     setSortState,
     renderSortIcon,
-    handleSortChange
+    handleSortChange,
   };
 };
