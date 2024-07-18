@@ -82,7 +82,7 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
           <tbody>
             {displayedRentals.length === 0 ? (
               <tr>
-                <td colSpan={8}>
+                <td colSpan={10}>
                   <CSCommonNoData message="No history available" />
                 </td>
               </tr>
@@ -111,3 +111,4 @@ export const CSMainRentalHistoryTable: FC<Props> = observer(({ loadedRentals, on
     </>
   );
 });
+
