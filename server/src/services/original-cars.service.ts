@@ -21,7 +21,7 @@ export class OriginalCarsService {
     @InjectRepository(OriginalCar)
     private originalCarsRepository: Repository<OriginalCar>,
     private readonly loggerService: LoggerService,
-  ) {}
+  ) { }
 
   async createOriginalCar(
     createCarDto: CreateOriginalCarDto,
