@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as winston from 'winston';
 import * as AWS from 'aws-sdk';
 import WinstonCloudWatch from 'winston-cloudwatch';
@@ -7,8 +8,16 @@ import WinstonCloudWatch from 'winston-cloudwatch';
 export class ProdLoggerService {
     private readonly logger: winston.Logger;
 
-    constructor() {
-        AWS.config.update({ region: process.env.AWS_REGION });
+    constructor(private configService: ConfigService) {
+        const awsRegion = this.configService.get<string>('AWS_REGION');
+        const logGroupName = this.configService.get<string>('LOG_GROUP_NAME');
+        const logStreamName = this.configService.get<string>('LOG_STREAM_NAME');
+
+        console.log('AWS Region:', awsRegion);
+        console.log('Log Group Name:', logGroupName);
+        console.log('Log Stream Name:', logStreamName);
+
+        AWS.config.update({ region: awsRegion });
 
         this.logger = winston.createLogger({
             level: 'info',
@@ -18,9 +27,9 @@ export class ProdLoggerService {
             ),
             transports: [
                 new WinstonCloudWatch({
-                    logGroupName: process.env.LOG_GROUP_NAME,
-                    logStreamName: process.env.LOG_STREAM_NAME,
-                    awsRegion: process.env.AWS_REGION,
+                    logGroupName,
+                    logStreamName,
+                    awsRegion,
                     jsonMessage: true,
                 }),
             ],
@@ -28,6 +37,7 @@ export class ProdLoggerService {
     }
 
     log(message: string): void {
+        console.log('message')
         this.logger.info(message);
     }
 
