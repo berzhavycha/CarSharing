@@ -11,12 +11,14 @@ type Props = {
 };
 
 export const CSCommonPaginationItem: FC<Props> = ({ page, currentPage, onPageChange }) => {
+  const isActive = currentPage === page;
+
   return (
     <>
       {page === ELLIPSIS ? (
         <Ellipsis>{ELLIPSIS}</Ellipsis>
       ) : (
-        <PageButton $active={currentPage === page} onClick={() => onPageChange(page)}>
+        <PageButton $active={isActive} onClick={() => onPageChange(page)} disabled={isActive}>
           {page}
         </PageButton>
       )}
@@ -53,7 +55,7 @@ export const BaseButton = styled.button`
   }
 `;
 
-const PageButton = styled(BaseButton)<{ $active?: boolean }>`
+const PageButton = styled(BaseButton) <{ $active?: boolean }>`
   background-color: ${({ $active }): string => ($active ? 'var(--main-blue)' : '#cadbf5')};
   color: ${({ $active }): string => ($active ? 'white' : 'black')};
   box-shadow: ${({ $active }): string =>
