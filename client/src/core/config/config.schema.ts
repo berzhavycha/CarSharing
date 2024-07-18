@@ -6,9 +6,6 @@ const configSchema = z.object({
   API_BASE_URL: z.string().refine((value) => value.trim() !== '', {
     message: 'API_BASE_URL cannot be an empty string',
   }),
-  CLOUDINARY_NAME: z.string().refine((value) => value.trim() !== '', {
-    message: 'CLOUDINARY_NAME cannot be an empty string',
-  }),
   PASSWORD_MIN_LENGTH: z
     .string()
     .transform((val) => parseInt(val, 10))
