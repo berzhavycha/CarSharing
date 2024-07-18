@@ -3,9 +3,6 @@ import { z } from 'zod';
 import { paginationSchema } from '@/helpers/validation/pagination/pagination-schema';
 
 const configSchema = z.object({
-  API_BASE_URL: z.string().refine((value) => value.trim() !== '', {
-    message: 'API_BASE_URL cannot be an empty string',
-  }),
   PASSWORD_MIN_LENGTH: z
     .string()
     .transform((val) => parseInt(val, 10))
@@ -16,6 +13,9 @@ const configSchema = z.object({
   ADMIN_TRANSACTIONS_PAGINATION_LIMIT: paginationSchema.default('10'),
   USER_CARS_PAGINATION_LIMIT: paginationSchema.default('9'),
   USER_RENTAL_HISTORY_PAGINATION_LIMIT: paginationSchema.default('10'),
+  CLOUDINARY_NAME: z.string().refine((value) => value.trim() !== '', {
+    message: 'CLOUDINARY_NAME cannot be an empty string',
+  }),
 });
 
 export type Config = z.infer<typeof configSchema>;
