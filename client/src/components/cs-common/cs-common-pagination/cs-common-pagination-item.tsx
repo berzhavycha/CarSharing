@@ -55,7 +55,7 @@ export const BaseButton = styled.button`
   }
 `;
 
-const PageButton = styled(BaseButton) <{ $active?: boolean }>`
+const PageButton = styled(BaseButton)<{ $active?: boolean }>`
   background-color: ${({ $active }): string => ($active ? 'var(--main-blue)' : '#cadbf5')};
   color: ${({ $active }): string => ($active ? 'white' : 'black')};
   box-shadow: ${({ $active }): string =>

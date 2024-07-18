@@ -15,11 +15,13 @@ export const CSMainAvailableCars: FC = () => {
 
   return (
     <AvailableCarsWrapper>
-      <Suspense fallback={
-        <SpinnerWrapper>
-          <Spinner />
-        </SpinnerWrapper>
-      }>
+      <Suspense
+        fallback={
+          <SpinnerWrapper>
+            <Spinner />
+          </SpinnerWrapper>
+        }
+      >
         <Await
           resolve={Promise.all([data.filterOptions, data.carsData])}
           errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
