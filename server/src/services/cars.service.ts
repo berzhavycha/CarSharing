@@ -31,7 +31,7 @@ export class CarsService {
     private carsRepository: Repository<Car>,
     private publicFilesService: PublicFilesService,
     private readonly loggerService: LoggerService,
-  ) { }
+  ) {}
 
   async createCar(
     createCarDto: CreateCarDto,
@@ -39,9 +39,7 @@ export class CarsService {
   ): Promise<Car> {
     try {
       const carPictures = await Promise.all(
-        fileData.map((file) =>
-          this.publicFilesService.uploadPublicFile(file),
-        ),
+        fileData.map((file) => this.publicFilesService.uploadPublicFile(file)),
       );
 
       const car = this.carsRepository.create({
@@ -76,9 +74,7 @@ export class CarsService {
       );
 
       const newCarPictures = await Promise.all(
-        newImages.map((file) =>
-          this.publicFilesService.uploadPublicFile(file),
-        ),
+        newImages.map((file) => this.publicFilesService.uploadPublicFile(file)),
       );
 
       car.pictures = [

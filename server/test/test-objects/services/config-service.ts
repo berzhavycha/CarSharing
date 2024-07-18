@@ -1,3 +1,3 @@
 export const testConfigService = {
-    get: jest.fn()
+  get: jest.fn(),
 };

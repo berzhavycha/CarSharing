@@ -5,8 +5,8 @@ import { Repository } from 'typeorm';
 import { PublicFile } from '@/entities';
 import { filesErrors } from '@/helpers';
 
-import { LoggerService } from './logger.service';
 import { CloudinaryService } from './cloudinary.service';
+import { LoggerService } from './logger.service';
 
 @Injectable()
 export class PublicFilesService {
@@ -14,12 +14,12 @@ export class PublicFilesService {
     @InjectRepository(PublicFile)
     private publicFilesRepository: Repository<PublicFile>,
     private readonly loggerService: LoggerService,
-    private readonly cloudinaryService: CloudinaryService
-  ) { }
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   async uploadPublicFile(file: Express.Multer.File): Promise<PublicFile> {
     try {
-      const uploadResult = await this.cloudinaryService.uploadFile(file)
+      const uploadResult = await this.cloudinaryService.uploadFile(file);
 
       const newFile = this.publicFilesRepository.create({
         publicId: uploadResult.public_id,

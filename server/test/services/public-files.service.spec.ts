@@ -4,15 +4,23 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { PublicFile } from '@/entities';
-import { CloudinaryService, LoggerService, PublicFilesService } from '@/services';
+import {
+  CloudinaryService,
+  LoggerService,
+  PublicFilesService,
+} from '@/services';
 
-import { testCloudinaryService, testLoggerService, testRepository } from '../test-objects';
+import {
+  testCloudinaryService,
+  testLoggerService,
+  testRepository,
+} from '../test-objects';
 import { makeCloudinaryFile, makeFile, makePublicFile } from '../utils';
 
 describe('PublicFilesService', () => {
   let publicFilesRepository: Repository<PublicFile>;
   let publicFilesService: PublicFilesService;
-  let cloudinaryService: CloudinaryService
+  let cloudinaryService: CloudinaryService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -41,10 +49,12 @@ describe('PublicFilesService', () => {
   describe('uploadPublicFile', () => {
     it('should create a file', async () => {
       const publicFile = makePublicFile();
-      const file = makeFile()
-      const cloudinaryFile = makeCloudinaryFile()
+      const file = makeFile();
+      const cloudinaryFile = makeCloudinaryFile();
 
-      jest.spyOn(cloudinaryService, 'uploadFile').mockResolvedValue(cloudinaryFile)
+      jest
+        .spyOn(cloudinaryService, 'uploadFile')
+        .mockResolvedValue(cloudinaryFile);
       jest.spyOn(publicFilesRepository, 'create').mockReturnValue(publicFile);
       jest.spyOn(publicFilesRepository, 'save').mockResolvedValue(publicFile);
 
@@ -83,7 +93,7 @@ describe('PublicFilesService', () => {
     it('should remove a file', async () => {
       const publicFile = makePublicFile();
 
-      jest.spyOn(cloudinaryService, 'deleteFile').mockResolvedValue(undefined)
+      jest.spyOn(cloudinaryService, 'deleteFile').mockResolvedValue(undefined);
       jest.spyOn(publicFilesService, 'findById').mockResolvedValue(publicFile);
       jest.spyOn(publicFilesRepository, 'remove').mockResolvedValue(null);
 

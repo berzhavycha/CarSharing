@@ -13,7 +13,7 @@ import { makeCar, makeCreateCarDto } from '../utils';
 describe('CarsController', () => {
   let carsService: CarsService;
   let carsController: CarsController;
-  let configService: ConfigService
+  let configService: ConfigService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
