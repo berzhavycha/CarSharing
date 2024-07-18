@@ -15,7 +15,7 @@ export class PublicFilesService {
     private publicFilesRepository: Repository<PublicFile>,
     private readonly loggerService: LoggerService,
     private readonly cloudinaryService: CloudinaryService,
-  ) {}
+  ) { }
 
   async uploadPublicFile(file: Express.Multer.File): Promise<PublicFile> {
     try {

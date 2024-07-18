@@ -32,7 +32,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly loggerService: LoggerService,
-  ) {}
+  ) { }
 
   async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
     try {

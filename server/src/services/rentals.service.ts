@@ -33,7 +33,7 @@ export class RentalsService {
     private usersService: UsersService,
     private readonly entityManager: EntityManager,
     private readonly loggerService: LoggerService,
-  ) {}
+  ) { }
 
   async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
     try {
@@ -130,7 +130,7 @@ export class RentalsService {
         const returnDate = new Date();
         const hoursDifference = Math.ceil(
           (returnDate.getTime() - rental.rentalStart.getTime()) /
-            ONE_HOUR_MILLISECONDS,
+          ONE_HOUR_MILLISECONDS,
         );
 
         let refund: number | undefined;

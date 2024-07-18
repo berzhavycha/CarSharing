@@ -22,7 +22,7 @@ export class TransactionsService {
     @InjectRepository(Transaction)
     private readonly transactionsRepository: Repository<Transaction>,
     private readonly loggerService: LoggerService,
-  ) {}
+  ) { }
 
   async createTransaction(
     transactionData: {
