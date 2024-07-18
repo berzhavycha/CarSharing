@@ -10,12 +10,10 @@ export class ProdLoggerService {
 
     constructor(private configService: ConfigService) {
         const awsRegion = this.configService.get<string>('AWS_REGION');
+        const awsAccessKeyId = this.configService.get<string>('AWS_ACCESS_KEY_ID');
+        const awsSecretKey = this.configService.get<string>('AWS_SECRET_ACCESS_KEY');
         const logGroupName = this.configService.get<string>('LOG_GROUP_NAME');
         const logStreamName = this.configService.get<string>('LOG_STREAM_NAME');
-
-        console.log('AWS Region:', awsRegion);
-        console.log('Log Group Name:', logGroupName);
-        console.log('Log Stream Name:', logStreamName);
 
         AWS.config.update({ region: awsRegion });
 
@@ -29,6 +27,8 @@ export class ProdLoggerService {
                 new WinstonCloudWatch({
                     logGroupName,
                     logStreamName,
+                    awsAccessKeyId,
+                    awsSecretKey,
                     awsRegion,
                     jsonMessage: true,
                 }),
@@ -37,7 +37,6 @@ export class ProdLoggerService {
     }
 
     log(message: string): void {
-        console.log('message')
         this.logger.info(message);
     }
 
