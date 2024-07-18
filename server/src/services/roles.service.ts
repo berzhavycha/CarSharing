@@ -4,14 +4,15 @@ import { Repository } from 'typeorm';
 
 import { Role } from '@/entities';
 
-import { LoggerService } from './logger.service';
+import { SingletonLoggerService } from './singleton-logger.service';
 
 @Injectable()
 export class RolesService {
+  private readonly loggerService = SingletonLoggerService.getInstance();
+
   constructor(
     @InjectRepository(Role) private readonly rolesRepository: Repository<Role>,
-    private readonly loggerService: LoggerService,
-  ) {}
+  ) { }
 
   async createRole(name: string): Promise<Role> {
     try {
