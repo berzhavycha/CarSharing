@@ -25,8 +25,8 @@ jobs:
 
       - name: Set environment variables for frontend
         run: |
-          echo "VITE_API_BASE_URL=${{ secrets.API_BASE_URL }}" >> .env
           echo "VITE_CLOUDINARY_NAME=${{ secrets.CLOUDINARY_NAME }}" >> .env
+          echo "VITE_API_BASE_URL=${{ secrets.API_BASE_URL }}" >> .env
         working-directory: client
 
       - name: Display .env file for debugging
