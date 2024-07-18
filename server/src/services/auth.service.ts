@@ -32,7 +32,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly loggerService: LoggerService,
-  ) {}
+  ) { }
 
   async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
     try {
@@ -172,7 +172,7 @@ export class AuthService {
     response.cookie('tokens', tokens, {
       httpOnly: true,
       maxAge,
-      sameSite: 'lax',
+      sameSite: secure ? 'none' : 'lax',
       secure,
     });
   }
@@ -190,7 +190,7 @@ export class AuthService {
 
     response.clearCookie('tokens', {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: secure ? 'none' : 'lax',
       secure,
     });
   }
