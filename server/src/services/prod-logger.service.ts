@@ -10,12 +10,20 @@ export class ProdLoggerService {
 
     constructor(private configService: ConfigService) {
         const awsRegion = this.configService.get<string>('AWS_REGION');
-        const awsAccessKeyId = this.configService.get<string>('AWS_ACCESS_KEY_ID');
-        const awsSecretKey = this.configService.get<string>('AWS_SECRET_ACCESS_KEY');
         const logGroupName = this.configService.get<string>('LOG_GROUP_NAME');
         const logStreamName = this.configService.get<string>('LOG_STREAM_NAME');
 
-        AWS.config.update({ region: awsRegion });
+        AWS.config.update({
+            accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
+            secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
+            region: awsRegion
+        });
+        console.log({
+            logGroupName,
+            logStreamName,
+            awsRegion,
+            jsonMessage: true,
+        })
 
         this.logger = winston.createLogger({
             level: 'info',
@@ -27,8 +35,6 @@ export class ProdLoggerService {
                 new WinstonCloudWatch({
                     logGroupName,
                     logStreamName,
-                    awsAccessKeyId,
-                    awsSecretKey,
                     awsRegion,
                     jsonMessage: true,
                 }),
@@ -37,7 +43,12 @@ export class ProdLoggerService {
     }
 
     log(message: string): void {
-        this.logger.info(message);
+        try {
+            console.log("TESTING")
+            this.logger.info(message);
+        } catch (error) {
+            console.error('Logging failed:', error);
+        }
     }
 
     error(message: string, trace?: string): void {
