@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { Env } from '@/core/config';
+import { Env } from '@/core';
 
 import { refreshTokenInterceptor } from './interceptors';
 
