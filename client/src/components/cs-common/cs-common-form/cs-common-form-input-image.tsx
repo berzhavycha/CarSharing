@@ -17,7 +17,7 @@ type Props = Omit<InputProps, 'name'> & {
   width?: number;
   height?: number;
   multiple?: boolean;
-  isPending?: boolean,
+  isPending?: boolean;
 };
 
 export const CSCommonFormInputImage: FC<Props> = ({

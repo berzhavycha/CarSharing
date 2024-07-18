@@ -1,3 +1,3 @@
 export * from './stores';
 export * from './models';
-export * from './cloudinary'
+export * from './cloudinary';

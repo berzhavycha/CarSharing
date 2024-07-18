@@ -37,7 +37,8 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
     carReturnStore.setOrigin(RentalReturnOrigin.SINGLE_PAGE);
   };
 
-  const onSuccessReturn = async (): Promise<void> => await singleRentalStore.fetchSingleRental(rentalId);
+  const onSuccessReturn = async (): Promise<void> =>
+    await singleRentalStore.fetchSingleRental(rentalId);
   const usedRental = singleRentalStore.rental ?? rental;
 
   return (
@@ -57,13 +58,19 @@ export const CSMainSingleRentalDetails: FC<Props> = observer(({ rental }) => {
                 </StatusBadge>
               }
             />
-            <CSCommonDetailsFeature label="Rental Start" text={formatDate(usedRental.rentalStart)} />
+            <CSCommonDetailsFeature
+              label="Rental Start"
+              text={formatDate(usedRental.rentalStart)}
+            />
             <CSCommonDetailsFeature
               label="Rental End"
               text={usedRental.rentalEnd ? formatDate(usedRental.rentalEnd) : 'Not returned yet'}
             />
             <CSCommonDetailsFeature label="Requested Hours" text={usedRental.requestedHours} />
-            <CSCommonDetailsFeature label="Total Price" text={`$${usedRental.totalPrice.toFixed(2)}`} />
+            <CSCommonDetailsFeature
+              label="Total Price"
+              text={`$${usedRental.totalPrice.toFixed(2)}`}
+            />
             <CSCommonDetailsFeature label="Pick-up Location" text={usedRental.pickUpLocation} />
             <CSCommonDetailsFeature label="Drop-off Location" text={usedRental.dropOffLocation} />
           </FeaturesWrapper>

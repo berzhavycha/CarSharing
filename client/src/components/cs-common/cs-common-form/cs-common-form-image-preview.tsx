@@ -1,11 +1,12 @@
+import { AdvancedImage, lazyload, placeholder, responsive } from '@cloudinary/react';
+import { Resize } from '@cloudinary/url-gen/actions';
+import { Quality } from '@cloudinary/url-gen/qualifiers';
 import { FC } from 'react';
 import styled from 'styled-components';
-import { AdvancedImage, lazyload, placeholder, responsive } from '@cloudinary/react';
 
-import { device } from '@/styles';
 import { cld } from '@/app/cloudinary';
-import { Quality } from '@cloudinary/url-gen/qualifiers';
-import { Resize } from '@cloudinary/url-gen/actions';
+import { device } from '@/styles';
+
 import { Spinner } from '../cs-common-spinner';
 
 type PictureWrapperProps = {
@@ -45,10 +46,7 @@ export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
   };
 
   const cloudinaryImage = publicId
-    ? cld
-      .image(publicId)
-      .resize(Resize.fit().width(width).height(height))
-      .quality(Quality.auto())
+    ? cld.image(publicId).resize(Resize.fit().width(width).height(height)).quality(Quality.auto())
     : null;
 
   return (
@@ -86,7 +84,7 @@ const SpinnerWrapper = styled.div<PictureWrapperProps>`
     width: ${(props): string => `${props.$width - 20}`}px;
     height: ${(props): string => `${props.$height - 20}`}px;
   }
-`
+`;
 
 const PictureWrapper = styled.div<PictureWrapperProps>`
   position: relative;

@@ -1,8 +1,11 @@
+import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
+import { Quality } from '@cloudinary/url-gen/qualifiers';
 import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
 import { FaCar, FaInfoCircle } from 'react-icons/fa';
 import styled from 'styled-components';
 
+import { cld } from '@/app/cloudinary';
 import { RentalType } from '@/app/models';
 import {
   CSCommonRentalStatusBadge,
@@ -14,9 +17,6 @@ import {
   TableRow,
 } from '@/components/cs-common';
 import { formatDate, RentalStatus, uppercaseFirstLetter } from '@/helpers';
-import { cld } from '@/app/cloudinary';
-import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
-import { Quality } from '@cloudinary/url-gen/qualifiers';
 
 type Props = {
   rental: RentalType;
@@ -33,17 +33,18 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({ rental, index,
     },
     ...(rental.status === RentalStatus.ACTIVE
       ? [
-        {
-          label: 'Return',
-          icon: <FaCar />,
-          onClick: onCarReturn,
-        },
-      ]
+          {
+            label: 'Return',
+            icon: <FaCar />,
+            onClick: onCarReturn,
+          },
+        ]
       : []),
   ];
 
-  const cloudinaryImage = cld.image(rental.originalCar.pictures[0].publicId).quality(Quality.auto())
-
+  const cloudinaryImage = cld
+    .image(rental.originalCar.pictures[0].publicId)
+    .quality(Quality.auto());
 
   return (
     <TableRow key={rental.id}>

@@ -1,10 +1,11 @@
-import { cld } from '@/app/cloudinary';
 import { AdvancedImage, lazyload, placeholder, responsive } from '@cloudinary/react';
 import { CloudinaryImage } from '@cloudinary/url-gen/index';
 import { Quality } from '@cloudinary/url-gen/qualifiers';
 import { FC, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import styled from 'styled-components';
+
+import { cld } from '@/app/cloudinary';
 
 type Props = {
   publicIds: string[];
@@ -28,10 +29,8 @@ export const CSCommonSlides: FC<Props> = ({ publicIds, width = '100%', height = 
   };
 
   const getCloudinaryImage = (publicId: string): CloudinaryImage => {
-    return cld
-      .image(publicId)
-      .quality(Quality.auto())
-  }
+    return cld.image(publicId).quality(Quality.auto());
+  };
 
   return (
     <div>
