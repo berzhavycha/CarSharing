@@ -31,7 +31,7 @@ export class CarsService {
     private carsRepository: Repository<Car>,
     private publicFilesService: PublicFilesService,
     private readonly loggerService: LoggerService,
-  ) { }
+  ) {}
 
   async createCar(
     createCarDto: CreateCarDto,
