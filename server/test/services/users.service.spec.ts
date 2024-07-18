@@ -24,6 +24,7 @@ import {
 } from '../test-objects';
 import {
   makeCreateUserDto,
+  makeFile,
   makeHash,
   makePublicFile,
   makeRole,
@@ -211,7 +212,7 @@ describe('UsersService', () => {
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
 
-      const file = { imageBuffer: new Buffer('file'), filename: 'name' };
+      const file = makeFile()
       const result = await usersService.updateUser(
         user.id,
         updateUserDtoStub,

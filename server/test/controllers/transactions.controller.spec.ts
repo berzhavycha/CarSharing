@@ -6,13 +6,8 @@ import { QueryTransactionsDto } from '@/dtos';
 import { Transaction } from '@/entities';
 import { TransactionsService } from '@/services';
 
-import { testTransanctionService } from '../test-objects';
+import { testConfigService, testTransanctionService } from '../test-objects';
 import { makeTransaction } from '../utils';
-
-jest.mock('@nestjs/config');
-const testConfigService = {
-  get: jest.fn(),
-};
 
 describe('TransactionsController', () => {
   let transactionsService: TransactionsService;

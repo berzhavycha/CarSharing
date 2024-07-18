@@ -5,13 +5,8 @@ import { UsersController } from '@/controllers';
 import { User } from '@/entities';
 import { UsersService } from '@/services';
 
-import { testUsersService } from '../test-objects';
+import { testConfigService, testUsersService } from '../test-objects';
 import { makePicture, makePublicFile, makeUser } from '../utils';
-
-jest.mock('@nestjs/config');
-const testConfigService = {
-  get: jest.fn(),
-};
 
 describe('UsersController', () => {
   let usersController: UsersController;

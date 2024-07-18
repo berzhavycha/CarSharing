@@ -329,7 +329,7 @@ describe('AuthService', () => {
       expect(mockResponse.cookie).toHaveBeenCalledWith('tokens', tokens, {
         httpOnly: true,
         maxAge: WEEK,
-        sameSite: 'lax',
+        sameSite: 'none',
         secure: true,
       });
     });
@@ -379,7 +379,7 @@ describe('AuthService', () => {
 
       expect(mockResponse.clearCookie).toHaveBeenCalledWith('tokens', {
         httpOnly: true,
-        sameSite: 'lax',
+        sameSite: 'none',
         secure: true,
       });
     });

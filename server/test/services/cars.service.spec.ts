@@ -22,6 +22,7 @@ import {
 import {
   makeCar,
   makeCreateCarDto,
+  makeFile,
   makePublicFile,
   makeRental,
 } from '../utils';
@@ -149,10 +150,7 @@ describe('CarsService', () => {
       };
 
       const newImages = [
-        {
-          imageBuffer: new Buffer('string'),
-          filename: 'name',
-        },
+        makeFile()
       ];
 
       const car = makeCar();

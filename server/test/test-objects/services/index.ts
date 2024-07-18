@@ -8,3 +8,5 @@ export * from './transaction-service';
 export * from './users-service';
 export * from './public-files-service';
 export * from './logger-service';
+export * from './cloudinary-service'
+export * from './config-service'
