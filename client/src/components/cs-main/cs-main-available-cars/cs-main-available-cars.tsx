@@ -2,7 +2,7 @@ import { FC, Suspense } from 'react';
 import { Await, useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { CSCommonError, CSCommonSpinner } from '@/components/cs-common';
+import { CSCommonError, Spinner } from '@/components/cs-common';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { AvailableCarsLoaderData } from '@/pages';
 import { device } from '@/styles';
@@ -15,30 +15,33 @@ export const CSMainAvailableCars: FC = () => {
 
   return (
     <AvailableCarsWrapper>
-      <Suspense fallback={<CSCommonSpinner />}>
+      <Suspense fallback={
+        <SpinnerWrapper>
+          <Spinner />
+        </SpinnerWrapper>
+      }>
         <Await
-          resolve={data.filterOptions}
+          resolve={Promise.all([data.filterOptions, data.carsData])}
           errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
         >
-          {(resolvedData) => <CSMainAvailableCarsFilter data={resolvedData} />}
-        </Await>
-      </Suspense>
-
-      <Suspense fallback={<CSCommonSpinner />}>
-        <Await
-          resolve={data.carsData}
-          errorElement={
-            <CarsErrorWrapper>
-              <CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />
-            </CarsErrorWrapper>
-          }
-        >
-          {(resolvedData) => <CSMainAvailableCarsList data={resolvedData} />}
+          {([filterOptions, carsData]) => (
+            <>
+              <CSMainAvailableCarsFilter data={filterOptions} />
+              <CSMainAvailableCarsList data={carsData} />
+            </>
+          )}
         </Await>
       </Suspense>
     </AvailableCarsWrapper>
   );
 };
+
+const SpinnerWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const AvailableCarsWrapper = styled.div`
   display: flex;
@@ -49,11 +52,4 @@ const AvailableCarsWrapper = styled.div`
   @media ${device.sm} {
     flex-direction: column;
   }
-`;
-
-const CarsErrorWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;

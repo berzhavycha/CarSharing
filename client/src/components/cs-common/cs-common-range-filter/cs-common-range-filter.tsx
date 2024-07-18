@@ -36,7 +36,7 @@ export const CSCommonRangeFilter: FC<Props> = ({
 
   useEffect(() => {
     debouncedUpdateSearchParams(valueRange);
-  }, [valueRange, debouncedUpdateSearchParams]);
+  }, [valueRange]);
 
   const handleValueRangeChange = (newRange: [number, number]): void => setValueRange(newRange);
 

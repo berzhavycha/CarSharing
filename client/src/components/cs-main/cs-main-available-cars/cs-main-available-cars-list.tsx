@@ -22,7 +22,7 @@ export const CSMainAvailableCarsList: FC<Props> = ({ data }) => {
 
   return (
     <CarsListContainer>
-      <CarsWrapper>
+      <CarsWrapper $totalPages={totalPages}>
         <CSCommonCarList cars={data.cars} />
       </CarsWrapper>
       {totalPages > 1 && (
@@ -43,22 +43,14 @@ const CarsListContainer = styled.div`
   margin-bottom: 40px;
 `;
 
-const CarsWrapper = styled.div`
+const CarsWrapper = styled.div<{ $totalPages: number }>`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(${(props): string => !props.$totalPages ? '1fr' : '300px'}, 1fr));
   gap: 1.25rem;
   margin: 40px;
-
-  @media ${device.lg} {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  }
-
-  @media ${device.md} {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  }
+  flex: 1;
 
   @media ${device.sm} {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     margin: 20px;
     width: auto;
   }
