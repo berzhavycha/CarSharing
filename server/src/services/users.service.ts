@@ -32,7 +32,7 @@ export class UsersService {
     private readonly rolesService: RolesService,
     private publicFilesService: PublicFilesService,
     private readonly loggerService: LoggerService,
-  ) { }
+  ) {}
 
   async createUser(userData: {
     userDetails: SafeUser;

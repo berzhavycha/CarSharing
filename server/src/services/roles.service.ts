@@ -11,7 +11,7 @@ export class RolesService {
   constructor(
     @InjectRepository(Role) private readonly rolesRepository: Repository<Role>,
     private readonly loggerService: LoggerService,
-  ) { }
+  ) {}
 
   async createRole(name: string): Promise<Role> {
     try {
