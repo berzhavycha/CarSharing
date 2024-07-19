@@ -18,7 +18,7 @@ export class CloudinaryService {
         const fileUri = 'data:' + mime + ';' + encoding + ',' + base64Data;
 
 
-        cloudinary.uploader.upload(fileUri).then((result) => {
+        cloudinary.uploader.upload(fileUri, { timeout: 60000 }).then((result) => {
           console.log(result);
           resolve(result);
         })
