@@ -38,12 +38,7 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile() file?: Express.Multer.File,
   ): Promise<User> {
-    try {
-      console.log(file)
-      return this.usersService.updateUser(id, updateUserDto, file);
-    } catch (error) {
-      console.log("ERROR")
-    }
+    return this.usersService.updateUser(id, updateUserDto, file);
   }
 
   @Patch(':id/top-up')
