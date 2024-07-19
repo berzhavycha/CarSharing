@@ -15,15 +15,15 @@ export class PublicFilesService {
     private publicFilesRepository: Repository<PublicFile>,
     private readonly loggerService: LoggerService,
     private readonly cloudinaryService: CloudinaryService,
-  ) { }
+  ) {}
 
   async uploadPublicFile(file: Express.Multer.File): Promise<PublicFile> {
     try {
-      // const uploadResult = await this.cloudinaryService.uploadFile(file);
+      const uploadResult = await this.cloudinaryService.uploadFile(file);
 
       const newFile = this.publicFilesRepository.create({
-        publicId: 'public_id',
-        url: 'uploadResult.url',
+        publicId: uploadResult.public_id,
+        url: uploadResult.url,
       });
       return this.publicFilesRepository.save(newFile);
     } catch (error) {

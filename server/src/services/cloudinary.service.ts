@@ -10,17 +10,16 @@ const streamifier = require('streamifier');
 export class CloudinaryService {
   uploadFile(file: Express.Multer.File): Promise<CloudinaryResponse> {
     return new Promise<CloudinaryResponse>((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
+      cloudinary.uploader.upload_stream(
+        { resource_type: 'auto' },
         (error, result) => {
           if (error) return reject(error);
           resolve(result);
-        },
-      );
-
-      streamifier.createReadStream(file.buffer).pipe(uploadStream);
+        }
+      ).end(file.buffer);
     });
   }
-
+  
   deleteFile(publicId: string): Promise<CloudinaryResponse> {
     return new Promise<CloudinaryResponse>((resolve, reject) => {
       cloudinary.uploader.destroy(publicId, (error, result) => {
