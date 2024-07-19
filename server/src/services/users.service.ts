@@ -109,7 +109,7 @@ export class UsersService {
   async updateUser(
     id: string,
     updateUserDto: UpdateUserDto | Partial<User>,
-    fileData?: Express.Multer.File,
+    fileData?,
   ): Promise<User | null> {
     try {
       console.log("UPDATE START")
