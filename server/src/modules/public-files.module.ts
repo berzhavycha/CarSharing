@@ -4,11 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PublicFile } from '@/entities';
 import { PublicFilesService } from '@/services';
 
-import { CloudinaryModule } from './cloudinary.module';
-
 @Module({
-  imports: [TypeOrmModule.forFeature([PublicFile]), CloudinaryModule],
+  imports: [TypeOrmModule.forFeature([PublicFile])],
   providers: [PublicFilesService],
   exports: [PublicFilesService],
 })
-export class PublicFilesModule {}
+export class PublicFilesModule { }

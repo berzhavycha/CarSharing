@@ -3,7 +3,6 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import {
   AuthModule,
   CarsModule,
-  CloudinaryModule,
   ConfigModule,
   DatabaseModule,
   LoggerModule,
@@ -28,7 +27,6 @@ import { RequestLoggingMiddleware } from './middlewares';
     TransactionsModule,
     AuthModule,
     PublicFilesModule,
-    CloudinaryModule,
   ],
 })
 export class AppModule {

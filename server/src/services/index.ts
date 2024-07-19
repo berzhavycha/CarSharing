@@ -7,7 +7,6 @@ export * from './transactions.service';
 export * from './roles.service';
 export * from './public-files.service';
 export * from './logger.service';
-export * from './cloudinary.service';
 export * from './prod-logger.service';
 export * from './logger.service';
 export * from './dev-logger.service';
