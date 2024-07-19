@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { v2 as cloudinary } from 'cloudinary';
 
 import { CloudinaryResponse } from '@/types';
-import { CLOUDINARY_TIMEOUT } from '@/helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const streamifier = require('streamifier');
@@ -14,10 +13,6 @@ export class CloudinaryService {
 
     return new Promise<CloudinaryResponse>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          resource_type: 'auto',
-          timeout: CLOUDINARY_TIMEOUT,
-        },
         (error, result) => {
           if (error) return reject(error);
           resolve(result);
