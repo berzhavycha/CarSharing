@@ -1,3 +1,3 @@
 export * from './pagination';
 export * from './filter-options';
-export * from './files';
+export * from './cloudinary';
