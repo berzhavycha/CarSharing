@@ -19,12 +19,11 @@ export class PublicFilesService {
 
   async uploadPublicFile(file: Express.Multer.File): Promise<PublicFile> {
     try {
-      // const uploadResult = await this.cloudinaryService.uploadFile(file);
+      const uploadResult = await this.cloudinaryService.uploadFile(file);
 
-      console.log("CLOUDINARY", file)
       const newFile = this.publicFilesRepository.create({
-        publicId: 'uploadResult.public_id',
-        url: 'uploadResult.url',
+        publicId: uploadResult.public_id,
+        url: uploadResult.url,
       });
       return this.publicFilesRepository.save(newFile);
     } catch (error) {

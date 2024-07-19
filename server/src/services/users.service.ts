@@ -32,7 +32,7 @@ export class UsersService {
     private readonly rolesService: RolesService,
     private publicFilesService: PublicFilesService,
     private readonly loggerService: LoggerService,
-  ) { }
+  ) {}
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -112,7 +112,6 @@ export class UsersService {
     fileData?: Express.Multer.File,
   ): Promise<User | null> {
     try {
-      console.log('UPDATE START', fileData)
       const user = await this.findById(id);
 
       if (
@@ -137,9 +136,8 @@ export class UsersService {
         delete updateUserDto.oldPassword;
         delete updateUserDto.newPassword;
       }
-      console.log('UPDATE FILE DATA', fileData)
+
       if (fileData) {
-        console.log('FILE DATA AGAIN', fileData)
         const avatar = await this.publicFilesService.uploadPublicFile(fileData);
         user.avatar = avatar;
       }
