@@ -25,7 +25,10 @@ async function bootstrapServer(): Promise<Server> {
 
     const configService = nestApp.get(ConfigService);
 
-    nestApp.enableCors();
+    nestApp.enableCors({
+      origin: configService.get<string>('CORS_ORIGIN'),
+      credentials: true,
+    });
 
     nestApp.useGlobalPipes(new ValidationPipe({ transform: true }));
     nestApp.use(cookieParser());
