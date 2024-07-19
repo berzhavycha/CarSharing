@@ -27,10 +27,12 @@ export class PublicFilesService {
       });
       return this.publicFilesRepository.save(newFile);
     } catch (error) {
-      this.loggerService.error(
-        `Error uploading public file: ${error.message}`,
-        error.stack,
-      );
+      if (error.http_code === 499) {
+        this.loggerService.error('Cloudinary upload timed out', error);
+        // Handle timeout specifically
+      } else {
+        this.loggerService.error(`Cloudinary upload error: ${error.message}`, error.stack);
+      }
       throw error;
     }
   }

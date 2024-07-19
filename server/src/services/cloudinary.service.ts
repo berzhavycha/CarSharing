@@ -14,7 +14,7 @@ export class CloudinaryService {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           resource_type: 'auto',
-          timeout: CLOUDINARY_TIMEOUT
+          timeout: CLOUDINARY_TIMEOUT,
         },
         (error, result) => {
           if (error) return reject(error);
