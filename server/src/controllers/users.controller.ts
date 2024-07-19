@@ -23,7 +23,7 @@ import { UsersService } from '@/services';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
@@ -33,7 +33,7 @@ export class UsersController {
       limits: defaultFileLimits,
     }),
   )
-  async updateUser(
+  updateUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile() file?: Express.Multer.File,
@@ -43,7 +43,7 @@ export class UsersController {
 
   @Patch(':id/top-up')
   @UseGuards(RoleGuard(Roles.USER))
-  async topUpUserAccount(
+  topUpUserAccount(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserBalanceDto: UpdateUserBalanceDto,
   ): Promise<User> {
