@@ -1,11 +1,8 @@
-import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
-import { Quality } from '@cloudinary/url-gen/qualifiers';
 import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { cld } from '@/app/cloudinary';
 import { BaseSection, SectionDescription, SectionTitle } from '@/components/cs-common';
 import { useStore } from '@/context';
 import { device } from '@/styles';
@@ -17,8 +14,6 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
   const location = useLocation();
   const car = location.state?.car as Car;
 
-  const carImage = cld.image(car.pictures[0]?.publicId).quality(Quality.auto());
-
   return (
     <SummaryWrapper>
       <SectionTitle>Rental Summary</SectionTitle>
@@ -26,9 +21,8 @@ export const CSMainRentalPaymentSummary: FC = observer(() => {
         Prices may change depending on the length of the rental and the price of your rental car.
       </SectionDescription>
       <CarInfoWrapper>
-        <StyledAdvancedImage
-          cldImg={carImage}
-          plugins={[lazyload(), placeholder()]}
+        <CarImage
+          src={car.pictures[0].url}
           alt={car.model}
         />
         <CarDetails>
@@ -64,7 +58,7 @@ const CarInfoWrapper = styled.div`
   margin-bottom: 40px;
 `;
 
-const StyledAdvancedImage = styled(AdvancedImage)`
+const CarImage = styled.img`
   width: 40%;
   height: 120px;
   padding: 5px;
