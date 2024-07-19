@@ -38,6 +38,7 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile() file?: Express.Multer.File,
   ): Promise<User> {
+    console.log("FILE", file.filename)
     return this.usersService.updateUser(id, updateUserDto, file);
   }
 
