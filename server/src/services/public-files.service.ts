@@ -19,6 +19,7 @@ export class PublicFilesService {
 
   async uploadPublicFile(file: Express.Multer.File): Promise<PublicFile> {
     try {
+      console.log("UPLOAD_FILE_DATA", file.filename)
       const uploadResult = await this.cloudinaryService.uploadFile(file);
 
       const newFile = this.publicFilesRepository.create({
@@ -27,12 +28,10 @@ export class PublicFilesService {
       });
       return this.publicFilesRepository.save(newFile);
     } catch (error) {
-      if (error.http_code === 499) {
-        this.loggerService.error('Cloudinary upload timed out', error);
-        // Handle timeout specifically
-      } else {
-        this.loggerService.error(`Cloudinary upload error: ${error.message}`, error.stack);
-      }
+      this.loggerService.error(
+        `Error uploading public file: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }

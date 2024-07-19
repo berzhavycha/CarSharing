@@ -138,6 +138,7 @@ export class UsersService {
       }
 
       if (fileData) {
+        console.log("FILE_DATA", fileData.filename)
         const avatar = await this.publicFilesService.uploadPublicFile(fileData);
         user.avatar = avatar;
       }
