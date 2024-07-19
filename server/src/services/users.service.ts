@@ -112,7 +112,6 @@ export class UsersService {
     fileData?: Express.Multer.File,
   ): Promise<User | null> {
     try {
-      console.log("UPDATE START")
       const user = await this.findById(id);
 
       if (
@@ -138,9 +137,7 @@ export class UsersService {
         delete updateUserDto.newPassword;
       }
 
-      console.log("UPDATE FILE DATA", fileData)
       if (fileData) {
-        console.log("UPDATE FILE DATA AGAIN", fileData)
         const avatar = await this.publicFilesService.uploadPublicFile(fileData);
         user.avatar = avatar;
       }
