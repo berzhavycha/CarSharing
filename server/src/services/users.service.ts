@@ -24,10 +24,6 @@ import { PublicFilesService } from './public-files.service';
 import { RolesService } from './roles.service';
 import { TransactionsService } from './transactions.service';
 
-function wait(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 @Injectable()
 export class UsersService {
   constructor(
@@ -116,7 +112,6 @@ export class UsersService {
     fileData?: Express.Multer.File,
   ): Promise<User | null> {
     try {
-      await wait(7000);
       console.log('UPDATE START', fileData)
       const user = await this.findById(id);
 
@@ -142,9 +137,9 @@ export class UsersService {
         delete updateUserDto.oldPassword;
         delete updateUserDto.newPassword;
       }
-
+      console.log('UPDATE FILE DATA', fileData)
       if (fileData) {
-        console.log('UPDATE FILE DATA', fileData)
+        console.log('FILE DATA AGAIN', fileData)
         const avatar = await this.publicFilesService.uploadPublicFile(fileData);
         user.avatar = avatar;
       }
