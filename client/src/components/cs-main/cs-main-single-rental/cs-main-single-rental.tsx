@@ -29,12 +29,12 @@ export const CSMainSingleRental: FC = observer(() => {
         >
           {(rental) => {
             const carImagesPublicIds = rental.originalCar?.pictures?.map(
-              (pic: PublicFile) => pic?.publicId,
+              (pic: PublicFile) => pic?.url,
             );
 
             return (
               <RentalDetailsContainer>
-                <CSCommonSlides publicIds={carImagesPublicIds} width="100%" height="20vw" />
+                <CSCommonSlides images={carImagesPublicIds} width="100%" height="20vw" />
                 <CSMainSingleRentalDetails rental={rental} />
               </RentalDetailsContainer>
             );
