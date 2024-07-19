@@ -1,11 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
+import { S3 } from 'aws-sdk';
 import { Repository } from 'typeorm';
+import { v4 as uuid } from 'uuid';
 
 import { PublicFile } from '@/entities';
 import { filesErrors } from '@/helpers';
 
-import { CloudinaryService } from './cloudinary.service';
 import { LoggerService } from './logger.service';
 
 @Injectable()
@@ -13,18 +15,24 @@ export class PublicFilesService {
   constructor(
     @InjectRepository(PublicFile)
     private publicFilesRepository: Repository<PublicFile>,
+    private readonly configService: ConfigService,
     private readonly loggerService: LoggerService,
-    private readonly cloudinaryService: CloudinaryService,
   ) { }
 
   async uploadPublicFile(file: Express.Multer.File): Promise<PublicFile> {
     try {
-      console.log("PUBLIC FILE DATA", file)
-      const uploadResult = await this.cloudinaryService.uploadFile(file);
+      const s3 = new S3();
+      const uploadResult = await s3
+        .upload({
+          Bucket: this.configService.get<string>('AWS_PUBLIC_BUCKET_NAME'),
+          Body: file.buffer,
+          Key: `${uuid()}-${file.filename}`,
+        })
+        .promise();
 
       const newFile = this.publicFilesRepository.create({
-        publicId: uploadResult.public_id,
-        url: uploadResult.url,
+        key: uploadResult.Key,
+        url: uploadResult.Location,
       });
       return this.publicFilesRepository.save(newFile);
     } catch (error) {
@@ -56,7 +64,13 @@ export class PublicFilesService {
     try {
       const file = await this.findById(id);
 
-      await this.cloudinaryService.deleteFile(file.publicId);
+      const s3 = new S3();
+      await s3
+        .deleteObject({
+          Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
+          Key: file.key,
+        })
+        .promise();
 
       await this.publicFilesRepository.remove(file);
     } catch (error) {
