@@ -18,7 +18,7 @@ export class CloudinaryService {
         const fileUri = 'data:' + mime + ';' + encoding + ',' + base64Data;
 
 
-        const uploadStream = cloudinary.uploader.upload(fileUri).then((result) => {
+        cloudinary.uploader.upload(fileUri).then((result) => {
           console.log(result);
           resolve(result);
         })
@@ -26,8 +26,6 @@ export class CloudinaryService {
             console.log(error);
             reject(error);
           });
-
-        streamifier.createReadStream(file.buffer).pipe(uploadStream);
       });
     }
 
