@@ -1,25 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { v2 as cloudinary } from 'cloudinary';
-
 import { CloudinaryResponse } from '@/types';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const streamifier = require('streamifier');
 
 @Injectable()
 export class CloudinaryService {
   uploadFile(file: Express.Multer.File): Promise<CloudinaryResponse> {
-    console.log("CLOUDINARY FILE DATA", file)
-
+    console.log("CLOUDINARY FILE DATA", file);
     return new Promise<CloudinaryResponse>((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
+      cloudinary.uploader.upload(
+        file.buffer.toString('base64'),
+        {
+          resource_type: 'auto',
+          timeout: 60000, // Set timeout to 60 seconds (adjust as needed)
+        },
         (error, result) => {
           if (error) return reject(error);
           resolve(result);
-        },
+        }
       );
-
-      streamifier.createReadStream(file.buffer).pipe(uploadStream);
     });
   }
 
