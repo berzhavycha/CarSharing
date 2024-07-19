@@ -15,7 +15,7 @@ export class CloudinaryService {
           if (error) return reject(error);
           resolve(result);
         },
-      );
+      ).end(file.buffer)
 
       streamifier.createReadStream(file.buffer).pipe(uploadStream);
     });
