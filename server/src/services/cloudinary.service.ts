@@ -9,7 +9,7 @@ const streamifier = require('streamifier');
 @Injectable()
 export class CloudinaryService {
   async uploadFile(file: Express.Multer.File): Promise<CloudinaryResponse> {
-    const uploadToCloudinary = () => {
+    const uploadToCloudinary = async () => {
       return new Promise<CloudinaryResponse>((resolve, reject) => {
         console.log("CLOUDINARY_FILE_DATA", file)
         const mime = file.mimetype;
