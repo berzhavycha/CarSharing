@@ -5,15 +5,11 @@ export const CloudinaryProvider = {
   imports: [ConfigModule],
   provide: 'CLOUDINARY',
   useFactory: (configService: ConfigService): ConfigOptions => {
-    console.log("CONFIG: ", {
-      cloud_name: configService.get<string>('CLOUDINARY_NAME'),
-      api_key: configService.get<string>('CLOUDINARY_API_KEY'),
-      api_secret: configService.get<string>('CLOUDINARY_API_SECRET'),
-    })
     return cloudinary.config({
       cloud_name: configService.get<string>('CLOUDINARY_NAME'),
       api_key: configService.get<string>('CLOUDINARY_API_KEY'),
       api_secret: configService.get<string>('CLOUDINARY_API_SECRET'),
+      timeout: 50000,
     });
   },
   inject: [ConfigService],
