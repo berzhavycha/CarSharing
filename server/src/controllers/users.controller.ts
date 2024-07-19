@@ -23,7 +23,7 @@ import { UsersService } from '@/services';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
@@ -38,8 +38,12 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile() file?: Express.Multer.File,
   ): Promise<User> {
-    console.log(file)
-    return this.usersService.updateUser(id, updateUserDto, file);
+    try {
+      console.log(file)
+      return this.usersService.updateUser(id, updateUserDto, file);
+    } catch (error) {
+      console.log("ERROR")
+    }
   }
 
   @Patch(':id/top-up')
