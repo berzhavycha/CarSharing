@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { v2 as cloudinary } from 'cloudinary';
 
-import { CloudinaryResponse } from '../types';
+import { CloudinaryResponse } from '@/types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const streamifier = require('streamifier');
@@ -9,16 +9,23 @@ const streamifier = require('streamifier');
 @Injectable()
 export class CloudinaryService {
   async uploadFile(file: Express.Multer.File): Promise<CloudinaryResponse> {
-    const uploadToCloudinary = async () => {
+    const uploadToCloudinary = () => {
       return new Promise<CloudinaryResponse>((resolve, reject) => {
         console.log("CLOUDINARY_FILE_DATA", file)
+        const mime = file.mimetype;
+        const encoding = 'base64';
+        const base64Data = Buffer.from(file.buffer).toString('base64');
+        const fileUri = 'data:' + mime + ';' + encoding + ',' + base64Data;
 
-        const uploadStream = cloudinary.uploader.upload_stream(
-          (error, result) => {
-            if (error) reject(error);
-            resolve(result);
-          },
-        );
+
+        const uploadStream = cloudinary.uploader.upload(fileUri).then((result) => {
+          console.log(result);
+          resolve(result);
+        })
+          .catch((error) => {
+            console.log(error);
+            reject(error);
+          });
 
         streamifier.createReadStream(file.buffer).pipe(uploadStream);
       });
