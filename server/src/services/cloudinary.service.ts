@@ -12,10 +12,11 @@ export class CloudinaryService {
     return new Promise<CloudinaryResponse>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         (error, result) => {
+          console.log('THE ERROR', error)
           if (error) return reject(error);
           resolve(result);
         },
-      ).end(file.buffer)
+      )
 
       streamifier.createReadStream(file.buffer).pipe(uploadStream);
     });
