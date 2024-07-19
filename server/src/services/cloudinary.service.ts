@@ -11,6 +11,7 @@ export class CloudinaryService {
   uploadFile(file: Express.Multer.File): Promise<CloudinaryResponse> {
     return new Promise<CloudinaryResponse>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
+        { timeout: 120000 },
         (error, result) => {
           if (error) return reject(error);
           resolve(result);
