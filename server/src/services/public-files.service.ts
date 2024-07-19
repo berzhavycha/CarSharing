@@ -19,6 +19,7 @@ export class PublicFilesService {
 
   async uploadPublicFile(file: Express.Multer.File): Promise<PublicFile> {
     try {
+      console.log("PUBLIC FILE DATA", file)
       const uploadResult = await this.cloudinaryService.uploadFile(file);
 
       const newFile = this.publicFilesRepository.create({

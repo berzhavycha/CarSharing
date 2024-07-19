@@ -9,9 +9,10 @@ const streamifier = require('streamifier');
 @Injectable()
 export class CloudinaryService {
   uploadFile(file: Express.Multer.File): Promise<CloudinaryResponse> {
+    console.log("CLOUDINARY FILE DATA", file)
+
     return new Promise<CloudinaryResponse>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { resource_type: 'image', timeout: 120000 },
         (error, result) => {
           if (error) return reject(error);
           resolve(result);

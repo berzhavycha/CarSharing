@@ -1,4 +1,4 @@
-import { AdvancedImage, lazyload, placeholder, responsive } from '@cloudinary/react';
+import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
 import { Resize } from '@cloudinary/url-gen/actions';
 import { Quality } from '@cloudinary/url-gen/qualifiers';
 import { FC } from 'react';
@@ -58,7 +58,7 @@ export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
       ) : cloudinaryImage ? (
         <StyledAdvancedImage
           cldImg={cloudinaryImage}
-          plugins={[lazyload(), responsive({ steps: 100 }), placeholder({ mode: 'blur' })]}
+          plugins={[lazyload(), placeholder({ mode: 'blur' })]}
           alt={alt}
         />
       ) : (
