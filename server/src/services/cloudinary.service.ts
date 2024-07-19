@@ -4,21 +4,18 @@ import { CloudinaryResponse } from '@/types';
 
 @Injectable()
 export class CloudinaryService {
-  uploadFile(file: Express.Multer.File): Promise<CloudinaryResponse> {
+  async uploadFile(file: Express.Multer.File): Promise<CloudinaryResponse> {
     console.log("CLOUDINARY FILE DATA", file);
-    return new Promise<CloudinaryResponse>((resolve, reject) => {
-      cloudinary.uploader.upload(
-        file.buffer.toString('base64'),
-        {
-          resource_type: 'auto',
-          timeout: 60000, // Set timeout to 60 seconds (adjust as needed)
-        },
-        (error, result) => {
-          if (error) return reject(error);
-          resolve(result);
-        }
-      );
-    });
+
+    const base64String = file.buffer.toString('base64');
+    const dataUri = `data:${file.mimetype};base64,${base64String}`;
+
+    try {
+      const result = await cloudinary.uploader.upload(dataUri, { timeout: 60000 });
+      return result;
+    } catch (error) {
+      throw new Error(`Failed to upload file to Cloudinary: ${error.message}`);
+    }
   }
 
   deleteFile(publicId: string): Promise<CloudinaryResponse> {
