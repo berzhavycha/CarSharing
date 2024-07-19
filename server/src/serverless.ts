@@ -30,7 +30,6 @@ async function bootstrapServer(): Promise<Server> {
       credentials: true,
     });
 
-    nestApp.useGlobalPipes(new ValidationPipe());
     nestApp.useGlobalPipes(new ValidationPipe({ transform: true }));
     nestApp.use(cookieParser());
     nestApp.useGlobalInterceptors(

@@ -23,7 +23,7 @@ import { UsersService } from '@/services';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
@@ -36,7 +36,7 @@ export class UsersController {
   async updateUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
-    @UploadedFile() file?,
+    @UploadedFile() file?: Express.Multer.File,
   ): Promise<User> {
     return this.usersService.updateUser(id, updateUserDto, file);
   }
