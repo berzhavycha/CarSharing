@@ -17,7 +17,7 @@ export class PublicFilesService {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  async uploadPublicFile(file): Promise<PublicFile> {
+  async uploadPublicFile(file: Express.Multer.File): Promise<PublicFile> {
     try {
       console.log("PUBLIC FILE DATA", file)
       const uploadResult = await this.cloudinaryService.uploadFile(file);
