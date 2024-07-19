@@ -28,9 +28,6 @@ jobs:
           echo "VITE_API_BASE_URL=${{ secrets.API_BASE_URL }}" >> .env
         working-directory: client
 
-      - name: Display .env file for debugging
-        run: cat client/.env
-
       - name: Build the frontend
         working-directory: client
         run: npm run build

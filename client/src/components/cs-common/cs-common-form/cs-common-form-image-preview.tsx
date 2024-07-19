@@ -1,10 +1,6 @@
-import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
-import { Resize } from '@cloudinary/url-gen/actions';
-import { Quality } from '@cloudinary/url-gen/qualifiers';
 import { FC } from 'react';
 import styled from 'styled-components';
 
-import { cld } from '@/app/cloudinary';
 import { device } from '@/styles';
 
 import { Spinner } from '../cs-common-spinner';
@@ -17,7 +13,6 @@ type PictureWrapperProps = {
 
 type ImagePreviewProps = {
   src: string;
-  publicId?: string;
   alt: string;
   circled?: boolean;
   width?: number;
@@ -30,7 +25,6 @@ type ImagePreviewProps = {
 
 export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
   src,
-  publicId,
   alt,
   circled,
   width = 100,
@@ -45,20 +39,15 @@ export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
     onRemove?.();
   };
 
-  const cloudinaryImage = publicId
-    ? cld.image(publicId).resize(Resize.fit().width(width).height(height)).quality(Quality.auto())
-    : null;
-
   return (
     <PictureWrapper onClick={onClick} $circled={circled} $width={width} $height={height}>
       {isPending ? (
         <SpinnerWrapper $width={width} $height={height}>
           <Spinner />
         </SpinnerWrapper>
-      ) : cloudinaryImage ? (
-        <StyledAdvancedImage
-          cldImg={cloudinaryImage}
-          plugins={[lazyload(), placeholder({ mode: 'blur' })]}
+      ) : src ? (
+        <CarImage
+          src={src}
           alt={alt}
         />
       ) : (
@@ -109,7 +98,7 @@ const PictureWrapper = styled.div<PictureWrapperProps>`
   }
 `;
 
-const StyledAdvancedImage = styled(AdvancedImage)`
+const CarImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: contain;

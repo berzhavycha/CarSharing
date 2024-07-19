@@ -1,11 +1,8 @@
-import { AdvancedImage, lazyload, placeholder } from '@cloudinary/react';
-import { Quality } from '@cloudinary/url-gen/qualifiers';
 import { FC, memo } from 'react';
 import { FaCog, FaGasPump, FaUsers } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { cld } from '@/app/cloudinary';
 import { CSCommonPrice, CSCommonPrimaryButton } from '@/components/cs-common';
 import { CarFuelType, extractBracketContent, getFuelUnit } from '@/helpers';
 import { Car } from '@/types';
@@ -18,8 +15,6 @@ type CarCardProps = {
 };
 
 export const CSCommonCarCard: FC<CarCardProps> = memo(({ carDetails, onClick }) => {
-  const carImage = cld.image(carDetails.pictures[0]?.publicId).quality(Quality.auto());
-
   return (
     <CardWrapper onClick={onClick}>
       <Header>
@@ -28,9 +23,8 @@ export const CSCommonCarCard: FC<CarCardProps> = memo(({ carDetails, onClick }) 
       </Header>
       <CarImageWrapper>
         <ShadowImage src="../../../../public/shadow.png" alt="" />
-        <StyledAdvancedImage
-          cldImg={carImage}
-          plugins={[lazyload(), placeholder()]}
+        <CarImage
+          src={carDetails.pictures[0]?.url}
           alt={carDetails.model}
         />
       </CarImageWrapper>
@@ -105,7 +99,7 @@ const ShadowImage = styled.img`
   z-index: 2;
 `;
 
-const StyledAdvancedImage = styled(AdvancedImage)`
+const CarImage = styled.img`
   width: 100%;
   height: 120px;
   object-fit: contain;
