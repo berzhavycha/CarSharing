@@ -26,7 +26,7 @@ export class PublicFilesService {
         .upload({
           Bucket: this.configService.get<string>('AWS_PUBLIC_BUCKET_NAME'),
           Body: file.buffer,
-          Key: `${uuid()}-${file.filename}`,
+          Key: `${uuid()}-${file.originalname}`,
         })
         .promise();
 
