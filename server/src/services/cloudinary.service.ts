@@ -14,7 +14,8 @@ export class CloudinaryService {
       const result = await cloudinary.uploader.upload(dataUri, { timeout: 60000 });
       return result;
     } catch (error) {
-      throw new Error(`Failed to upload file to Cloudinary: ${error.message}`);
+      console.error('Failed to upload file to Cloudinary:', error);
+      throw new Error(`Failed to upload file to Cloudinary: ${error.message || 'Unknown error'}`);
     }
   }
 
