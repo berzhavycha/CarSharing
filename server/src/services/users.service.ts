@@ -138,8 +138,8 @@ export class UsersService {
       }
 
       if (fileData) {
-        // const avatar = await this.publicFilesService.uploadPublicFile(fileData);
-        // user.avatar = avatar;
+        const avatar = await this.publicFilesService.uploadPublicFile(fileData);
+        user.avatar = avatar;
       }
 
       if (updateUserDto.email) {
