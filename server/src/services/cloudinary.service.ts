@@ -8,28 +8,17 @@ const streamifier = require('streamifier');
 
 @Injectable()
 export class CloudinaryService {
-  async uploadFile(file: Express.Multer.File): Promise<CloudinaryResponse> {
-    const uploadToCloudinary = async () => {
-      return new Promise<CloudinaryResponse>((resolve, reject) => {
-        console.log("CLOUDINARY_FILE_DATA", file)
-        const mime = file.mimetype;
-        const encoding = 'base64';
-        const base64Data = Buffer.from(file.buffer).toString('base64');
-        const fileUri = 'data:' + mime + ';' + encoding + ',' + base64Data;
-
-
-        cloudinary.uploader.upload(fileUri, { timeout: 60000 }).then((result) => {
-          console.log(result);
+  uploadFile(file: Express.Multer.File): Promise<CloudinaryResponse> {
+    return new Promise<CloudinaryResponse>((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        (error, result) => {
+          if (error) return reject(error);
           resolve(result);
-        })
-          .catch((error) => {
-            console.log(error);
-            reject(error);
-          });
-      });
-    }
+        },
+      );
 
-    return await uploadToCloudinary()
+      streamifier.createReadStream(file.buffer).pipe(uploadStream);
+    });
   }
 
   deleteFile(publicId: string): Promise<CloudinaryResponse> {
