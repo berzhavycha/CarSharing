@@ -46,10 +46,7 @@ export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
           <Spinner />
         </SpinnerWrapper>
       ) : src ? (
-        <CarImage
-          src={src}
-          alt={alt}
-        />
+        <CarImage src={src} alt={alt} />
       ) : (
         <img src={src} alt={alt} />
       )}
