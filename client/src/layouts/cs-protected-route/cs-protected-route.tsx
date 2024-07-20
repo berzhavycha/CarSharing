@@ -1,10 +1,12 @@
 import { FC, PropsWithChildren, useEffect, useState } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 
 import { CSCommonSpinner } from '@/components';
+import { AuthenticatedUser } from '@/types';
+import { Roles } from '@/helpers';
 
 type Props = PropsWithChildren & {
-  isAllowed: () => Promise<boolean>;
+  isAllowed: () => Promise<{ allowed: boolean; user: AuthenticatedUser | null }>;
   redirectPath?: string;
   errorMessage?: string;
 };
@@ -16,11 +18,17 @@ export const CSProtectedRoute: FC<Props> = ({
   redirectPath = '/sign-in',
 }) => {
   const [allowed, setAllowed] = useState<boolean | null>(null);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const checkPermission = async (): Promise<void> => {
-      const result = await isAllowed();
-      setAllowed(result);
+      const { allowed, user } = await isAllowed();
+
+      if (user?.role === Roles.ADMIN) {
+        navigate('/dashboard/profile-settings')
+      }
+      
+      setAllowed(allowed);
     };
 
     checkPermission();
