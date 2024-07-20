@@ -11,7 +11,7 @@ export const CSMainLayoutUserInfo: FC = observer(() => {
     currentUserStore: { user },
   } = useStore();
 
-  const avatar = user?.avatar ? user.avatar.url : DefaultImage
+  const avatar = user?.avatar ? user.avatar.url : DefaultImage;
 
   return (
     <>

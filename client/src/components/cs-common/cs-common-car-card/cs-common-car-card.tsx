@@ -23,10 +23,7 @@ export const CSCommonCarCard: FC<CarCardProps> = memo(({ carDetails, onClick }) 
       </Header>
       <CarImageWrapper>
         <ShadowImage src="../../../../public/shadow.png" alt="" />
-        <CarImage
-          src={carDetails.pictures[0]?.url}
-          alt={carDetails.model}
-        />
+        <CarImage src={carDetails.pictures[0]?.url} alt={carDetails.model} />
       </CarImageWrapper>
       <Features>
         <CarFeature
