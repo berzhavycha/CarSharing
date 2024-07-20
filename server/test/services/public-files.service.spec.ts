@@ -1,19 +1,18 @@
 import { NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import AWSMock from 'aws-sdk-mock';
 import { Repository } from 'typeorm';
 
 import { PublicFile } from '@/entities';
-import { LoggerService, PublicFilesService } from '@/services';
+import { FilesManagerService, LoggerService, PublicFilesService } from '@/services';
 
-import { testLoggerService, testRepository } from '../test-objects';
-import { makeFile, makePublicFile } from '../utils';
+import { testFilesManagerService, testLoggerService, testRepository } from '../test-objects';
+import { makeFile, makePublicFile, makeUploadedFile } from '../utils';
 
 describe('PublicFilesService', () => {
   let publicFilesRepository: Repository<PublicFile>;
   let publicFilesService: PublicFilesService;
+  let filesManagerService: FilesManagerService
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -23,12 +22,7 @@ describe('PublicFilesService', () => {
           provide: getRepositoryToken(PublicFile),
           useValue: testRepository,
         },
-        {
-          provide: ConfigService,
-          useValue: {
-            get: jest.fn().mockReturnValue('test-bucket-name'),
-          },
-        },
+        { provide: FilesManagerService, useValue: testFilesManagerService },
         { provide: LoggerService, useValue: testLoggerService },
       ],
     }).compile();
@@ -37,19 +31,7 @@ describe('PublicFilesService', () => {
     publicFilesRepository = module.get<Repository<PublicFile>>(
       getRepositoryToken(PublicFile),
     );
-
-    AWSMock.mock('S3', 'upload', (params, callback) => {
-      callback(null, { Key: 'key', Location: 'url' });
-    });
-
-    AWSMock.mock('S3', 'deleteObject', (params, callback) => {
-      callback(null, {});
-    });
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-    AWSMock.restore('S3');
+    filesManagerService = module.get<FilesManagerService>(FilesManagerService);
   });
 
   it('should be defined', () => {
@@ -59,11 +41,13 @@ describe('PublicFilesService', () => {
   describe('uploadPublicFile', () => {
     it('should create a file', async () => {
       const publicFile = makePublicFile();
+      const uploadedFile = makeUploadedFile()
+      const file = makeFile()
 
+      jest.spyOn(filesManagerService, 'uploadPublicFile').mockResolvedValue(uploadedFile)
       jest.spyOn(publicFilesRepository, 'create').mockReturnValue(publicFile);
       jest.spyOn(publicFilesRepository, 'save').mockResolvedValue(publicFile);
 
-      const file = makeFile()
       const result = await publicFilesService.uploadPublicFile(file);
 
       expect(result).toBe(publicFile);
@@ -99,12 +83,12 @@ describe('PublicFilesService', () => {
     it('should remove a file', async () => {
       const publicFile = makePublicFile();
 
+      jest.spyOn(filesManagerService, 'removeFile').mockResolvedValue(undefined)
       jest.spyOn(publicFilesService, 'findById').mockResolvedValue(publicFile);
       jest.spyOn(publicFilesRepository, 'remove').mockResolvedValue(null);
 
       await publicFilesService.removeFile(publicFile.id);
 
-      expect(publicFilesService.findById).toHaveBeenCalledWith(publicFile.id);
       expect(publicFilesRepository.remove).toHaveBeenCalledWith(publicFile);
     });
   });

@@ -44,11 +44,7 @@ export class PublicFilesService {
 
     async removeFile(id: string): Promise<void> {
         try {
-            const file = await this.publicFilesRepository.findOne({ where: { id } });
-
-            if (!file) {
-                throw new NotFoundException(filesErrors.NOT_FOUND);
-            }
+            const file = await this.findById(id)
 
             await this.filesService.removeFile(file.key ?? file.publicId)
             await this.publicFilesRepository.remove(file);
