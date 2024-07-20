@@ -11,6 +11,7 @@ import {
   RentalsModule,
   TransactionsModule,
   UsersModule,
+  FilesManagerModule
 } from '@/modules';
 
 import { RequestLoggingMiddleware } from './middlewares';
@@ -27,6 +28,7 @@ import { RequestLoggingMiddleware } from './middlewares';
     TransactionsModule,
     AuthModule,
     PublicFilesModule,
+    FilesManagerModule
   ],
 })
 export class AppModule {

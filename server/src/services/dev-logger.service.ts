@@ -2,14 +2,16 @@ import { Injectable } from '@nestjs/common';
 import * as path from 'path';
 import * as winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
+import { LoggerService } from './logger.service';
 
 const logDirectory = path.join(process.cwd(), 'src/core/logs');
 
 @Injectable()
-export class DevLoggerService {
+export class DevLoggerService extends LoggerService {
   private readonly logger: winston.Logger | null;
 
   constructor() {
+    super()
     this.logger = winston.createLogger({
       level: 'debug',
       format: winston.format.combine(

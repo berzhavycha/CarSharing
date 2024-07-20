@@ -20,9 +20,9 @@ import {
 import { SafeUser } from '@/interfaces';
 
 import { LoggerService } from './logger.service';
-import { PublicFilesService } from './public-files.service';
 import { RolesService } from './roles.service';
 import { TransactionsService } from './transactions.service';
+import { PublicFilesService } from './public-files.service';
 
 @Injectable()
 export class UsersService {

@@ -19,8 +19,11 @@ export class PublicFile {
   @Column()
   url: string;
 
-  @Column()
-  key: string;
+  @Column({ nullable: true })
+  key: string | null;
+
+  @Column({ nullable: true })
+  publicId: string | null;
 
   @ManyToOne(() => Car, (car) => car.pictures, { onDelete: 'CASCADE' })
   car: Car;
