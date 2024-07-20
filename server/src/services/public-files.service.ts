@@ -1,84 +1,63 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { S3 } from 'aws-sdk';
 import { Repository } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 
 import { PublicFile } from '@/entities';
 import { filesErrors } from '@/helpers';
 
 import { LoggerService } from './logger.service';
+import { FilesManagerService } from './files-manager.service';
 
 @Injectable()
 export class PublicFilesService {
-  constructor(
-    @InjectRepository(PublicFile)
-    private publicFilesRepository: Repository<PublicFile>,
-    private readonly configService: ConfigService,
-    private readonly loggerService: LoggerService,
-  ) { }
+    constructor(
+        @InjectRepository(PublicFile)
+        private publicFilesRepository: Repository<PublicFile>,
+        private readonly filesService: FilesManagerService,
+        private readonly loggerService: LoggerService,
+    ) { }
 
-  async uploadPublicFile(file: Express.Multer.File): Promise<PublicFile> {
-    try {
-      const s3 = new S3();
-      const uploadResult = await s3
-        .upload({
-          Bucket: this.configService.get<string>('AWS_PUBLIC_BUCKET_NAME'),
-          Body: file.buffer,
-          Key: `${uuid()}-${file.originalname}`,
-        })
-        .promise();
+    async uploadPublicFile(file: Express.Multer.File): Promise<PublicFile> {
+        try {
+            const uploadResult = await this.filesService.uploadPublicFile(file);
 
-      const newFile = this.publicFilesRepository.create({
-        key: uploadResult.Key,
-        url: uploadResult.Location,
-      });
-      return this.publicFilesRepository.save(newFile);
-    } catch (error) {
-      this.loggerService.error(
-        `Error uploading public file: ${error.message}`,
-        error.stack,
-      );
-      throw error;
+            const newFile = this.publicFilesRepository.create(uploadResult);
+            return this.publicFilesRepository.save(newFile);
+        } catch (error) {
+            this.loggerService.error(
+                `Error uploading public file: ${error.message}`,
+                error.stack,
+            );
+            throw error;
+        }
     }
-  }
 
-  async findById(id: string): Promise<PublicFile> {
-    try {
-      const file = await this.publicFilesRepository.findOne({ where: { id } });
-      if (!file) {
-        throw new NotFoundException(filesErrors.NOT_FOUND);
-      }
-      return file;
-    } catch (error) {
-      this.loggerService.error(
-        `Error finding public file by id: ${error.message}`,
-        error.stack,
-      );
-      throw error;
+    async findById(id: string): Promise<PublicFile> {
+        const file = await this.publicFilesRepository.findOne({ where: { id } });
+
+        if (!file) {
+            throw new NotFoundException(filesErrors.NOT_FOUND);
+        }
+
+        return file
     }
-  }
 
-  async removeFile(id: string): Promise<void> {
-    try {
-      const file = await this.findById(id);
+    async removeFile(id: string): Promise<void> {
+        try {
+            const file = await this.publicFilesRepository.findOne({ where: { id } });
 
-      const s3 = new S3();
-      await s3
-        .deleteObject({
-          Bucket: this.configService.get('AWS_PUBLIC_BUCKET_NAME'),
-          Key: file.key,
-        })
-        .promise();
+            if (!file) {
+                throw new NotFoundException(filesErrors.NOT_FOUND);
+            }
 
-      await this.publicFilesRepository.remove(file);
-    } catch (error) {
-      this.loggerService.error(
-        `Error removing public file: ${error.message}`,
-        error.stack,
-      );
-      throw error;
+            await this.filesService.removeFile(file.key ?? file.publicId)
+            await this.publicFilesRepository.remove(file);
+        } catch (error) {
+            this.loggerService.error(
+                `Error removing public file: ${error.message}`,
+                error.stack,
+            );
+            throw error;
+        }
     }
-  }
 }

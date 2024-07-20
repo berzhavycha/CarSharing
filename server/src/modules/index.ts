@@ -8,3 +8,4 @@ export * from './database.module';
 export * from './config.module';
 export * from './public-files.module';
 export * from './logger.module';
+export * from './files-manager.module'
