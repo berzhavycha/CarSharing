@@ -9,4 +9,4 @@ export * from './users-service';
 export * from './public-files-service';
 export * from './logger-service';
 export * from './config-service';
-export * from './files-manager-service'
+export * from './files-manager-service';

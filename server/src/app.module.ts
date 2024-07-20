@@ -5,13 +5,13 @@ import {
   CarsModule,
   ConfigModule,
   DatabaseModule,
+  FilesManagerModule,
   LoggerModule,
   OriginalCarsModule,
   PublicFilesModule,
   RentalsModule,
   TransactionsModule,
   UsersModule,
-  FilesManagerModule
 } from '@/modules';
 
 import { RequestLoggingMiddleware } from './middlewares';
@@ -28,7 +28,7 @@ import { RequestLoggingMiddleware } from './middlewares';
     TransactionsModule,
     AuthModule,
     PublicFilesModule,
-    FilesManagerModule
+    FilesManagerModule,
   ],
 })
 export class AppModule {

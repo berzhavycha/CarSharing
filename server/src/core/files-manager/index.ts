@@ -1,1 +1,1 @@
-export * from './files-manager.provider'
+export * from './files-manager.provider';
