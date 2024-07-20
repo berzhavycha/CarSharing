@@ -45,8 +45,6 @@ export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
         <SpinnerWrapper $width={width} $height={height}>
           <Spinner />
         </SpinnerWrapper>
-      ) : src ? (
-        <CarImage src={src} alt={alt} />
       ) : (
         <img src={src} alt={alt} />
       )}
@@ -93,12 +91,6 @@ const PictureWrapper = styled.div<PictureWrapperProps>`
       height: ${(props): string => `${props.$height - 20}`}px;
     }
   }
-`;
-
-const CarImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
 `;
 
 const RemoveButton = styled.button`
