@@ -77,7 +77,7 @@ export const CSCommonFormInputImage: FC<Props> = ({
         {previews.map((preview, index) => (
           <CSCommonFormImagePreview
             key={index}
-            src={preview.url}
+            src={'https://car-sharing-files.s3.eu-north-1.amazonaws.com/0796f782-b6ba-4fa3-b232-15df4137e576-icon-256x256.png'}
             alt={`${name}-${index}`}
             circled={circled}
             width={width}
