@@ -10,7 +10,7 @@ export type AuthenticatedUser = {
   lastName: string;
   balance: number | null;
   role: Roles;
-  avatar: PublicFile;
+  avatar: PublicFile | null;
   avatarId: string | null;
 };
 
