@@ -8,6 +8,17 @@ import { LoggerService, RolesService } from '@/services';
 import { testLoggerService, testRepository } from '../test-objects';
 import { makeRole } from '../utils';
 
+jest.mock('../../src/services/singleton-logger.service.ts', () => ({
+  SingletonLoggerService: {
+    getInstance: jest.fn(() => ({
+      error: jest.fn(),
+      log: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+    })),
+  },
+}));
+
 describe('RolesService', () => {
   let rolesService: RolesService;
   let rolesRepository: Repository<Role>;

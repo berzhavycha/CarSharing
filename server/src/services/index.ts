@@ -10,3 +10,4 @@ export * from './logger.service';
 export * from './prod-logger.service';
 export * from './logger.service';
 export * from './dev-logger.service';
+export * from './singleton-logger.service'
