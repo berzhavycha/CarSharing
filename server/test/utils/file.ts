@@ -17,11 +17,13 @@ export const makeFile = (): Express.Multer.File => {
   return { buffer: Buffer.from('test') } as Express.Multer.File;
 };
 
-export const makeUploadedFile = (details?: Partial<UploadedFile>): UploadedFile => {
+export const makeUploadedFile = (
+  details?: Partial<UploadedFile>,
+): UploadedFile => {
   return {
     key: 'public_key',
     publicId: null,
     url: 'some-url',
-    ...details
-  }
-}
+    ...details,
+  };
+};

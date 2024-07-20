@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { PublicFile } from '@/entities';
 import { PublicFilesService } from '@/services';
+
 import { FilesManagerModule } from './files-manager.module';
 
 @Module({
@@ -10,4 +11,4 @@ import { FilesManagerModule } from './files-manager.module';
   providers: [PublicFilesService],
   exports: [PublicFilesService],
 })
-export class PublicFilesModule { }
+export class PublicFilesModule {}

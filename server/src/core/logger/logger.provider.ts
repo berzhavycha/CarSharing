@@ -10,4 +10,3 @@ export const loggerProvider: Provider = {
       ? ProdLoggerService
       : DevLoggerService,
 };
-

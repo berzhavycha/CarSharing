@@ -23,7 +23,7 @@ import { UsersService } from '@/services';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)

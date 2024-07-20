@@ -1,5 +1,5 @@
 export type UploadedFile = {
-    url: string;
-    key: string | null;
-    publicId: string | null;
-}
+  url: string;
+  key: string | null;
+  publicId: string | null;
+};

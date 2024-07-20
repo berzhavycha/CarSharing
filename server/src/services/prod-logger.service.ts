@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
+
 import { LoggerService } from './logger.service';
 
 @Injectable()
 export class ProdLoggerService extends LoggerService {
   constructor() {
-    super()
+    super();
   }
 
   private formatMessage(

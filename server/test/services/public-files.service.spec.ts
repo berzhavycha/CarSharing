@@ -4,15 +4,23 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { PublicFile } from '@/entities';
-import { FilesManagerService, LoggerService, PublicFilesService } from '@/services';
+import {
+  FilesManagerService,
+  LoggerService,
+  PublicFilesService,
+} from '@/services';
 
-import { testFilesManagerService, testLoggerService, testRepository } from '../test-objects';
+import {
+  testFilesManagerService,
+  testLoggerService,
+  testRepository,
+} from '../test-objects';
 import { makeFile, makePublicFile, makeUploadedFile } from '../utils';
 
 describe('PublicFilesService', () => {
   let publicFilesRepository: Repository<PublicFile>;
   let publicFilesService: PublicFilesService;
-  let filesManagerService: FilesManagerService
+  let filesManagerService: FilesManagerService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -41,10 +49,12 @@ describe('PublicFilesService', () => {
   describe('uploadPublicFile', () => {
     it('should create a file', async () => {
       const publicFile = makePublicFile();
-      const uploadedFile = makeUploadedFile()
-      const file = makeFile()
+      const uploadedFile = makeUploadedFile();
+      const file = makeFile();
 
-      jest.spyOn(filesManagerService, 'uploadPublicFile').mockResolvedValue(uploadedFile)
+      jest
+        .spyOn(filesManagerService, 'uploadPublicFile')
+        .mockResolvedValue(uploadedFile);
       jest.spyOn(publicFilesRepository, 'create').mockReturnValue(publicFile);
       jest.spyOn(publicFilesRepository, 'save').mockResolvedValue(publicFile);
 
@@ -83,7 +93,9 @@ describe('PublicFilesService', () => {
     it('should remove a file', async () => {
       const publicFile = makePublicFile();
 
-      jest.spyOn(filesManagerService, 'removeFile').mockResolvedValue(undefined)
+      jest
+        .spyOn(filesManagerService, 'removeFile')
+        .mockResolvedValue(undefined);
       jest.spyOn(publicFilesService, 'findById').mockResolvedValue(publicFile);
       jest.spyOn(publicFilesRepository, 'remove').mockResolvedValue(null);
 

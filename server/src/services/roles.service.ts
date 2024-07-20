@@ -12,7 +12,7 @@ export class RolesService {
 
   constructor(
     @InjectRepository(Role) private readonly rolesRepository: Repository<Role>,
-  ) { }
+  ) {}
 
   async createRole(name: string): Promise<Role> {
     try {
