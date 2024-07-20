@@ -25,9 +25,9 @@ async function bootstrap(): Promise<void> {
   loggerService.log(`CORS enabled with origin: ${corsOrigin}`);
 
   config.update({
-    accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
-    secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
-    region: configService.get('AWS_REGION'),
+    accessKeyId: configService.get('LAMBDA_AWS_ACCESS_KEY_ID'),
+    secretAccessKey: configService.get('LAMBDA_AWS_SECRET_ACCESS_KEY'),
+    region: configService.get('LAMBDA_AWS_REGION'),
   });
   loggerService.log(
     `AWS SDK configured for region: ${configService.get('AWS_REGION')}`,
