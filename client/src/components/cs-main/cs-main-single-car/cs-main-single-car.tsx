@@ -20,11 +20,13 @@ export const CSMainSingleCar: FC = () => {
   return (
     <CSCommonContainer>
       <SingleCarWrapper>
-        <Suspense fallback={
-          <SpinnerContainer>
-            <CSCommonSpinner />
-          </SpinnerContainer>
-        }>
+        <Suspense
+          fallback={
+            <SpinnerContainer>
+              <CSCommonSpinner />
+            </SpinnerContainer>
+          }
+        >
           <Await
             resolve={data.data}
             errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
@@ -51,7 +53,7 @@ const SpinnerContainer = styled.div`
   align-items: center;
   width: 100%;
   height: 80vh;
-`
+`;
 
 const SingleCarWrapper = styled.div`
   margin-top: 50px;

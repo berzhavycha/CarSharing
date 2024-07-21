@@ -16,10 +16,7 @@ export const CSMainAvailableCars: FC = () => {
 
   return (
     <AvailableCarsWrapper>
-      <Suspense
-
-        fallback={<CSMainAvailableCarsSpinner />}
-      >
+      <Suspense fallback={<CSMainAvailableCarsSpinner />}>
         <Await
           resolve={data.data}
           errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
@@ -32,7 +29,7 @@ export const CSMainAvailableCars: FC = () => {
           )}
         </Await>
       </Suspense>
-    </AvailableCarsWrapper >
+    </AvailableCarsWrapper>
   );
 };
 

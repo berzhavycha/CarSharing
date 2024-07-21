@@ -2,9 +2,7 @@ import { FC } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 export const CSCommonSpinner: FC = () => {
-  return (
-    <Spinner />
-  );
+  return <Spinner />;
 };
 
 const spinAnimation = keyframes`

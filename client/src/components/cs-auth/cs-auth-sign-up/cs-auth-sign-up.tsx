@@ -147,7 +147,7 @@ export const BaseFormInner = styled.div`
   background-color: white;
   box-shadow: var(--default-box-shadow);
 
-  @media ${device.sm}{
+  @media ${device.sm} {
     padding: 25px;
   }
 `;
@@ -177,7 +177,7 @@ const SignUpFormContainer = styled(FormContainer)`
     min-height: 100vh;
     margin: 80px 0;
   }
-`
+`;
 
 export const Title = styled.span`
   font-size: 24px;

@@ -32,7 +32,7 @@ export const CSCommonTableList = <T,>({
   const data = useLoaderData() as { data: T };
   const { searchParams } = useSearchParamsWithDefaults(defaultSearchParams);
   const { onPageChange, onSortChange } = usePagination(defaultSearchParams);
-  const { search, handleInputChange } = useParamsSearch()
+  const { search, handleInputChange } = useParamsSearch();
 
   return (
     <ListViewContainer>
