@@ -23,18 +23,31 @@ export const CSMainAvailableCars: FC = () => {
         }
       >
         <Await
-          resolve={Promise.all([data.filterOptions, data.carsData])}
+          resolve={data.filterOptions}
           errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
         >
-          {([filterOptions, carsData]) => (
-            <>
-              <CSMainAvailableCarsFilter data={filterOptions} />
-              <CSMainAvailableCarsList data={carsData} />
-            </>
+          {(filterOptions) => (
+            <CSMainAvailableCarsFilter data={filterOptions} />
           )}
         </Await>
       </Suspense>
-    </AvailableCarsWrapper>
+      <Suspense
+        fallback={
+          <SpinnerWrapper>
+            <Spinner />
+          </SpinnerWrapper>
+        }
+      >
+        <Await
+          resolve={data.carsData}
+          errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
+        >
+          {(carsData) => (
+            <CSMainAvailableCarsList data={carsData} />
+          )}
+        </Await>
+      </Suspense>
+    </AvailableCarsWrapper >
   );
 };
 

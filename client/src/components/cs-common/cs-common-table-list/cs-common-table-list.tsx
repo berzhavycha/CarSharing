@@ -9,7 +9,7 @@ import {
   Pagination,
 } from '@/components/cs-common';
 import { DEFAULT_PAGINATION_PAGE, defaultSearchParams, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
-import { usePagination, useSearchParamsWithDefaults } from '@/hooks';
+import { usePagination, useParamsSearch, useSearchParamsWithDefaults } from '@/hooks';
 import { device } from '@/styles';
 
 type Props<T> = {
@@ -31,7 +31,8 @@ export const CSCommonTableList = <T,>({
 }: Props<T>): JSX.Element => {
   const data = useLoaderData() as { data: T };
   const { searchParams } = useSearchParamsWithDefaults(defaultSearchParams);
-  const { onPageChange, onSearchChange, onSortChange } = usePagination(defaultSearchParams);
+  const { onPageChange, onSortChange } = usePagination(defaultSearchParams);
+  const { search, handleInputChange } = useParamsSearch()
 
   return (
     <ListViewContainer>
@@ -39,8 +40,8 @@ export const CSCommonTableList = <T,>({
         <Header>
           <h3>{title}</h3>
           <CSCommonSearchBar
-            search={searchParams.get('search') ?? ''}
-            onSearchChange={onSearchChange}
+            search={search}
+            onSearchChange={handleInputChange}
             placeholder={searchPlaceholder}
           />
           {extraHeaderContent}

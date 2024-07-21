@@ -68,7 +68,9 @@ export const CSCommonPaymentForm: FC<Props> = ({ title, description, submitButto
           </FormRow>
         </PaymentFormBlocks>
       </FormContent>
-      <CSCommonForm.SubmitButton buttonContent={submitButtonContent} />
+      <SubmitButtonContainer>
+        <CSCommonForm.SubmitButton buttonContent={submitButtonContent} />
+      </SubmitButtonContainer>
     </FormInfoWrapper>
   );
 };
@@ -109,11 +111,10 @@ const PaymentFormBlocks = styled.div`
   flex: 1;
   display: grid;
   grid-template-rows: repeat(3, auto);
-  grid-gap: 20px;
+  grid-gap: 10px;
 
   @media ${device.sm} {
     grid-template-columns: 1fr;
-    grid-gap: 20px 0;
   }
 
   @media ${device.md} {
@@ -131,3 +132,7 @@ const FormRow = styled.div`
     grid-gap: 0 0;
   }
 `;
+
+const SubmitButtonContainer = styled.div`
+  text-align: right;
+`
