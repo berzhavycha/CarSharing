@@ -69,7 +69,9 @@ export const CSDashboardCarForm: FC<Props> = ({ carDefaultValues, onFormSubmit }
             <CSCommonForm.SubmitButton buttonContent={saveBtnContent} />
           </CarHeaderWrapper>
 
-          <CSCommonErrorMessage>{errors?.unexpectedError}</CSCommonErrorMessage>
+          <ErrorContainer>
+            <CSCommonErrorMessage>{errors?.unexpectedError}</CSCommonErrorMessage>
+          </ErrorContainer>
 
           <Title>General Information</Title>
           <Section>
@@ -162,6 +164,10 @@ const FormContainer = styled.div`
   min-height: 100vh;
 `;
 
+const ErrorContainer = styled.div`
+  margin: 15px 0;
+`
+
 const ContentContainer = styled.div`
   padding: 30px;
   background-color: white;
@@ -200,13 +206,4 @@ const CarHeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 50px;
-
-  @media ${device.md} {
-    margin-bottom: 20px;
-  }
-
-  @media ${device.sm} {
-    margin-bottom: 10px;
-  }
 `;
