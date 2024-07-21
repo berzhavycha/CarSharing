@@ -39,11 +39,11 @@ const SpinnerContainer = styled.div`
 
 const CarsWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 305px));
   gap: 1.25rem;
 
   @media ${device.lg} {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 305px));
   }
 
   @media ${device.md} {
