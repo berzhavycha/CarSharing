@@ -12,11 +12,13 @@ export const CSMainInitialCarList: FC = () => {
 
   return (
     <CarsWrapper>
-      <Suspense fallback={
-        <SpinnerContainer>
-          <Spinner />
-        </SpinnerContainer>
-      }>
+      <Suspense
+        fallback={
+          <SpinnerContainer>
+            <Spinner />
+          </SpinnerContainer>
+        }
+      >
         <Await
           resolve={data.data}
           errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
@@ -35,7 +37,7 @@ const SpinnerContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-`
+`;
 
 const CarsWrapper = styled.div`
   display: grid;

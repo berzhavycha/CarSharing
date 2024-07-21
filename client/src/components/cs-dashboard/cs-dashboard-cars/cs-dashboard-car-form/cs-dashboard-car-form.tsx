@@ -166,7 +166,7 @@ const FormContainer = styled.div`
 
 const ErrorContainer = styled.div`
   margin: 15px 0;
-`
+`;
 
 const ContentContainer = styled.div`
   padding: 30px;

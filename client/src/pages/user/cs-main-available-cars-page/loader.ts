@@ -16,7 +16,7 @@ export type AvailableCarsLoaderData = {
       capacities: FilterOption<number>[];
       maxPrice: number;
     };
-  }
+  };
 };
 
 export const availableCarsLoader = (
@@ -50,6 +50,6 @@ export const availableCarsLoader = (
   const filterOptions = fetchCarsFilterOptions();
 
   return defer({
-    data: Promise.all([filterOptions, carsData])
+    data: Promise.all([filterOptions, carsData]),
   });
 };

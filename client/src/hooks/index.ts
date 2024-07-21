@@ -6,4 +6,4 @@ export * from './use-debounce';
 export * from './use-click-outside';
 export * from './use-sort-column';
 export * from './use-non-negative-input';
-export * from './use-params-search'
+export * from './use-params-search';
