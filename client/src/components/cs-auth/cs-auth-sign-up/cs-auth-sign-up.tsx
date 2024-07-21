@@ -27,7 +27,7 @@ export const CSAuthSignUp: FC = observer(() => {
   const btnContent = currentUserStore.isLoading ? <BtnSpinner /> : 'Sign Up';
 
   return (
-    <FormContainer>
+    <SignUpFormContainer>
       <FormInner>
         <Title>Register</Title>
         <Span>
@@ -100,7 +100,7 @@ export const CSAuthSignUp: FC = observer(() => {
           />
         </CSCommonForm>
       </FormInner>
-    </FormContainer>
+    </SignUpFormContainer>
   );
 });
 
@@ -146,6 +146,10 @@ export const BaseFormInner = styled.div`
   border-radius: 10px;
   background-color: white;
   box-shadow: var(--default-box-shadow);
+
+  @media ${device.sm}{
+    padding: 25px;
+  }
 `;
 
 const FormInner = styled(BaseFormInner)`
@@ -166,12 +170,14 @@ export const FormContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
 
+const SignUpFormContainer = styled(FormContainer)`
   @media ${device.sm} {
     min-height: 100vh;
     margin: 80px 0;
   }
-`;
+`
 
 export const Title = styled.span`
   font-size: 24px;
