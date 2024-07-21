@@ -1,16 +1,14 @@
 import { FC } from 'react';
-
 import { CSCommonSearchBar } from '@/components/cs-common';
-import { usePagination, useSearchParamsWithDefaults } from '@/hooks';
+import { useParamsSearch } from '@/hooks';
 
 export const CSMainLayoutCarSearch: FC = () => {
-  const { searchParams } = useSearchParamsWithDefaults();
-  const { onSearchChange } = usePagination();
-
+  const { search, handleInputChange } = useParamsSearch()
+  
   return (
     <CSCommonSearchBar
-      search={searchParams.get('search') ?? ''}
-      onSearchChange={onSearchChange}
+      search={search}
+      onSearchChange={handleInputChange}
       placeholder="Search car by name"
     />
   );
