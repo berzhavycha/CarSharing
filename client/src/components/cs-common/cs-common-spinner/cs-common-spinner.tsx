@@ -3,9 +3,7 @@ import styled, { keyframes } from 'styled-components';
 
 export const CSCommonSpinner: FC = () => {
   return (
-    <SpinnerContainer>
-      <Spinner />
-    </SpinnerContainer>
+    <Spinner />
   );
 };
 
@@ -16,15 +14,6 @@ const spinAnimation = keyframes`
   to {
     transform: rotate(360deg);
   }
-`;
-
-const SpinnerContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
-  background-color: white;
 `;
 
 export const Spinner = styled.div`

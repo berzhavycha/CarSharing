@@ -2,7 +2,7 @@ import { FC, Suspense } from 'react';
 import { Await, useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { CSCommonCarList, CSCommonError, CSCommonSpinner } from '@/components/cs-common';
+import { CSCommonCarList, CSCommonError, Spinner } from '@/components/cs-common';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { InitialCarsLoaderData } from '@/pages';
 import { device } from '@/styles';
@@ -12,7 +12,11 @@ export const CSMainInitialCarList: FC = () => {
 
   return (
     <CarsWrapper>
-      <Suspense fallback={<CSCommonSpinner />}>
+      <Suspense fallback={
+        <SpinnerContainer>
+          <Spinner />
+        </SpinnerContainer>
+      }>
         <Await
           resolve={data.data}
           errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
@@ -25,6 +29,13 @@ export const CSMainInitialCarList: FC = () => {
     </CarsWrapper>
   );
 };
+
+const SpinnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`
 
 const CarsWrapper = styled.div`
   display: grid;

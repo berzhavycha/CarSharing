@@ -22,7 +22,11 @@ export const CSMainSingleRental: FC = observer(() => {
 
   return (
     <CSCommonContainer>
-      <Suspense fallback={<CSCommonSpinner />}>
+      <Suspense fallback={
+        <SpinnerContainer>
+          <CSCommonSpinner />
+        </SpinnerContainer>
+      }>
         <Await
           resolve={data.data}
           errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
@@ -46,6 +50,14 @@ export const CSMainSingleRental: FC = observer(() => {
     </CSCommonContainer>
   );
 });
+
+const SpinnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80vh;
+`
 
 const RentalDetailsContainer = styled.div`
   display: flex;

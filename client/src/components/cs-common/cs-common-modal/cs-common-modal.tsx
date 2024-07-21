@@ -2,7 +2,7 @@ import { FC, MouseEvent } from 'react';
 import styled from 'styled-components';
 
 import { CSCommonCloseButton } from '../cs-common-close-button';
-import { Spinner } from '../cs-common-spinner';
+import { CSCommonSpinner } from '../cs-common-spinner';
 
 import { iconMap } from './icon-map';
 
@@ -38,7 +38,7 @@ export const CSCommonModal: FC<ModalProps> = ({
       <ModalContainer>
         {loading ? (
           <SpinnerContainer>
-            <Spinner />
+            <CSCommonSpinner />
           </SpinnerContainer>
         ) : (
           <>

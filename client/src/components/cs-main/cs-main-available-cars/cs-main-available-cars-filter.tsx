@@ -15,7 +15,7 @@ import { device } from '@/styles';
 import { CSMainAvailableCarsSort } from './cs-main-available-cars-sort';
 
 type Props = {
-  data: AvailableCarsLoaderData['filterOptions'];
+  data: AvailableCarsLoaderData['data']['filterOptions'];
 };
 
 export const CSMainAvailableCarsFilter: FC<Props> = ({ data }) => {

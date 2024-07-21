@@ -9,7 +9,7 @@ import { AvailableCarsLoaderData } from '@/pages';
 import { device } from '@/styles';
 
 type Props = {
-  data: AvailableCarsLoaderData['carsData'];
+  data: AvailableCarsLoaderData['data']['carsData'];
 };
 
 export const CSMainAvailableCarsList: FC<Props> = ({ data }) => {

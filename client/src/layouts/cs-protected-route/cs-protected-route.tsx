@@ -4,6 +4,7 @@ import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { CSCommonSpinner } from '@/components';
 import { Roles } from '@/helpers';
 import { AuthenticatedUser } from '@/types';
+import styled from 'styled-components';
 
 type Props = PropsWithChildren & {
   isAllowed: () => Promise<{ allowed: boolean; user: AuthenticatedUser | null }>;
@@ -35,7 +36,11 @@ export const CSProtectedRoute: FC<Props> = ({
   }, [isAllowed]);
 
   if (allowed === null) {
-    return <CSCommonSpinner />;
+    return (
+      <SpinnerContainer>
+        <CSCommonSpinner />
+      </SpinnerContainer>
+    ) 
   }
 
   if (!allowed) {
@@ -44,3 +49,13 @@ export const CSProtectedRoute: FC<Props> = ({
 
   return children ? children : <Outlet />;
 };
+
+
+const SpinnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+`;

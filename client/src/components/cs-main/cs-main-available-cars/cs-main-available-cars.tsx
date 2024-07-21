@@ -2,13 +2,14 @@ import { FC, Suspense } from 'react';
 import { Await, useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { CSCommonError, Spinner } from '@/components/cs-common';
+import { CSCommonError } from '@/components/cs-common';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { AvailableCarsLoaderData } from '@/pages';
 import { device } from '@/styles';
 
 import { CSMainAvailableCarsFilter } from './cs-main-available-cars-filter';
 import { CSMainAvailableCarsList } from './cs-main-available-cars-list';
+import { CSMainAvailableCarsSpinner } from './cs-main-available-cars-spinner';
 
 export const CSMainAvailableCars: FC = () => {
   const data = useLoaderData() as AvailableCarsLoaderData;
@@ -16,47 +17,24 @@ export const CSMainAvailableCars: FC = () => {
   return (
     <AvailableCarsWrapper>
       <Suspense
-        fallback={
-          <SpinnerWrapper>
-            <Spinner />
-          </SpinnerWrapper>
-        }
+
+        fallback={<CSMainAvailableCarsSpinner />}
       >
         <Await
-          resolve={data.filterOptions}
+          resolve={data.data}
           errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
         >
-          {(filterOptions) => (
-            <CSMainAvailableCarsFilter data={filterOptions} />
-          )}
-        </Await>
-      </Suspense>
-      <Suspense
-        fallback={
-          <SpinnerWrapper>
-            <Spinner />
-          </SpinnerWrapper>
-        }
-      >
-        <Await
-          resolve={data.carsData}
-          errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
-        >
-          {(carsData) => (
-            <CSMainAvailableCarsList data={carsData} />
+          {([filterOptions, carsData]) => (
+            <>
+              <CSMainAvailableCarsFilter data={filterOptions} />
+              <CSMainAvailableCarsList data={carsData} />
+            </>
           )}
         </Await>
       </Suspense>
     </AvailableCarsWrapper >
   );
 };
-
-const SpinnerWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 const AvailableCarsWrapper = styled.div`
   display: flex;
