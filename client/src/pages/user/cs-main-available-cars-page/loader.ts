@@ -6,15 +6,17 @@ import { fetchCars, fetchCarsFilterOptions } from '@/services';
 import { Car, FilterOption } from '@/types';
 
 export type AvailableCarsLoaderData = {
-  carsData: {
-    cars: Car[];
-    total: number;
-  };
-  filterOptions: {
-    types: FilterOption<string>[];
-    capacities: FilterOption<number>[];
-    maxPrice: number;
-  };
+  data: {
+    carsData: {
+      cars: Car[];
+      total: number;
+    };
+    filterOptions: {
+      types: FilterOption<string>[];
+      capacities: FilterOption<number>[];
+      maxPrice: number;
+    };
+  }
 };
 
 export const availableCarsLoader = (
@@ -48,7 +50,6 @@ export const availableCarsLoader = (
   const filterOptions = fetchCarsFilterOptions();
 
   return defer({
-    carsData,
-    filterOptions,
+    data: Promise.all([filterOptions, carsData])
   });
 };

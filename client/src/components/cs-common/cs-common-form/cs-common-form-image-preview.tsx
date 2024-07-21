@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { device } from '@/styles';
 
-import { Spinner } from '../cs-common-spinner';
+import { CSCommonSpinner } from '../cs-common-spinner';
 
 type PictureWrapperProps = {
   $circled?: boolean;
@@ -43,7 +43,7 @@ export const CSCommonFormImagePreview: FC<ImagePreviewProps> = ({
     <PictureWrapper onClick={onClick} $circled={circled} $width={width} $height={height}>
       {isPending ? (
         <SpinnerWrapper $width={width} $height={height}>
-          <Spinner />
+          <CSCommonSpinner />
         </SpinnerWrapper>
       ) : (
         <img src={src} alt={alt} />
