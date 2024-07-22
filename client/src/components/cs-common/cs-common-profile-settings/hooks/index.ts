@@ -1,1 +1,1 @@
-export * from './useProfileUpdate';
+export * from './use-profile-update';

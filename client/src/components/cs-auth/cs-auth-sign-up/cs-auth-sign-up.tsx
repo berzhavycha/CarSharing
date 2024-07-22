@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { BtnSpinner, CSCommonErrorMessage, CSCommonForm } from '@/components';
 import { useStore } from '@/context';
-import { authRedirectPages, AuthType, getUserSchema, Roles } from '@/helpers';
+import { authRedirectPages, AuthType, getUserSchema } from '@/helpers';
 import { device } from '@/styles';
 import { SignUpUserDto } from '@/types';
 
@@ -20,7 +20,7 @@ export const CSAuthSignUp: FC = observer(() => {
   const onSubmit = async (data: SignUpUserDto): Promise<void> => {
     await currentUserStore.signUp(data);
     if (currentUserStore.user) {
-      navigate(authRedirectPages[currentUserStore.user.role as Roles]);
+      navigate(authRedirectPages[currentUserStore.user.role]);
     }
   };
 

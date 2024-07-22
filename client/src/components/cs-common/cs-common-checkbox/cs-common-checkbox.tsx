@@ -11,10 +11,12 @@ type Props = {
 };
 
 export const CSCommonCheckbox: FC<Props> = ({ type, option, checked, onCheck }) => {
+  const onCheckboxClick = (): void => onCheck(type, `${option.originalValue || option.label}`);
+
   return (
     <CheckboxLabel key={option.label}>
       <HiddenCheckbox type="checkbox" readOnly checked={checked} />
-      <CustomCheckbox onClick={() => onCheck(type, `${option.originalValue || option.label}`)} />
+      <CustomCheckbox onClick={onCheckboxClick} />
       {option.label}
       <Count>({option.count})</Count>
     </CheckboxLabel>
