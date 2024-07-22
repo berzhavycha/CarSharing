@@ -5,6 +5,6 @@ import { FilesManagerService } from '@/services';
 
 @Module({
   providers: [CloudinaryProvider, FilesManagerProvider],
-  exports: [FilesManagerService],
+  exports: [CloudinaryProvider, FilesManagerService],
 })
 export class FilesManagerModule {}

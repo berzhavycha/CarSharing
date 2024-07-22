@@ -30,7 +30,7 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
     private readonly transactionsService: TransactionsService,
     private readonly rolesService: RolesService,
-    private publicFilesService: PublicFilesService,
+    private readonly publicFilesService: PublicFilesService,
     private readonly loggerService: LoggerService,
   ) {}
 
@@ -124,13 +124,6 @@ export class UsersService {
       }
 
       if ('oldPassword' in updateUserDto && updateUserDto.oldPassword) {
-        if (
-          !(await bcrypt.compare(updateUserDto.oldPassword, user.passwordHash))
-        ) {
-          throw new BadRequestException(
-            usersErrorMessages.INVALID_OLD_PASSWORD,
-          );
-        }
         await this.updateUserPassword(user, updateUserDto);
 
         delete updateUserDto.oldPassword;

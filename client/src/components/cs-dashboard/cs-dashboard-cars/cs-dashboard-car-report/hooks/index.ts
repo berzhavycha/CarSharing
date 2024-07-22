@@ -1,1 +1,1 @@
-export * from './useCarRemoval';
+export * from './use-car-removal';
