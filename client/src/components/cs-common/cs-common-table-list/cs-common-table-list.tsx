@@ -46,7 +46,11 @@ export const CSCommonTableList = <T,>({
           />
           {extraHeaderContent}
         </Header>
-        <Suspense fallback={<CSCommonSpinner />}>
+        <Suspense fallback={
+          <SpinnerContainer>
+            <CSCommonSpinner />
+          </SpinnerContainer>
+        }>
           <Await
             resolve={data.data}
             errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
@@ -75,6 +79,13 @@ export const CSCommonTableList = <T,>({
     </ListViewContainer>
   );
 };
+
+const SpinnerContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const ListViewContainer = styled.div`
   width: 100%;
