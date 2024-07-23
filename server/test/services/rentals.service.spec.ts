@@ -48,6 +48,7 @@ describe('RentalsService', () => {
   let originalCarsService: OriginalCarsService;
   let usersService: UsersService;
 
+  // optimize DI
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
