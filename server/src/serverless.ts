@@ -46,6 +46,5 @@ async function bootstrapServer(): Promise<Server> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handler: Handler = async (event: any, context: Context) => {
   cachedServer = await bootstrapServer();
-  context.callbackWaitsForEmptyEventLoop = false
   return proxy(cachedServer, event, context, 'PROMISE').promise;
 };
