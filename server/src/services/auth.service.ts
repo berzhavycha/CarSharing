@@ -53,12 +53,12 @@ export class AuthService {
       }
 
       console.log('hash value')
-      const { salt, hash } = await hashValue(password);
+      // const { salt, hash } = await hashValue(password);
       console.log('create user value')
       const user = await this.usersService.createUser({
         userDetails: safeUser,
-        passwordHash: hash,
-        passwordSalt: salt,
+        passwordHash: '',
+        passwordSalt: '',
         refreshTokenHash: null,
         refreshTokenSalt: null,
       });
