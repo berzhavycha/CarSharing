@@ -233,7 +233,7 @@ describe('RentalsService', () => {
   });
 
   describe('returnCar', () => {
-    const mockNow = new Date('2023-01-01T12:00:00Z').getTime();
+    const mockNow = new Date('2024-01-01T12:00:00Z').getTime();
 
     beforeAll(() => {
       jest.useFakeTimers();

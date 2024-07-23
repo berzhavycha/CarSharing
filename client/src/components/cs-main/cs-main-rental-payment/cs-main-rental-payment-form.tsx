@@ -6,14 +6,13 @@ import {
   BtnSpinner,
   CSCommonForm,
   CSCommonModal,
-  CSCommonPaymentForm,
   SectionDescription,
   SectionTitle,
 } from '@/components/cs-common';
-import { MAX_REQUESTED_HOURS, rentalSchema } from '@/helpers';
+import { MAX_REQUESTED_HOURS, rentalFormSchema } from '@/helpers';
 import { useNonNegativeInput } from '@/hooks';
 import { device } from '@/styles';
-import { PaymentDto, RentalDto } from '@/types';
+import { RentalDto } from '@/types';
 
 import { useRental } from './hooks';
 
@@ -36,7 +35,7 @@ export const CSMainRentalPaymentForm: FC = () => {
 
   return (
     <FormWrapper>
-      <CSCommonForm<RentalDto & PaymentDto> validationSchema={rentalSchema} onSubmit={onSubmit}>
+      <CSCommonForm<RentalDto> validationSchema={rentalFormSchema} onSubmit={onSubmit}>
         <FormInfoWrapper>
           <SectionTitle>Rental Info</SectionTitle>
           <SectionDescription>Please enter your rental info</SectionDescription>
@@ -53,12 +52,8 @@ export const CSMainRentalPaymentForm: FC = () => {
               max={MAX_REQUESTED_HOURS}
             />
           </RentalFormBlocks>
+          <CSCommonForm.SubmitButton buttonContent={rentBtnContent} />
         </FormInfoWrapper>
-        <CSCommonPaymentForm
-          title="Payment Details"
-          description="Please enter your payment details"
-          submitButtonContent={rentBtnContent}
-        />
       </CSCommonForm>
 
       {isRentSuccessful && (
@@ -92,24 +87,11 @@ const FormWrapper = styled.div`
 `;
 
 const FormInfoWrapper = styled(BaseSection)`
-  padding: 35px 35px 10px 35px;
-
+  padding: 35px;
   margin-bottom: 20px;
 `;
 
 const RentalFormBlocks = styled.div`
-  display: grid;
-  grid-column: span 3;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0px 40px;
-
-  @media ${device.lg} {
-    grid-column: span 2;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @media ${device.sm} {
-    grid-column: span 1;
-    grid-template-columns: 1fr;
-  }
+  display: flex;
+  flex-direction: column;
 `;

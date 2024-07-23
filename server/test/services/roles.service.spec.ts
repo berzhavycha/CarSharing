@@ -3,9 +3,9 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Role } from '@/entities';
-import { LoggerService, RolesService } from '@/services';
+import { RolesService } from '@/services';
 
-import { testLoggerService, testRepository } from '../test-objects';
+import { testRepository } from '../test-objects';
 import { makeRole } from '../utils';
 
 jest.mock('../../src/services/singleton-logger.service.ts', () => ({
@@ -31,7 +31,6 @@ describe('RolesService', () => {
           provide: getRepositoryToken(Role),
           useValue: testRepository,
         },
-        { provide: LoggerService, useValue: testLoggerService },
       ],
     }).compile();
 
