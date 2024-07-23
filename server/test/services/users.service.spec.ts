@@ -209,7 +209,7 @@ describe('UsersService', () => {
       jest
         .spyOn(publicFilesService, 'uploadPublicFile')
         .mockResolvedValue(publicFile);
-      jest.spyOn(usersService, 'findById').mockResolvedValue(user);
+      jest.spyOn(usersService, 'findById').mockResolvedValue(updatedUser);
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
 
       const file = makeFile();

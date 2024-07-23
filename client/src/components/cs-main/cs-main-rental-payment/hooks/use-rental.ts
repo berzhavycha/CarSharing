@@ -4,10 +4,10 @@ import { useLocation } from 'react-router-dom';
 import { useStore } from '@/context';
 import { MAX_REQUESTED_HOURS } from '@/helpers';
 import { createRental } from '@/services';
-import { PaymentDto, RentalDto } from '@/types';
+import { RentalDto } from '@/types';
 
 type HookReturn = {
-  onSubmit: (rentalDto: RentalDto & PaymentDto) => Promise<void>;
+  onSubmit: (rentalDto: RentalDto) => Promise<void>;
   isRentSuccessful: boolean;
   setIsRentSuccessful: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
@@ -25,7 +25,7 @@ export const useRental = (): HookReturn => {
   const rentedCar = location.state.car;
 
   const {
-    rentalPaymentStore: { potentialRentalPrice, setPotentialRentalPrice },
+    rentalPaymentStore: { setPotentialRentalPrice },
     currentUserStore: { user, updateBalance },
   } = useStore();
 
@@ -33,7 +33,7 @@ export const useRental = (): HookReturn => {
     setPotentialRentalPrice(rentedCar.pricePerHour);
   }, []);
 
-  const onSubmit = async (rentalDto: RentalDto & PaymentDto): Promise<void> => {
+  const onSubmit = async (rentalDto: RentalDto): Promise<void> => {
     setIsLoading(true);
     const { rental: createdRental, error } = await createRental({
       carId: rentedCar.id,
@@ -41,8 +41,9 @@ export const useRental = (): HookReturn => {
     });
 
     setIsLoading(false);
-    if (createdRental && user?.balance && potentialRentalPrice) {
-      updateBalance(user.balance - potentialRentalPrice);
+    const price = rentedCar.pricePerHour * rentalDto.hours
+    if (createdRental && user?.balance && price) {
+      updateBalance(user.balance - price);
       setIsRentSuccessful(true);
     } else if (error) {
       setPotentialRentalPrice(rentedCar.pricePerHour);
