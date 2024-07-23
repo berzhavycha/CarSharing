@@ -36,6 +36,7 @@ export class AuthService {
 
   async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
     try {
+      console.log('sign up start')
       const { password, ...safeUser } = registerUserDto;
 
       const invitationCode = this.configService.get<string>(
@@ -51,7 +52,9 @@ export class AuthService {
         );
       }
 
+      console.log('hash value')
       const { salt, hash } = await hashValue(password);
+      console.log('create user value')
       const user = await this.usersService.createUser({
         userDetails: safeUser,
         passwordHash: hash,
@@ -60,6 +63,7 @@ export class AuthService {
         refreshTokenSalt: null,
       });
 
+      console.log('generate tokens')
       return {
         user,
         tokens: await this.generateTokens(user.id, user.email),
