@@ -7,10 +7,11 @@ import { device } from '@/styles';
 
 import { CSMainLayoutCarSearch } from './cs-main-layout-car-search';
 import { CSMainLayoutHeaderOptions } from './cs-main-layout-header-options';
+import { searchEnabledRoutes } from './constants';
 
 export const CSMainLayoutHeader: FC = () => {
   const { pathname } = useLocation();
-  const isSearchBarEnabled = ['/', '/available-cars'].includes(pathname);
+  const isSearchBarEnabled = searchEnabledRoutes.includes(pathname);
 
   return (
     <Section>
@@ -40,13 +41,13 @@ const HeaderContent = styled.div<{ $isSearchBarEnabled: boolean }>`
 
   @media ${device.sm} {
     ${(props): string =>
-      props.$isSearchBarEnabled
-        ? `
+    props.$isSearchBarEnabled
+      ? `
         flex-direction: column;
         align-items: stretch;
         gap: 15px;
       `
-        : ''}
+      : ''}
   }
 `;
 

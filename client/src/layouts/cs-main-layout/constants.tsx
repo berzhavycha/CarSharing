@@ -12,3 +12,5 @@ export const menuItems: MenuItemType[] = [
   { icon: <FaDollarSign />, label: 'Top Up', path: '/top-up' },
   { icon: <FaHistory />, label: 'History', path: '/rental-history' },
 ];
+
+export const searchEnabledRoutes = ['/', '/available-cars']
