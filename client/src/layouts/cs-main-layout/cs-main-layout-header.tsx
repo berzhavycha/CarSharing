@@ -5,9 +5,9 @@ import styled from 'styled-components';
 import { CSCommonContainer } from '@/components';
 import { device } from '@/styles';
 
+import { searchEnabledRoutes } from './constants';
 import { CSMainLayoutCarSearch } from './cs-main-layout-car-search';
 import { CSMainLayoutHeaderOptions } from './cs-main-layout-header-options';
-import { searchEnabledRoutes } from './constants';
 
 export const CSMainLayoutHeader: FC = () => {
   const { pathname } = useLocation();
@@ -41,13 +41,13 @@ const HeaderContent = styled.div<{ $isSearchBarEnabled: boolean }>`
 
   @media ${device.sm} {
     ${(props): string =>
-    props.$isSearchBarEnabled
-      ? `
+      props.$isSearchBarEnabled
+        ? `
         flex-direction: column;
         align-items: stretch;
         gap: 15px;
       `
-      : ''}
+        : ''}
   }
 `;
 

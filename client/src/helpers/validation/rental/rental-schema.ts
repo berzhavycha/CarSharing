@@ -5,4 +5,3 @@ export const rentalFormSchema = z.object({
   dropOffLocation: z.string().min(1, 'Drop Off Location is required'),
   hours: z.coerce.number().min(1, 'Requested Hours must be at least 1'),
 });
-

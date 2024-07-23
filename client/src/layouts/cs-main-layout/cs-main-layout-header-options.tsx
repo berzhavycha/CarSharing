@@ -1,10 +1,12 @@
 import { observer } from 'mobx-react-lite';
 import { FC, useRef, useState } from 'react';
 import { FaBars } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CSCommonCloseButton } from '@/components';
 import { useStore } from '@/context';
+import { Env } from '@/core';
 import { useClickOutside, useSignOut } from '@/hooks';
 import { device } from '@/styles';
 
@@ -13,8 +15,6 @@ import DefaultImage from '../../../public/avatar.webp';
 import { menuItems, searchEnabledRoutes } from './constants';
 import { NavItem } from './cs-main-layout-nav-item';
 import { CSMainLayoutSignOutBtn } from './cs-main-layout-sign-out-btn';
-import { Env } from '@/core';
-import { useLocation } from 'react-router-dom';
 
 export const CSMainLayoutHeaderOptions: FC = observer(() => {
   const {
@@ -107,7 +107,7 @@ const MenuButton = styled.button`
   }
 `;
 
-const NavOptions = styled.div<{ $isOpen: boolean, $isSearchBarEnabled: boolean }>`
+const NavOptions = styled.div<{ $isOpen: boolean; $isSearchBarEnabled: boolean }>`
   display: flex;
   align-items: center;
   gap: 20px;
