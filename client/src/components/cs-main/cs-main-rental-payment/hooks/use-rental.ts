@@ -41,7 +41,7 @@ export const useRental = (): HookReturn => {
     });
 
     setIsLoading(false);
-    const price = rentedCar.pricePerHour * rentalDto.hours
+    const price = rentedCar.pricePerHour * rentalDto.hours;
     if (createdRental && user?.balance && price) {
       updateBalance(user.balance - price);
       setIsRentSuccessful(true);

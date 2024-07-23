@@ -46,11 +46,13 @@ export const CSCommonTableList = <T,>({
           />
           {extraHeaderContent}
         </Header>
-        <Suspense fallback={
-          <SpinnerContainer>
-            <CSCommonSpinner />
-          </SpinnerContainer>
-        }>
+        <Suspense
+          fallback={
+            <SpinnerContainer>
+              <CSCommonSpinner />
+            </SpinnerContainer>
+          }
+        >
           <Await
             resolve={data.data}
             errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}

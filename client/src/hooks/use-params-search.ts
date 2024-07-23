@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { DEBOUNCE_DELAY } from '@/helpers';
+
 import { useDebounce } from './use-debounce';
 import { usePagination } from './use-pagination';
 import { useSearchParamsWithDefaults } from './use-search-params-with-defaults';
@@ -17,7 +19,7 @@ export const useParamsSearch = (key: string = 'search'): HookReturn => {
 
   const debouncedSearchChange = useDebounce((text: string) => {
     handleSearchChange(text);
-  }, 300);
+  }, DEBOUNCE_DELAY);
 
   const handleInputChange = (text: string): void => {
     setSearch(text);
