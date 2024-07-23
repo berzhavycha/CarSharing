@@ -19,7 +19,11 @@ export const CSMainAvailableCars: FC = () => {
       <Suspense fallback={<CSMainAvailableCarsSpinner />}>
         <Await
           resolve={data.data}
-          errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
+          errorElement={
+            <ErrorWrapper>
+              <CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />
+            </ErrorWrapper>
+          }
         >
           {([filterOptions, carsData]) => (
             <>
@@ -32,6 +36,10 @@ export const CSMainAvailableCars: FC = () => {
     </AvailableCarsWrapper>
   );
 };
+
+const ErrorWrapper = styled.div`
+  width: 100%;
+`
 
 const AvailableCarsWrapper = styled.div`
   display: flex;
