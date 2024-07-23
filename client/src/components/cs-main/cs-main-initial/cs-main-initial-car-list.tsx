@@ -11,24 +11,26 @@ export const CSMainInitialCarList: FC = () => {
   const data = useLoaderData() as { data: InitialCarsLoaderData };
 
   return (
-    <CarsWrapper>
-      <Suspense
-        fallback={
-          <SpinnerContainer>
-            <Spinner />
-          </SpinnerContainer>
-        }
+    <Suspense
+      fallback={
+        <SpinnerContainer>
+          <Spinner />
+        </SpinnerContainer>
+      }
+    >
+      <Await
+        resolve={data.data}
+        errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
       >
-        <Await
-          resolve={data.data}
-          errorElement={<CSCommonError errorMessage={UNEXPECTED_ERROR_MESSAGE} />}
-        >
-          {(data) => {
-            return <CSCommonCarList cars={data.cars} />;
-          }}
-        </Await>
-      </Suspense>
-    </CarsWrapper>
+        {(data) => {
+          return (
+            <CarsWrapper>
+              <CSCommonCarList cars={data.cars} />
+            </CarsWrapper>
+          );
+        }}
+      </Await>
+    </Suspense>
   );
 };
 
