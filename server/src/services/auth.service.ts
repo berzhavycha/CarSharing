@@ -32,11 +32,10 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly loggerService: LoggerService,
-  ) {}
+  ) { }
 
   async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
     try {
-      console.log('sign up start')
       const { password, ...safeUser } = registerUserDto;
 
       const invitationCode = this.configService.get<string>(
@@ -52,18 +51,15 @@ export class AuthService {
         );
       }
 
-      console.log('hash value')
-      // const { salt, hash } = await hashValue(password);
-      console.log('create user value')
+      const { salt, hash } = await hashValue(password);
       const user = await this.usersService.createUser({
         userDetails: safeUser,
-        passwordHash: '',
-        passwordSalt: '',
+        passwordHash: hash,
+        passwordSalt: salt,
         refreshTokenHash: null,
         refreshTokenSalt: null,
       });
 
-      console.log('generate tokens')
       return {
         user,
         tokens: await this.generateTokens(user.id, user.email),
