@@ -3,17 +3,12 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
 
 import { QueryTransactionsDto } from '@/dtos';
-import { Transaction } from '@/entities';
+import { PublicFile, Transaction } from '@/entities';
 import { applySearchAndPagination } from '@/helpers';
-import { LoggerService, TransactionsService } from '@/services';
+import { TransactionsService } from '@/services';
 
-import {
-  testEntityManager,
-  testLoggerService,
-  testQueryBuilder,
-  testRepository,
-} from '../test-objects';
 import { makeTransaction } from '../utils';
+import { createMock } from '@golevelup/ts-jest';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
@@ -29,11 +24,11 @@ describe('TransanctionsService', () => {
         TransactionsService,
         {
           provide: getRepositoryToken(Transaction),
-          useValue: testRepository,
+          useValue: createMock<Repository<PublicFile>>(),
         },
-        { provide: LoggerService, useValue: testLoggerService },
       ],
-    }).compile();
+    }).useMocker(createMock)
+      .compile();
 
     transactionsService = module.get<TransactionsService>(TransactionsService);
     transactionsRepository = module.get<Repository<Transaction>>(
@@ -52,49 +47,36 @@ describe('TransanctionsService', () => {
   describe('createTransaction', () => {
     it('should create a transanction', async () => {
       const transaction = makeTransaction();
+      const entityManager = createMock<EntityManager>()
 
       jest.spyOn(transactionsRepository, 'create').mockReturnValue(transaction);
-      jest.spyOn(testEntityManager, 'save').mockResolvedValue(transaction);
+      jest.spyOn(entityManager, 'save').mockResolvedValue(transaction);
 
       const result = await transactionsService.createTransaction(
         transaction,
-        testEntityManager as unknown as EntityManager,
+        entityManager,
       );
 
       expect(result).toBe(transaction);
-      expect(testEntityManager.save).toHaveBeenCalledWith(transaction);
+      expect(entityManager.save).toHaveBeenCalledWith(transaction);
     });
   });
 
   describe('findAll', () => {
-    it('should return all transactions with pagination and search applied', async () => {
-      const listCarsDto: QueryTransactionsDto = {
-        search: 'query',
-        page: 1,
-        limit: 10,
-        order: 'ASC',
-        sort: 'amount',
-      };
-
+    it('should return transactions and count', async () => {
       const transaction = makeTransaction();
+      const paginationResult: [Transaction[], number] = [[transaction, transaction], 2];
+      const queryBuilder = createMock<SelectQueryBuilder<Transaction>>()
 
-      jest
-        .spyOn(transactionsRepository, 'createQueryBuilder')
-        .mockReturnValue(
-          testQueryBuilder as unknown as SelectQueryBuilder<Transaction>,
-        );
+      jest.spyOn(queryBuilder, 'leftJoinAndSelect').mockReturnThis()
+      jest.spyOn(queryBuilder, 'getManyAndCount').mockResolvedValue(paginationResult)
+      jest.spyOn(transactionsRepository, 'createQueryBuilder').mockReturnValue(queryBuilder);
 
-      (applySearchAndPagination as jest.Mock).mockReturnValue(
-        testQueryBuilder as unknown as SelectQueryBuilder<Transaction>,
-      );
+      const mockApplySearchAndPagination = applySearchAndPagination as jest.Mock;
+      mockApplySearchAndPagination.mockImplementation((qb) => qb);
 
-      const paginationResult = [[transaction, transaction], 2];
-
-      jest
-        .spyOn(testQueryBuilder, 'getManyAndCount')
-        .mockResolvedValue(paginationResult);
-
-      const result = await transactionsService.findAll(listCarsDto);
+      const queryDto: QueryTransactionsDto = {};
+      const result = await transactionsService.findAll(queryDto);
 
       expect(result).toEqual(paginationResult);
     });

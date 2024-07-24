@@ -7,21 +7,12 @@ import { EntityManager, Repository } from 'typeorm';
 import { User } from '@/entities';
 import { hashValue, usersErrorMessages } from '@/helpers';
 import {
-  LoggerService,
   PublicFilesService,
   RolesService,
   TransactionsService,
   UsersService,
 } from '@/services';
 
-import {
-  testEntityManager,
-  testLoggerService,
-  testPublicFilesService,
-  testRepository,
-  testRoleService,
-  testTransanctionService,
-} from '../test-objects';
 import {
   makeCreateUserDto,
   makeFile,
@@ -31,6 +22,7 @@ import {
   makeUpdateUserBalanceOptions,
   makeUser,
 } from '../utils';
+import { createMock } from '@golevelup/ts-jest';
 
 jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
   hashValue: jest.fn(),
@@ -46,6 +38,7 @@ describe('UsersService', () => {
   let rolesService: RolesService;
   let usersRepository: Repository<User>;
   let publicFilesService: PublicFilesService;
+  let entityManager: EntityManager
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -53,29 +46,18 @@ describe('UsersService', () => {
         UsersService,
         {
           provide: getRepositoryToken(User),
-          useValue: testRepository,
+          useValue: createMock<Repository<User>>(),
         },
-        {
-          provide: TransactionsService,
-          useValue: testTransanctionService,
-        },
-        {
-          provide: RolesService,
-          useValue: testRoleService,
-        },
-        {
-          provide: PublicFilesService,
-          useValue: testPublicFilesService,
-        },
-        { provide: LoggerService, useValue: testLoggerService },
       ],
-    }).compile();
+    }).useMocker(createMock)
+      .compile();
 
     usersService = module.get<UsersService>(UsersService);
     transactionsService = module.get<TransactionsService>(TransactionsService);
     rolesService = module.get<RolesService>(RolesService);
     usersRepository = module.get<Repository<User>>(getRepositoryToken(User));
     publicFilesService = module.get<PublicFilesService>(PublicFilesService);
+    entityManager = module.get<EntityManager>(EntityManager)
   });
 
   afterEach(() => {
@@ -299,8 +281,9 @@ describe('UsersService', () => {
       const user = makeUser();
       const balance = 100;
       const options = makeUpdateUserBalanceOptions();
+      const entityManager = createMock<EntityManager>()
 
-      jest.spyOn(testEntityManager, 'save').mockResolvedValue({
+      jest.spyOn(entityManager, 'save').mockResolvedValue({
         ...user,
         balance,
       });
@@ -308,7 +291,7 @@ describe('UsersService', () => {
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       const result = await usersService.updateUserBalance(
         options,
-        testEntityManager as unknown as EntityManager,
+        entityManager
       );
 
       expect(result).toEqual(user);
@@ -320,9 +303,9 @@ describe('UsersService', () => {
           user: { ...user },
           rental: options.rental,
         },
-        testEntityManager,
+        entityManager,
       );
-      expect(testEntityManager.save).toHaveBeenCalledWith({
+      expect(entityManager.save).toHaveBeenCalledWith({
         ...user,
         balance,
       });
@@ -333,14 +316,14 @@ describe('UsersService', () => {
       const options = makeUpdateUserBalanceOptions();
 
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
-      jest
-        .spyOn(usersRepository.manager, 'transaction')
-        .mockResolvedValue(user);
+      (entityManager.transaction as jest.Mock).mockResolvedValue(user);
+
+      jest.spyOn(transactionsService, 'createTransaction').mockResolvedValue(undefined);
 
       const result = await usersService.updateUserBalance(options);
 
       expect(result).toEqual(user);
-      expect(usersRepository.manager.transaction).toHaveBeenCalled();
+      expect(entityManager.transaction).toHaveBeenCalled();
     });
 
     it('should throw NotFoundException if user is not found', async () => {

@@ -1,12 +1,12 @@
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Role } from '@/entities';
 import { RolesService } from '@/services';
 
-import { testRepository } from '../test-objects';
 import { makeRole } from '../utils';
+import { createMock } from '@golevelup/ts-jest'
 
 jest.mock('../../src/services/singleton-logger.service.ts', () => ({
   SingletonLoggerService: {
@@ -24,15 +24,18 @@ describe('RolesService', () => {
   let rolesRepository: Repository<Role>;
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         RolesService,
         {
           provide: getRepositoryToken(Role),
-          useValue: testRepository,
+          useValue: createMock<Repository<Role>>(),
         },
       ],
-    }).compile();
+    })
+      .useMocker(createMock)
+      .compile();
+
 
     rolesService = module.get<RolesService>(RolesService);
     rolesRepository = module.get<Repository<Role>>(getRepositoryToken(Role));

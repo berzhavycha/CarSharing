@@ -1,4 +1,3 @@
-import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CarsController } from '@/controllers';
@@ -7,32 +6,21 @@ import { Car } from '@/entities';
 import { CarStatus } from '@/helpers';
 import { CarsService } from '@/services';
 
-import { testCarsService, testConfigService } from '../test-objects';
 import { makeCar, makeCreateCarDto } from '../utils';
+import { createMock } from '@golevelup/ts-jest';
 
 describe('CarsController', () => {
   let carsService: CarsService;
   let carsController: CarsController;
-  let configService: ConfigService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CarsController],
-      providers: [
-        {
-          provide: CarsService,
-          useValue: testCarsService,
-        },
-        {
-          provide: ConfigService,
-          useValue: testConfigService,
-        },
-      ],
-    }).compile();
+    }).useMocker(createMock)
+      .compile();
 
     carsService = module.get<CarsService>(CarsService);
     carsController = module.get<CarsController>(CarsController);
-    configService = module.get<ConfigService>(ConfigService);
   });
 
   afterEach(() => {
@@ -48,7 +36,6 @@ describe('CarsController', () => {
       const createdCar = makeCar();
       const createCarDto = makeCreateCarDto();
 
-      jest.spyOn(configService, 'get').mockReturnValue('uploads');
       jest.spyOn(carsService, 'createCar').mockResolvedValue(createdCar);
 
       const dto = { ...createCarDto, status: CarStatus.AVAILABLE };
@@ -106,7 +93,6 @@ describe('CarsController', () => {
         ...updateCarDto,
       });
 
-      jest.spyOn(configService, 'get').mockReturnValue('uploads');
       jest.spyOn(carsService, 'updateCar').mockResolvedValue(updatedCar);
 
       const result = await carsController.update(carId, updateCarDto);

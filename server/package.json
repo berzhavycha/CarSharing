@@ -67,6 +67,7 @@
     "yaml": "^2.4.5"
   },
   "devDependencies": {
+    "@golevelup/ts-jest": "^0.5.0",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.3.9",
