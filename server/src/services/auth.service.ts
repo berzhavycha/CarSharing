@@ -14,7 +14,6 @@ import { RegisterUserDto } from '@/dtos';
 import { User } from '@/entities';
 import {
   authErrorMessages,
-  DUPLICATE_EMAIL_ERROR_CODE,
   hashValue,
   NODE_ENV,
   ONE_DAY_MILLISECONDS,
@@ -37,6 +36,12 @@ export class AuthService {
   async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
     try {
       const { password, ...safeUser } = registerUserDto;
+
+      const existingUser = this.usersService.findByEmail(safeUser.email)
+
+      if (existingUser) {
+        throw new ConflictException(authErrorMessages.DUPLICATE_EMAIL);
+      }
 
       const invitationCode = this.configService.get<string>(
         'ADMIN_INVITATION_CODE',
@@ -65,18 +70,11 @@ export class AuthService {
         tokens: await this.generateTokens(user.id, user.email),
       };
     } catch (error) {
-      if (error.code === DUPLICATE_EMAIL_ERROR_CODE) {
-        this.loggerService.warn(
-          `Duplicate email registration attempt: ${registerUserDto.email}`,
-        );
-        throw new ConflictException(authErrorMessages.DUPLICATE_EMAIL);
-      } else {
-        this.loggerService.error(
-          `Error during user registration: ${error.message}`,
-          error.stack,
-        );
-        throw error;
-      }
+      this.loggerService.error(
+        `Error during user registration: ${error.message}`,
+        error.stack,
+      );
+      throw error;
     }
   }
 
