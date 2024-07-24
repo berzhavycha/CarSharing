@@ -126,7 +126,6 @@ export class RentalsService {
         throw new BadRequestException(rentalsErrorMessages.CAR_IS_RETURNED);
       }
 
-      //refactor
       return this.entityManager.transaction(async (manager) => {
         const returnDate = new Date();
         const hoursDifference = Math.ceil(
