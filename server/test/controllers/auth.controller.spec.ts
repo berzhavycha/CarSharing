@@ -10,8 +10,8 @@ import { Roles } from '@/helpers';
 import { RequestWithUser } from '@/interfaces';
 import { AuthService } from '@/services';
 
-import { testAuthService } from '../test-objects';
 import { makeResponse, makeTokens, makeUser } from '../utils';
+import { createMock } from '@golevelup/ts-jest';
 
 describe('AuthController', () => {
   let authService: AuthService;
@@ -20,13 +20,8 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [
-        {
-          provide: AuthService,
-          useValue: testAuthService,
-        },
-      ],
-    }).compile();
+    }).useMocker(createMock)
+      .compile();
 
     authService = module.get<AuthService>(AuthService);
     authController = module.get<AuthController>(AuthController);

@@ -11,14 +11,8 @@ import {
   CarStatus,
   RentalStatus,
 } from '@/helpers';
-import { CarsService, LoggerService, PublicFilesService } from '@/services';
+import { CarsService, PublicFilesService } from '@/services';
 
-import {
-  testLoggerService,
-  testPublicFilesService,
-  testQueryBuilder,
-  testRepository,
-} from '../test-objects';
 import {
   makeCar,
   makeCreateCarDto,
@@ -26,6 +20,7 @@ import {
   makePublicFile,
   makeRental,
 } from '../utils';
+import { createMock } from '@golevelup/ts-jest';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
@@ -42,15 +37,11 @@ describe('CarsService', () => {
         CarsService,
         {
           provide: getRepositoryToken(Car),
-          useValue: testRepository,
+          useValue: createMock<Repository<Car>>(),
         },
-        {
-          provide: PublicFilesService,
-          useValue: testPublicFilesService,
-        },
-        { provide: LoggerService, useValue: testLoggerService },
       ],
-    }).compile();
+    }).useMocker(createMock)
+      .compile();
 
     carsService = module.get<CarsService>(CarsService);
     carsRepository = module.get<Repository<Car>>(getRepositoryToken(Car));
@@ -295,7 +286,8 @@ describe('CarsService', () => {
       };
 
       const car = makeCar();
-      const resultValue = [
+      const queryBuilder = createMock<SelectQueryBuilder<Car>>()
+      const resultValue: [Car[], number] = [
         [
           { ...car, id: '1' },
           { ...car, id: '2' },
@@ -305,17 +297,12 @@ describe('CarsService', () => {
 
       jest
         .spyOn(carsRepository, 'createQueryBuilder')
-        .mockReturnValue(
-          testQueryBuilder as unknown as SelectQueryBuilder<Car>,
-        );
+        .mockReturnValue(queryBuilder);
+      jest.spyOn(queryBuilder, 'leftJoinAndSelect').mockReturnThis()
+      jest.spyOn(queryBuilder, 'getManyAndCount').mockResolvedValue(resultValue)
 
-      (applySearchAndPagination as jest.Mock).mockReturnValue(
-        testQueryBuilder as unknown as SelectQueryBuilder<Car>,
-      );
-
-      jest
-        .spyOn(testQueryBuilder, 'getManyAndCount')
-        .mockResolvedValue(resultValue);
+      const mockApplySearchAndPagination = applySearchAndPagination as jest.Mock;
+      mockApplySearchAndPagination.mockImplementation((qb) => qb);
 
       const result = await carsService.findAll(listCarsDto);
 

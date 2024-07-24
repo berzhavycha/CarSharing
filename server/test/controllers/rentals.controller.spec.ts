@@ -5,8 +5,8 @@ import { QueryRentalsDto, RentCarDto } from '@/dtos';
 import { Rental } from '@/entities';
 import { RentalsService } from '@/services';
 
-import { testRentalsService } from '../test-objects';
 import { makeRental, makeUser } from '../utils';
+import { createMock } from '@golevelup/ts-jest';
 
 describe('RentalsController', () => {
   let rentalsController: RentalsController;
@@ -15,13 +15,8 @@ describe('RentalsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RentalsController],
-      providers: [
-        {
-          provide: RentalsService,
-          useValue: testRentalsService,
-        },
-      ],
-    }).compile();
+    }).useMocker(createMock)
+      .compile();
 
     rentalsController = module.get<RentalsController>(RentalsController);
     rentalsService = module.get<RentalsService>(RentalsService);

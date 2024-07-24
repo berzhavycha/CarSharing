@@ -4,7 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
 
 import { QueryRentalsDto } from '@/dtos';
-import { Rental, User } from '@/entities';
+import { PublicFile, Rental, User } from '@/entities';
 import {
   applySearchAndPagination,
   CarStatus,
@@ -14,21 +14,11 @@ import {
 } from '@/helpers';
 import {
   CarsService,
-  LoggerService,
   OriginalCarsService,
   RentalsService,
   UsersService,
 } from '@/services';
 
-import {
-  testCarsService,
-  testEntityManager,
-  testLoggerService,
-  testOriginalCarsService,
-  testQueryBuilder,
-  testRepository,
-  testUsersService,
-} from '../test-objects';
 import {
   makeCar,
   makeOriginalCar,
@@ -36,6 +26,7 @@ import {
   makeRentalDto,
   makeUser,
 } from '../utils';
+import { createMock } from '@golevelup/ts-jest';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
@@ -47,36 +38,21 @@ describe('RentalsService', () => {
   let carsService: CarsService;
   let originalCarsService: OriginalCarsService;
   let usersService: UsersService;
+  let entityManager: EntityManager
 
-  // optimize DI
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
         RentalsService,
         {
           provide: getRepositoryToken(Rental),
-          useValue: testRepository,
+          useValue: createMock<Repository<PublicFile>>(),
         },
-        {
-          provide: CarsService,
-          useValue: testCarsService,
-        },
-        {
-          provide: OriginalCarsService,
-          useValue: testOriginalCarsService,
-        },
-        {
-          provide: UsersService,
-          useValue: testUsersService,
-        },
-        {
-          provide: EntityManager,
-          useValue: testEntityManager,
-        },
-        { provide: LoggerService, useValue: testLoggerService },
       ],
-    }).compile();
+    }).useMocker(createMock)
+      .compile();
 
+    entityManager = module.get<EntityManager>(EntityManager)
     rentalsService = module.get<RentalsService>(RentalsService);
     rentalsRepository = module.get<Repository<Rental>>(
       getRepositoryToken(Rental),
@@ -164,8 +140,7 @@ describe('RentalsService', () => {
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
-      jest
-        .spyOn(testEntityManager, 'transaction')
+      (entityManager.transaction as jest.Mock)
         .mockImplementation(async (fn) => {
           return await fn({
             save: jest
@@ -174,7 +149,6 @@ describe('RentalsService', () => {
               .mockResolvedValue(rental),
           });
         });
-
       jest.spyOn(rentalsRepository, 'create').mockReturnValue(rental);
       jest
         .spyOn(originalCarsService, 'createOriginalCarTransaction')
@@ -199,8 +173,7 @@ describe('RentalsService', () => {
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
-      jest
-        .spyOn(testEntityManager, 'transaction')
+      (entityManager.transaction as jest.Mock)
         .mockImplementation(async (fn) => {
           return await fn({
             save: jest
@@ -209,7 +182,6 @@ describe('RentalsService', () => {
               .mockResolvedValue(rental),
           });
         });
-
       jest.spyOn(rentalsRepository, 'create').mockReturnValue(rental);
       jest
         .spyOn(originalCarsService, 'createOriginalCarTransaction')
@@ -290,8 +262,7 @@ describe('RentalsService', () => {
       const returnResult = { refund: 40, rental };
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
-      jest
-        .spyOn(testEntityManager, 'transaction')
+      (entityManager.transaction as jest.Mock)
         .mockImplementation(async (fn) => {
           return await fn({
             save: jest
@@ -300,6 +271,9 @@ describe('RentalsService', () => {
               .mockResolvedValue(rental),
           });
         });
+      jest
+        .spyOn(usersService, 'updateUserBalance')
+        .mockResolvedValue(undefined);
 
       const result = await rentalsService.returnCar(rentalId, user);
 
@@ -327,8 +301,7 @@ describe('RentalsService', () => {
       const returnResult = { refund: 40, rental };
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
-      jest
-        .spyOn(testEntityManager, 'transaction')
+      (entityManager.transaction as jest.Mock)
         .mockImplementation(async (fn) => {
           return await fn({
             save: jest
@@ -337,6 +310,9 @@ describe('RentalsService', () => {
               .mockResolvedValue(rental),
           });
         });
+      jest
+        .spyOn(usersService, 'updateUserBalance')
+        .mockResolvedValue(undefined);
 
       const result = await rentalsService.returnCar(rentalId, user);
 
@@ -370,8 +346,7 @@ describe('RentalsService', () => {
       const returnResult = { penalty: 20, rental };
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
-      jest
-        .spyOn(testEntityManager, 'transaction')
+      (entityManager.transaction as jest.Mock)
         .mockImplementation(async (fn) => {
           return await fn({
             save: jest
@@ -380,6 +355,9 @@ describe('RentalsService', () => {
               .mockResolvedValue(rental),
           });
         });
+      jest
+        .spyOn(usersService, 'updateUserBalance')
+        .mockResolvedValue(undefined);
 
       const result = await rentalsService.returnCar(rentalId, user);
 
@@ -413,16 +391,18 @@ describe('RentalsService', () => {
       const returnResult = { rental };
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
-      jest
-        .spyOn(testEntityManager, 'transaction')
+      (entityManager.transaction as jest.Mock)
         .mockImplementation(async (fn) => {
           return await fn({
             save: jest
               .fn()
-              .mockResolvedValueOnce(rental.car)
+              .mockResolvedValueOnce(car)
               .mockResolvedValue(rental),
           });
         });
+      jest
+        .spyOn(usersService, 'updateUserBalance')
+        .mockResolvedValue(undefined);
 
       const result = await rentalsService.returnCar(rentalId, user);
 
@@ -455,32 +435,25 @@ describe('RentalsService', () => {
 
   describe('findAllUserRentals', () => {
     it('should return user rentals when found', async () => {
-      const user = makeUser();
-      const queryDto: QueryRentalsDto = { page: 1, limit: 10 };
-
-      const userRentals = [
+      const paginationResult: [Rental[], number] = [[
         makeRental({ id: '1st-rental' }),
         makeRental({ id: '2nd-rental' }),
         makeRental({ id: '3rd-rental' }),
-      ];
+      ], 3];
+      const queryBuilder = createMock<SelectQueryBuilder<Rental>>()
 
-      jest
-        .spyOn(rentalsRepository, 'createQueryBuilder')
-        .mockReturnValue(
-          testQueryBuilder as unknown as SelectQueryBuilder<Rental>,
-        );
+      jest.spyOn(queryBuilder, 'where').mockReturnThis()
+      jest.spyOn(queryBuilder, 'leftJoinAndSelect').mockReturnThis()
+      jest.spyOn(queryBuilder, 'getManyAndCount').mockResolvedValue(paginationResult)
+      jest.spyOn(rentalsRepository, 'createQueryBuilder').mockReturnValue(queryBuilder);
 
-      (applySearchAndPagination as jest.Mock).mockReturnValue(
-        testQueryBuilder as unknown as SelectQueryBuilder<Rental>,
-      );
+      const mockApplySearchAndPagination = applySearchAndPagination as jest.Mock;
+      mockApplySearchAndPagination.mockImplementation((qb) => qb);
 
-      jest
-        .spyOn(testQueryBuilder, 'getManyAndCount')
-        .mockResolvedValue([...userRentals, userRentals.length]);
+      const queryDto: QueryRentalsDto = {};
+      const result = await rentalsService.findAllUserRentals('user-id', queryDto);
 
-      const result = await rentalsService.findAllUserRentals(user.id, queryDto);
-
-      expect(result).toEqual([...userRentals, userRentals.length]);
+      expect(result).toEqual(paginationResult);
     });
   });
 });

@@ -32,7 +32,8 @@ export class UsersService {
     private readonly rolesService: RolesService,
     private readonly publicFilesService: PublicFilesService,
     private readonly loggerService: LoggerService,
-  ) {}
+    private readonly entityManager: EntityManager,
+  ) { }
 
   async createUser(userData: {
     userDetails: SafeUser;
@@ -230,7 +231,7 @@ export class UsersService {
         return updateBalance(manager);
       }
 
-      return this.usersRepository.manager.transaction(updateBalance);
+      return this.entityManager.transaction(updateBalance);
     } catch (error) {
       this.loggerService.error(
         `Error updating user balance: ${error.message}`,

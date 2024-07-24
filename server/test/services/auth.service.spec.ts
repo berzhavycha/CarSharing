@@ -3,7 +3,6 @@ import {
   ConflictException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import * as bcrypt from 'bcryptjs';
@@ -12,14 +11,11 @@ import { Response } from 'express-serve-static-core';
 
 import { User } from '@/entities';
 import { DUPLICATE_EMAIL_ERROR_CODE, hashValue, Roles } from '@/helpers';
-import { AuthService, LoggerService, UsersService } from '@/services';
+import { AuthService, UsersService } from '@/services';
 
-import {
-  testJwtService,
-  testLoggerService,
-  testUsersService,
-} from '../test-objects';
 import { makeHash, makeResponse, makeTokens, makeUser } from '../utils';
+import { createMock } from '@golevelup/ts-jest';
+import { ConfigService } from '@nestjs/config';
 
 jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
   hashValue: jest.fn(),
@@ -29,45 +25,24 @@ jest.mock('bcryptjs', () => ({
   compare: jest.fn(),
 }));
 
-jest.mock('@nestjs/config');
-const testConfigService = {
-  get: jest.fn().mockImplementation((key: string) => {
-    switch (key) {
-      case 'JWT_REFRESH_SECRET':
-        return 'mock_refresh_secret';
-      case 'JWT_REFRESH_TOKEN_TIME':
-        return '1d';
-      case 'AUTH_COOKIE_EXPIRATION_DAYS_TIME':
-        return 7;
-      case 'ADMIN_INVITATION_CODE':
-        return '1234';
-      case 'NODE_ENV':
-        return 'production';
-      default:
-        return undefined;
-    }
-  }),
-};
 
 describe('AuthService', () => {
   let authService: AuthService;
   let jwtService: JwtService;
   let usersService: UsersService;
+  let configService: ConfigService
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      providers: [
-        AuthService,
-        { provide: ConfigService, useValue: testConfigService },
-        { provide: UsersService, useValue: testUsersService },
-        { provide: JwtService, useValue: testJwtService },
-        { provide: LoggerService, useValue: testLoggerService },
-      ],
-    }).compile();
+      providers: [AuthService],
+    })
+      .useMocker(createMock)
+      .compile();
 
     authService = module.get<AuthService>(AuthService);
     jwtService = module.get<JwtService>(JwtService);
     usersService = module.get<UsersService>(UsersService);
+    configService = module.get<ConfigService>(ConfigService)
   });
 
   afterEach(() => {
@@ -95,6 +70,7 @@ describe('AuthService', () => {
       (hashValue as jest.Mock).mockResolvedValueOnce(hash);
       jest.spyOn(authService, 'generateTokens').mockResolvedValueOnce(tokens);
       jest.spyOn(usersService, 'createUser').mockResolvedValueOnce(user);
+      jest.spyOn(usersService, 'findByEmail').mockResolvedValueOnce(null);
 
       const result = await authService.signUp(registerUserDto);
 
@@ -107,7 +83,7 @@ describe('AuthService', () => {
       const hash = makeHash();
 
       (hashValue as jest.Mock).mockResolvedValueOnce(hash);
-      jest.spyOn(testUsersService, 'createUser').mockImplementationOnce(() => {
+      jest.spyOn(usersService, 'createUser').mockImplementationOnce(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const error: any = new Error('Email already exists');
         error.code = DUPLICATE_EMAIL_ERROR_CODE;
@@ -125,6 +101,8 @@ describe('AuthService', () => {
         role: Roles.ADMIN,
         invitationCode: 'invalid-code',
       };
+
+      jest.spyOn(usersService, 'findByEmail').mockResolvedValueOnce(null);
 
       await expect(authService.signUp(registerDto)).rejects.toThrow(
         BadRequestException,
@@ -246,7 +224,7 @@ describe('AuthService', () => {
         .spyOn(jwtService, 'signAsync')
         .mockResolvedValueOnce(tokens.accessToken)
         .mockResolvedValueOnce(tokens.refreshToken);
-      jest.spyOn(testUsersService, 'updateUser').mockResolvedValue(user);
+      jest.spyOn(usersService, 'updateUser').mockResolvedValue(user);
 
       const result = await authService.generateTokens(userId, email);
 
@@ -264,7 +242,7 @@ describe('AuthService', () => {
         .spyOn(jwtService, 'signAsync')
         .mockResolvedValueOnce(tokens.accessToken)
         .mockResolvedValueOnce(tokens.refreshToken);
-      jest.spyOn(testUsersService, 'updateUser').mockResolvedValue(user);
+      jest.spyOn(usersService, 'updateUser').mockResolvedValue(user);
 
       await authService.generateTokens(userId, email);
 
@@ -324,6 +302,17 @@ describe('AuthService', () => {
       const tokens = makeTokens();
       const mockResponse = makeResponse();
 
+      jest.spyOn(configService, 'get').mockImplementation((key: string) => {
+        switch (key) {
+          case 'AUTH_COOKIE_EXPIRATION_DAYS_TIME':
+            return 7;
+          case 'NODE_ENV':
+            return 'production';
+          default:
+            return undefined;
+        }
+      });
+
       authService.setTokensCookies(mockResponse as unknown as Response, tokens);
 
       expect(mockResponse.cookie).toHaveBeenCalledWith('tokens', tokens, {
@@ -338,18 +327,16 @@ describe('AuthService', () => {
       const tokens = makeTokens();
       const mockResponse = makeResponse();
 
-      testConfigService.get = jest
-        .fn()
-        .mockImplementationOnce((key: string) => {
-          switch (key) {
-            case 'AUTH_COOKIE_EXPIRATION_DAYS_TIME':
-              return 7;
-            case 'NODE_ENV':
-              return 'development';
-            default:
-              return undefined;
-          }
-        });
+      jest.spyOn(configService, 'get').mockImplementationOnce((key: string) => {
+        switch (key) {
+          case 'AUTH_COOKIE_EXPIRATION_DAYS_TIME':
+            return 7;
+          case 'NODE_ENV':
+            return 'development';
+          default:
+            return undefined;
+        }
+      });
 
       authService.setTokensCookies(mockResponse as unknown as Response, tokens);
 
@@ -366,7 +353,7 @@ describe('AuthService', () => {
     it('should clear tokens cookie with correct options', () => {
       const mockResponse = makeResponse();
 
-      testConfigService.get = jest.fn().mockImplementation((key: string) => {
+      jest.spyOn(configService, 'get').mockImplementation((key: string) => {
         switch (key) {
           case 'NODE_ENV':
             return 'production';
@@ -387,7 +374,7 @@ describe('AuthService', () => {
     it('should set secure to false when NODE_ENV is not production', () => {
       const mockResponse = makeResponse();
 
-      testConfigService.get = jest.fn().mockImplementation((key: string) => {
+      jest.spyOn(configService, 'get').mockImplementation((key: string) => {
         switch (key) {
           case 'NODE_ENV':
             return 'development';

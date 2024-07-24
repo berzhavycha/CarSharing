@@ -6,16 +6,11 @@ import { Repository } from 'typeorm';
 import { PublicFile } from '@/entities';
 import {
   FilesManagerService,
-  LoggerService,
   PublicFilesService,
 } from '@/services';
 
-import {
-  testFilesManagerService,
-  testLoggerService,
-  testRepository,
-} from '../test-objects';
 import { makeFile, makePublicFile, makeUploadedFile } from '../utils';
+import { createMock } from '@golevelup/ts-jest';
 
 describe('PublicFilesService', () => {
   let publicFilesRepository: Repository<PublicFile>;
@@ -28,12 +23,11 @@ describe('PublicFilesService', () => {
         PublicFilesService,
         {
           provide: getRepositoryToken(PublicFile),
-          useValue: testRepository,
+          useValue: createMock<Repository<PublicFile>>(),
         },
-        { provide: FilesManagerService, useValue: testFilesManagerService },
-        { provide: LoggerService, useValue: testLoggerService },
       ],
-    }).compile();
+    }).useMocker(createMock)
+      .compile();
 
     publicFilesService = module.get<PublicFilesService>(PublicFilesService);
     publicFilesRepository = module.get<Repository<PublicFile>>(

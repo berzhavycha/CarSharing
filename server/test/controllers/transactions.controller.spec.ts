@@ -1,4 +1,3 @@
-import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { TransactionsController } from '@/controllers';
@@ -6,8 +5,8 @@ import { QueryTransactionsDto } from '@/dtos';
 import { Transaction } from '@/entities';
 import { TransactionsService } from '@/services';
 
-import { testConfigService, testTransanctionService } from '../test-objects';
 import { makeTransaction } from '../utils';
+import { createMock } from '@golevelup/ts-jest';
 
 describe('TransactionsController', () => {
   let transactionsService: TransactionsService;
@@ -16,17 +15,8 @@ describe('TransactionsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TransactionsController],
-      providers: [
-        {
-          provide: TransactionsService,
-          useValue: testTransanctionService,
-        },
-        {
-          provide: ConfigService,
-          useValue: testConfigService,
-        },
-      ],
-    }).compile();
+    }).useMocker(createMock)
+      .compile();
 
     transactionsService = module.get<TransactionsService>(TransactionsService);
     transactionsController = module.get<TransactionsController>(

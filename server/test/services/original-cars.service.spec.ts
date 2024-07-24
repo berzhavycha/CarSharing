@@ -6,15 +6,10 @@ import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
 import { QueryCarsDto } from '@/dtos';
 import { OriginalCar } from '@/entities';
 import { applySearchAndPagination } from '@/helpers';
-import { LoggerService, OriginalCarsService } from '@/services';
+import { OriginalCarsService } from '@/services';
 
-import {
-  testEntityManager,
-  testLoggerService,
-  testQueryBuilder,
-  testRepository,
-} from '../test-objects';
 import { makeOriginalCar, makeOriginalCarDto } from '../utils';
+import { createMock } from '@golevelup/ts-jest';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
@@ -30,11 +25,11 @@ describe('OriginalCarsService', () => {
         OriginalCarsService,
         {
           provide: getRepositoryToken(OriginalCar),
-          useValue: testRepository,
+          useValue: createMock<Repository<OriginalCar>>(),
         },
-        { provide: LoggerService, useValue: testLoggerService },
       ],
-    }).compile();
+    }).useMocker(createMock)
+      .compile();
 
     originalCarsService = module.get<OriginalCarsService>(OriginalCarsService);
     originalCarsRepository = module.get<Repository<OriginalCar>>(
@@ -70,31 +65,33 @@ describe('OriginalCarsService', () => {
       const createdCar = makeOriginalCar();
       const dto = makeOriginalCarDto();
 
-      jest.spyOn(testEntityManager, 'create').mockReturnValue(createdCar);
-      jest.spyOn(testEntityManager, 'save').mockResolvedValue(createdCar);
+      const entityManager = createMock<EntityManager>();
+      jest.spyOn(entityManager, 'create').mockReturnValue(createdCar as unknown as unknown[]);
+      jest.spyOn(entityManager, 'save').mockResolvedValue(createdCar);
 
       const result = await originalCarsService.createOriginalCarTransaction(
         dto,
-        testEntityManager as unknown as EntityManager,
+        entityManager
       );
 
       expect(result).toEqual(createdCar);
-      expect(testEntityManager.save).toHaveBeenCalledWith(createdCar);
+      expect(entityManager.save).toHaveBeenCalledWith(createdCar);
     });
 
     it('should propagate error when save operation fails', async () => {
       const originalCar = makeOriginalCar();
       const dto = makeOriginalCarDto();
 
-      jest.spyOn(testEntityManager, 'create').mockReturnValue(originalCar);
+      const entityManager = createMock<EntityManager>()
+      jest.spyOn(entityManager, 'create').mockReturnValue(originalCar as unknown as unknown[]);
       jest
-        .spyOn(testEntityManager, 'save')
+        .spyOn(entityManager, 'save')
         .mockRejectedValue(new Error('Save failed'));
 
       await expect(
         originalCarsService.createOriginalCarTransaction(
           dto,
-          testEntityManager as unknown as EntityManager,
+          entityManager,
         ),
       ).rejects.toThrow(Error);
     });
@@ -135,18 +132,17 @@ describe('OriginalCarsService', () => {
       };
 
       const originalCar = makeOriginalCar();
-      const resultValue = [[originalCar, { ...originalCar, id: '2nd-id' }], 2];
+      const resultValue: [OriginalCar[], number] = [[originalCar, { ...originalCar, id: '2nd-id' }], 2];
+      const queryBuilder = createMock<SelectQueryBuilder<OriginalCar>>()
 
       jest
         .spyOn(originalCarsRepository, 'createQueryBuilder')
-        .mockReturnValue(
-          testQueryBuilder as unknown as SelectQueryBuilder<OriginalCar>,
-        );
+        .mockReturnValue(queryBuilder);
 
-      (applySearchAndPagination as jest.Mock).mockReturnValue(testQueryBuilder);
+      (applySearchAndPagination as jest.Mock).mockReturnValue(queryBuilder);
 
       jest
-        .spyOn(testQueryBuilder, 'getManyAndCount')
+        .spyOn(queryBuilder, 'getManyAndCount')
         .mockResolvedValue(resultValue);
 
       const result = await originalCarsService.findAll(listCarsDto);

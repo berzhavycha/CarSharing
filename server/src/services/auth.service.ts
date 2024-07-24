@@ -38,6 +38,7 @@ export class AuthService {
       const { password, ...safeUser } = registerUserDto;
 
       const existingUser = await this.usersService.findByEmail(safeUser.email)
+      
       if (existingUser) {
         throw new ConflictException(authErrorMessages.DUPLICATE_EMAIL);
       }
