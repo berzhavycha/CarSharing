@@ -39,5 +39,4 @@ export const RentalListStore = t
     }),
   }));
 
-
 export type RentalListStoreType = Instance<typeof RentalListStore>;

@@ -1,16 +1,13 @@
+import { createMock } from '@golevelup/ts-jest';
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { PublicFile } from '@/entities';
-import {
-  FilesManagerService,
-  PublicFilesService,
-} from '@/services';
+import { FilesManagerService, PublicFilesService } from '@/services';
 
 import { makeFile, makePublicFile, makeUploadedFile } from '../utils';
-import { createMock } from '@golevelup/ts-jest';
 
 describe('PublicFilesService', () => {
   let publicFilesRepository: Repository<PublicFile>;
@@ -26,7 +23,8 @@ describe('PublicFilesService', () => {
           useValue: createMock<Repository<PublicFile>>(),
         },
       ],
-    }).useMocker(createMock)
+    })
+      .useMocker(createMock)
       .compile();
 
     publicFilesService = module.get<PublicFilesService>(PublicFilesService);

@@ -5,6 +5,7 @@ import { getRental } from '@/services';
 import { Rental } from '@/types';
 
 import { RentalModel } from '../models';
+
 import { RootStoreType } from './root-store';
 
 export const SingleRentalStore = t
@@ -36,6 +37,5 @@ export const SingleRentalStore = t
       }
     }),
   }));
-
 
 export type SingleRentalStoreType = Instance<typeof SingleRentalStore>;

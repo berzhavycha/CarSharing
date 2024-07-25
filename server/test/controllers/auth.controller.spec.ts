@@ -1,3 +1,4 @@
+import { createMock } from '@golevelup/ts-jest';
 import { HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToClass } from 'class-transformer';
@@ -11,7 +12,6 @@ import { RequestWithUser } from '@/interfaces';
 import { AuthService } from '@/services';
 
 import { makeResponse, makeTokens, makeUser } from '../utils';
-import { createMock } from '@golevelup/ts-jest';
 
 describe('AuthController', () => {
   let authService: AuthService;
@@ -20,7 +20,8 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-    }).useMocker(createMock)
+    })
+      .useMocker(createMock)
       .compile();
 
     authService = module.get<AuthService>(AuthService);

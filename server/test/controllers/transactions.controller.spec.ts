@@ -1,3 +1,4 @@
+import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { TransactionsController } from '@/controllers';
@@ -6,7 +7,6 @@ import { Transaction } from '@/entities';
 import { TransactionsService } from '@/services';
 
 import { makeTransaction } from '../utils';
-import { createMock } from '@golevelup/ts-jest';
 
 describe('TransactionsController', () => {
   let transactionsService: TransactionsService;
@@ -15,7 +15,8 @@ describe('TransactionsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TransactionsController],
-    }).useMocker(createMock)
+    })
+      .useMocker(createMock)
       .compile();
 
     transactionsService = module.get<TransactionsService>(TransactionsService);

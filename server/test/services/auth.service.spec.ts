@@ -1,8 +1,10 @@
+import { createMock } from '@golevelup/ts-jest';
 import {
   BadRequestException,
   ConflictException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import * as bcrypt from 'bcryptjs';
@@ -14,8 +16,6 @@ import { DUPLICATE_EMAIL_ERROR_CODE, hashValue, Roles } from '@/helpers';
 import { AuthService, UsersService } from '@/services';
 
 import { makeHash, makeResponse, makeTokens, makeUser } from '../utils';
-import { createMock } from '@golevelup/ts-jest';
-import { ConfigService } from '@nestjs/config';
 
 jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
   hashValue: jest.fn(),
@@ -25,12 +25,11 @@ jest.mock('bcryptjs', () => ({
   compare: jest.fn(),
 }));
 
-
 describe('AuthService', () => {
   let authService: AuthService;
   let jwtService: JwtService;
   let usersService: UsersService;
-  let configService: ConfigService
+  let configService: ConfigService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -42,7 +41,7 @@ describe('AuthService', () => {
     authService = module.get<AuthService>(AuthService);
     jwtService = module.get<JwtService>(JwtService);
     usersService = module.get<UsersService>(UsersService);
-    configService = module.get<ConfigService>(ConfigService)
+    configService = module.get<ConfigService>(ConfigService);
   });
 
   afterEach(() => {

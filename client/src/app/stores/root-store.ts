@@ -25,4 +25,3 @@ export const rootStore = RootStore.create({
 });
 
 export type RootStoreType = Instance<typeof RootStore>;
-

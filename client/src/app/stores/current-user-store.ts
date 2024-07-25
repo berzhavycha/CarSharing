@@ -114,7 +114,7 @@ export const CurrentUserStore = t
         handleUserResponse(
           response,
           (user) => self.setUser(user),
-          () => { },
+          () => {},
         );
       } catch (error) {
         self.setUser(null);

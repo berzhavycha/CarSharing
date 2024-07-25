@@ -39,7 +39,7 @@ export const CSMainAvailableCars: FC = () => {
 
 const ErrorWrapper = styled.div`
   width: 100%;
-`
+`;
 
 const AvailableCarsWrapper = styled.div`
   display: flex;
