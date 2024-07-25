@@ -1,4 +1,4 @@
-import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
+import { handleUserResponse, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import * as services from '@/services';
 import { SignUpUserDto, UpdateUserBalanceDto } from '@/types';
 
@@ -12,6 +12,10 @@ jest.mock('@/core', () => ({
   Env: {
     API_BASE_URL: 'http://test-api.example.com',
   },
+}));
+
+jest.mock('../../helpers/utils/auth/handle-user-response.ts', () => ({
+  handleUserResponse: jest.fn(),
 }));
 
 describe('CurrentUserStore', () => {
@@ -31,6 +35,9 @@ describe('CurrentUserStore', () => {
     it('should handle successful action', async () => {
       const user = makeUser();
       const action = jest.fn().mockResolvedValue({ user });
+      (handleUserResponse as jest.Mock).mockImplementation((response, onSuccess) => {
+        onSuccess(response.user);
+      });
 
       await store.performUserAction('signIn', action);
 
@@ -40,6 +47,9 @@ describe('CurrentUserStore', () => {
     it('should handle action with errors', async () => {
       const errors = { email: ['Invalid email'] };
       const action = jest.fn().mockResolvedValue({ errors });
+      (handleUserResponse as jest.Mock).mockImplementation((response, _onSuccess, onError) => {
+        onError(response.errors);
+      });
 
       await store.performUserAction('signIn', action);
 
@@ -61,6 +71,10 @@ describe('CurrentUserStore', () => {
     it('should sign up user', async () => {
       const userDto = { email: 'test@example.com', password: 'password' } as SignUpUserDto;
       const user = makeUser();
+
+      (handleUserResponse as jest.Mock).mockImplementation((response, onSuccess) => {
+        onSuccess(response.user);
+      });
       (services.signUp as jest.Mock).mockResolvedValue({ user });
 
       await store.signUp(userDto);
@@ -71,6 +85,10 @@ describe('CurrentUserStore', () => {
     it('should sign in user', async () => {
       const userDto = { email: 'test@example.com', password: 'password' };
       const user = makeUser();
+
+      (handleUserResponse as jest.Mock).mockImplementation((response, onSuccess) => {
+        onSuccess(response.user);
+      });
       (services.signIn as jest.Mock).mockResolvedValue({ user });
 
       await store.signIn(userDto);
@@ -81,6 +99,9 @@ describe('CurrentUserStore', () => {
     it('should sign out user', async () => {
       store.setUser(makeUser());
 
+      (handleUserResponse as jest.Mock).mockImplementation((response, onSuccess) => {
+        onSuccess(response.user);
+      });
       (services.signOut as jest.Mock).mockResolvedValue({});
 
       await store.signOut();
@@ -91,8 +112,13 @@ describe('CurrentUserStore', () => {
     it('should update user', async () => {
       const initialUser = makeUser();
       store.setUser(initialUser);
+
       const updateDto = { email: 'new@example.com' };
       const updatedUser = { ...initialUser, ...updateDto };
+
+      (handleUserResponse as jest.Mock).mockImplementation((response, onSuccess) => {
+        onSuccess(response.user);
+      });
       (services.updateUser as jest.Mock).mockResolvedValue({ user: updatedUser });
 
       await store.updateUser(updateDto);
@@ -105,6 +131,10 @@ describe('CurrentUserStore', () => {
       store.setUser(initialUser);
       const topUpDto = { amount: 50 } as UpdateUserBalanceDto;
       const updatedUser = { ...initialUser, balance: 150 };
+      
+      (handleUserResponse as jest.Mock).mockImplementation((response, onSuccess) => {
+        onSuccess(response.user);
+      });
       (services.topUp as jest.Mock).mockResolvedValue({ user: updatedUser });
 
       await store.topUp(topUpDto);

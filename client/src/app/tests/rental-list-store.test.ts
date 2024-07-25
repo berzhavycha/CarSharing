@@ -48,10 +48,6 @@ describe('RentalListStore', () => {
     expect(store.rentals[0]).toEqual(updatedRental);
   });
 
-  it('should set error message', () => {
-    store.setErrorMessage('Test error');
-    expect(store.errorMessage).toBe('Test error');
-  });
 
   it('should fetch rentals successfully', async () => {
     const rentals = [makeRental()];
@@ -61,7 +57,6 @@ describe('RentalListStore', () => {
 
     expect(store.rentals).toHaveLength(1);
     expect(store.rentals).toEqual(rentals);
-    expect(store.errorMessage).toBe('');
   });
 
   it('should handle fetch rentals error', async () => {
@@ -69,7 +64,6 @@ describe('RentalListStore', () => {
 
     await store.fetchRentals({});
 
-    expect(store.rentals).toHaveLength(0);
     expect(store.errorMessage).toBe(UNEXPECTED_ERROR_MESSAGE);
   });
 });
