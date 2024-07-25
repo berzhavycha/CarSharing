@@ -1,4 +1,4 @@
-import { flow, getRoot, t } from 'mobx-state-tree';
+import { flow, getRoot, Instance, t } from 'mobx-state-tree';
 
 import { findOrCreateRentalModel, RentalReturnOrigin, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { returnCar } from '@/services';
@@ -56,7 +56,7 @@ export const CarReturnStore = t
         const { rental, refund, penalty, error } = yield returnCar(id);
         const userStore = getRoot<RootStoreType>(self).currentUserStore;
 
-        if (userStore.user?.balance) {
+        if (userStore.user?.balance !== null && userStore.user?.balance !== undefined) {
           if (refund) {
             self.setRefund(refund);
             userStore.updateBalance(userStore.user.balance + refund);
@@ -67,7 +67,6 @@ export const CarReturnStore = t
             self.setIsReturnedInTime(true);
           }
         }
-
         if (error) {
           self.setErrorMessage(error);
         }
@@ -79,3 +78,5 @@ export const CarReturnStore = t
       }
     }),
   }));
+
+export type CarReturnStoreType = Instance<typeof CarReturnStore>;

@@ -1,4 +1,4 @@
-import { applySnapshot, flow, t } from 'mobx-state-tree';
+import { applySnapshot, flow, Instance, t } from 'mobx-state-tree';
 
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { fetchRentalHistory } from '@/services';
@@ -38,3 +38,6 @@ export const RentalListStore = t
       }
     }),
   }));
+
+
+export type RentalListStoreType = Instance<typeof RentalListStore>;

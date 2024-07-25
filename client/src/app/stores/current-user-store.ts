@@ -12,7 +12,7 @@ import {
   UpdateUserDto,
 } from '@/types';
 
-import { CurrentUserErrorModel, UserModel } from '../models';
+import { UserErrorModel, UserModel } from '../models';
 
 export type ServiceUserResponse<T extends object> = {
   user?: AuthenticatedUser;
@@ -29,7 +29,7 @@ type ErrorTypes =
 export const CurrentUserStore = t
   .model('CurrentUserStore', {
     user: t.optional(t.maybeNull(UserModel), null),
-    errors: CurrentUserErrorModel,
+    errors: UserErrorModel,
     isLoading: t.optional(t.boolean, false),
   })
   .views((self) => ({
@@ -114,7 +114,7 @@ export const CurrentUserStore = t
         handleUserResponse(
           response,
           (user) => self.setUser(user),
-          () => {},
+          () => { },
         );
       } catch (error) {
         self.setUser(null);

@@ -1,11 +1,10 @@
-import { flow, getRoot, t } from 'mobx-state-tree';
+import { flow, getRoot, Instance, t } from 'mobx-state-tree';
 
 import { findOrCreateRentalModel, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { getRental } from '@/services';
 import { Rental } from '@/types';
 
 import { RentalModel } from '../models';
-
 import { RootStoreType } from './root-store';
 
 export const SingleRentalStore = t
@@ -37,3 +36,6 @@ export const SingleRentalStore = t
       }
     }),
   }));
+
+
+export type SingleRentalStoreType = Instance<typeof SingleRentalStore>;
