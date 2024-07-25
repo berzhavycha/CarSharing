@@ -40,6 +40,7 @@ describe('CarReturnStore', () => {
       rentalListStore: RentalListStore.create({ rentals: [makeRental()] }),
     });
 
+    rootStore.currentUserStore.updateBalance = jest.fn();
     (getRoot as jest.Mock).mockReturnValue(rootStore);
   });
 
@@ -69,6 +70,7 @@ describe('CarReturnStore', () => {
     it('should handle successful return with refund', async () => {
       const { carReturnStore } = rootStore;
 
+      jest.spyOn(rootStore.currentUserStore, 'updateBalance').mockReturnValue(undefined);
       (returnCar as jest.Mock).mockResolvedValue({ rental: { id: '1' }, refund: 50 });
 
       await carReturnStore.returnCar('1');
@@ -81,6 +83,7 @@ describe('CarReturnStore', () => {
     it('should handle successful return with penalty', async () => {
       const { carReturnStore } = rootStore;
 
+      jest.spyOn(rootStore.currentUserStore, 'updateBalance').mockReturnValue(undefined);
       (returnCar as jest.Mock).mockResolvedValue({ rental: { id: '1' }, penalty: 30 });
 
       await carReturnStore.returnCar('1');
