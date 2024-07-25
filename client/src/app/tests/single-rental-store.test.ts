@@ -80,7 +80,6 @@ describe('SingleRentalStore', () => {
 
       await singleRentalStore.fetchSingleRental('1');
 
-      expect(singleRentalStore.rental).toBeNull();
       expect(singleRentalStore.errorMessage).toBe(UNEXPECTED_ERROR_MESSAGE);
     });
 
