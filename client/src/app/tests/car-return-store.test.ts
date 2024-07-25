@@ -44,6 +44,10 @@ describe('CarReturnStore', () => {
     (getRoot as jest.Mock).mockReturnValue(rootStore);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('setRentalToReturn', () => {
     it('should set rental correctly', () => {
       const { singleRentalStore } = rootStore;

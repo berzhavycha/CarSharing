@@ -7,6 +7,10 @@ describe('RentalPaymentStore', () => {
     store = RentalPaymentStore.create();
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('setPotentialRentalPrice', () => {
     it('should set the potential rental price', () => {
       store.setPotentialRentalPrice(150);

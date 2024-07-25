@@ -39,6 +39,10 @@ describe('SingleRentalStore', () => {
     (getRoot as jest.Mock).mockReturnValue(rootStore);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('setRental', () => {
     it('should set single rental correctly', () => {
       const { singleRentalStore } = rootStore;

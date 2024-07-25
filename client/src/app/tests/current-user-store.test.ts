@@ -131,7 +131,7 @@ describe('CurrentUserStore', () => {
       store.setUser(initialUser);
       const topUpDto = { amount: 50 } as UpdateUserBalanceDto;
       const updatedUser = { ...initialUser, balance: 150 };
-      
+
       (handleUserResponse as jest.Mock).mockImplementation((response, onSuccess) => {
         onSuccess(response.user);
       });
@@ -144,6 +144,10 @@ describe('CurrentUserStore', () => {
 
     it('should fetch current user', async () => {
       const user = makeUser();
+      
+      (handleUserResponse as jest.Mock).mockImplementation((response, onSuccess) => {
+        onSuccess(response.user);
+      });
       (services.fetchCurrentUser as jest.Mock).mockResolvedValue({ user });
 
       await store.fetchCurrentUser();
