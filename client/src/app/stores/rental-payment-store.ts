@@ -1,4 +1,4 @@
-import { t } from 'mobx-state-tree';
+import { Instance, t } from 'mobx-state-tree';
 
 export const RentalPaymentStore = t
   .model('RentalPaymentStore', {
@@ -9,3 +9,5 @@ export const RentalPaymentStore = t
       self.potentialRentalPrice = price;
     },
   }));
+
+export type RentalPaymentStoreType = Instance<typeof RentalPaymentStore>;
