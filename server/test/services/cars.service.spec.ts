@@ -1,3 +1,4 @@
+import { createMock } from '@golevelup/ts-jest';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -20,7 +21,6 @@ import {
   makePublicFile,
   makeRental,
 } from '../utils';
-import { createMock } from '@golevelup/ts-jest';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
@@ -40,7 +40,8 @@ describe('CarsService', () => {
           useValue: createMock<Repository<Car>>(),
         },
       ],
-    }).useMocker(createMock)
+    })
+      .useMocker(createMock)
       .compile();
 
     carsService = module.get<CarsService>(CarsService);
@@ -286,7 +287,7 @@ describe('CarsService', () => {
       };
 
       const car = makeCar();
-      const queryBuilder = createMock<SelectQueryBuilder<Car>>()
+      const queryBuilder = createMock<SelectQueryBuilder<Car>>();
       const resultValue: [Car[], number] = [
         [
           { ...car, id: '1' },
@@ -298,10 +299,13 @@ describe('CarsService', () => {
       jest
         .spyOn(carsRepository, 'createQueryBuilder')
         .mockReturnValue(queryBuilder);
-      jest.spyOn(queryBuilder, 'leftJoinAndSelect').mockReturnThis()
-      jest.spyOn(queryBuilder, 'getManyAndCount').mockResolvedValue(resultValue)
+      jest.spyOn(queryBuilder, 'leftJoinAndSelect').mockReturnThis();
+      jest
+        .spyOn(queryBuilder, 'getManyAndCount')
+        .mockResolvedValue(resultValue);
 
-      const mockApplySearchAndPagination = applySearchAndPagination as jest.Mock;
+      const mockApplySearchAndPagination =
+        applySearchAndPagination as jest.Mock;
       mockApplySearchAndPagination.mockImplementation((qb) => qb);
 
       const result = await carsService.findAll(listCarsDto);

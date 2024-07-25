@@ -1,3 +1,4 @@
+import { createMock } from '@golevelup/ts-jest';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -22,7 +23,6 @@ import {
   makeUpdateUserBalanceOptions,
   makeUser,
 } from '../utils';
-import { createMock } from '@golevelup/ts-jest';
 
 jest.mock('../../src/helpers/utils/hash-value.ts', () => ({
   hashValue: jest.fn(),
@@ -38,7 +38,7 @@ describe('UsersService', () => {
   let rolesService: RolesService;
   let usersRepository: Repository<User>;
   let publicFilesService: PublicFilesService;
-  let entityManager: EntityManager
+  let entityManager: EntityManager;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -49,7 +49,8 @@ describe('UsersService', () => {
           useValue: createMock<Repository<User>>(),
         },
       ],
-    }).useMocker(createMock)
+    })
+      .useMocker(createMock)
       .compile();
 
     usersService = module.get<UsersService>(UsersService);
@@ -57,7 +58,7 @@ describe('UsersService', () => {
     rolesService = module.get<RolesService>(RolesService);
     usersRepository = module.get<Repository<User>>(getRepositoryToken(User));
     publicFilesService = module.get<PublicFilesService>(PublicFilesService);
-    entityManager = module.get<EntityManager>(EntityManager)
+    entityManager = module.get<EntityManager>(EntityManager);
   });
 
   afterEach(() => {
@@ -281,7 +282,7 @@ describe('UsersService', () => {
       const user = makeUser();
       const balance = 100;
       const options = makeUpdateUserBalanceOptions();
-      const entityManager = createMock<EntityManager>()
+      const entityManager = createMock<EntityManager>();
 
       jest.spyOn(entityManager, 'save').mockResolvedValue({
         ...user,
@@ -291,7 +292,7 @@ describe('UsersService', () => {
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       const result = await usersService.updateUserBalance(
         options,
-        entityManager
+        entityManager,
       );
 
       expect(result).toEqual(user);
@@ -318,7 +319,9 @@ describe('UsersService', () => {
       jest.spyOn(usersService, 'findById').mockResolvedValue(user);
       (entityManager.transaction as jest.Mock).mockResolvedValue(user);
 
-      jest.spyOn(transactionsService, 'createTransaction').mockResolvedValue(undefined);
+      jest
+        .spyOn(transactionsService, 'createTransaction')
+        .mockResolvedValue(undefined);
 
       const result = await usersService.updateUserBalance(options);
 

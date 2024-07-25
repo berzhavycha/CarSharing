@@ -1,3 +1,4 @@
+import { createMock } from '@golevelup/ts-jest';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { EntityManager, Repository, SelectQueryBuilder } from 'typeorm';
@@ -8,7 +9,6 @@ import { applySearchAndPagination } from '@/helpers';
 import { TransactionsService } from '@/services';
 
 import { makeTransaction } from '../utils';
-import { createMock } from '@golevelup/ts-jest';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
@@ -27,7 +27,8 @@ describe('TransanctionsService', () => {
           useValue: createMock<Repository<PublicFile>>(),
         },
       ],
-    }).useMocker(createMock)
+    })
+      .useMocker(createMock)
       .compile();
 
     transactionsService = module.get<TransactionsService>(TransactionsService);
@@ -47,7 +48,7 @@ describe('TransanctionsService', () => {
   describe('createTransaction', () => {
     it('should create a transanction', async () => {
       const transaction = makeTransaction();
-      const entityManager = createMock<EntityManager>()
+      const entityManager = createMock<EntityManager>();
 
       jest.spyOn(transactionsRepository, 'create').mockReturnValue(transaction);
       jest.spyOn(entityManager, 'save').mockResolvedValue(transaction);
@@ -65,14 +66,22 @@ describe('TransanctionsService', () => {
   describe('findAll', () => {
     it('should return transactions and count', async () => {
       const transaction = makeTransaction();
-      const paginationResult: [Transaction[], number] = [[transaction, transaction], 2];
-      const queryBuilder = createMock<SelectQueryBuilder<Transaction>>()
+      const paginationResult: [Transaction[], number] = [
+        [transaction, transaction],
+        2,
+      ];
+      const queryBuilder = createMock<SelectQueryBuilder<Transaction>>();
 
-      jest.spyOn(queryBuilder, 'leftJoinAndSelect').mockReturnThis()
-      jest.spyOn(queryBuilder, 'getManyAndCount').mockResolvedValue(paginationResult)
-      jest.spyOn(transactionsRepository, 'createQueryBuilder').mockReturnValue(queryBuilder);
+      jest.spyOn(queryBuilder, 'leftJoinAndSelect').mockReturnThis();
+      jest
+        .spyOn(queryBuilder, 'getManyAndCount')
+        .mockResolvedValue(paginationResult);
+      jest
+        .spyOn(transactionsRepository, 'createQueryBuilder')
+        .mockReturnValue(queryBuilder);
 
-      const mockApplySearchAndPagination = applySearchAndPagination as jest.Mock;
+      const mockApplySearchAndPagination =
+        applySearchAndPagination as jest.Mock;
       mockApplySearchAndPagination.mockImplementation((qb) => qb);
 
       const queryDto: QueryTransactionsDto = {};

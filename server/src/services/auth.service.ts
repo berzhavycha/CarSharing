@@ -31,14 +31,14 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly loggerService: LoggerService,
-  ) { }
+  ) {}
 
   async signUp(registerUserDto: RegisterUserDto): Promise<AuthResult> {
     try {
       const { password, ...safeUser } = registerUserDto;
 
-      const existingUser = await this.usersService.findByEmail(safeUser.email)
-      
+      const existingUser = await this.usersService.findByEmail(safeUser.email);
+
       if (existingUser) {
         throw new ConflictException(authErrorMessages.DUPLICATE_EMAIL);
       }

@@ -1,3 +1,4 @@
+import { createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CarsController } from '@/controllers';
@@ -7,7 +8,6 @@ import { CarStatus } from '@/helpers';
 import { CarsService } from '@/services';
 
 import { makeCar, makeCreateCarDto } from '../utils';
-import { createMock } from '@golevelup/ts-jest';
 
 describe('CarsController', () => {
   let carsService: CarsService;
@@ -16,7 +16,8 @@ describe('CarsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CarsController],
-    }).useMocker(createMock)
+    })
+      .useMocker(createMock)
       .compile();
 
     carsService = module.get<CarsService>(CarsService);

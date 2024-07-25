@@ -1,9 +1,7 @@
 import { Instance, t } from 'mobx-state-tree';
 
 import { Roles } from '@/helpers';
-import {
-  PublicFile,
-} from '@/types';
+import { PublicFile } from '@/types';
 
 export const UserModel = t.model('UserModel', {
   id: t.string,
@@ -16,4 +14,4 @@ export const UserModel = t.model('UserModel', {
   avatarId: t.maybeNull(t.string),
 });
 
-export interface UserType extends Instance<typeof UserModel> { }
+export interface UserType extends Instance<typeof UserModel> {}

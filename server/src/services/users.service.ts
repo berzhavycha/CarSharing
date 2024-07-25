@@ -33,7 +33,7 @@ export class UsersService {
     private readonly publicFilesService: PublicFilesService,
     private readonly loggerService: LoggerService,
     private readonly entityManager: EntityManager,
-  ) { }
+  ) {}
 
   async createUser(userData: {
     userDetails: SafeUser;

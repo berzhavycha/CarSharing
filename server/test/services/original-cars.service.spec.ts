@@ -1,3 +1,4 @@
+import { createMock } from '@golevelup/ts-jest';
 import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -9,7 +10,6 @@ import { applySearchAndPagination } from '@/helpers';
 import { OriginalCarsService } from '@/services';
 
 import { makeOriginalCar, makeOriginalCarDto } from '../utils';
-import { createMock } from '@golevelup/ts-jest';
 
 jest.mock('../../src/helpers/utils/apply-search-and-pagination.ts', () => ({
   applySearchAndPagination: jest.fn(),
@@ -28,7 +28,8 @@ describe('OriginalCarsService', () => {
           useValue: createMock<Repository<OriginalCar>>(),
         },
       ],
-    }).useMocker(createMock)
+    })
+      .useMocker(createMock)
       .compile();
 
     originalCarsService = module.get<OriginalCarsService>(OriginalCarsService);
@@ -66,12 +67,14 @@ describe('OriginalCarsService', () => {
       const dto = makeOriginalCarDto();
 
       const entityManager = createMock<EntityManager>();
-      jest.spyOn(entityManager, 'create').mockReturnValue(createdCar as unknown as unknown[]);
+      jest
+        .spyOn(entityManager, 'create')
+        .mockReturnValue(createdCar as unknown as unknown[]);
       jest.spyOn(entityManager, 'save').mockResolvedValue(createdCar);
 
       const result = await originalCarsService.createOriginalCarTransaction(
         dto,
-        entityManager
+        entityManager,
       );
 
       expect(result).toEqual(createdCar);
@@ -82,17 +85,16 @@ describe('OriginalCarsService', () => {
       const originalCar = makeOriginalCar();
       const dto = makeOriginalCarDto();
 
-      const entityManager = createMock<EntityManager>()
-      jest.spyOn(entityManager, 'create').mockReturnValue(originalCar as unknown as unknown[]);
+      const entityManager = createMock<EntityManager>();
+      jest
+        .spyOn(entityManager, 'create')
+        .mockReturnValue(originalCar as unknown as unknown[]);
       jest
         .spyOn(entityManager, 'save')
         .mockRejectedValue(new Error('Save failed'));
 
       await expect(
-        originalCarsService.createOriginalCarTransaction(
-          dto,
-          entityManager,
-        ),
+        originalCarsService.createOriginalCarTransaction(dto, entityManager),
       ).rejects.toThrow(Error);
     });
   });
@@ -132,8 +134,11 @@ describe('OriginalCarsService', () => {
       };
 
       const originalCar = makeOriginalCar();
-      const resultValue: [OriginalCar[], number] = [[originalCar, { ...originalCar, id: '2nd-id' }], 2];
-      const queryBuilder = createMock<SelectQueryBuilder<OriginalCar>>()
+      const resultValue: [OriginalCar[], number] = [
+        [originalCar, { ...originalCar, id: '2nd-id' }],
+        2,
+      ];
+      const queryBuilder = createMock<SelectQueryBuilder<OriginalCar>>();
 
       jest
         .spyOn(originalCarsRepository, 'createQueryBuilder')
