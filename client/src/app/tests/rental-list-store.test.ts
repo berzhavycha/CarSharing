@@ -1,4 +1,3 @@
-import { getSnapshot } from 'mobx-state-tree';
 import { fetchRentalHistory } from '@/services';
 import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { RentalListStore, RentalListStoreType } from '../stores/rental-list-store';
@@ -29,7 +28,7 @@ describe('RentalListStore', () => {
         ];
 
         store.setRentals(rentals);
-        
+
         expect(store.rentals).toHaveLength(2);
         expect(store.rentals).toEqual(rentals);
     });
