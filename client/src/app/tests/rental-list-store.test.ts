@@ -1,9 +1,10 @@
-import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
+import { RentalStatus, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
 import { fetchRentalHistory } from '@/services';
 
 import { RentalListStore, RentalListStoreType } from '../stores/rental-list-store';
 
 import { makeRental } from './utils';
+import { applySnapshot } from 'mobx-state-tree';
 
 jest.mock('../../services/rentals/fetch-rental-history.ts', () => ({
   fetchRentalHistory: jest.fn(),
@@ -15,11 +16,20 @@ jest.mock('@/core', () => ({
   },
 }));
 
+jest.mock('mobx-state-tree', () => ({
+  ...jest.requireActual('mobx-state-tree'),
+  applySnapshot: jest.fn(),
+}));
+
 describe('RentalListStore', () => {
   let store: RentalListStoreType;
 
   beforeEach(() => {
     store = RentalListStore.create();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should set rentals', () => {
@@ -42,10 +52,13 @@ describe('RentalListStore', () => {
     const rental = makeRental();
     store.addRental(rental);
 
-    const updatedRental = makeRental();
-    store.updateRental('1', updatedRental);
+    const updatedRental = makeRental({ id: rental.id, status: RentalStatus.CANCELLED });
+    store.updateRental(rental.id, updatedRental);
 
-    expect(store.rentals[0]).toEqual(updatedRental);
+    expect(applySnapshot).toHaveBeenCalledWith(
+      expect.anything(),
+      updatedRental
+    );
   });
 
 
