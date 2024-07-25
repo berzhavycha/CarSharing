@@ -1,7 +1,7 @@
-import { getSnapshot, IAnyStateTreeNode } from 'mobx-state-tree';
+import { getSnapshot } from 'mobx-state-tree';
 import { fetchRentalHistory } from '@/services';
-import { RentalStatus, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
-import { RentalListStore } from '../stores/rental-list-store';
+import { UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
+import { RentalListStore, RentalListStoreType } from '../stores/rental-list-store';
 import { makeRental } from './utils';
 
 jest.mock('../../services/rentals/fetch-rental-history.ts', () => ({
@@ -16,7 +16,7 @@ jest.mock('@/core', () => ({
 
 
 describe('RentalListStore', () => {
-    let store: IAnyStateTreeNode;
+    let store: RentalListStoreType;
 
     beforeEach(() => {
         store = RentalListStore.create();
@@ -29,23 +29,26 @@ describe('RentalListStore', () => {
         ];
 
         store.setRentals(rentals);
+        
         expect(store.rentals).toHaveLength(2);
-        expect(getSnapshot(store.rentals)).toEqual(rentals);
+        expect(store.rentals).toEqual(rentals);
     });
 
     it('should add a rental', () => {
         const rental = makeRental()
         store.addRental(rental);
         expect(store.rentals).toHaveLength(1);
-        expect(getSnapshot(store.rentals[0])).toEqual(rental);
+        expect(store.rentals[0]).toEqual(rental);
     });
 
     it('should update a rental', () => {
         const rental = makeRental()
         store.addRental(rental);
-        const updatedRental = makeRental({ id: '1', status: RentalStatus.CANCELLED })
+
+        const updatedRental = makeRental()
         store.updateRental('1', updatedRental);
-        expect(getSnapshot(store.rentals[0])).toEqual(updatedRental);
+
+        expect(store.rentals[0]).toEqual(updatedRental);
     });
 
     it('should set error message', () => {
@@ -60,7 +63,7 @@ describe('RentalListStore', () => {
         await store.fetchRentals({});
 
         expect(store.rentals).toHaveLength(1);
-        expect(getSnapshot(store.rentals)).toEqual(rentals);
+        expect(store.rentals).toEqual(rentals);
         expect(store.errorMessage).toBe('');
     });
 

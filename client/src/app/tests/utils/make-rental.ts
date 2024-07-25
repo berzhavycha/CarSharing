@@ -1,9 +1,10 @@
 import { RentalStatus } from "@/helpers";
 import { Rental } from "@/types";
-import { makeCar } from "./makeCar";
-import { makeOriginalCar } from "./makeOriginalCar";
+import { makeCar } from "./make-car";
+import { makeOriginalCar } from "./make-original-car";
+import { RentalType } from "@/app/models";
 
-export const makeRental = (details?: Partial<Rental>): Rental => {
+export const makeRental = (details?: Partial<Rental>): RentalType => {
     return {
         id: '1',
         rentalStart: '2023-07-25T10:00:00Z',
@@ -19,5 +20,5 @@ export const makeRental = (details?: Partial<Rental>): Rental => {
         originalCar: makeOriginalCar(),
         transactions: [],
         ...details
-    }
+    } as RentalType
 }

@@ -1,4 +1,4 @@
-import { t } from 'mobx-state-tree';
+import { Instance, t } from 'mobx-state-tree';
 
 import { Roles } from '@/helpers';
 import {
@@ -16,3 +16,4 @@ export const UserModel = t.model('UserModel', {
   avatarId: t.maybeNull(t.string),
 });
 
+export interface UserType extends Instance<typeof UserModel> { }

@@ -6,7 +6,7 @@ import { RentalListStore } from './rental-list-store';
 import { RentalPaymentStore } from './rental-payment-store';
 import { SingleRentalStore } from './single-rental-store';
 
-const RootStore = t.model('RootStore', {
+export const RootStore = t.model('RootStore', {
   currentUserStore: CurrentUserStore,
   carReturnStore: CarReturnStore,
   rentalPaymentStore: RentalPaymentStore,
@@ -25,3 +25,4 @@ export const rootStore = RootStore.create({
 });
 
 export type RootStoreType = Instance<typeof RootStore>;
+
