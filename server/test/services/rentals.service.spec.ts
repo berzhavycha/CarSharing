@@ -71,6 +71,113 @@ describe('RentalsService', () => {
     expect(rentalsService).toBeDefined();
   });
 
+  describe('calculatePenaltyOrRefund', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+    
+    it('should return a refund when car is returned earlier', () => {
+      const rentalStart = new Date('2024-01-01T10:00:00Z');
+      jest.setSystemTime(rentalStart);
+
+      const rental = {
+        rentalStart,
+        requestedHours: 5,
+        car: { pricePerHour: 20 },
+      } as Rental;
+
+      jest.advanceTimersByTime(3 * ONE_HOUR_MILLISECONDS);
+
+      const result = rentalsService.calculatePenaltyOrRefund(rental, new Date());
+
+      expect(result).toEqual({
+        amount: 40,
+        transactionType: TransactionType.REFUND,
+      });
+    });
+
+    it('should return a penalty when car is returned later', () => {
+      const rentalStart = new Date('2024-01-01T10:00:00Z');
+      jest.setSystemTime(rentalStart);
+
+      const rental = {
+        rentalStart,
+        requestedHours: 3,
+        car: { pricePerHour: 20 },
+      } as Rental;
+
+      jest.advanceTimersByTime(4 * ONE_HOUR_MILLISECONDS);
+
+      const result = rentalsService.calculatePenaltyOrRefund(rental, new Date());
+
+      expect(result).toEqual({
+        amount: 20,
+        transactionType: TransactionType.PENALTY,
+      });
+    });
+
+    it('should return no penalty or refund when car is returned exactly on time', () => {
+      const rentalStart = new Date('2024-01-01T10:00:00Z');
+      jest.setSystemTime(rentalStart);
+
+      const rental = {
+        rentalStart,
+        requestedHours: 3,
+        car: { pricePerHour: 20 },
+      } as Rental;
+
+      jest.advanceTimersByTime(3 * ONE_HOUR_MILLISECONDS);
+
+      const result = rentalsService.calculatePenaltyOrRefund(rental, new Date());
+
+      expect(result).toEqual({});
+    });
+
+    it('should round up partial hours for refund calculation', () => {
+      const rentalStart = new Date('2024-01-01T10:00:00Z');
+      jest.setSystemTime(rentalStart);
+
+      const rental = {
+        rentalStart,
+        requestedHours: 5,
+        car: { pricePerHour: 20 },
+      } as Rental;
+
+      jest.advanceTimersByTime(3.5 * ONE_HOUR_MILLISECONDS);
+
+      const result = rentalsService.calculatePenaltyOrRefund(rental, new Date());
+
+      expect(result).toEqual({
+        amount: 20,
+        transactionType: TransactionType.REFUND,
+      });
+    });
+
+    it('should round up partial hours for penalty calculation', () => {
+      const rentalStart = new Date('2024-01-01T10:00:00Z');
+      jest.setSystemTime(rentalStart);
+
+      const rental = {
+        rentalStart,
+        requestedHours: 3,
+        car: { pricePerHour: 20 },
+      } as Rental;
+
+      jest.advanceTimersByTime(3.5 * ONE_HOUR_MILLISECONDS);
+
+      const result = rentalsService.calculatePenaltyOrRefund(rental, new Date());
+
+      expect(result).toEqual({
+        amount: 20,
+        transactionType: TransactionType.PENALTY,
+      });
+    });
+  });
+
   describe('calculateRentalPrice', () => {
     it('should throw BadRequestException if the car is not found', async () => {
       const rentCarDto = makeRentalDto();
@@ -428,7 +535,7 @@ describe('RentalsService', () => {
       );
       jest
         .spyOn(rentalsService, 'calculatePenaltyOrRefund')
-        .mockReturnValue({ });
+        .mockReturnValue({});
       jest
         .spyOn(usersService, 'updateUserBalance')
         .mockResolvedValue(undefined);
