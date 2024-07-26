@@ -286,6 +286,9 @@ describe('RentalsService', () => {
         },
       );
       jest
+        .spyOn(rentalsService, 'calculatePenaltyOrRefund')
+        .mockReturnValue({ amount: 40, transactionType: TransactionType.REFUND });
+      jest
         .spyOn(usersService, 'updateUserBalance')
         .mockResolvedValue(undefined);
 
@@ -325,6 +328,9 @@ describe('RentalsService', () => {
           });
         },
       );
+      jest
+        .spyOn(rentalsService, 'calculatePenaltyOrRefund')
+        .mockReturnValue({ amount: 40, transactionType: TransactionType.REFUND });
       jest
         .spyOn(usersService, 'updateUserBalance')
         .mockResolvedValue(undefined);
@@ -372,6 +378,9 @@ describe('RentalsService', () => {
         },
       );
       jest
+        .spyOn(rentalsService, 'calculatePenaltyOrRefund')
+        .mockReturnValue({ amount: 20, transactionType: TransactionType.PENALTY });
+      jest
         .spyOn(usersService, 'updateUserBalance')
         .mockResolvedValue(undefined);
 
@@ -417,6 +426,9 @@ describe('RentalsService', () => {
           });
         },
       );
+      jest
+        .spyOn(rentalsService, 'calculatePenaltyOrRefund')
+        .mockReturnValue({ });
       jest
         .spyOn(usersService, 'updateUserBalance')
         .mockResolvedValue(undefined);
