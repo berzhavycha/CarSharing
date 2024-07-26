@@ -33,7 +33,7 @@ export class RentalsService {
     private usersService: UsersService,
     private readonly entityManager: EntityManager,
     private readonly loggerService: LoggerService,
-  ) {}
+  ) { }
 
   async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
     try {
@@ -108,58 +108,69 @@ export class RentalsService {
     }
   }
 
+  private calculatePenaltyOrRefund(
+    rental: Rental,
+    returnDate: Date,
+  ): { amount?: number; transactionType?: TransactionType } {
+    const hoursDifference = Math.ceil(
+      (returnDate.getTime() - rental.rentalStart.getTime()) /
+      ONE_HOUR_MILLISECONDS,
+    );
+
+    if (hoursDifference < rental.requestedHours) {
+      const refund =
+        rental.car.pricePerHour *
+        Math.ceil(rental.requestedHours - hoursDifference);
+
+      return { amount: refund, transactionType: TransactionType.REFUND };
+    } else if (hoursDifference > rental.requestedHours) {
+      const penalty =
+        rental.car.pricePerHour *
+        Math.ceil(hoursDifference - rental.requestedHours);
+
+      return { amount: penalty, transactionType: TransactionType.PENALTY };
+    }
+
+    return {};
+  }
+
+  async getRentalToReturn(id: string): Promise<Rental> {
+    const rental = await this.rentalsRepository.findOne({
+      where: { id },
+      relations: ['car', 'originalCar', 'user'],
+    });
+
+    if (!rental) {
+      throw new BadRequestException(rentalsErrorMessages.RENTAL_NOT_FOUND);
+    }
+
+    if (rental.rentalEnd !== null) {
+      throw new BadRequestException(rentalsErrorMessages.CAR_IS_RETURNED);
+    }
+
+    return rental
+  }
+
   async returnCar(
     rentalId: string,
     user: User,
   ): Promise<{ rental: Rental; penalty?: number; refund?: number }> {
     try {
-      const rental = await this.rentalsRepository.findOne({
-        where: { id: rentalId },
-        relations: ['car', 'originalCar', 'user'],
-      });
-
-      if (!rental) {
-        throw new BadRequestException(rentalsErrorMessages.RENTAL_NOT_FOUND);
-      }
-
-      if (rental.rentalEnd !== null) {
-        throw new BadRequestException(rentalsErrorMessages.CAR_IS_RETURNED);
-      }
+      const rental = await this.getRentalToReturn(rentalId)
 
       return this.entityManager.transaction(async (manager) => {
         const returnDate = new Date();
-        const hoursDifference = Math.ceil(
-          (returnDate.getTime() - rental.rentalStart.getTime()) /
-            ONE_HOUR_MILLISECONDS,
+        const { amount, transactionType } = this.calculatePenaltyOrRefund(
+          rental,
+          returnDate,
         );
 
-        let refund: number | undefined;
-        let penalty: number | undefined;
-
-        if (hoursDifference < rental.requestedHours) {
-          refund =
-            rental.car.pricePerHour *
-            Math.ceil(rental.requestedHours - hoursDifference);
-
+        if (amount && transactionType) {
           await this.usersService.updateUserBalance(
             {
               id: user.id,
-              balanceDto: { amount: refund },
-              transactionType: TransactionType.REFUND,
-              rental,
-            },
-            manager,
-          );
-        } else if (hoursDifference > rental.requestedHours) {
-          penalty =
-            rental.car.pricePerHour *
-            Math.ceil(hoursDifference - rental.requestedHours);
-
-          await this.usersService.updateUserBalance(
-            {
-              id: user.id,
-              balanceDto: { amount: -penalty },
-              transactionType: TransactionType.PENALTY,
+              balanceDto: { amount: transactionType === TransactionType.PENALTY ? -amount : amount },
+              transactionType,
               rental,
             },
             manager,
@@ -174,7 +185,11 @@ export class RentalsService {
 
         const updatedRental = await manager.save(rental);
 
-        return { rental: updatedRental, refund, penalty };
+        return {
+          rental: updatedRental,
+          penalty: transactionType === TransactionType.PENALTY ? amount : undefined,
+          refund: transactionType === TransactionType.REFUND ? amount : undefined
+        };
       });
     } catch (error) {
       this.loggerService.error(

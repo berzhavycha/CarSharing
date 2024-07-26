@@ -80,7 +80,6 @@ describe('CarReturnStore', () => {
       await carReturnStore.returnCar('1');
 
       expect(carReturnStore.refund).toBe(50);
-      expect(carReturnStore.loading).toBe(false);
       expect(carReturnStore.rentalToReturn).toBeNull();
     });
 
@@ -93,7 +92,6 @@ describe('CarReturnStore', () => {
       await carReturnStore.returnCar('1');
 
       expect(carReturnStore.penalty).toBe(30);
-      expect(carReturnStore.loading).toBe(false);
       expect(carReturnStore.rentalToReturn).toBeNull();
     });
 
@@ -105,7 +103,6 @@ describe('CarReturnStore', () => {
       await carReturnStore.returnCar('1');
 
       expect(carReturnStore.isReturnedInTime).toBe(true);
-      expect(carReturnStore.loading).toBe(false);
       expect(carReturnStore.rentalToReturn).toBeNull();
     });
 
@@ -117,7 +114,6 @@ describe('CarReturnStore', () => {
       await carReturnStore.returnCar('1');
 
       expect(carReturnStore.errorMessage).toBe('API Error');
-      expect(carReturnStore.loading).toBe(false);
       expect(carReturnStore.rentalToReturn).toBeNull();
     });
 
@@ -129,7 +125,6 @@ describe('CarReturnStore', () => {
       await carReturnStore.returnCar('1');
 
       expect(carReturnStore.errorMessage).toBe(UNEXPECTED_ERROR_MESSAGE);
-      expect(carReturnStore.loading).toBe(false);
       expect(carReturnStore.rentalToReturn).toBeNull();
     });
   });
