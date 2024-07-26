@@ -71,29 +71,14 @@ describe('RentalsService', () => {
     expect(rentalsService).toBeDefined();
   });
 
-  describe('rentCar', () => {
-    it('should throw BadRequestException if user already has an active rental', async () => {
-      const rentCarDto = makeRentalDto();
-      const user = makeUser({ balance: 1000 });
-      const rental = makeRental();
-
-      jest
-        .spyOn(rentalsRepository, 'findOne')
-        .mockResolvedValue({ ...rental, status: RentalStatus.ACTIVE });
-
-      await expect(rentalsService.rentCar(rentCarDto, user)).rejects.toThrow(
-        BadRequestException,
-      );
-    });
-
+  describe('calculateRentalPrice', () => {
     it('should throw BadRequestException if the car is not found', async () => {
       const rentCarDto = makeRentalDto();
       const user = makeUser({ balance: 1000 });
 
-      jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
       jest.spyOn(carsService, 'findById').mockResolvedValue(null);
 
-      await expect(rentalsService.rentCar(rentCarDto, user)).rejects.toThrow(
+      await expect(rentalsService.calculateRentalPrice(rentCarDto, user)).rejects.toThrow(
         BadRequestException,
       );
     });
@@ -106,10 +91,9 @@ describe('RentalsService', () => {
         pricePerHour: 20,
       });
 
-      jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
 
-      await expect(rentalsService.rentCar(rentCarDto, user)).rejects.toThrow(
+      await expect(rentalsService.calculateRentalPrice(rentCarDto, user)).rejects.toThrow(
         BadRequestException,
       );
     });
@@ -122,8 +106,23 @@ describe('RentalsService', () => {
         pricePerHour: 20,
       });
 
-      jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
+
+      await expect(rentalsService.calculateRentalPrice(rentCarDto, user)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+  })
+
+  describe('rentCar', () => {
+    it('should throw BadRequestException if user already has an active rental', async () => {
+      const rentCarDto = makeRentalDto();
+      const user = makeUser({ balance: 1000 });
+      const rental = makeRental();
+
+      jest
+        .spyOn(rentalsRepository, 'findOne')
+        .mockResolvedValue({ ...rental, status: RentalStatus.ACTIVE });
 
       await expect(rentalsService.rentCar(rentCarDto, user)).rejects.toThrow(
         BadRequestException,
@@ -140,7 +139,7 @@ describe('RentalsService', () => {
       const rental = makeRental();
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
-      jest.spyOn(carsService, 'findById').mockResolvedValue(car);
+      jest.spyOn(rentalsService, 'calculateRentalPrice').mockResolvedValue({ car, rentalCost: 40 });
       (entityManager.transaction as jest.Mock).mockImplementation(
         async (fn) => {
           return await fn({
@@ -174,7 +173,7 @@ describe('RentalsService', () => {
       const rental = makeRental();
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
-      jest.spyOn(carsService, 'findById').mockResolvedValue(car);
+      jest.spyOn(rentalsService, 'calculateRentalPrice').mockResolvedValue({ car, rentalCost: 40 });
       (entityManager.transaction as jest.Mock).mockImplementation(
         async (fn) => {
           return await fn({
