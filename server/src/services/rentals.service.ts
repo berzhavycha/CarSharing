@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
 import { QueryRentalsDto, RentCarDto } from '@/dtos';
-import { Rental, User } from '@/entities';
+import { Car, Rental, User } from '@/entities';
 import {
   applySearchAndPagination,
   CarStatus,
@@ -50,18 +50,7 @@ export class RentalsService {
         );
       }
 
-      const car = await this.carsService.findById(rentCarDto.carId);
-
-      if (!car || car.status !== CarStatus.AVAILABLE) {
-        throw new BadRequestException(rentalsErrorMessages.CAR_NOT_AVAILABLE);
-      }
-
-      const rentalCost = car.pricePerHour * rentCarDto.hours;
-      if (user.balance < rentalCost) {
-        throw new BadRequestException(
-          rentalsErrorMessages.INSUFFICIENT_BALANCE,
-        );
-      }
+      const { car, rentalCost } = await this.calculateRentalPrice(rentCarDto, user)
 
       return this.entityManager.transaction(async (manager) => {
         const originalCar =
@@ -108,7 +97,27 @@ export class RentalsService {
     }
   }
 
-  private calculatePenaltyOrRefund(
+  async calculateRentalPrice(rentCarDto: RentCarDto, user: User): Promise<{ car: Car, rentalCost: number }> {
+    const car = await this.carsService.findById(rentCarDto.carId);
+
+    if (!car || car.status !== CarStatus.AVAILABLE) {
+      throw new BadRequestException(rentalsErrorMessages.CAR_NOT_AVAILABLE);
+    }
+
+    const rentalCost = car.pricePerHour * rentCarDto.hours;
+    if (user.balance < rentalCost) {
+      throw new BadRequestException(
+        rentalsErrorMessages.INSUFFICIENT_BALANCE,
+      );
+    }
+
+    return {
+      car,
+      rentalCost
+    }
+  }
+
+  calculatePenaltyOrRefund(
     rental: Rental,
     returnDate: Date,
   ): { amount?: number; transactionType?: TransactionType } {
