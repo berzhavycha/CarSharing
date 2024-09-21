@@ -183,9 +183,7 @@ describe('RentalsService', () => {
       const rentCarDto = makeRentalDto();
       const user = makeUser({ balance: 1000 });
 
-      jest.spyOn(carsService, 'findById').mockResolvedValue(null);
-
-      await expect(rentalsService.calculateRentalPrice(rentCarDto, user)).rejects.toThrow(
+      expect(() => rentalsService.calculateRentalPrice(null, rentCarDto, user)).toThrow(
         BadRequestException,
       );
     });
@@ -200,7 +198,7 @@ describe('RentalsService', () => {
 
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
 
-      await expect(rentalsService.calculateRentalPrice(rentCarDto, user)).rejects.toThrow(
+      expect(() => rentalsService.calculateRentalPrice(car, rentCarDto, user)).toThrow(
         BadRequestException,
       );
     });
@@ -215,7 +213,7 @@ describe('RentalsService', () => {
 
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
 
-      await expect(rentalsService.calculateRentalPrice(rentCarDto, user)).rejects.toThrow(
+      expect(() => rentalsService.calculateRentalPrice(car, rentCarDto, user)).toThrow(
         BadRequestException,
       );
     });
@@ -246,10 +244,11 @@ describe('RentalsService', () => {
       const rental = makeRental();
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
-      jest.spyOn(rentalsService, 'calculateRentalPrice').mockResolvedValue({ car, rentalCost: 40 });
+      jest.spyOn(rentalsService, 'calculateRentalPrice').mockReturnValue(40);
       (entityManager.transaction as jest.Mock).mockImplementation(
         async (fn) => {
           return await fn({
+            findOne: jest.fn().mockResolvedValue(car),
             save: jest
               .fn()
               .mockResolvedValueOnce(car)
@@ -280,10 +279,11 @@ describe('RentalsService', () => {
       const rental = makeRental();
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(null);
-      jest.spyOn(rentalsService, 'calculateRentalPrice').mockResolvedValue({ car, rentalCost: 40 });
+      jest.spyOn(rentalsService, 'calculateRentalPrice').mockReturnValue(40);
       (entityManager.transaction as jest.Mock).mockImplementation(
         async (fn) => {
           return await fn({
+            findOne: jest.fn().mockResolvedValue(car),
             save: jest
               .fn()
               .mockResolvedValueOnce(car)
