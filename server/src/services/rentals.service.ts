@@ -103,7 +103,7 @@ export class RentalsService {
     }
   }
 
-  calculateRentalPrice(car: Car, carDto: RentCarDto, user: User): number {
+  calculateRentalPrice(car: Car | null, carDto: RentCarDto, user: User): number {
     if (!car || car.status !== CarStatus.AVAILABLE) {
       throw new BadRequestException(rentalsErrorMessages.CAR_NOT_AVAILABLE);
     }
