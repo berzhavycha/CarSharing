@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { FindOneOptions, Repository, SelectQueryBuilder } from 'typeorm';
 
 import { CreateCarDto, QueryCarsDto, UpdateCarDto } from '@/dtos';
 import { Car } from '@/entities';
@@ -116,11 +116,12 @@ export class CarsService {
     }
   }
 
-  async findById(id: string): Promise<Car> {
+  async findById(id: string, options?: FindOneOptions<Car>): Promise<Car> {
     try {
       const car = await this.carsRepository.findOne({
         where: { id },
         relations: ['rentals', 'pictures'],
+        ...options
       });
 
       if (!car) {
