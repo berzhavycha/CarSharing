@@ -50,9 +50,15 @@ export class RentalsService {
         );
       }
 
-      const { car, rentalCost } = await this.calculateRentalPrice(rentCarDto, user)
 
       return this.entityManager.transaction(async (manager) => {
+        const carToRent = await manager.findOne(Car, {
+          where: { id: rentCarDto.carId },
+          lock: { mode: 'pessimistic_write' },
+        });
+
+        const { car, rentalCost } = await this.calculateRentalPrice(carToRent, rentCarDto, user);
+
         const originalCar =
           await this.originalCarsService.createOriginalCarTransaction(
             car,
@@ -97,14 +103,12 @@ export class RentalsService {
     }
   }
 
-  async calculateRentalPrice(rentCarDto: RentCarDto, user: User): Promise<{ car: Car, rentalCost: number }> {
-    const car = await this.carsService.findById(rentCarDto.carId);
-
+  async calculateRentalPrice(car: Car, carDto: RentCarDto, user: User): Promise<{ car: Car, rentalCost: number }> {
     if (!car || car.status !== CarStatus.AVAILABLE) {
       throw new BadRequestException(rentalsErrorMessages.CAR_NOT_AVAILABLE);
     }
 
-    const rentalCost = car.pricePerHour * rentCarDto.hours;
+    const rentalCost = car.pricePerHour * carDto.hours;
     if (user.balance < rentalCost) {
       throw new BadRequestException(
         rentalsErrorMessages.INSUFFICIENT_BALANCE,
