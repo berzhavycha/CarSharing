@@ -181,12 +181,9 @@ describe('RentalsService', () => {
   describe('calculateRentalPrice', () => {
     it('should throw BadRequestException if the car is not found', async () => {
       const rentCarDto = makeRentalDto();
-      const car = makeCar()
       const user = makeUser({ balance: 1000 });
 
-      jest.spyOn(carsService, 'findById').mockResolvedValue(null);
-
-      expect(rentalsService.calculateRentalPrice(car, rentCarDto, user)).rejects.toThrow(
+      expect(() => rentalsService.calculateRentalPrice(null, rentCarDto, user)).toThrow(
         BadRequestException,
       );
     });
@@ -201,7 +198,7 @@ describe('RentalsService', () => {
 
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
 
-      expect(rentalsService.calculateRentalPrice(car, rentCarDto, user)).toThrow(
+      expect(() => rentalsService.calculateRentalPrice(car, rentCarDto, user)).toThrow(
         BadRequestException,
       );
     });
@@ -216,7 +213,7 @@ describe('RentalsService', () => {
 
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
 
-      expect(rentalsService.calculateRentalPrice(car, rentCarDto, user)).toThrow(
+      expect(() => rentalsService.calculateRentalPrice(car, rentCarDto, user)).toThrow(
         BadRequestException,
       );
     });
@@ -251,6 +248,7 @@ describe('RentalsService', () => {
       (entityManager.transaction as jest.Mock).mockImplementation(
         async (fn) => {
           return await fn({
+            findOne: jest.fn().mockResolvedValue(car),
             save: jest
               .fn()
               .mockResolvedValueOnce(car)
@@ -285,6 +283,7 @@ describe('RentalsService', () => {
       (entityManager.transaction as jest.Mock).mockImplementation(
         async (fn) => {
           return await fn({
+            findOne: jest.fn().mockResolvedValue(car),
             save: jest
               .fn()
               .mockResolvedValueOnce(car)
