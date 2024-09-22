@@ -3,7 +3,7 @@ import { RouterProvider } from 'react-router-dom';
 import { GlobalStyles } from '@/styles';
 
 import { CSStoreProvider } from './context';
-import { router } from './router'
+import { router } from './router';
 
 function App(): JSX.Element {
   return (
@@ -14,4 +14,4 @@ function App(): JSX.Element {
   );
 }
 
-export default App
+export default App;
