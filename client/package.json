@@ -11,6 +11,13 @@
     "format": "prettier --write \"./src/**/*.ts\" \"./src/**/*.tsx\"",
     "test": "jest"
   },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+      "prettier --write"
+    ],
+    "*.{css,scss}": "prettier --write"
+  },
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"

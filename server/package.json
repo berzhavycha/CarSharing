@@ -29,6 +29,12 @@
     "typeorm:revert-migration": "npm run typeorm -- -d ./src/core/database/ormconfig.ts migration:revert",
     "generate:spec": "npx ts-node --esm ./src/generate-spec.ts"
   },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+      "prettier --write"
+    ]
+  },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.2",
