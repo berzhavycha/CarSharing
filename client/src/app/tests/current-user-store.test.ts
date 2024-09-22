@@ -144,7 +144,7 @@ describe('CurrentUserStore', () => {
 
     it('should fetch current user', async () => {
       const user = makeUser();
-      
+
       (handleUserResponse as jest.Mock).mockImplementation((response, onSuccess) => {
         onSuccess(response.user);
       });
