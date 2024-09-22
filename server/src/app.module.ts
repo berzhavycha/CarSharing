@@ -12,9 +12,9 @@ import {
   RentalsModule,
   TransactionsModule,
   UsersModule,
-} from '@/modules';
+} from '@/modules'
 
-import { RequestLoggingMiddleware } from './middlewares';
+import { RequestLoggingMiddleware } from './middlewares'
 
 @Module({
   imports: [
