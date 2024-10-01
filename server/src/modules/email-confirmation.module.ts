@@ -5,9 +5,10 @@ import { JwtConfig } from '@/core';
 import { EmailConfirmationService } from '@/services';
 
 import { EmailModule } from './email.module';
+import { UsersModule } from './users.module';
 
 @Module({
-  imports: [EmailModule, JwtModule.registerAsync(JwtConfig)],
+  imports: [UsersModule, EmailModule, JwtModule.registerAsync(JwtConfig)],
   controllers: [],
   providers: [EmailConfirmationService],
   exports: [EmailConfirmationService],
