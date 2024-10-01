@@ -1,11 +1,11 @@
 import { observer } from 'mobx-react-lite';
-import { FC } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { FC, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { BtnSpinner, CSCommonErrorMessage, CSCommonForm } from '@/components';
+import { BtnSpinner, CSCommonErrorMessage, CSCommonForm, CSCommonModal } from '@/components';
 import { useStore } from '@/context';
-import { authRedirectPages, AuthType, getUserSchema } from '@/helpers';
+import { AuthType, getUserSchema } from '@/helpers';
 import { device } from '@/styles';
 import { SignUpUserDto } from '@/types';
 
@@ -13,94 +13,109 @@ import { useUserRole } from './hooks';
 
 export const CSAuthSignUp: FC = observer(() => {
   const { userRole, handleUserTypeChange, showSecretCodeInput } = useUserRole();
-  const navigate = useNavigate();
 
   const { currentUserStore } = useStore();
 
+  const [isEmailConfirmationRequired, setIsEmailConfirmationRequired] = useState<boolean>(
+    (currentUserStore.user && !currentUserStore.user.isEmailConfirmed) ?? false,
+  );
+
+  const onConfirmModalClose = (): void => setIsEmailConfirmationRequired(false);
+
   const onSubmit = async (data: SignUpUserDto): Promise<void> => {
     await currentUserStore.signUp(data);
-    if (currentUserStore.user) {
-      navigate(authRedirectPages[currentUserStore.user.role]);
-    }
+    setIsEmailConfirmationRequired(true);
   };
 
   const btnContent = currentUserStore.isLoading ? <BtnSpinner /> : 'Sign Up';
 
   return (
-    <SignUpFormContainer>
-      <FormInner>
-        <Title>Register</Title>
-        <Span>
-          Already have an account?
-          <RedirectLink to="/sign-in">Sign In here</RedirectLink> instead
-        </Span>
-        <ErrorMessageWrapper>
-          <CSCommonErrorMessage>
-            {currentUserStore.errors?.signUp?.unexpectedError ?? ''}
-          </CSCommonErrorMessage>
-        </ErrorMessageWrapper>
-        <CSCommonForm<SignUpUserDto>
-          validationSchema={getUserSchema(AuthType.SIGN_UP, userRole)}
-          onSubmit={onSubmit}
-          shouldReset={false}
-        >
-          <FormBlocks>
-            <CSCommonForm.Input
-              label="First Name"
-              name="firstName"
-              error={currentUserStore.errors.signUp?.firstName}
-            />
-            <CSCommonForm.Input
-              label="Last Name"
-              name="lastName"
-              error={currentUserStore.errors.signUp?.lastName}
-            />
-            <CSCommonForm.Input
-              label="Email"
-              name="email"
-              error={currentUserStore.errors.signUp?.email}
-            />
-            <PasswordWrapper>
+    <>
+      <SignUpFormContainer>
+        <FormInner>
+          <Title>Register</Title>
+          <Span>
+            Already have an account?
+            <RedirectLink to="/sign-in">Sign In here</RedirectLink> instead
+          </Span>
+          <ErrorMessageWrapper>
+            <CSCommonErrorMessage>
+              {currentUserStore.errors?.signUp?.unexpectedError ?? ''}
+            </CSCommonErrorMessage>
+          </ErrorMessageWrapper>
+          <CSCommonForm<SignUpUserDto>
+            validationSchema={getUserSchema(AuthType.SIGN_UP, userRole)}
+            onSubmit={onSubmit}
+            shouldReset={false}
+          >
+            <FormBlocks>
               <CSCommonForm.Input
-                label="Password"
-                name="password"
-                isSecured
-                error={currentUserStore.errors.signUp?.password}
+                label="First Name"
+                name="firstName"
+                error={currentUserStore.errors.signUp?.firstName}
               />
               <CSCommonForm.Input
-                label="Confirm Password"
-                name="confirmPassword"
-                isSecured
-                error={currentUserStore.errors.signUp?.confirmPassword}
+                label="Last Name"
+                name="lastName"
+                error={currentUserStore.errors.signUp?.lastName}
               />
-            </PasswordWrapper>
-            <RoleWrapper>
-              <CSCommonForm.Select
-                onChange={handleUserTypeChange}
-                label="Role"
-                name="role"
-                options={[
-                  { label: 'User', value: 'user' },
-                  { label: 'Admin', value: 'admin' },
-                ]}
+              <CSCommonForm.Input
+                label="Email"
+                name="email"
+                error={currentUserStore.errors.signUp?.email}
               />
-              {showSecretCodeInput && (
+              <PasswordWrapper>
                 <CSCommonForm.Input
-                  label="Invitation Code"
-                  name="invitationCode"
+                  label="Password"
+                  name="password"
                   isSecured
-                  error={currentUserStore.errors.signUp?.invitationCode}
+                  error={currentUserStore.errors.signUp?.password}
                 />
-              )}
-            </RoleWrapper>
-          </FormBlocks>
-          <CSCommonForm.SubmitButton
-            buttonContent={btnContent}
-            disabled={currentUserStore.isLoading}
-          />
-        </CSCommonForm>
-      </FormInner>
-    </SignUpFormContainer>
+                <CSCommonForm.Input
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  isSecured
+                  error={currentUserStore.errors.signUp?.confirmPassword}
+                />
+              </PasswordWrapper>
+              <RoleWrapper>
+                <CSCommonForm.Select
+                  onChange={handleUserTypeChange}
+                  label="Role"
+                  name="role"
+                  options={[
+                    { label: 'User', value: 'user' },
+                    { label: 'Admin', value: 'admin' },
+                  ]}
+                />
+                {showSecretCodeInput && (
+                  <CSCommonForm.Input
+                    label="Invitation Code"
+                    name="invitationCode"
+                    isSecured
+                    error={currentUserStore.errors.signUp?.invitationCode}
+                  />
+                )}
+              </RoleWrapper>
+            </FormBlocks>
+            <CSCommonForm.SubmitButton
+              buttonContent={btnContent}
+              disabled={currentUserStore.isLoading}
+            />
+          </CSCommonForm>
+        </FormInner>
+      </SignUpFormContainer>
+
+      {isEmailConfirmationRequired && (
+        <CSCommonModal
+          type="warning"
+          title="You need to confirm your email"
+          message="We have sent you an email to confirm it. Please check your inbox."
+          onClose={onConfirmModalClose}
+          onOk={onConfirmModalClose}
+        />
+      )}
+    </>
   );
 });
 

@@ -27,7 +27,8 @@ export const CSAuthSignIn: FC = observer(() => {
 
   const onSubmit = async (data: SignInUserDto): Promise<void> => {
     await currentUserStore.signIn(data);
-    if (currentUserStore.user) {
+
+    if (currentUserStore.user && currentUserStore.user.isEmailConfirmed) {
       navigate(authRedirectPages[currentUserStore.user.role]);
     }
   };

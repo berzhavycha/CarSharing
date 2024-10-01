@@ -8,6 +8,7 @@ export const UserModel = t.model('UserModel', {
   email: t.string,
   firstName: t.string,
   lastName: t.string,
+  isEmailConfirmed: t.boolean,
   balance: t.maybeNull(t.number),
   role: t.enumeration('Roles', [Roles.ADMIN, Roles.USER]),
   avatar: t.maybeNull(t.frozen<PublicFile>()),

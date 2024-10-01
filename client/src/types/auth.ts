@@ -13,3 +13,7 @@ export type SignInUserDto = {
   email: string;
   password: string;
 };
+
+export type ConfirmEmailDto = {
+  token?: string;
+};

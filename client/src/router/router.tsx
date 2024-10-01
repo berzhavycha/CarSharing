@@ -6,6 +6,7 @@ import {
   allCarsLoader,
   availableCarsLoader,
   carLoader,
+  CSConfirmEmailPage,
   CSDashboardAddCarPage,
   CSDashboardCarsPage,
   CSDashboardEditCarPage,
@@ -86,6 +87,8 @@ export const router = createBrowserRouter(
           <Route path="edit-car" element={<CSDashboardEditCarPage />} loader={carLoader} />
         </Route>
       </Route>
+
+      <Route path="confirm-email" element={<CSConfirmEmailPage />} />
       <Route path="sign-up" element={<CSSignUpPage />} />
       <Route path="sign-in" element={<CSSignInPage />} />
     </>,

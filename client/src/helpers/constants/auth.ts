@@ -1,4 +1,4 @@
-import { SignInUserDto, SignUpUserDto } from '@/types';
+import { ConfirmEmailDto, SignInUserDto, SignUpUserDto } from '@/types';
 
 export enum AuthType {
   SIGN_UP = 'signUp',
@@ -25,6 +25,10 @@ export const signUpFieldMappings: Record<string, keyof SignUpUserDto> = {
 export const signInFieldMappings: Record<string, keyof SignInUserDto> = {
   email: 'email',
   password: 'password',
+};
+
+export const confirmEmailFieldMappings: Record<string, keyof ConfirmEmailDto> = {
+  token: 'token',
 };
 
 export const authRedirectPages = {

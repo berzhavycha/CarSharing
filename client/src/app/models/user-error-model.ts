@@ -2,6 +2,7 @@ import { Instance, t } from 'mobx-state-tree';
 
 import {
   AuthenticatedUser,
+  ConfirmEmailDto,
   FieldErrorsState,
   SignInUserDto,
   SignUpUserDto,
@@ -15,6 +16,7 @@ export const UserErrorModel = t.model('ErrorModel', {
   signOut: t.maybeNull(t.frozen<FieldErrorsState<AuthenticatedUser>>()),
   update: t.maybeNull(t.frozen<FieldErrorsState<UpdateUserDto>>()),
   topUp: t.maybeNull(t.frozen<FieldErrorsState<UpdateUserBalanceDto>>()),
+  confirmEmail: t.maybeNull(t.frozen<FieldErrorsState<ConfirmEmailDto>>()),
 });
 
 export interface UserErrorType extends Instance<typeof UserErrorModel> {}

@@ -1,9 +1,18 @@
 import { flow, Instance, t } from 'mobx-state-tree';
 
 import { handleUserResponse, UNEXPECTED_ERROR_MESSAGE } from '@/helpers';
-import { fetchCurrentUser, signIn, signOut, signUp, topUp, updateUser } from '@/services';
+import {
+  confirmEmail,
+  fetchCurrentUser,
+  signIn,
+  signOut,
+  signUp,
+  topUp,
+  updateUser,
+} from '@/services';
 import {
   AuthenticatedUser,
+  ConfirmEmailDto,
   FieldErrorsState,
   PublicFile,
   SignInUserDto,
@@ -22,6 +31,7 @@ export type ServiceUserResponse<T extends object> = {
 type ErrorTypes =
   | SignInUserDto
   | SignUpUserDto
+  | ConfirmEmailDto
   | AuthenticatedUser
   | UpdateUserDto
   | UpdateUserBalanceDto;
@@ -92,6 +102,12 @@ export const CurrentUserStore = t
     }),
     signOut: flow(function* () {
       yield self.performUserAction<AuthenticatedUser>('signOut', signOut);
+      self.setUser(null);
+    }),
+    confirmEmail: flow(function* (confirmEmailDto: ConfirmEmailDto) {
+      yield self.performUserAction<ConfirmEmailDto>('confirmEmail', () =>
+        confirmEmail(confirmEmailDto),
+      );
       self.setUser(null);
     }),
     updateUser: flow(function* (userDto: UpdateUserDto) {

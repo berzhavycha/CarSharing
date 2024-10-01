@@ -8,6 +8,7 @@ export type AuthenticatedUser = {
   email: string;
   firstName: string;
   lastName: string;
+  isEmailConfirmed: boolean;
   balance: number | null;
   role: Roles;
   avatar: PublicFile | null;

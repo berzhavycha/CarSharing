@@ -2,6 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
+import { ConfirmEmailDto } from '@/dtos';
+import { User } from '@/entities';
 import { authErrorMessages } from '@/helpers';
 import { VerificationTokenPayload } from '@/interfaces';
 
@@ -23,7 +25,7 @@ export class EmailConfirmationService {
     const payload: VerificationTokenPayload = { email };
     const token = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_VERIFICATION_TOKEN_SECRET'),
-      expiresIn: `${this.configService.get('JWT_VERIFICATION_TOKEN_EXPIRATION_TIME')}s`,
+      expiresIn: `${this.configService.get('JWT_VERIFICATION_TOKEN_EXPIRATION_TIME')}`,
     });
 
     const url = `${this.configService.get('EMAIL_CONFIRMATION_URL')}?token=${token}`;
@@ -37,14 +39,16 @@ export class EmailConfirmationService {
     });
   }
 
-  async confirmEmail(email: string): Promise<void> {
+  async confirmEmail(confirmationData: ConfirmEmailDto): Promise<User | null> {
+    const email = await this.decodeConfirmationToken(confirmationData.token);
+
     const user = await this.usersService.findByEmail(email);
 
     if (user.isEmailConfirmed) {
       throw new BadRequestException(authErrorMessages.EMAIL_CONFIRMED);
     }
 
-    await this.usersService.updateUser(user.id, { isEmailConfirmed: true });
+    return this.usersService.updateUser(user.id, { isEmailConfirmed: true });
   }
 
   async decodeConfirmationToken(token: string): Promise<string> {
@@ -56,6 +60,7 @@ export class EmailConfirmationService {
       if (typeof payload === 'object' && 'email' in payload) {
         return payload.email;
       }
+
       throw new BadRequestException();
     } catch (error) {
       if (error?.name === 'TokenExpiredError') {
