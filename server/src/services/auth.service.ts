@@ -21,6 +21,7 @@ import {
 } from '@/helpers';
 import { AuthResult, ITokens, JwtPayload } from '@/interfaces';
 
+import { EmailConfirmationService } from './email-confirmation.service';
 import { LoggerService } from './logger.service';
 import { UsersService } from './users.service';
 
@@ -30,6 +31,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly emailConfirmationService: EmailConfirmationService,
     private readonly loggerService: LoggerService,
   ) {}
 
@@ -64,6 +66,8 @@ export class AuthService {
         refreshTokenHash: null,
         refreshTokenSalt: null,
       });
+
+      await this.emailConfirmationService.sendVerificationLink(safeUser.email);
 
       return {
         user,

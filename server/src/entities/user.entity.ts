@@ -55,6 +55,9 @@ export class User {
   @Column({ nullable: true })
   refreshTokenSalt: string | null;
 
+  @Column({ default: false })
+  isEmailConfirmed: boolean;
+
   @Column({
     type: 'decimal',
     nullable: true,

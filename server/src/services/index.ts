@@ -15,3 +15,5 @@ export * from './aws-files.service';
 export * from './cloudinary-files.service';
 export * from './files-manager.service';
 export * from './public-files.service';
+export * from './email.service';
+export * from './email-confirmation.service';

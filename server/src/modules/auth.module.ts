@@ -11,6 +11,7 @@ import {
 } from '@/core';
 import { AuthService } from '@/services';
 
+import { EmailConfirmationModule } from './email-confirmation.module';
 import { UsersModule } from './users.module';
 
 @Module({
@@ -18,6 +19,7 @@ import { UsersModule } from './users.module';
     UsersModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync(JwtConfig),
+    EmailConfirmationModule,
   ],
   providers: [AuthService, JwtStrategy, LocalStrategy, JwtRefreshTokenStrategy],
   controllers: [AuthController],

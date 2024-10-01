@@ -5,6 +5,7 @@ import {
   CarsModule,
   ConfigModule,
   DatabaseModule,
+  EmailModule,
   FilesManagerModule,
   LoggerModule,
   OriginalCarsModule,
@@ -15,6 +16,7 @@ import {
 } from '@/modules';
 
 import { RequestLoggingMiddleware } from './middlewares';
+import { EmailConfirmationModule } from './modules';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { RequestLoggingMiddleware } from './middlewares';
     AuthModule,
     PublicFilesModule,
     FilesManagerModule,
+    EmailModule,
+    EmailConfirmationModule,
   ],
 })
 export class AppModule {
