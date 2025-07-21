@@ -35,6 +35,11 @@ on:
         description: 'The git tag that was created'
         value: ${{ jobs.bump-version.outputs.tag_name }}
 
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
 jobs:
   bump-version:
     runs-on: ubuntu-latest
@@ -46,7 +51,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -112,6 +117,8 @@ jobs:
           git commit -m "chore: bump version to ${{ steps.version.outputs.new_version }} (${{ inputs.bump_type }})"
 
       - name: Create and push tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           git tag ${{ steps.version.outputs.tag_name }}
           git push origin HEAD --tags
@@ -121,37 +128,55 @@ jobs:
         if: inputs.create_release
         run: |
           if [ -n "${{ inputs.release_notes }}" ]; then
-            NOTES="${{ inputs.release_notes }}"
+            cat << 'EOF' > release_notes.md
+          ${{ inputs.release_notes }}
+          EOF
           else
             # Generate automatic release notes based on commits since last tag
             LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+            
+            echo "## 🚀 What's Changed" > release_notes.md
+            echo "" >> release_notes.md
+            
             if [ -n "$LAST_TAG" ]; then
-              NOTES="## Changes since $LAST_TAG"$'\n\n'
-              NOTES+=$(git log --pretty=format:"- %s (%h)" $LAST_TAG..HEAD)
+              echo "**Changes since [\`$LAST_TAG\`](https://github.com/${{ github.repository }}/releases/tag/$LAST_TAG):**" >> release_notes.md
+              echo "" >> release_notes.md
+              
+              # Get commits since last tag, excluding the version bump commit we just made
+              git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" $LAST_TAG..HEAD~1 >> release_notes.md
             else
-              NOTES="## Changes in this release"$'\n\n'
-              NOTES+=$(git log --pretty=format:"- %s (%h)" --max-count=10)
+              echo "**Recent changes:**" >> release_notes.md
+              echo "" >> release_notes.md
+              
+              # Get last 10 commits excluding the version bump commit
+              git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" --max-count=10 HEAD~1 >> release_notes.md
             fi
+            
+            # Add footer
+            echo "" >> release_notes.md
+            echo "---" >> release_notes.md
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/$LAST_TAG...${{ steps.version.outputs.tag_name }}" >> release_notes.md
           fi
           
-          # Escape newlines for GitHub Actions
-          NOTES="${NOTES//'%'/'%25'}"
-          NOTES="${NOTES//$'\n'/'%0A'}"
-          NOTES="${NOTES//$'\r'/'%0D'}"
-          
-          echo "notes=$NOTES" >> $GITHUB_OUTPUT
+          # Set the output using the file content
+          {
+            echo 'notes<<EOF'
+            cat release_notes.md
+            echo EOF
+          } >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         if: inputs.create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.version.outputs.tag_name }}
-          release_name: Release ${{ steps.version.outputs.tag_name }}
-          body: ${{ steps.release_notes.outputs.notes }}
+          name: Release ${{ steps.version.outputs.tag_name }}
+          body_path: release_notes.md
           draft: false
           prerelease: false
+          generate_release_notes: false
 
       - name: Summary
         run: |
