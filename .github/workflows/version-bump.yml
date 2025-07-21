@@ -35,11 +35,6 @@ on:
         description: 'The git tag that was created'
         value: ${{ jobs.bump-version.outputs.tag_name }}
 
-permissions:
-  contents: write
-  issues: write
-  pull-requests: write
-  
 jobs:
   bump-version:
     runs-on: ubuntu-latest
