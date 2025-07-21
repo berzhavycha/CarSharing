@@ -19,7 +19,7 @@ on:
 
 jobs:
   release:
-    uses: CarSharing/.github/workflows/version-bump.yml@main
+    uses: berzhavycha/CarSharing/.github/workflows/version-bump.yml@main
     with:
       bump_type: ${{ inputs.bump_type }}
       package_manager: 'npm'  # or 'yarn', 'pnpm'
