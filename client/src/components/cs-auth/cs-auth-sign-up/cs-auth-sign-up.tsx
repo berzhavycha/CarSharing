@@ -11,7 +11,6 @@ import { SignUpUserDto } from '@/types';
 
 import { useUserRole } from './hooks';
 
-console.log('here 1')
 
 export const CSAuthSignUp: FC = observer(() => {
   const { userRole, handleUserTypeChange, showSecretCodeInput } = useUserRole();
