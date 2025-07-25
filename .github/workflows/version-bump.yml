@@ -7,6 +7,16 @@ on:
         description: 'Type of version bump (major, minor, patch)'
         required: true
         type: string
+      target_branch:
+        description: 'Branch to create release from'
+        required: false
+        type: string
+        default: 'main'
+      environment:
+        description: 'Target environment (production, staging, development)'
+        required: false
+        type: string
+        default: 'production'
       package_manager:
         description: 'Package manager to use (npm, yarn, pnpm)'
         required: false
@@ -48,9 +58,10 @@ jobs:
       tag_name: ${{ steps.version.outputs.tag_name }}
 
     steps:
-      - name: Checkout code
+      - name: Checkout specific branch
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.target_branch }}
           token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
@@ -66,10 +77,15 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-      - name: Validate bump type
+      - name: Validate inputs
         run: |
           if [[ ! "${{ inputs.bump_type }}" =~ ^(major|minor|patch)$ ]]; then
             echo "Error: bump_type must be one of: major, minor, patch"
+            exit 1
+          fi
+          
+          if [[ ! "${{ inputs.environment }}" =~ ^(production|staging|development)$ ]]; then
+            echo "Error: environment must be one of: production, staging, development"
             exit 1
           fi
 
@@ -98,7 +114,13 @@ jobs:
           esac
 
           NEW_VERSION=${NEW_VERSION#v}
-          TAG_NAME="v$NEW_VERSION"
+          
+          # Add environment prefix to tag for non-production environments
+          if [ "${{ inputs.environment }}" != "production" ]; then
+            TAG_NAME="v$NEW_VERSION-${{ inputs.environment }}"
+          else
+            TAG_NAME="v$NEW_VERSION"
+          fi
 
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
@@ -110,22 +132,30 @@ jobs:
           if [ -f package-lock.json ]; then
             git add package-lock.json
           fi
-          git commit -m "chore: bump version to ${{ steps.version.outputs.new_version }} (${{ inputs.bump_type }})"
+          git commit -m "chore: bump version to ${{ steps.version.outputs.new_version }} (${{ inputs.bump_type }}) for ${{ inputs.environment }}"
 
       - name: Create and push tag
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           git tag ${{ steps.version.outputs.tag_name }}
-          git push origin HEAD --tags
+          git push origin ${{ inputs.target_branch }} --tags
 
       - name: Generate release notes
         id: release_notes
         if: inputs.create_release
         run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          # Find last tag for this environment
+          if [ "${{ inputs.environment }}" != "production" ]; then
+            LAST_TAG=$(git tag -l "v*-${{ inputs.environment }}" --sort=-version:refname | head -1 || echo "")
+          else
+            LAST_TAG=$(git tag -l "v*" --sort=-version:refname | grep -v "-" | head -1 || echo "")
+          fi
 
-          echo "## What's Changed" > release_notes.md
+          echo "## What's Changed (${{ inputs.environment }} Environment)" > release_notes.md
+          echo "" >> release_notes.md
+          echo "**Branch:** ${{ inputs.target_branch }}" >> release_notes.md
+          echo "**Environment:** ${{ inputs.environment }}" >> release_notes.md
           echo "" >> release_notes.md
 
           if [ -n "$LAST_TAG" ]; then
@@ -134,7 +164,7 @@ jobs:
 
             git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" $LAST_TAG..HEAD~1 >> release_notes.md
           else
-            echo "**Changes in initial release:**" >> release_notes.md
+            echo "**Changes in initial ${{ inputs.environment }} release:**" >> release_notes.md
             echo "" >> release_notes.md
 
             FIRST_COMMIT=$(git rev-list --max-parents=0 HEAD)
@@ -166,15 +196,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.version.outputs.tag_name }}
-          name: Release ${{ steps.version.outputs.tag_name }}
+          name: Release ${{ steps.version.outputs.tag_name }} (${{ inputs.environment }})
           body_path: release_notes.md
           draft: false
-          prerelease: false
+          prerelease: ${{ inputs.environment != 'production' }}
           generate_release_notes: false
 
       - name: Summary
         run: |
           echo "## Version Bump Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment:** ${{ inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** ${{ inputs.target_branch }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Previous Version:** ${{ steps.current_version.outputs.current_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **New Version:** ${{ steps.version.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Bump Type:** ${{ inputs.bump_type }}" >> $GITHUB_STEP_SUMMARY
