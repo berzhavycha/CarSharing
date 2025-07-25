@@ -3,14 +3,16 @@ name: Bump Version and Tag Release
 on:
   workflow_dispatch:
     inputs:
-      target_branch:
-        description: "Branch to create release from"
+      deployment_target:
+        description: "Select deployment target"
         required: true
         type: choice
         options:
-          - main
-          - feature/add-husky
-        default: "main"
+          - production    # maps to main branch
+          - staging      # maps to staging branch  
+          - development  # maps to dev/latest branch
+          - hotfix       # maps to hotfix/* branch
+        default: "production"
       bump_type:
         description: "Type of version bump"
         required: true
@@ -20,15 +22,6 @@ on:
           - minor
           - major
         default: "patch"
-      environment:
-        description: "Target environment"
-        required: true
-        type: choice
-        options:
-          - production
-          - staging
-          - development
-        default: "production"
       release_notes:
         description: "Custom release notes (optional)"
         required: false
@@ -41,16 +34,51 @@ permissions:
   pull-requests: write
 
 jobs:
+  map-target:
+    name: Map Deployment Target
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.mapping.outputs.branch }}
+      environment: ${{ steps.mapping.outputs.environment }}
+      tag_prefix: ${{ steps.mapping.outputs.tag_prefix }}
+    steps:
+      - name: Map deployment target to branch and environment
+        id: mapping
+        run: |
+          case "${{ inputs.deployment_target }}" in
+            "production")
+              echo "branch=main" >> $GITHUB_OUTPUT
+              echo "environment=production" >> $GITHUB_OUTPUT
+              echo "tag_prefix=" >> $GITHUB_OUTPUT  # No prefix for production
+              ;;
+            "staging")
+              echo "branch=staging" >> $GITHUB_OUTPUT
+              echo "environment=staging" >> $GITHUB_OUTPUT
+              echo "tag_prefix=staging-" >> $GITHUB_OUTPUT
+              ;;
+            "development")
+              echo "branch=dev/latest" >> $GITHUB_OUTPUT
+              echo "environment=development" >> $GITHUB_OUTPUT
+              echo "tag_prefix=dev-" >> $GITHUB_OUTPUT
+              ;;
+            "hotfix")
+              echo "branch=hotfix" >> $GITHUB_OUTPUT
+              echo "environment=hotfix" >> $GITHUB_OUTPUT
+              echo "tag_prefix=hotfix-" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
   release:
-    name: Bump Version and Create Release (${{ inputs.environment }})
-    if: github.ref_name == inputs.target_branch || github.event_name == 'workflow_dispatch'
-    uses: berzhavycha/CarSharing/.github/workflows/version-bump.yml@main
+    name: Bump Version and Create Release
+    needs: map-target
+    uses: optimalitypro/opt-devops-pipeline/.github/workflows/builder-bump-version-tag-release.yaml@main
     with:
       bump_type: ${{ inputs.bump_type }}
-      package_manager: "npm"
+      target_branch: ${{ needs.map-target.outputs.branch }}
+      environment: ${{ needs.map-target.outputs.environment }}
+      tag_prefix: ${{ needs.map-target.outputs.tag_prefix }}
+      package_manager: "yarn"
       working_directory: "."
       create_release: true
       release_notes: ${{ inputs.release_notes }}
-      target_branch: ${{ inputs.target_branch }}
-      environment: ${{ inputs.environment }}
     secrets: inherit
