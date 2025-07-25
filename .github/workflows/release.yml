@@ -1,22 +1,40 @@
-name: Release
+name: Bump Version and Tag Release
 
 on:
   workflow_dispatch:
     inputs:
+      target_branch:
+        description: "Branch to create release from"
+        required: true
+        type: choice
+        options:
+          - main
+          - feature/add-husky
+        default: "main"
       bump_type:
-        description: 'Type of version bump'
+        description: "Type of version bump"
         required: true
         type: choice
         options:
           - patch
           - minor
           - major
-        default: 'patch'
+        default: "patch"
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - production
+          - staging
+          - development
+        default: "production"
       release_notes:
-        description: 'Custom release notes (optional)'
+        description: "Custom release notes (optional)"
         required: false
         type: string
-        
+        default: ""
+
 permissions:
   contents: write
   issues: write
@@ -24,11 +42,15 @@ permissions:
 
 jobs:
   release:
-    uses: berzhavycha/CarSharing/.github/workflows/version-bump.yml@main
+    name: Bump Version and Create Release (${{ inputs.environment }})
+    if: github.ref_name == inputs.target_branch || github.event_name == 'workflow_dispatch'
+    uses: berzhavycha/CarSharing/.github/workflows/builder-bump-version-tag-release.yaml@main
     with:
       bump_type: ${{ inputs.bump_type }}
-      package_manager: 'npm'  # or 'yarn', 'pnpm'
-      working_directory: '.'   # change if package.json is in a subdirectory
+      package_manager: "npm"
+      working_directory: "."
       create_release: true
       release_notes: ${{ inputs.release_notes }}
+      target_branch: ${{ inputs.target_branch }}
+      environment: ${{ inputs.environment }}
     secrets: inherit
