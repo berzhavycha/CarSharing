@@ -11,7 +11,6 @@ import { SignUpUserDto } from '@/types';
 
 import { useUserRole } from './hooks';
 
-
 export const CSAuthSignUp: FC = observer(() => {
   const { userRole, handleUserTypeChange, showSecretCodeInput } = useUserRole();
   const navigate = useNavigate();
@@ -125,7 +124,7 @@ const RoleWrapper = styled.div`
   grid-column: span 3;
   display: grid;
   grid-template-columns: 1fr 3fr;
-  gap: 10px 40px;
+  gap: 12px 40px;
 
   @media ${device.md} {
     grid-template-columns: 1fr 1fr;
