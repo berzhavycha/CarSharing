@@ -3,16 +3,6 @@ name: Bump Version and Tag Release
 on:
   workflow_dispatch:
     inputs:
-      deployment_target:
-        description: "Select deployment target"
-        required: true
-        type: choice
-        options:
-          - production    # maps to main branch
-          - staging      # maps to staging branch  
-          - development  # maps to dev/latest branch
-          - hotfix       # maps to hotfix/* branch
-        default: "production"
       bump_type:
         description: "Type of version bump"
         required: true
@@ -34,49 +24,46 @@ permissions:
   pull-requests: write
 
 jobs:
-  map-target:
-    name: Map Deployment Target
+  map-branch:
+    name: Map Branch to Environment
     runs-on: ubuntu-latest
     outputs:
-      branch: ${{ steps.mapping.outputs.branch }}
       environment: ${{ steps.mapping.outputs.environment }}
       tag_suffix: ${{ steps.mapping.outputs.tag_suffix }}
     steps:
-      - name: Map deployment target to branch and environment
+      - name: Determine branch and environment
         id: mapping
         run: |
-          case "${{ inputs.deployment_target }}" in
-            "production")
-              echo "branch=main" >> $GITHUB_OUTPUT
-              echo "environment=production" >> $GITHUB_OUTPUT
-              echo "tag_suffix=-chevron" >> $GITHUB_OUTPUT  # No suffix for production
-              ;;
-            "staging")
-              echo "branch=staging" >> $GITHUB_OUTPUT
-              echo "environment=staging" >> $GITHUB_OUTPUT
-              echo "tag_suffix=-staging" >> $GITHUB_OUTPUT
-              ;;
-            "development")
-              echo "branch=dev/latest" >> $GITHUB_OUTPUT
-              echo "environment=development" >> $GITHUB_OUTPUT
-              echo "tag_suffix=-dev" >> $GITHUB_OUTPUT
-              ;;
-            "hotfix")
-              echo "branch=hotfix" >> $GITHUB_OUTPUT
-              echo "environment=hotfix" >> $GITHUB_OUTPUT
-              echo "tag_suffix=-hotfix" >> $GITHUB_OUTPUT
-              ;;
-          esac
+          echo "Current ref is: $GITHUB_REF"
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          echo "Branch name: $BRANCH_NAME"
+
+          if [[ "$BRANCH_NAME" == "main" ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+            echo "tag_suffix=-chevron" >> $GITHUB_OUTPUT
+          elif [[ "$BRANCH_NAME" == "staging" ]]; then
+            echo "environment=staging" >> $GITHUB_OUTPUT
+            echo "tag_suffix=-staging" >> $GITHUB_OUTPUT
+          elif [[ "$BRANCH_NAME" == "dev/latest" ]]; then
+            echo "environment=development" >> $GITHUB_OUTPUT
+            echo "tag_suffix=-dev" >> $GITHUB_OUTPUT
+          elif [[ "$BRANCH_NAME" == hotfix/* ]]; then
+            echo "environment=hotfix" >> $GITHUB_OUTPUT
+            echo "tag_suffix=-hotfix" >> $GITHUB_OUTPUT
+          else
+            echo "Unsupported branch: $BRANCH_NAME"
+            exit 1
+          fi
 
   release:
     name: Bump Version and Create Release
-    needs: map-target
+    needs: map-branch
     uses: berzhavycha/CarSharing/.github/workflows/version-bump.yml@main
     with:
       bump_type: ${{ inputs.bump_type }}
-      target_branch: ${{ needs.map-target.outputs.branch }}
-      environment: ${{ needs.map-target.outputs.environment }}
-      tag_suffix: ${{ needs.map-target.outputs.tag_suffix }}
+      target_branch: ${{ github.ref_name }}  # Uses the current branch
+      environment: ${{ needs.map-branch.outputs.environment }}
+      tag_suffix: ${{ needs.map-branch.outputs.tag_suffix }}
       package_manager: "yarn"
       working_directory: "."
       create_release: true
