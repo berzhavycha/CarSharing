@@ -44,7 +44,7 @@ jobs:
   release:
     name: Bump Version and Create Release (${{ inputs.environment }})
     if: github.ref_name == inputs.target_branch || github.event_name == 'workflow_dispatch'
-    uses: berzhavycha/CarSharing/.github/workflows/builder-bump-version-tag-release.yaml@main
+    uses: berzhavycha/CarSharing/.github/workflows/version-bump.yml@main
     with:
       bump_type: ${{ inputs.bump_type }}
       package_manager: "npm"
