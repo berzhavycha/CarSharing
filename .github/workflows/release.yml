@@ -71,7 +71,7 @@ jobs:
   release:
     name: Bump Version and Create Release
     needs: map-target
-    uses: optimalitypro/opt-devops-pipeline/.github/workflows/builder-bump-version-tag-release.yaml@main
+    uses: berzhavycha/CarSharing/.github/workflows/version-bump.yml@main
     with:
       bump_type: ${{ inputs.bump_type }}
       target_branch: ${{ needs.map-target.outputs.branch }}
