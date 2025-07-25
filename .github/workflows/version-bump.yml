@@ -75,6 +75,12 @@ jobs:
           cache: ${{ inputs.package_manager }}
           cache-dependency-path: ${{ inputs.working_directory }}/package-lock.json
 
+      - name: Install jq (if missing)
+        run: |
+          if ! command -v jq &> /dev/null; then
+            sudo apt-get update && sudo apt-get install -y jq
+          fi
+
       - name: Configure Git
         run: |
           git config --local user.email "action@github.com"
@@ -95,10 +101,11 @@ jobs:
           echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
           echo "Current version: $CURRENT_VERSION"
 
-      - name: Bump version
+      - name: Bump version and add suffix in package.json
         id: version
         working-directory: ${{ inputs.working_directory }}
         run: |
+          # Bump numeric version only
           case "${{ inputs.bump_type }}" in
             "major")
               NEW_VERSION=$(npm version major --no-git-tag-version)
@@ -111,10 +118,24 @@ jobs:
               ;;
           esac
 
+          # Remove leading 'v' if present
           NEW_VERSION=${NEW_VERSION#v}
-          TAG_NAME="v$NEW_VERSION${{ inputs.tag_suffix }}"
 
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          # Prepare suffix without leading dash
+          if [ -n "${{ inputs.tag_suffix }}" ]; then
+            SUFFIX="${{ inputs.tag_suffix }}"
+            SUFFIX="${SUFFIX#-}"
+            FULL_VERSION="${NEW_VERSION}-${SUFFIX}"
+          else
+            FULL_VERSION="${NEW_VERSION}"
+          fi
+
+          # Update package.json version field with suffix
+          jq --arg version "$FULL_VERSION" '.version = $version' package.json > package.tmp.json && mv package.tmp.json package.json
+
+          TAG_NAME="v$FULL_VERSION"
+
+          echo "new_version=$FULL_VERSION" >> $GITHUB_OUTPUT
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
           echo "Creating tag: $TAG_NAME"
 
@@ -138,11 +159,9 @@ jobs:
         id: release_notes
         if: inputs.create_release
         run: |
-          # Find last tag with same suffix
           if [ -n "${{ inputs.tag_suffix }}" ]; then
             LAST_TAG=$(git tag -l "v*${{ inputs.tag_suffix }}" --sort=-version:refname | head -1 2>/dev/null || echo "")
           else
-            # For production (no suffix), exclude tags with suffixes
             LAST_TAG=$(git tag -l "v*" --sort=-version:refname | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$" | head -1 2>/dev/null || echo "")
           fi
 
