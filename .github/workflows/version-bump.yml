@@ -15,8 +15,8 @@ on:
         description: 'Target environment'
         required: true
         type: string
-      tag_suffix:
-        description: 'Suffix for the tag (e.g., "-staging", "-dev")'
+      tag_prefix:
+        description: 'Prefix for the tag (e.g., "staging-", "dev-")'
         required: false
         type: string
         default: ''
@@ -112,7 +112,7 @@ jobs:
           esac
 
           NEW_VERSION=${NEW_VERSION#v}
-          TAG_NAME="v$NEW_VERSION${{ inputs.tag_suffix }}"
+          TAG_NAME="${{ inputs.tag_prefix }}v$NEW_VERSION"
 
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
@@ -138,15 +138,15 @@ jobs:
         id: release_notes
         if: inputs.create_release
         run: |
-          # Find last tag with same suffix
-          if [ -n "${{ inputs.tag_suffix }}" ]; then
-            LAST_TAG=$(git tag -l "v*${{ inputs.tag_suffix }}" --sort=-version:refname | head -1 2>/dev/null || echo "")
+          # Find last tag with same prefix
+          if [ -n "${{ inputs.tag_prefix }}" ]; then
+            LAST_TAG=$(git tag -l "${{ inputs.tag_prefix }}v*" --sort=-version:refname | head -1 2>/dev/null || echo "")
           else
-            # For production (no suffix), exclude tags with suffixes
+            # For production (no prefix), exclude tags with prefixes
             LAST_TAG=$(git tag -l "v*" --sort=-version:refname | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$" | head -1 2>/dev/null || echo "")
           fi
 
-          echo "## 🚀 Release Notes - ${{ inputs.environment }} Environment" > release_notes.md
+          echo "## Release Notes - ${{ inputs.environment }} Environment" > release_notes.md
           echo "" >> release_notes.md
           echo "**Branch:** \`${{ inputs.target_branch }}\`" >> release_notes.md
           echo "**Environment:** \`${{ inputs.environment }}\`" >> release_notes.md
@@ -155,12 +155,12 @@ jobs:
           echo "" >> release_notes.md
 
           if [ -n "$LAST_TAG" ]; then
-            echo "### 📝 Changes since [\`$LAST_TAG\`](https://github.com/${{ github.repository }}/releases/tag/$LAST_TAG)" >> release_notes.md
+            echo "### Changes since [\`$LAST_TAG\`](https://github.com/${{ github.repository }}/releases/tag/$LAST_TAG)" >> release_notes.md
             echo "" >> release_notes.md
 
             git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" $LAST_TAG..HEAD~1 >> release_notes.md
           else
-            echo "### 📝 Changes in initial ${{ inputs.environment }} release" >> release_notes.md
+            echo "### Changes in initial ${{ inputs.environment }} release" >> release_notes.md
             echo "" >> release_notes.md
 
             FIRST_COMMIT=$(git rev-list --max-parents=0 HEAD)
@@ -170,7 +170,7 @@ jobs:
           if [ -n "${{ inputs.release_notes }}" ]; then
             echo "" >> release_notes.md
             echo "---" >> release_notes.md
-            echo "### 📋 Additional Notes" >> release_notes.md
+            echo "### Additional Notes" >> release_notes.md
             echo "" >> release_notes.md
             echo "${{ inputs.release_notes }}" >> release_notes.md
           fi
@@ -204,7 +204,7 @@ jobs:
 
       - name: Summary
         run: |
-          echo "## 🎉 Version Bump Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Version Bump Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
           echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
