@@ -49,7 +49,7 @@ jobs:
             "production")
               echo "branch=main" >> $GITHUB_OUTPUT
               echo "environment=production" >> $GITHUB_OUTPUT
-              echo "tag_suffix=" >> $GITHUB_OUTPUT  # No suffix for production
+              echo "tag_suffix=-chevron" >> $GITHUB_OUTPUT  # No suffix for production
               ;;
             "staging")
               echo "branch=staging" >> $GITHUB_OUTPUT
