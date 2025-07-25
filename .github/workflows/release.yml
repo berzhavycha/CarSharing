@@ -40,7 +40,7 @@ jobs:
     outputs:
       branch: ${{ steps.mapping.outputs.branch }}
       environment: ${{ steps.mapping.outputs.environment }}
-      tag_prefix: ${{ steps.mapping.outputs.tag_prefix }}
+      tag_suffix: ${{ steps.mapping.outputs.tag_suffix }}
     steps:
       - name: Map deployment target to branch and environment
         id: mapping
@@ -49,22 +49,22 @@ jobs:
             "production")
               echo "branch=main" >> $GITHUB_OUTPUT
               echo "environment=production" >> $GITHUB_OUTPUT
-              echo "tag_prefix=chevron" >> $GITHUB_OUTPUT  # No prefix for production
+              echo "tag_suffix=-chevron" >> $GITHUB_OUTPUT  # No suffix for production: v1.2.3
               ;;
             "staging")
               echo "branch=staging" >> $GITHUB_OUTPUT
               echo "environment=staging" >> $GITHUB_OUTPUT
-              echo "tag_prefix=staging-" >> $GITHUB_OUTPUT
+              echo "tag_suffix=-staging" >> $GITHUB_OUTPUT  # v1.2.3-staging
               ;;
             "development")
               echo "branch=dev/latest" >> $GITHUB_OUTPUT
               echo "environment=development" >> $GITHUB_OUTPUT
-              echo "tag_prefix=dev-" >> $GITHUB_OUTPUT
+              echo "tag_suffix=-dev" >> $GITHUB_OUTPUT  # v1.2.3-dev
               ;;
             "hotfix")
               echo "branch=hotfix" >> $GITHUB_OUTPUT
               echo "environment=hotfix" >> $GITHUB_OUTPUT
-              echo "tag_prefix=hotfix-" >> $GITHUB_OUTPUT
+              echo "tag_suffix=-hotfix" >> $GITHUB_OUTPUT  # v1.2.3-hotfix
               ;;
           esac
 
@@ -76,7 +76,7 @@ jobs:
       bump_type: ${{ inputs.bump_type }}
       target_branch: ${{ needs.map-target.outputs.branch }}
       environment: ${{ needs.map-target.outputs.environment }}
-      tag_prefix: ${{ needs.map-target.outputs.tag_prefix }}
+      tag_suffix: ${{ needs.map-target.outputs.tag_suffix }} 
       package_manager: "npm"
       working_directory: "."
       create_release: true
