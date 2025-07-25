@@ -41,9 +41,9 @@ jobs:
           if [[ "$BRANCH_NAME" == "main" ]]; then
             echo "environment=production" >> $GITHUB_OUTPUT
             echo "tag_suffix=-chevron" >> $GITHUB_OUTPUT
-          elif [[ "$BRANCH_NAME" == "staging" ]]; then
-            echo "environment=staging" >> $GITHUB_OUTPUT
-            echo "tag_suffix=-staging" >> $GITHUB_OUTPUT
+          elif [[ "$BRANCH_NAME" == "feature/add-husky" ]]; then
+            echo "environment=opti" >> $GITHUB_OUTPUT
+            echo "tag_suffix=-opti" >> $GITHUB_OUTPUT
           elif [[ "$BRANCH_NAME" == "dev/latest" ]]; then
             echo "environment=development" >> $GITHUB_OUTPUT
             echo "tag_suffix=-dev" >> $GITHUB_OUTPUT
