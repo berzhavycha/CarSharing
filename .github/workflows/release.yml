@@ -1,0 +1,71 @@
+name: Bump Version and Tag Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: "Type of version bump"
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: "patch"
+      release_notes:
+        description: "Custom release notes (optional)"
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  map-branch:
+    name: Map Branch to Environment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.mapping.outputs.environment }}
+      tag_suffix: ${{ steps.mapping.outputs.tag_suffix }}
+    steps:
+      - name: Determine branch and environment
+        id: mapping
+        run: |
+          echo "Current ref is: $GITHUB_REF"
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          echo "Branch name: $BRANCH_NAME"
+
+          if [[ "$BRANCH_NAME" == "main" ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+            echo "tag_suffix=-chevron" >> $GITHUB_OUTPUT
+          elif [[ "$BRANCH_NAME" == "feature/add-husky" ]]; then
+            echo "environment=opti" >> $GITHUB_OUTPUT
+            echo "tag_suffix=-opti" >> $GITHUB_OUTPUT
+          elif [[ "$BRANCH_NAME" == "dev/latest" ]]; then
+            echo "environment=development" >> $GITHUB_OUTPUT
+            echo "tag_suffix=-dev" >> $GITHUB_OUTPUT
+          elif [[ "$BRANCH_NAME" == hotfix/* ]]; then
+            echo "environment=hotfix" >> $GITHUB_OUTPUT
+            echo "tag_suffix=-hotfix" >> $GITHUB_OUTPUT
+          else
+            echo "Unsupported branch: $BRANCH_NAME"
+            exit 1
+          fi
+
+  release:
+    name: Bump Version and Create Release
+    needs: map-branch
+    uses: berzhavycha/CarSharing/.github/workflows/version-bump.yml@main
+    with:
+      bump_type: ${{ inputs.bump_type }}
+      target_branch: ${{ github.ref_name }}  # Uses the current branch
+      environment: ${{ needs.map-branch.outputs.environment }}
+      tag_suffix: ${{ needs.map-branch.outputs.tag_suffix }}
+      package_manager: "yarn"
+      working_directory: "."
+      create_release: true
+      release_notes: ${{ inputs.release_notes }}
+    secrets: inherit
