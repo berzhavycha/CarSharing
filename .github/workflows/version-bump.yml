@@ -16,7 +16,7 @@ on:
         required: true
         type: string
       tag_suffix:
-        description: 'Suffix for the tag (e.g., "-staging", "-dev")'
+        description: 'Suffix for the tag (e.g., "-staging", "-production")'
         required: false
         type: string
         default: ''
@@ -50,6 +50,7 @@ on:
 
 permissions:
   contents: write
+  packages: read
   issues: write
   pull-requests: write
 
@@ -71,9 +72,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: ${{ inputs.package_manager }}
-          cache-dependency-path: ${{ inputs.working_directory }}/package-lock.json
+          cache-dependency-path: |
+            ${{ inputs.working_directory }}/package-lock.json
+            ${{ inputs.working_directory }}/yarn.lock
+            ${{ inputs.working_directory }}/pnpm-lock.yaml
+
+      - name: Authenticate GitHub Packages
+        run: |
+          echo "@optimalitypro:registry=https://npm.pkg.github.com" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}" >> ~/.npmrc
 
       - name: Configure Git
         run: |
@@ -87,6 +96,19 @@ jobs:
             exit 1
           fi
 
+      - name: Install dependencies
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          case "${{ inputs.package_manager }}" in
+            npm) npm ci ;;
+            yarn) yarn install --frozen-lockfile ;;
+            pnpm) pnpm install --frozen-lockfile ;;
+            *)
+              echo "Unsupported package manager: ${{ inputs.package_manager }}"
+              exit 1
+              ;;
+          esac
+
       - name: Get current version
         id: current_version
         working-directory: ${{ inputs.working_directory }}
@@ -99,15 +121,21 @@ jobs:
         id: version
         working-directory: ${{ inputs.working_directory }}
         run: |
-          case "${{ inputs.bump_type }}" in
-            "major")
-              NEW_VERSION=$(npm version major --no-git-tag-version)
+          case "${{ inputs.package_manager }}" in
+            npm)
+              NEW_VERSION=$(npm version ${{ inputs.bump_type }} --no-git-tag-version)
               ;;
-            "minor")
-              NEW_VERSION=$(npm version minor --no-git-tag-version)
+            yarn)
+              yarn config set version-git-tag false
+              yarn version --${{ inputs.bump_type }}
+              NEW_VERSION=$(node -p "require('./package.json').version")
               ;;
-            "patch")
-              NEW_VERSION=$(npm version patch --no-git-tag-version)
+            pnpm)
+              NEW_VERSION=$(pnpm version ${{ inputs.bump_type }} --no-git-tag-version)
+              ;;
+            *)
+              echo "Unsupported package manager: ${{ inputs.package_manager }}"
+              exit 1
               ;;
           esac
 
@@ -118,13 +146,15 @@ jobs:
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
           echo "Creating tag: $TAG_NAME"
 
+
       - name: Commit version bump
         working-directory: ${{ inputs.working_directory }}
         run: |
           git add package.json
-          if [ -f package-lock.json ]; then
-            git add package-lock.json
-          fi
+          if [ -f package-lock.json ]; then git add package-lock.json; fi
+          if [ -f yarn.lock ]; then git add yarn.lock; fi
+          if [ -f pnpm-lock.yaml ]; then git add pnpm-lock.yaml; fi
+
           git commit -m "chore(${{ inputs.environment }}): bump version to ${{ steps.version.outputs.new_version }} (${{ inputs.bump_type }})"
 
       - name: Create and push tag
@@ -138,11 +168,9 @@ jobs:
         id: release_notes
         if: inputs.create_release
         run: |
-          # Find last tag with same suffix
           if [ -n "${{ inputs.tag_suffix }}" ]; then
             LAST_TAG=$(git tag -l "v*${{ inputs.tag_suffix }}" --sort=-version:refname | head -1 2>/dev/null || echo "")
           else
-            # For production (no suffix), exclude tags with suffixes
             LAST_TAG=$(git tag -l "v*" --sort=-version:refname | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$" | head -1 2>/dev/null || echo "")
           fi
 
@@ -157,12 +185,10 @@ jobs:
           if [ -n "$LAST_TAG" ]; then
             echo "### 📝 Changes since [\`$LAST_TAG\`](https://github.com/${{ github.repository }}/releases/tag/$LAST_TAG)" >> release_notes.md
             echo "" >> release_notes.md
-
             git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" $LAST_TAG..HEAD~1 >> release_notes.md
           else
             echo "### 📝 Changes in initial ${{ inputs.environment }} release" >> release_notes.md
             echo "" >> release_notes.md
-
             FIRST_COMMIT=$(git rev-list --max-parents=0 HEAD)
             git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" $FIRST_COMMIT..HEAD~1 >> release_notes.md
           fi
