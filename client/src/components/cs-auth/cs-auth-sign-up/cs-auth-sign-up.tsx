@@ -25,6 +25,7 @@ export const CSAuthSignUp: FC = observer(() => {
   };
 
   const btnText = currentUserStore.isLoading ? <BtnSpinner /> : 'Sign Up';
+  console.log('currentUserStore.errors', currentUserStore.errors);
 
   return (
     <SignUpFormContainer>
