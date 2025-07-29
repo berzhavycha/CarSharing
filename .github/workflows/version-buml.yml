@@ -1,0 +1,243 @@
+name: Bump Version and Tag Release
+
+on:
+  workflow_call:
+    inputs:
+      bump_type:
+        description: 'Type of version bump (major, minor, patch)'
+        required: true
+        type: string
+      target_branch:
+        description: 'Branch to create release from'
+        required: true
+        type: string
+      environment:
+        description: 'Target environment'
+        required: true
+        type: string
+      tag_suffix:
+        description: 'Suffix for the tag (e.g., "-staging", "-production")'
+        required: false
+        type: string
+        default: ''
+      package_manager:
+        description: 'Package manager to use (npm, yarn, pnpm)'
+        required: false
+        type: string
+        default: 'npm'
+      working_directory:
+        description: 'Working directory where package.json is located'
+        required: false
+        type: string
+        default: '.'
+      create_release:
+        description: 'Whether to create a GitHub release'
+        required: false
+        type: boolean
+        default: true
+      release_notes:
+        description: 'Custom release notes'
+        required: false
+        type: string
+        default: ''
+    outputs:
+      new_version:
+        description: 'The new version that was created'
+        value: ${{ jobs.bump-version.outputs.new_version }}
+      tag_name:
+        description: 'The git tag that was created'
+        value: ${{ jobs.bump-version.outputs.tag_name }}
+
+permissions:
+  contents: write
+  packages: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.version.outputs.new_version }}
+      tag_name: ${{ steps.version.outputs.tag_name }}
+
+    steps:
+      - name: Checkout specific branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_branch }}
+          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: ${{ inputs.package_manager }}
+          cache-dependency-path: |
+            ${{ inputs.working_directory }}/package-lock.json
+            ${{ inputs.working_directory }}/yarn.lock
+            ${{ inputs.working_directory }}/pnpm-lock.yaml
+
+      - name: Authenticate GitHub Packages
+        run: |
+          echo "@optimalitypro:registry=https://npm.pkg.github.com" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Validate bump type
+        run: |
+          if [[ ! "${{ inputs.bump_type }}" =~ ^(major|minor|patch)$ ]]; then
+            echo "Error: bump_type must be one of: major, minor, patch"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          case "${{ inputs.package_manager }}" in
+            npm) npm ci ;;
+            yarn) yarn install --frozen-lockfile ;;
+            pnpm) pnpm install --frozen-lockfile ;;
+            *)
+              echo "Unsupported package manager: ${{ inputs.package_manager }}"
+              exit 1
+              ;;
+          esac
+
+      - name: Get current version
+        id: current_version
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: $CURRENT_VERSION"
+
+      - name: Bump version
+        id: version
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          case "${{ inputs.package_manager }}" in
+            npm)
+              NEW_VERSION=$(npm version ${{ inputs.bump_type }} --no-git-tag-version)
+              ;;
+            yarn)
+              yarn config set version-git-tag false
+              yarn version --${{ inputs.bump_type }}
+              NEW_VERSION=$(node -p "require('./package.json').version")
+              ;;
+            pnpm)
+              NEW_VERSION=$(pnpm version ${{ inputs.bump_type }} --no-git-tag-version)
+              ;;
+            *)
+              echo "Unsupported package manager: ${{ inputs.package_manager }}"
+              exit 1
+              ;;
+          esac
+
+          NEW_VERSION=${NEW_VERSION#v}
+          TAG_NAME="v$NEW_VERSION${{ inputs.tag_suffix }}"
+
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "Creating tag: $TAG_NAME"
+
+
+      - name: Commit version bump
+        working-directory: ${{ inputs.working_directory }}
+        run: |
+          git add package.json
+          if [ -f package-lock.json ]; then git add package-lock.json; fi
+          if [ -f yarn.lock ]; then git add yarn.lock; fi
+          if [ -f pnpm-lock.yaml ]; then git add pnpm-lock.yaml; fi
+
+          git commit -m "chore(${{ inputs.environment }}): bump version to ${{ steps.version.outputs.new_version }} (${{ inputs.bump_type }})"
+
+      - name: Create and push tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          git tag ${{ steps.version.outputs.tag_name }}
+          git push origin ${{ inputs.target_branch }} --tags
+
+      - name: Generate release notes
+        id: release_notes
+        if: inputs.create_release
+        run: |
+          if [ -n "${{ inputs.tag_suffix }}" ]; then
+            LAST_TAG=$(git tag -l "v*${{ inputs.tag_suffix }}" --sort=-version:refname | head -1 2>/dev/null || echo "")
+          else
+            LAST_TAG=$(git tag -l "v*" --sort=-version:refname | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$" | head -1 2>/dev/null || echo "")
+          fi
+
+          echo "## 🚀 Release Notes - ${{ inputs.environment }} Environment" > release_notes.md
+          echo "" >> release_notes.md
+          echo "**Branch:** \`${{ inputs.target_branch }}\`" >> release_notes.md
+          echo "**Environment:** \`${{ inputs.environment }}\`" >> release_notes.md
+          echo "**Version:** \`${{ steps.version.outputs.new_version }}\`" >> release_notes.md
+          echo "**Tag:** \`${{ steps.version.outputs.tag_name }}\`" >> release_notes.md
+          echo "" >> release_notes.md
+
+          if [ -n "$LAST_TAG" ]; then
+            echo "### 📝 Changes since [\`$LAST_TAG\`](https://github.com/${{ github.repository }}/releases/tag/$LAST_TAG)" >> release_notes.md
+            echo "" >> release_notes.md
+            git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" $LAST_TAG..HEAD~1 >> release_notes.md
+          else
+            echo "### 📝 Changes in initial ${{ inputs.environment }} release" >> release_notes.md
+            echo "" >> release_notes.md
+            FIRST_COMMIT=$(git rev-list --max-parents=0 HEAD)
+            git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" $FIRST_COMMIT..HEAD~1 >> release_notes.md
+          fi
+
+          if [ -n "${{ inputs.release_notes }}" ]; then
+            echo "" >> release_notes.md
+            echo "---" >> release_notes.md
+            echo "### 📋 Additional Notes" >> release_notes.md
+            echo "" >> release_notes.md
+            echo "${{ inputs.release_notes }}" >> release_notes.md
+          fi
+
+          echo "" >> release_notes.md
+          echo "---" >> release_notes.md
+          if [ -n "$LAST_TAG" ]; then
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/$LAST_TAG...${{ steps.version.outputs.tag_name }}" >> release_notes.md
+          else
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/commits/${{ inputs.target_branch }}" >> release_notes.md
+          fi
+
+          {
+            echo 'notes<<EOF'
+            cat release_notes.md
+            echo EOF
+          } >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        if: inputs.create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.tag_name }}
+          name: "${{ steps.version.outputs.tag_name }} (${{ inputs.environment }})"
+          body_path: release_notes.md
+          draft: false
+          prerelease: ${{ inputs.environment != 'production' }}
+          generate_release_notes: false
+
+      - name: Summary
+        run: |
+          echo "## 🎉 Version Bump Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Environment** | \`${{ inputs.environment }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Branch** | \`${{ inputs.target_branch }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Previous Version** | \`${{ steps.current_version.outputs.current_version }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **New Version** | \`${{ steps.version.outputs.new_version }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Bump Type** | \`${{ inputs.bump_type }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Tag Created** | \`${{ steps.version.outputs.tag_name }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Release Created** | \`${{ inputs.create_release }}\` |" >> $GITHUB_STEP_SUMMARY

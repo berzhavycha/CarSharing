@@ -104,6 +104,8 @@ export const CSAuthSignUp: FC = observer(() => {
   );
 });
 
+
+
 const PasswordWrapper = styled.div`
   grid-column: span 3;
   display: grid;
