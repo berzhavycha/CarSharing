@@ -9,6 +9,9 @@ import { device } from '@/styles';
 import { SignUpUserDto } from '@/types';
 import { useUserRole } from './hooks';
 
+
+
+
 export const CSAuthSignUp: FC = observer(() => {
   const { userRole, handleUserTypeChange, showSecretCodeInput } = useUserRole();
   const navigate = useNavigate();
@@ -21,6 +24,8 @@ export const CSAuthSignUp: FC = observer(() => {
       navigate(authRedirectPages[currentUserStore.user.role]);
     }
   };
+
+  
 
   const btnText = currentUserStore.isLoading ? <BtnSpinner /> : 'Sign Up';
 
