@@ -8,7 +8,6 @@ import { useStore } from '@/context';
 import { authRedirectPages, AuthType, getUserSchema } from '@/helpers';
 import { device } from '@/styles';
 import { SignUpUserDto } from '@/types';
-
 import { useUserRole } from './hooks';
 
 export const CSAuthSignUp: FC = observer(() => {
@@ -103,6 +102,8 @@ export const CSAuthSignUp: FC = observer(() => {
     </SignUpFormContainer>
   );
 });
+
+
 
 const PasswordWrapper = styled.div`
   grid-column: span 3;
