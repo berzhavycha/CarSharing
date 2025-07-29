@@ -168,12 +168,21 @@ jobs:
         id: release_notes
         if: inputs.create_release
         run: |
+          # Get the tag that was just created (current tag)
+          CURRENT_TAG="${{ steps.version.outputs.tag_name }}"
+          
+          # Find the previous tag based on suffix
           if [ -n "${{ inputs.tag_suffix }}" ]; then
-            LAST_TAG=$(git tag -l "v*${{ inputs.tag_suffix }}" --sort=-version:refname | head -1 2>/dev/null || echo "")
+            # For suffixed tags, find the previous tag with the same suffix
+            LAST_TAG=$(git tag -l "v*${{ inputs.tag_suffix }}" --sort=-version:refname | grep -v "^$CURRENT_TAG$" | head -1 2>/dev/null || echo "")
           else
-            LAST_TAG=$(git tag -l "v*" --sort=-version:refname | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$" | head -1 2>/dev/null || echo "")
+            # For non-suffixed tags, find the previous semantic version tag (exclude suffixed ones)
+            LAST_TAG=$(git tag -l "v*" --sort=-version:refname | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$" | grep -v "^$CURRENT_TAG$" | head -1 2>/dev/null || echo "")
           fi
-
+          
+          echo "Current tag: $CURRENT_TAG"
+          echo "Previous tag: $LAST_TAG"
+          
           echo "## 🚀 Release Notes - ${{ inputs.environment }} Environment" > release_notes.md
           echo "" >> release_notes.md
           echo "**Branch:** \`${{ inputs.target_branch }}\`" >> release_notes.md
@@ -182,15 +191,34 @@ jobs:
           echo "**Tag:** \`${{ steps.version.outputs.tag_name }}\`" >> release_notes.md
           echo "" >> release_notes.md
 
-          if [ -n "$LAST_TAG" ]; then
+          if [ -n "$LAST_TAG" ] && [ "$LAST_TAG" != "$CURRENT_TAG" ]; then
             echo "### 📝 Changes since [\`$LAST_TAG\`](https://github.com/${{ github.repository }}/releases/tag/$LAST_TAG)" >> release_notes.md
             echo "" >> release_notes.md
-            git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" $LAST_TAG..HEAD~1 >> release_notes.md
+            
+            # Get commits between the last tag and the current commit (before version bump)
+            # Use HEAD~1 to exclude the version bump commit itself
+            COMMIT_COUNT=$(git rev-list --count $LAST_TAG..HEAD~1 2>/dev/null || echo "0")
+            
+            if [ "$COMMIT_COUNT" -gt 0 ]; then
+              git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" $LAST_TAG..HEAD~1 >> release_notes.md
+            else
+              echo "- No new commits since last release" >> release_notes.md
+            fi
           else
             echo "### 📝 Changes in initial ${{ inputs.environment }} release" >> release_notes.md
             echo "" >> release_notes.md
-            FIRST_COMMIT=$(git rev-list --max-parents=0 HEAD)
-            git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" $FIRST_COMMIT..HEAD~1 >> release_notes.md
+            
+            # For initial release, get all commits except the version bump
+            COMMIT_COUNT=$(git rev-list --count HEAD~1 2>/dev/null || echo "0")
+            
+            if [ "$COMMIT_COUNT" -gt 0 ]; then
+              git log --pretty=format:"- %s ([%h](https://github.com/${{ github.repository }}/commit/%H))" HEAD~1 >> release_notes.md
+            else
+              echo "- Initial release" >> release_notes.md
+            fi
+            
+            # Clear LAST_TAG for changelog URL
+            LAST_TAG=""
           fi
 
           if [ -n "${{ inputs.release_notes }}" ]; then
@@ -204,7 +232,7 @@ jobs:
           echo "" >> release_notes.md
           echo "---" >> release_notes.md
           if [ -n "$LAST_TAG" ]; then
-            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/$LAST_TAG...${{ steps.version.outputs.tag_name }}" >> release_notes.md
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/$LAST_TAG...$CURRENT_TAG" >> release_notes.md
           else
             echo "**Full Changelog**: https://github.com/${{ github.repository }}/commits/${{ inputs.target_branch }}" >> release_notes.md
           fi
