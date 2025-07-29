@@ -24,7 +24,7 @@ export const CSAuthSignUp: FC = observer(() => {
     }
   };
 
-  const btnContent = currentUserStore.isLoading ? <BtnSpinner /> : 'Sign Up';
+  const buttonContent = currentUserStore.isLoading ? <BtnSpinner /> : 'Sign Up';
 
   return (
     <SignUpFormContainer>
@@ -95,7 +95,7 @@ export const CSAuthSignUp: FC = observer(() => {
             </RoleWrapper>
           </FormBlocks>
           <CSCommonForm.SubmitButton
-            buttonContent={btnContent}
+            buttonContent={buttonContent}
             disabled={currentUserStore.isLoading}
           />
         </CSCommonForm>
