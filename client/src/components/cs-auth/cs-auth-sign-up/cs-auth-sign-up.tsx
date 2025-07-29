@@ -2,11 +2,13 @@ import { observer } from 'mobx-react-lite';
 import { FC } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+
 import { BtnSpinner, CSCommonErrorMessage, CSCommonForm } from '@/components';
 import { useStore } from '@/context';
 import { authRedirectPages, AuthType, getUserSchema } from '@/helpers';
 import { device } from '@/styles';
 import { SignUpUserDto } from '@/types';
+
 import { useUserRole } from './hooks';
 
 export const CSAuthSignUp: FC = observer(() => {
@@ -101,8 +103,6 @@ export const CSAuthSignUp: FC = observer(() => {
     </SignUpFormContainer>
   );
 });
-
-
 
 const PasswordWrapper = styled.div`
   grid-column: span 3;
