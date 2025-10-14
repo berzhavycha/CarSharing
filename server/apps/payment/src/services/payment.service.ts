@@ -11,11 +11,10 @@ import {
   NOTIFICATION_COMMAND_PRODUCER,
   PAYMENT_EVENTS_PRODUCER,
 } from '../helpers/constants/providers';
-import { STRIPE_KEY } from '../helpers/constants/stripe';
 
 @Injectable()
 export class PaymentService {
-  private readonly stripe = new Stripe(STRIPE_KEY);
+  private readonly stripe = new Stripe(process.env.STRIPE_KEY);
 
   constructor(
     private readonly configService: ConfigService,
