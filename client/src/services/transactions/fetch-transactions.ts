@@ -8,7 +8,7 @@ type ServiceReturn = {
 };
 
 export const fetchTransactions = async (queryDto: QueryTransactionsDto): Promise<ServiceReturn> => {
-  const { data } = await axiosInstance.get(`${Env.API_BASE_URL}/transactions`, {
+  const { data } = await axiosInstance.get(`${Env.PAYMENT_API_BASE_URL}/transactions`, {
     params: queryDto,
   });
   return { transactions: data[0], total: data[1] };

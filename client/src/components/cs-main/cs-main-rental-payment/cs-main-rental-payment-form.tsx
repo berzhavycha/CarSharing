@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import styled from 'styled-components';
 
 import {
@@ -10,11 +10,13 @@ import {
   SectionTitle,
 } from '@/components/cs-common';
 import { MAX_REQUESTED_HOURS, rentalFormSchema } from '@/helpers';
-import { useNonNegativeInput } from '@/hooks';
+import { useNonNegativeInput, useSSE } from '@/hooks';
 import { device } from '@/styles';
 import { RentalDto } from '@/types';
 
 import { useRental } from './hooks';
+import { useStore } from '@/context';
+import { Env } from '@/core';
 
 export const CSMainRentalPaymentForm: FC = () => {
   const {
@@ -26,6 +28,22 @@ export const CSMainRentalPaymentForm: FC = () => {
     setErrorMessage,
     onRequestedHoursChange,
   } = useRental();
+  const {
+    currentUserStore: { user },
+  } = useStore();
+  const update = useSSE<{ rentalId: string; status: string; reason?: string }>(
+    `${Env.RENTAL_API_BASE_URL}/rentals/stream/${user?.id}/return`,
+  );
+
+  useEffect(() => {
+    console.log(update)
+    if (update?.status === 'ACTIVE') {
+      setIsRentSuccessful(true);
+    } else if (update?.status === 'CANCELLED') {
+      setErrorMessage(update.reason ?? 'Failed');
+    }
+  }, [update]);
+
   const { preventNegativeInput } = useNonNegativeInput();
 
   const rentBtnContent = isLoading ? <BtnSpinner /> : 'Rent';

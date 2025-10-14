@@ -8,6 +8,6 @@ export type FetchCarsServiceReturn = {
 };
 
 export const fetchCars = async (queryCarsDto: QueryCarsDto): Promise<FetchCarsServiceReturn> => {
-  const { data } = await axiosInstance.get(`${Env.API_BASE_URL}/cars`, { params: queryCarsDto });
+  const { data } = await axiosInstance.get(`${Env.CAR_API_BASE_URL}/cars`, { params: queryCarsDto });
   return { cars: data[0], total: data[1] };
 };

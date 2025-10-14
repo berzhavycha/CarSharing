@@ -1,0 +1,121 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" version="28.1.1">
+  <diagram name="Сторінка-1" id="2S-RhsuggML7ExtbnjMG">
+    <mxGraphModel dx="1233" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="d3V86LnB9oLFMA-N6rPh-1" value="User Stories for CarSharing App:&lt;br&gt;1. User should be able to register/sign in to the application&lt;br&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;2. As an Admin user should be able to update its profile&lt;br&gt;3. As an Admin user should be able to add/remove/update cars for the rental&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;4. As an Admin user should be able to see all the rentals being made&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;5. As an Admin user should be able to see all the transactions being made&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;6. As a Regular account user should be able to rent cars&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;7. As a Regular account user should be able to release cars&lt;/div&gt;&lt;div style=&quot;&quot;&gt;8. As a Regular account user should be able to top up his account&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="20" y="240" width="460" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="d3V86LnB9oLFMA-N6rPh-2" value="" style="whiteSpace=wrap;html=1;aspect=fixed;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="20" y="420" width="420" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="d3V86LnB9oLFMA-N6rPh-3" value="High Level Domain Model" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="30" y="430" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="d3V86LnB9oLFMA-N6rPh-4" value="User &amp;amp; Identity" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="30" y="500" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="d3V86LnB9oLFMA-N6rPh-5" value="Vehicle" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="170" y="500" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="d3V86LnB9oLFMA-N6rPh-6" value="Account &amp;amp; Payment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="310" y="500" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="d3V86LnB9oLFMA-N6rPh-7" value="Rental" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="30" y="585" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="d3V86LnB9oLFMA-N6rPh-8" value="Notification" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="170" y="585" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-1" value="Future" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=#ffffff;strokeColor=#2D7600;" parent="1" vertex="1">
+          <mxGeometry x="210" y="585" width="80" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-2" value="&lt;div style=&quot;&quot;&gt;Business Capabilities of CarSharing App:&amp;nbsp;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;1. Rental Management&lt;br&gt;2. User Management&lt;br&gt;3. Vehicle Management&lt;br&gt;4. Account &amp;amp; Payment Management&lt;/div&gt;&lt;div style=&quot;&quot;&gt;5. Notification Management&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="20" y="860" width="460" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-4" value="" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="20" y="1020" width="180" height="450" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-5" value="Rental Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="40" y="1040" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-7" value="User Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="40" y="1110" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-8" value="Vehicle Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="40" y="1180" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-9" value="Payment Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="40" y="1250" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-10" value="Notification Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="40" y="1320" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-11" value="Capability Hierarchy" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="6" y="1015" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-12" value="" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="260" y="1020" width="180" height="450" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-13" value="Rental Service" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="277.5" y="1055" width="145" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-14" value="User &amp;amp; Identity Service" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="277.5" y="1125" width="145" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-15" value="Vehicle Service" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="277.5" y="1195" width="145" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-16" value="Payment Service" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="277.5" y="1265" width="145" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-17" value="Notification Service" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="277.5" y="1335" width="145" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-18" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="S1jlUAOMtnpiKfV2ju4x-5" target="S1jlUAOMtnpiKfV2ju4x-13" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="220" y="1030" as="sourcePoint" />
+            <mxPoint x="270" y="980" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-21" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="S1jlUAOMtnpiKfV2ju4x-7" target="S1jlUAOMtnpiKfV2ju4x-14" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="230" y="1160" as="sourcePoint" />
+            <mxPoint x="280" y="1110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-22" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="S1jlUAOMtnpiKfV2ju4x-8" target="S1jlUAOMtnpiKfV2ju4x-15" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="240" y="1210" as="sourcePoint" />
+            <mxPoint x="290" y="1160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-23" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="S1jlUAOMtnpiKfV2ju4x-9" target="S1jlUAOMtnpiKfV2ju4x-16" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="220" y="1280" as="sourcePoint" />
+            <mxPoint x="270" y="1230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="S1jlUAOMtnpiKfV2ju4x-24" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="S1jlUAOMtnpiKfV2ju4x-10" target="S1jlUAOMtnpiKfV2ju4x-17" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="210" y="1350" as="sourcePoint" />
+            <mxPoint x="260" y="1300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CsgUtYUI9Bm3DpnGKKZk-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="CsgUtYUI9Bm3DpnGKKZk-1" target="CsgUtYUI9Bm3DpnGKKZk-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CsgUtYUI9Bm3DpnGKKZk-1" value="File Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1390" width="140" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="CsgUtYUI9Bm3DpnGKKZk-2" value="Notification Service" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="277.5" y="1405" width="145" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="CsgUtYUI9Bm3DpnGKKZk-4" value="File" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="310" y="585" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

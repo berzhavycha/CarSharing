@@ -9,8 +9,8 @@ export const topUp = async (
   userDto: UpdateUserBalanceDto,
 ): Promise<ServiceUserResponse<UpdateUserBalanceDto>> => {
   try {
-    const { data } = await axiosInstance.patch(
-      `${Env.API_BASE_URL}/users/${userId}/top-up`,
+    const { data } = await axiosInstance.post(
+      `${Env.IDENTITY_API_BASE_URL}/users/${userId}/top-up`,
       userDto,
     );
     return { user: transformUserResponse(data) };

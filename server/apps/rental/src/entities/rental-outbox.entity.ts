@@ -1,0 +1,52 @@
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+@Entity({ name: 'rental_outbox', schema: 'rental' })
+export class RentalOutboxEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column('text')
+  topic: string;
+
+  @Column('text')
+  eventType: string;
+
+  @Column('jsonb')
+  payload: Record<string, unknown>;
+
+  @Column({ nullable: true })
+  key?: string;
+
+  @Column('jsonb', { default: () => "'{}'::jsonb" })
+  headers: Record<string, string>;
+
+  @Column({ name: 'partition_key', type: 'text', nullable: true })
+  partitionKey?: string;
+
+  @Column({ type: 'varchar', default: 'PENDING' })
+  status: 'PENDING' | 'IN_PROGRESS' | 'SENT' | 'FAILED';
+
+  @Column({ type: 'int', default: 0 })
+  attempts: number;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  sendAfter?: Date;
+
+  @Column({ type: 'text', nullable: true })
+  lastError?: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  sentAt?: Date;
+}

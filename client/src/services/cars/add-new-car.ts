@@ -16,7 +16,7 @@ export const addNewCar = async (car: CarDto): Promise<ServiceReturn> => {
       formData.append('pictures', file, file.name);
     });
 
-    const { data } = await axiosInstance.post(`${Env.API_BASE_URL}/cars`, formData, {
+    const { data } = await axiosInstance.post(`${Env.CAR_API_BASE_URL}/cars`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

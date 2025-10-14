@@ -5,7 +5,7 @@ import { Env } from '@/core';
 import { refreshTokenInterceptor } from './interceptors';
 
 export const axiosInstance = axios.create({
-  baseURL: Env.API_BASE_URL,
+  baseURL: Env.IDENTITY_API_BASE_URL,
   withCredentials: true,
 });
 

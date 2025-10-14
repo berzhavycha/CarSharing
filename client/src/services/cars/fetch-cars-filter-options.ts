@@ -8,6 +8,6 @@ type ServiceReturn = {
 };
 
 export const fetchCarsFilterOptions = async (): Promise<ServiceReturn> => {
-  const { data } = await axiosInstance.get(`${Env.API_BASE_URL}/cars/filter-options`);
+  const { data } = await axiosInstance.get(`${Env.CAR_API_BASE_URL}/cars/filter-options`);
   return data;
 };

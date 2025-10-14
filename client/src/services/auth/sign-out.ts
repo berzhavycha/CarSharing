@@ -7,7 +7,7 @@ export const signOut = async (): Promise<ServiceUserResponse<{
   unexpectedError: string;
 }> | void> => {
   try {
-    await axiosInstance.post(`${Env.API_BASE_URL}/auth/sign-out`);
+    await axiosInstance.post(`${Env.IDENTITY_API_BASE_URL}/auth/sign-out`);
   } catch (error) {
     return { errors: { unexpectedError: UNEXPECTED_ERROR_MESSAGE } };
   }

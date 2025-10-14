@@ -35,13 +35,15 @@ export const useRental = (): HookReturn => {
 
   const onSubmit = async (rentalDto: RentalDto): Promise<void> => {
     setIsLoading(true);
+
+    const price = rentedCar.pricePerHour * rentalDto.hours;
     const { rental: createdRental, error } = await createRental({
-      carId: rentedCar.id,
       ...rentalDto,
+      carId: rentedCar.id,
+      pricePerHour: rentedCar.pricePerHour,
     });
 
     setIsLoading(false);
-    const price = rentedCar.pricePerHour * rentalDto.hours;
     if (createdRental && user?.balance && price) {
       updateBalance(user.balance - price);
       setIsRentSuccessful(true);

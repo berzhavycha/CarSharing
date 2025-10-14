@@ -1,0 +1,107 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Rent Car Saga Flow" id="rent-car-saga">
+    <mxGraphModel dx="1000" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Start -->
+        <mxCell id="start" value="Rental Created Event" style="ellipse;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="200" y="50" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Check Car Availability -->
+        <mxCell id="checkCarAvailability" value="Check Car Availability" style="rhombus;fillColor=#FFF2CC;strokeColor=#D6B656;" vertex="1" parent="1">
+          <mxGeometry x="200" y="150" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Car Available -->
+        <mxCell id="carAvailable" value="Car Available?" style="rhombus;fillColor=#FFF2CC;strokeColor=#D6B656;" vertex="1" parent="1">
+          <mxGeometry x="200" y="270" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Cancel Rental: Car Not Available -->
+        <mxCell id="cancelRentalCarNotAvailable" value="Cancel Rental (Car not available)" style="rectangle;fillColor=#F8CECC;strokeColor=#B85450;" vertex="1" parent="1">
+          <mxGeometry x="50" y="400" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Deduct User Balance -->
+        <mxCell id="deductUserBalance" value="Deduct User Balance" style="rectangle;fillColor=#DAE8FC;strokeColor=#6C8EBF;" vertex="1" parent="1">
+          <mxGeometry x="350" y="400" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- User Balance Deducted? -->
+        <mxCell id="userBalanceDeducted" value="User Balance Deducted?" style="rhombus;fillColor=#FFF2CC;strokeColor=#D6B656;" vertex="1" parent="1">
+          <mxGeometry x="350" y="500" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Cancel Rental: Balance Deduction Failed -->
+        <mxCell id="cancelRentalBalanceFailed" value="Cancel Rental (Balance Deduction Failed)" style="rectangle;fillColor=#F8CECC;strokeColor=#B85450;" vertex="1" parent="1">
+          <mxGeometry x="200" y="620" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Book Car -->
+        <mxCell id="bookCar" value="Book Car" style="rectangle;fillColor=#DAE8FC;strokeColor=#6C8EBF;" vertex="1" parent="1">
+          <mxGeometry x="500" y="620" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Car Booked? -->
+        <mxCell id="carBooked" value="Car Booked?" style="rhombus;fillColor=#FFF2CC;strokeColor=#D6B656;" vertex="1" parent="1">
+          <mxGeometry x="500" y="720" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Confirm Rental -->
+        <mxCell id="confirmRental" value="Confirm Rental" style="rectangle;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="700" y="840" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Cancel Rental: Car Booking Rejected -->
+        <mxCell id="cancelRentalBookingRejected" value="Cancel Rental (Car Booking Rejected) & Top-up User Balance" style="rectangle;fillColor=#F8CECC;strokeColor=#B85450;" vertex="1" parent="1">
+          <mxGeometry x="300" y="840" width="300" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="edge1" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;" edge="1" source="start" target="checkCarAvailability" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge2" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;" edge="1" source="checkCarAvailability" target="carAvailable" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge3" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;" edge="1" source="carAvailable" target="cancelRentalCarNotAvailable" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge4" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;" edge="1" source="carAvailable" target="deductUserBalance" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge5" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;" edge="1" source="deductUserBalance" target="userBalanceDeducted" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge6" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;" edge="1" source="userBalanceDeducted" target="cancelRentalBalanceFailed" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge7" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;" edge="1" source="userBalanceDeducted" target="bookCar" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge8" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;" edge="1" source="bookCar" target="carBooked" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge9" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;" edge="1" source="carBooked" target="confirmRental" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge10" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;" edge="1" source="carBooked" target="cancelRentalBookingRejected" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

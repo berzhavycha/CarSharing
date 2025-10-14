@@ -20,7 +20,7 @@ export const updateUser = async (
       formData.append('picture', userDto.picture as Blob);
     }
 
-    const { data } = await axiosInstance.patch(`${Env.API_BASE_URL}/users/${userId}`, formData, {
+    const { data } = await axiosInstance.patch(`${Env.IDENTITY_API_BASE_URL}/users/${userId}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

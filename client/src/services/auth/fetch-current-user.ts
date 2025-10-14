@@ -7,7 +7,7 @@ export const fetchCurrentUser = async (): Promise<
   Promise<ServiceUserResponse<{ unexpectedError: string }>>
 > => {
   try {
-    const { data } = await axiosInstance.get(`${Env.API_BASE_URL}/auth/current-user`);
+    const { data } = await axiosInstance.get(`${Env.IDENTITY_API_BASE_URL}/auth/current-user`);
     return { user: transformUserResponse(data) };
   } catch (error) {
     return { errors: { unexpectedError: UNEXPECTED_ERROR_MESSAGE } };

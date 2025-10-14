@@ -8,7 +8,7 @@ export const signIn = async (
   userDto: SignInUserDto,
 ): Promise<ServiceUserResponse<SignInUserDto>> => {
   try {
-    const { data } = await axiosInstance.post(`${Env.API_BASE_URL}/auth/sign-in`, userDto);
+    const { data } = await axiosInstance.post(`${Env.IDENTITY_API_BASE_URL}/auth/sign-in`, userDto);
     return { user: transformUserResponse(data) };
   } catch (error) {
     return { errors: errorHandler<SignInUserDto>(error, signInFieldMappings) };

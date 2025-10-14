@@ -18,6 +18,7 @@ export const returnCarFieldMappings: Record<string, keyof UserRentalErrors> = {
 export enum RentalStatus {
   ACTIVE = 'active',
   CLOSED = 'closed',
+  PENDING = 'pending',
   CANCELLED = 'cancelled',
 }
 

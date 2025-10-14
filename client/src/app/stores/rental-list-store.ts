@@ -30,13 +30,73 @@ export const RentalListStore = t
   }))
   .actions((self) => ({
     fetchRentals: flow(function* (params: QueryRentalsDto) {
-      try {
-        const { rentals } = yield fetchRentalHistory(params);
-        self.setRentals(rentals);
-      } catch (error) {
-        self.setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
-      }
-    }),
+  try {
+    const { rentals } = yield fetchRentalHistory(params);
+    self.setRentals(
+      rentals.map((r) => ({
+        id: r.id,
+        rentalStart: r.rentalStart,
+        rentalEnd: r.rentalEnd ?? null,
+        totalPrice: r.totalPrice,
+        requestedHours: r.requestedHours,
+        pickUpLocation: r.pickUpLocation,
+        dropOffLocation: r.dropOffLocation,
+        status: r.status.toLowerCase(),
+        createdAt: r.createdAt,
+        updatedAt: r.updatedAt,
+        transactions:
+          Array.isArray(r.transactions) && r.transactions.length > 0
+            ? r.transactions
+                .filter((t) => t && typeof t === 'object' && t.id)
+                .map((t) => ({
+                  id: t.id,
+                  amount: t.amount,
+                  paymentMethod: t.paymentMethod,
+                  createdAt: t.createdAt,
+                  status: t.status,
+                }))
+            : [],
+        car: r.car
+  ? {
+      id: r.car.id,
+      model: r.car.model,
+      year: r.car.year,
+      description: r.car.description,
+      pricePerHour: r.car.pricePerHour,
+      type: r.car.type,
+      status: r.car.status,
+      capacity: r.car.capacity,
+      fuelType: r.car.fuelType,
+      steering: r.car.steering,
+      fuelCapacity: r.car.fuelCapacity,
+      pictures: r.car.pictures ?? [],
+    }
+  : { id: r.carId, pictures: [], model: '', year: 0, description: '', pricePerHour: 0, type: '', status: '', capacity: 0, fuelType: '', steering: '', fuelCapacity: 0 },
+
+originalCar: r.car
+  ? {
+      id: r.car.id,
+      model: r.car.model,
+      year: r.car.year,
+      description: r.car.description,
+      pricePerHour: r.car.pricePerHour,
+      type: r.car.type,
+      capacity: r.car.capacity,
+      fuelType: r.car.fuelType,
+      steering: r.car.steering,
+      fuelCapacity: r.car.fuelCapacity,
+      pictures: r.car.pictures ?? [],
+    }
+  : { id: r.carId, pictures: [], model: '', year: 0, description: '', pricePerHour: 0, type: '', capacity: 0, fuelType: '', steering: '', fuelCapacity: 0 },
+
+      }))
+    );
+  } catch (error) {
+    self.setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
+  }
+}),
+
+
   }));
 
 export type RentalListStoreType = Instance<typeof RentalListStore>;

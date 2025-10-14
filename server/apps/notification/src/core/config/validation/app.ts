@@ -1,0 +1,8 @@
+import * as Joi from 'joi';
+
+export const appValidationSchema = Joi.object({
+  NODE_ENV: Joi.string().default('development'),
+  PORT: Joi.number().default(4002),
+  TCP_HOST: Joi.string().default('0.0.0.0'),
+  TCP_PORT: Joi.number().default(4004),
+});

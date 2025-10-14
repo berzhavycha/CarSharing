@@ -1,0 +1,1 @@
+export const FILE_EVENTS_PRODUCER = Symbol('FILE_EVENTS_PRODUCER');

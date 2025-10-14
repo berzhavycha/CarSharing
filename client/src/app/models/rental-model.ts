@@ -14,6 +14,7 @@ export const RentalModel = t.model('RentalModel', {
   status: t.enumeration('RentalStatus', [
     RentalStatus.ACTIVE,
     RentalStatus.CLOSED,
+    RentalStatus.PENDING,
     RentalStatus.CANCELLED,
   ]),
   createdAt: t.string,

@@ -19,6 +19,9 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "rxjs": [
+        "./node_modules/rxjs"
+      ],
       "@/controllers": [
         "src/controllers"
       ],
@@ -96,6 +99,12 @@
       ],
       "@/middlewares/*": [
         "src/middlewares/*"
+      ],
+      "@app/shared": [
+        "libs/shared/src"
+      ],
+      "@app/shared/*": [
+        "libs/shared/src/*"
       ]
     }
   }

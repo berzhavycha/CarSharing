@@ -43,9 +43,9 @@ export const CSMainRentalHistoryTableRow: FC<Props> = observer(({ rental, index,
     <TableRow key={rental.id}>
       <TableCell>{index + 1}</TableCell>
       <HiddenMDTableCell>
-        <img src={rental.originalCar.pictures[0].url} alt={rental.originalCar.model} />
+        <img src={rental.car.pictures[0].url} alt={rental.car.model} />
       </HiddenMDTableCell>
-      <TableCell>{rental.originalCar?.model}</TableCell>
+      <TableCell>{rental.car?.model}</TableCell>
       <HiddenXSTableCell>{rental.requestedHours}</HiddenXSTableCell>
       <HiddenSMTableCell>{rental.totalPrice}</HiddenSMTableCell>
       <HiddenSMTableCell>{formatDate(rental.rentalStart)}</HiddenSMTableCell>

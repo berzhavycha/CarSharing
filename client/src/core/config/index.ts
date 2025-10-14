@@ -12,6 +12,7 @@ try {
 } catch (error) {
   if (error instanceof ZodError) {
     error.errors.forEach((err) => {
+      console.log(error)
       console.error('Env Validation Failed:', err.message);
     });
   }

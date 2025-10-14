@@ -18,7 +18,7 @@ export const refreshTokenInterceptor = {
     ) {
       originalRequest._retry = true;
       try {
-        await axios.post(`${Env.API_BASE_URL}/auth/refresh-token`, {}, { withCredentials: true });
+        await axios.post(`${Env.IDENTITY_API_BASE_URL}/auth/refresh-token`, {}, { withCredentials: true });
         return axios(originalRequest);
       } catch (refreshError) {
         return Promise.reject(refreshError);

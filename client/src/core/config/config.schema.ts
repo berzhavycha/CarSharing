@@ -3,8 +3,17 @@ import { z } from 'zod';
 import { paginationSchema } from '@/helpers/validation/pagination/pagination-schema';
 
 const configSchema = z.object({
-  API_BASE_URL: z.string().refine((value) => value.trim() !== '', {
-    message: 'API_BASE_URL cannot be an empty string',
+  CAR_API_BASE_URL: z.string().refine((value) => value.trim() !== '', {
+    message: 'CAR_API_BASE_URL cannot be an empty string',
+  }),
+  IDENTITY_API_BASE_URL: z.string().refine((value) => value.trim() !== '', {
+    message: 'IDENTITY_API_BASE_URL cannot be an empty string',
+  }),
+  RENTAL_API_BASE_URL: z.string().refine((value) => value.trim() !== '', {
+    message: 'RENTAL_API_BASE_URL cannot be an empty string',
+  }),
+  PAYMENT_API_BASE_URL: z.string().refine((value) => value.trim() !== '', {
+    message: 'PAYMENT_API_BASE_URL cannot be an empty string',
   }),
   PASSWORD_MIN_LENGTH: z
     .string()

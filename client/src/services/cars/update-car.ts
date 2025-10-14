@@ -16,7 +16,7 @@ export const updateCar = async (car: Partial<CarDto>): Promise<ServiceReturn> =>
       formData.append('pictures', file, file.name);
     });
 
-    const { data } = await axiosInstance.patch(`${Env.API_BASE_URL}/cars/${car.id}`, formData, {
+    const { data } = await axiosInstance.patch(`${Env.CAR_API_BASE_URL}/cars/${car.id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
