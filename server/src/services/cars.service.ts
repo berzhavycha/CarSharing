@@ -121,7 +121,7 @@ export class CarsService {
       const car = await this.carsRepository.findOne({
         where: { id },
         relations: ['rentals', 'pictures'],
-        ...options
+        ...options,
       });
 
       if (!car) {

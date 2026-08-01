@@ -15,3 +15,6 @@ export * from './aws-files.service';
 export * from './cloudinary-files.service';
 export * from './files-manager.service';
 export * from './public-files.service';
+export * from './oauth-client.service';
+export * from './oauth-code.service';
+export * from './oauth-token.service';

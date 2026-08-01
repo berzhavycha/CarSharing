@@ -79,7 +79,7 @@ describe('RentalsService', () => {
     afterEach(() => {
       jest.useRealTimers();
     });
-    
+
     it('should return a refund when car is returned earlier', () => {
       const rentalStart = new Date('2024-01-01T10:00:00Z');
       jest.setSystemTime(rentalStart);
@@ -92,7 +92,10 @@ describe('RentalsService', () => {
 
       jest.advanceTimersByTime(3 * ONE_HOUR_MILLISECONDS);
 
-      const result = rentalsService.calculatePenaltyOrRefund(rental, new Date());
+      const result = rentalsService.calculatePenaltyOrRefund(
+        rental,
+        new Date(),
+      );
 
       expect(result).toEqual({
         amount: 40,
@@ -112,7 +115,10 @@ describe('RentalsService', () => {
 
       jest.advanceTimersByTime(4 * ONE_HOUR_MILLISECONDS);
 
-      const result = rentalsService.calculatePenaltyOrRefund(rental, new Date());
+      const result = rentalsService.calculatePenaltyOrRefund(
+        rental,
+        new Date(),
+      );
 
       expect(result).toEqual({
         amount: 20,
@@ -132,7 +138,10 @@ describe('RentalsService', () => {
 
       jest.advanceTimersByTime(3 * ONE_HOUR_MILLISECONDS);
 
-      const result = rentalsService.calculatePenaltyOrRefund(rental, new Date());
+      const result = rentalsService.calculatePenaltyOrRefund(
+        rental,
+        new Date(),
+      );
 
       expect(result).toEqual({});
     });
@@ -149,7 +158,10 @@ describe('RentalsService', () => {
 
       jest.advanceTimersByTime(3.5 * ONE_HOUR_MILLISECONDS);
 
-      const result = rentalsService.calculatePenaltyOrRefund(rental, new Date());
+      const result = rentalsService.calculatePenaltyOrRefund(
+        rental,
+        new Date(),
+      );
 
       expect(result).toEqual({
         amount: 20,
@@ -169,7 +181,10 @@ describe('RentalsService', () => {
 
       jest.advanceTimersByTime(3.5 * ONE_HOUR_MILLISECONDS);
 
-      const result = rentalsService.calculatePenaltyOrRefund(rental, new Date());
+      const result = rentalsService.calculatePenaltyOrRefund(
+        rental,
+        new Date(),
+      );
 
       expect(result).toEqual({
         amount: 20,
@@ -183,9 +198,9 @@ describe('RentalsService', () => {
       const rentCarDto = makeRentalDto();
       const user = makeUser({ balance: 1000 });
 
-      expect(() => rentalsService.calculateRentalPrice(null, rentCarDto, user)).toThrow(
-        BadRequestException,
-      );
+      expect(() =>
+        rentalsService.calculateRentalPrice(null, rentCarDto, user),
+      ).toThrow(BadRequestException);
     });
 
     it('should throw BadRequestException if the user has insufficient balance', async () => {
@@ -198,9 +213,9 @@ describe('RentalsService', () => {
 
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
 
-      expect(() => rentalsService.calculateRentalPrice(car, rentCarDto, user)).toThrow(
-        BadRequestException,
-      );
+      expect(() =>
+        rentalsService.calculateRentalPrice(car, rentCarDto, user),
+      ).toThrow(BadRequestException);
     });
 
     it('should throw BadRequestException if the car is not available', async () => {
@@ -213,11 +228,11 @@ describe('RentalsService', () => {
 
       jest.spyOn(carsService, 'findById').mockResolvedValue(car);
 
-      expect(() => rentalsService.calculateRentalPrice(car, rentCarDto, user)).toThrow(
-        BadRequestException,
-      );
+      expect(() =>
+        rentalsService.calculateRentalPrice(car, rentCarDto, user),
+      ).toThrow(BadRequestException);
     });
-  })
+  });
 
   describe('rentCar', () => {
     it('should throw BadRequestException if user already has an active rental', async () => {
@@ -321,7 +336,7 @@ describe('RentalsService', () => {
 
       jest.spyOn(rentalsRepository, 'findOne').mockResolvedValue(rental);
 
-      const result = await rentalsService.getRentalToReturn(rentalId)
+      const result = await rentalsService.getRentalToReturn(rentalId);
 
       expect(result).toEqual(rental);
     });
@@ -350,7 +365,7 @@ describe('RentalsService', () => {
         BadRequestException,
       );
     });
-  })
+  });
 
   describe('returnCar', () => {
     const mockNow = new Date('2024-01-01T12:00:00Z').getTime();
@@ -394,7 +409,10 @@ describe('RentalsService', () => {
       );
       jest
         .spyOn(rentalsService, 'calculatePenaltyOrRefund')
-        .mockReturnValue({ amount: 40, transactionType: TransactionType.REFUND });
+        .mockReturnValue({
+          amount: 40,
+          transactionType: TransactionType.REFUND,
+        });
       jest
         .spyOn(usersService, 'updateUserBalance')
         .mockResolvedValue(undefined);
@@ -437,7 +455,10 @@ describe('RentalsService', () => {
       );
       jest
         .spyOn(rentalsService, 'calculatePenaltyOrRefund')
-        .mockReturnValue({ amount: 40, transactionType: TransactionType.REFUND });
+        .mockReturnValue({
+          amount: 40,
+          transactionType: TransactionType.REFUND,
+        });
       jest
         .spyOn(usersService, 'updateUserBalance')
         .mockResolvedValue(undefined);
@@ -486,7 +507,10 @@ describe('RentalsService', () => {
       );
       jest
         .spyOn(rentalsService, 'calculatePenaltyOrRefund')
-        .mockReturnValue({ amount: 20, transactionType: TransactionType.PENALTY });
+        .mockReturnValue({
+          amount: 20,
+          transactionType: TransactionType.PENALTY,
+        });
       jest
         .spyOn(usersService, 'updateUserBalance')
         .mockResolvedValue(undefined);

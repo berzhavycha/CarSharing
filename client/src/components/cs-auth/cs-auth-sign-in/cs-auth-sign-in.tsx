@@ -24,11 +24,18 @@ export const CSAuthSignIn: FC = observer(() => {
   const navigate = useNavigate();
   const location = useLocation();
   const errorMessage = location.state?.errorMessage ?? '';
+  const searchParams = new URLSearchParams(location.search);
+  const returnTo = searchParams.get('returnTo');
 
   const onSubmit = async (data: SignInUserDto): Promise<void> => {
     await currentUserStore.signIn(data);
     if (currentUserStore.user) {
-      navigate(authRedirectPages[currentUserStore.user.role]);
+      if (returnTo) {
+        // returnTo is the /oauth/authorize path on the API server
+        window.location.href = `${import.meta.env.VITE_API_BASE_URL}${decodeURIComponent(returnTo)}`;
+      } else {
+        navigate(authRedirectPages[currentUserStore.user.role]);
+      }
     }
   };
 

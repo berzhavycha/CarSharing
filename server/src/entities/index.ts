@@ -5,3 +5,5 @@ export * from './role.entity';
 export * from './transaction.entity';
 export * from './user.entity';
 export * from './public-file.entity';
+export * from './oauth-client.entity';
+export * from './oauth-code.entity';

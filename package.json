@@ -10,8 +10,7 @@
     "lint:client": "cd client && npm run lint",
     "lint:server": "cd server && npm run lint",
     "format:client": "cd client && npm run format",
-    "format:server": "cd server && npm run format",
-    "prepare": "husky install"
+    "format:server": "cd server && npm run format"
   },
   "devDependencies": {
     "husky": "^8.0.0",

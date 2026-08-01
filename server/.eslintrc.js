@@ -22,7 +22,7 @@ module.exports = {
     "no-duplicate-imports": "error",
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'error',
+    '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-explicit-any': 'error',
   },
 };

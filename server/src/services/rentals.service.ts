@@ -33,7 +33,7 @@ export class RentalsService {
     private usersService: UsersService,
     private readonly entityManager: EntityManager,
     private readonly loggerService: LoggerService,
-  ) { }
+  ) {}
 
   async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
     try {
@@ -49,7 +49,6 @@ export class RentalsService {
           rentalsErrorMessages.USER_HAVE_ACTIVE_RENTAL,
         );
       }
-
 
       return this.entityManager.transaction(async (manager) => {
         const car = await manager.findOne(Car, {
@@ -103,19 +102,21 @@ export class RentalsService {
     }
   }
 
-  calculateRentalPrice(car: Car | null, carDto: RentCarDto, user: User): number {
+  calculateRentalPrice(
+    car: Car | null,
+    carDto: RentCarDto,
+    user: User,
+  ): number {
     if (!car || car.status !== CarStatus.AVAILABLE) {
       throw new BadRequestException(rentalsErrorMessages.CAR_NOT_AVAILABLE);
     }
 
     const rentalCost = car.pricePerHour * carDto.hours;
     if (user.balance < rentalCost) {
-      throw new BadRequestException(
-        rentalsErrorMessages.INSUFFICIENT_BALANCE,
-      );
+      throw new BadRequestException(rentalsErrorMessages.INSUFFICIENT_BALANCE);
     }
 
-    return rentalCost
+    return rentalCost;
   }
 
   calculatePenaltyOrRefund(
@@ -124,7 +125,7 @@ export class RentalsService {
   ): { amount?: number; transactionType?: TransactionType } {
     const hoursDifference = Math.ceil(
       (returnDate.getTime() - rental.rentalStart.getTime()) /
-      ONE_HOUR_MILLISECONDS,
+        ONE_HOUR_MILLISECONDS,
     );
 
     if (hoursDifference < rental.requestedHours) {
@@ -158,7 +159,7 @@ export class RentalsService {
       throw new BadRequestException(rentalsErrorMessages.CAR_IS_RETURNED);
     }
 
-    return rental
+    return rental;
   }
 
   async returnCar(
@@ -166,7 +167,7 @@ export class RentalsService {
     user: User,
   ): Promise<{ rental: Rental; penalty?: number; refund?: number }> {
     try {
-      const rental = await this.getRentalToReturn(rentalId)
+      const rental = await this.getRentalToReturn(rentalId);
 
       return this.entityManager.transaction(async (manager) => {
         const returnDate = new Date();
@@ -179,7 +180,12 @@ export class RentalsService {
           await this.usersService.updateUserBalance(
             {
               id: user.id,
-              balanceDto: { amount: transactionType === TransactionType.PENALTY ? -amount : amount },
+              balanceDto: {
+                amount:
+                  transactionType === TransactionType.PENALTY
+                    ? -amount
+                    : amount,
+              },
               transactionType,
               rental,
             },
@@ -197,8 +203,10 @@ export class RentalsService {
 
         return {
           rental: updatedRental,
-          penalty: transactionType === TransactionType.PENALTY ? amount : undefined,
-          refund: transactionType === TransactionType.REFUND ? amount : undefined
+          penalty:
+            transactionType === TransactionType.PENALTY ? amount : undefined,
+          refund:
+            transactionType === TransactionType.REFUND ? amount : undefined,
         };
       });
     } catch (error) {

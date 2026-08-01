@@ -7,6 +7,7 @@ import { configValidationSchema } from '@/core';
   imports: [
     OriginalConfigModule.forRoot({
       isGlobal: true,
+      ignoreEnvFile: process.env.DOCKER === 'true',
       envFilePath: './.env',
       validationSchema: configValidationSchema,
     }),

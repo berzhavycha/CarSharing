@@ -18,6 +18,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req: Request): string => extractJWTFromCookies(req, 'accessToken'),
+        // OAuth flow — MCP server sends Bearer token in Authorization header
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
       ignoreExpiration: false,
       secretOrKey: configService.get<string>('JWT_ACCESS_SECRET'),

@@ -15,6 +15,7 @@ import {
 } from '@/modules';
 
 import { RequestLoggingMiddleware } from './middlewares';
+import { OAuthModule } from './modules/oauth.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { RequestLoggingMiddleware } from './middlewares';
     TransactionsModule,
     AuthModule,
     PublicFilesModule,
+    OAuthModule,
     FilesManagerModule,
   ],
 })

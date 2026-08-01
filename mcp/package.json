@@ -1,0 +1,27 @@
+{
+  "name": "carsharing-mcp",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "MCP server for CarSharing app",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "tsx src/main.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/node": "^2.0.0",
+    "@modelcontextprotocol/server": "^2.0.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.0",
+    "pkce-challenge": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.0",
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "tsx": "^4.23.1",
+    "typescript": "^5.0.0"
+  }
+}
