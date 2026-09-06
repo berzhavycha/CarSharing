@@ -27,6 +27,7 @@ import {
   singleRentalLoader,
   transactionsLoader,
 } from '@/pages';
+import { CSAgent } from '@/pages/agent';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -53,6 +54,7 @@ export const router = createBrowserRouter(
           />
           <Route path="rental-form" element={<CSMainRentalPaymentPage />} />
           <Route path="top-up" element={<CSMainUserTopUpPage />} />
+          <Route path="agent" element={<CSAgent />} />
           <Route path="profile-settings" element={<CSMainUserProfileSettingsPage />} />
           <Route
             path="rental-history"

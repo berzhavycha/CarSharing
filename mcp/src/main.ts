@@ -17,29 +17,45 @@ const PORT = process.env.MCP_PORT ?? 3001;
 
 const app = express();
 
-// ─── MCP Server setup ────────────────────────────────────────────────────────
+// ─── Per-session transport map ────────────────────────────────────────────────
 
-const server = new McpServer({
-  name: 'carsharing-mcp',
-  version: '1.0.0',
+const transports = new Map<string, NodeStreamableHTTPServerTransport>();
+
+// ─── MCP endpoint — one server + transport per session ───────────────────────
+
+app.all('/mcp', async (req, res) => {
+  const mcpSessionId = req.headers['mcp-session-id'] as string | undefined;
+  // Read the OAuth session ID the agent backend passes
+  const oauthSessionId = req.headers['x-oauth-session-id'] as string | undefined;
+
+  if (mcpSessionId && transports.has(mcpSessionId)) {
+    const transport = transports.get(mcpSessionId)!;
+    await transport.handleRequest(req, res);
+    return;
+  }
+
+  const transport = new NodeStreamableHTTPServerTransport({
+    sessionIdGenerator: () => randomUUID(),
+    onsessioninitialized: (newSessionId) => {
+      transports.set(newSessionId, transport);
+    },
+  });
+
+  transport.onclose = () => {
+    if (transport.sessionId) transports.delete(transport.sessionId);
+  };
+
+  const server = new McpServer({ name: 'carsharing-mcp', version: '1.0.0' });
+
+  registerTools(server, oauthSessionId); // <-- pass it down
+  registerResources(server);
+  registerPrompts(server);
+
+  await server.connect(transport);
+  await transport.handleRequest(req, res);
 });
-
-registerTools(server);
-registerResources(server);
-registerPrompts(server);
-
-// ─── Streamable HTTP transport ────────────────────────────────────────────────
-
-const transport = new NodeStreamableHTTPServerTransport({
-  sessionIdGenerator: () => randomUUID(),
-});
-
-await server.connect(transport);
-
-app.all('/mcp', (req, res) => transport.handleRequest(req, res));
-
-
 app.use(express.json());
+
 // ─── OAuth callback ───────────────────────────────────────────────────────────
 
 app.get('/oauth/callback', async (req, res) => {

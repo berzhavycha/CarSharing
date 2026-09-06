@@ -1,8 +1,6 @@
 services:
-
   postgres:
     image: postgres:16-alpine
-    restart: unless-stopped
     networks:
       - carsharing
     environment:
@@ -19,21 +17,20 @@ services:
       timeout: 5s
       retries: 10
 
-  mcp:
-    build:
-      context: ./mcp
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    networks:
-      - carsharing
-    ports:
-      - "3001:3001"
-    environment:
-      MCP_PORT: 3001
-      API_BASE_URL: http://localhost:4000
-      MCP_CLIENT_ID: ${MCP_CLIENT_ID}
-      MCP_CLIENT_SECRET: ${MCP_CLIENT_SECRET}
-      MCP_REDIRECT_URI: http://localhost:3001/oauth/callback
+  # mcp:
+  #   build:
+  #     context: ./mcp
+  #     dockerfile: Dockerfile
+  #   networks:
+  #     - carsharing
+  #   ports:
+  #     - "3001:3001"
+  #   environment:
+  #     MCP_PORT: 3001
+  #     API_BASE_URL: http://localhost:4000
+  #     MCP_CLIENT_ID: ${MCP_CLIENT_ID}
+  #     MCP_CLIENT_SECRET: ${MCP_CLIENT_SECRET}
+  #     MCP_REDIRECT_URI: http://localhost:3001/oauth/callback
 
 networks:
   carsharing:
