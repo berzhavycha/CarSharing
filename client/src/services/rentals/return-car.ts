@@ -10,9 +10,16 @@ type ServiceReturn = {
   error?: string;
 };
 
-export const returnCar = async (id: string): Promise<ServiceReturn> => {
+export const returnCar = async (
+  id: string,
+  idempotencyKey: string,
+): Promise<ServiceReturn> => {
   try {
-    const { data } = await axiosInstance.patch(`${Env.API_BASE_URL}/rentals/${id}`);
+    const { data } = await axiosInstance.patch(`${Env.API_BASE_URL}/rentals/${id}`, undefined, {
+      headers: {
+        'Idempotency-Key': idempotencyKey,
+      },
+    });
     return { rental: data.rental, penalty: data.penalty, refund: data.refund };
   } catch (error) {
     return findFirstExpectedError<UserRentalErrors>(error, returnCarFieldMappings);

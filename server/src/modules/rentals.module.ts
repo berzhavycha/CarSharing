@@ -8,12 +8,14 @@ import { RentalsService } from '@/services';
 import { CarsModule } from './cars.module';
 import { OriginalCarsModule } from './original-cars.module';
 import { UsersModule } from './users.module';
+import { IdempotencyModule } from './idempotancy.module';
 
 @Module({
   imports: [
     UsersModule,
     CarsModule,
     OriginalCarsModule,
+    IdempotencyModule,
     TypeOrmModule.forFeature([Rental]),
   ],
   controllers: [RentalsController],

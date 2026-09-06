@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { useStore } from '@/context';
@@ -33,21 +33,31 @@ export const useRental = (): HookReturn => {
     setPotentialRentalPrice(rentedCar.pricePerHour);
   }, []);
 
+  // Generated once per form mount. The rental form has no amount field to
+  // watch — the car and hours are the payload, but changing hours is part of
+  // the same booking intent. Key is only rotated after confirmed success so
+  // retries on timeout always carry the same key.
+  const idempotencyKeyRef = useRef<string>(crypto.randomUUID());
+
   const onSubmit = async (rentalDto: RentalDto): Promise<void> => {
     setIsLoading(true);
-    const { rental: createdRental, error } = await createRental({
-      carId: rentedCar.id,
-      ...rentalDto,
-    });
+    const { rental: createdRental, error } = await createRental(
+      { carId: rentedCar.id, ...rentalDto },
+      idempotencyKeyRef.current,
+    );
 
     setIsLoading(false);
     const price = rentedCar.pricePerHour * rentalDto.hours;
+
     if (createdRental && user?.balance && price) {
       updateBalance(user.balance - price);
       setIsRentSuccessful(true);
+      idempotencyKeyRef.current = crypto.randomUUID();
     } else if (error) {
       setPotentialRentalPrice(rentedCar.pricePerHour);
       setErrorMessage(error);
+      // Key is intentionally NOT rotated on error — a retry of the same
+      // booking should carry the same key so the server deduplicates it.
     }
   };
 

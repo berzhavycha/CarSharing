@@ -1,7 +1,9 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
+  Headers,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -26,8 +28,12 @@ export class RentalsController {
   async createRental(
     @Body() rentCarDto: RentCarDto,
     @CurrentUser() user: User,
+    @Headers('idempotency-key') idempotencyKey?: string,
   ): Promise<Rental> {
-    return this.rentalsService.rentCar(rentCarDto, user);
+    if (!idempotencyKey) {
+      throw new BadRequestException('Idempotency-Key header is required.');
+    }
+    return this.rentalsService.rentCar(rentCarDto, user, idempotencyKey);
   }
 
   @Get('history')
@@ -56,7 +62,11 @@ export class RentalsController {
   async returnCar(
     @Param('id') id: string,
     @CurrentUser() user: User,
+    @Headers('idempotency-key') idempotencyKey?: string,
   ): Promise<{ rental: Rental; penalty?: number; refund?: number }> {
-    return this.rentalsService.returnCar(id, user);
+    if (!idempotencyKey) {
+      throw new BadRequestException('Idempotency-Key header is required.');
+    }
+    return this.rentalsService.returnCar(id, user, idempotencyKey);
   }
 }

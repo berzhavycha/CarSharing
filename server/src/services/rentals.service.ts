@@ -22,6 +22,7 @@ import { CarsService } from './cars.service';
 import { LoggerService } from './logger.service';
 import { OriginalCarsService } from './original-cars.service';
 import { UsersService } from './users.service';
+import { IdempotencyService } from './idempotancy.service';
 
 @Injectable()
 export class RentalsService {
@@ -31,11 +32,12 @@ export class RentalsService {
     private carsService: CarsService,
     private originalCarsService: OriginalCarsService,
     private usersService: UsersService,
+    private readonly idempotencyService: IdempotencyService,
     private readonly entityManager: EntityManager,
     private readonly loggerService: LoggerService,
   ) {}
 
-  async rentCar(rentCarDto: RentCarDto, user: User): Promise<Rental> {
+  async rentCar(rentCarDto: RentCarDto, user: User, idempotencyKey: string): Promise<Rental> {
     try {
       const existingActiveUserRental = await this.rentalsRepository.findOne({
         where: {
@@ -50,7 +52,17 @@ export class RentalsService {
         );
       }
 
+      const payloadHash = this.idempotencyService.hashPayload(rentCarDto);
+
       return this.entityManager.transaction(async (manager) => {
+        const cached = await this.idempotencyService.handleIdempotency<Rental>(
+          idempotencyKey,
+          payloadHash,
+          manager,
+        );
+
+        if (cached) return cached;
+
         const car = await manager.findOne(Car, {
           where: { id: rentCarDto.carId },
           lock: { mode: 'pessimistic_write' },
@@ -88,6 +100,12 @@ export class RentalsService {
             transactionType: TransactionType.RENTAL_PAYMENT,
             rental: createdRental,
           },
+          manager,
+        );
+
+        await this.idempotencyService.completeRecord(
+          idempotencyKey,
+          createdRental,
           manager,
         );
 
@@ -165,11 +183,24 @@ export class RentalsService {
   async returnCar(
     rentalId: string,
     user: User,
+    idempotencyKey: string,
   ): Promise<{ rental: Rental; penalty?: number; refund?: number }> {
     try {
       const rental = await this.getRentalToReturn(rentalId);
 
+      // Payload is the rentalId — the return action is fully determined by
+      // which rental is being returned, no other parameters vary.
+      const payloadHash = this.idempotencyService.hashPayload({ rentalId });
+
       return this.entityManager.transaction(async (manager) => {
+        const cached = await this.idempotencyService.handleIdempotency<{
+          rental: Rental;
+          penalty?: number;
+          refund?: number;
+        }>(idempotencyKey, payloadHash, manager);
+
+        if (cached) return cached;
+
         const returnDate = new Date();
         const { amount, transactionType } = this.calculatePenaltyOrRefund(
           rental,
@@ -201,13 +232,19 @@ export class RentalsService {
 
         const updatedRental = await manager.save(rental);
 
-        return {
+        const result = {
           rental: updatedRental,
-          penalty:
-            transactionType === TransactionType.PENALTY ? amount : undefined,
-          refund:
-            transactionType === TransactionType.REFUND ? amount : undefined,
+          penalty: transactionType === TransactionType.PENALTY ? amount : undefined,
+          refund: transactionType === TransactionType.REFUND ? amount : undefined,
         };
+
+        await this.idempotencyService.completeRecord(
+          idempotencyKey,
+          result,
+          manager,
+        );
+
+        return result;
       });
     } catch (error) {
       this.loggerService.error(

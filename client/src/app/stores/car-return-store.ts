@@ -20,6 +20,10 @@ export const CarReturnStore = t
       t.enumeration('ReturnOrigin', [RentalReturnOrigin.TABLE, RentalReturnOrigin.SINGLE_PAGE]),
       RentalReturnOrigin.TABLE,
     ),
+    // Stored in the model so it survives re-renders and is stable across
+    // retries of the same return action. Reset to a new UUID after a confirmed
+    // success so a subsequent return gets a fresh key.
+    idempotencyKey: t.optional(t.string, () => crypto.randomUUID()),
   })
   .actions((self) => ({
     setRentalToReturn(rental: Rental | null): void {
@@ -48,12 +52,19 @@ export const CarReturnStore = t
     setOrigin(origin: RentalReturnOrigin): void {
       self.origin = origin;
     },
+    rotateIdempotencyKey(): void {
+      self.idempotencyKey = crypto.randomUUID();
+    },
   }))
   .actions((self) => ({
     returnCar: flow(function* (id: string) {
       try {
         self.setLoading(true);
-        const { rental, refund, penalty, error } = yield returnCar(id);
+        const { rental, refund, penalty, error } = yield returnCar(
+          id,
+          self.idempotencyKey,
+        );
+
         const userStore = getRoot<RootStoreType>(self).currentUserStore;
 
         if (userStore.user?.balance !== null && userStore.user?.balance !== undefined) {
@@ -67,11 +78,18 @@ export const CarReturnStore = t
             self.setIsReturnedInTime(true);
           }
         }
+
         if (error) {
           self.setErrorMessage(error);
+        } else {
+          // Confirmed success — rotate the key so any future return
+          // action gets a fresh idempotency key.
+          self.rotateIdempotencyKey();
         }
       } catch (error) {
         self.setErrorMessage(UNEXPECTED_ERROR_MESSAGE);
+        // Key intentionally NOT rotated on unexpected error — retry
+        // of the same return should carry the same key.
       } finally {
         self.setLoading(false);
         self.setRentalToReturn(null);

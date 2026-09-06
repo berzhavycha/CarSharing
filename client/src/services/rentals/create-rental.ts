@@ -8,9 +8,16 @@ type ServiceReturn = {
   error?: string;
 };
 
-export const createRental = async (rentalDto: RentalDto): Promise<ServiceReturn> => {
+export const createRental = async (
+  rentalDto: RentalDto,
+  idempotencyKey: string,
+): Promise<ServiceReturn> => {
   try {
-    const { data } = await axiosInstance.post(`${Env.API_BASE_URL}/rentals`, rentalDto);
+    const { data } = await axiosInstance.post(`${Env.API_BASE_URL}/rentals`, rentalDto, {
+      headers: {
+        'Idempotency-Key': idempotencyKey,
+      },
+    });
     return { rental: data };
   } catch (error) {
     return findFirstExpectedError<RentalDto & UserRentalErrors>(error, createRentalFieldMappings);
