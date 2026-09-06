@@ -101,10 +101,15 @@ export const CurrentUserStore = t
         );
       }
     }),
-    topUp: flow(function* (userDto: UpdateUserBalanceDto) {
+    // A fresh idempotency key is generated per submission attempt. If the
+    // request fails ambiguously (network drop, 5xx) and the hook retries with
+    // the same key, the server returns the cached result without crediting
+    // the balance again. A new form submission always generates a new key,
+    // so intentional repeat top-ups are never blocked.
+    topUp: flow(function* (userDto: UpdateUserBalanceDto, idempotencyKey: string) {
       if (self.user) {
         yield self.performUserAction<UpdateUserBalanceDto>('topUp', () =>
-          topUp(self.user!.id, userDto),
+          topUp(self.user!.id, userDto, idempotencyKey),
         );
       }
     }),

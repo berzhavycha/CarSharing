@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Headers,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -46,11 +47,13 @@ export class UsersController {
   topUpUserAccount(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserBalanceDto: UpdateUserBalanceDto,
+    @Headers('idempotency-key') idempotencyKey?: string,
   ): Promise<User> {
     return this.usersService.updateUserBalance({
       id,
       balanceDto: updateUserBalanceDto,
       transactionType: TransactionType.TOP_UP,
+      idempotencyKey,
     });
   }
 }

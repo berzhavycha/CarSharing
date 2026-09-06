@@ -6,6 +6,7 @@ import {
   ConfigModule,
   DatabaseModule,
   FilesManagerModule,
+  IdempotencyModule,
   LoggerModule,
   OriginalCarsModule,
   PublicFilesModule,
@@ -31,6 +32,7 @@ import { OAuthModule } from './modules/oauth.module';
     PublicFilesModule,
     OAuthModule,
     FilesManagerModule,
+    IdempotencyModule
   ],
 })
 export class AppModule {

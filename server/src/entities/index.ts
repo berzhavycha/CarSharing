@@ -7,3 +7,4 @@ export * from './user.entity';
 export * from './public-file.entity';
 export * from './oauth-client.entity';
 export * from './oauth-code.entity';
+export * from './idempotancy-record.entity';

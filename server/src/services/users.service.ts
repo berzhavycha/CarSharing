@@ -23,6 +23,7 @@ import { LoggerService } from './logger.service';
 import { PublicFilesService } from './public-files.service';
 import { RolesService } from './roles.service';
 import { TransactionsService } from './transactions.service';
+import { IdempotencyService } from './idempotancy.service';
 
 @Injectable()
 export class UsersService {
@@ -32,6 +33,7 @@ export class UsersService {
     private readonly rolesService: RolesService,
     private readonly publicFilesService: PublicFilesService,
     private readonly loggerService: LoggerService,
+    private readonly idempotencyService: IdempotencyService,
     private readonly entityManager: EntityManager,
   ) {}
 
@@ -205,13 +207,31 @@ export class UsersService {
       balanceDto: UpdateUserBalanceDto;
       transactionType: TransactionType;
       rental?: Rental;
+      idempotencyKey?: string;
     },
     manager?: EntityManager,
   ): Promise<User | null> {
     try {
       const user = await this.findById(options.id);
 
+      const payloadHash = options.idempotencyKey
+        ? this.idempotencyService.hashPayload(options.balanceDto)
+        : null;
+
       const updateBalance = async (manager: EntityManager): Promise<User> => {
+        if (options.idempotencyKey) {
+          const cached = await this.idempotencyService.handleIdempotency<User>(
+            options.idempotencyKey,
+            payloadHash,
+            manager,
+          );
+
+          // Covers: completed matching retry → return original response.
+          // Concurrent retry → 409 already thrown inside handleIdempotency.
+          // Different payload → 422 already thrown inside handleIdempotency.
+          if (cached) return cached;
+        }
+
         await this.transactionsService.createTransaction(
           {
             amount: options.balanceDto.amount,
@@ -224,14 +244,25 @@ export class UsersService {
         );
 
         user.balance = user.balance + options.balanceDto.amount;
-        return manager.save(user);
+        const updatedUser = await manager.save(user);
+
+        // Mark the record complete inside the same transaction. If this
+        // commit fails, the PENDING row remains and subsequent retries
+        // receive a 409 rather than reprocessing — safe, recoverable.
+        if (options.idempotencyKey) {
+          await this.idempotencyService.completeRecord(
+            options.idempotencyKey,
+            updatedUser,
+            manager,
+          );
+        }
+
+        return updatedUser;
       };
 
-      if (manager) {
-        return updateBalance(manager);
-      }
-
-      return this.entityManager.transaction(updateBalance);
+      return manager
+        ? await updateBalance(manager)
+        : await this.entityManager.transaction(updateBalance);
     } catch (error) {
       this.loggerService.error(
         `Error updating user balance: ${error.message}`,

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 import { useStore } from '@/context';
 import { UpdateUserBalanceDto } from '@/types';
@@ -21,18 +21,28 @@ export const useTopUp = (): HookReturn => {
   const [unexpectedError, setUnexpectedError] = useState<string>(
     errors?.topUp?.unexpectedError ?? '',
   );
+  const [lastAmount, setLastAmount] = useState<number | null>(null);
+
+  const idempotencyKeyRef = useRef<string>(crypto.randomUUID());
 
   useEffect(() => {
     if (isSubmitted) {
       if (!errors?.topUp) {
         setIsTopUpSuccessful(true);
+        idempotencyKeyRef.current = crypto.randomUUID();
+        setLastAmount(null);
       }
       setIsSubmitted(false);
     }
   }, [isSubmitted, errors?.topUp]);
 
   const onSubmit = async (topUpDto: UpdateUserBalanceDto): Promise<void> => {
-    await topUp(topUpDto);
+    if (topUpDto.amount !== lastAmount) {
+      idempotencyKeyRef.current = crypto.randomUUID();
+      setLastAmount(topUpDto.amount);
+    }
+
+    await topUp(topUpDto, idempotencyKeyRef.current);
     setIsSubmitted(true);
   };
 
