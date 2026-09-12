@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Headers,
@@ -49,6 +50,9 @@ export class UsersController {
     @Body() updateUserBalanceDto: UpdateUserBalanceDto,
     @Headers('idempotency-key') idempotencyKey?: string,
   ): Promise<User> {
+    if (!idempotencyKey) {
+      throw new BadRequestException('Idempotency-Key header is required.');
+    }
     return this.usersService.updateUserBalance({
       id,
       balanceDto: updateUserBalanceDto,

@@ -59,6 +59,8 @@ export function registerTools(server: McpServer, oauthSessionId: string): void {
           hours,
           pickUpLocation,
           dropOffLocation,
+        }, {
+          headers: { 'Idempotency-Key': crypto.randomUUID() },
         });
         return {
           content: [{ type: 'text', text: JSON.stringify(data) }],
@@ -84,7 +86,9 @@ export function registerTools(server: McpServer, oauthSessionId: string): void {
     async ({ rentalId }) => {
       try {
         const api = await getApiClient(oauthSessionId);
-        const { data } = await api.patch(`/rentals/${rentalId}`);
+        const { data } = await api.patch(`/rentals/${rentalId}`, undefined, {
+          headers: { 'Idempotency-Key': crypto.randomUUID() },
+        });
   
         return {
           content: [{ type: 'text', text: JSON.stringify(data) }],
