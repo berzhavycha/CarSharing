@@ -163,31 +163,12 @@ export class RentalsService {
     return {};
   }
 
-  async getRentalToReturn(id: string): Promise<Rental> {
-    const rental = await this.rentalsRepository.findOne({
-      where: { id },
-      relations: ['car', 'originalCar', 'user'],
-    });
-
-    if (!rental) {
-      throw new BadRequestException(rentalsErrorMessages.RENTAL_NOT_FOUND);
-    }
-
-    if (rental.rentalEnd !== null) {
-      throw new BadRequestException(rentalsErrorMessages.CAR_IS_RETURNED);
-    }
-
-    return rental;
-  }
-
   async returnCar(
     rentalId: string,
     user: User,
     idempotencyKey: string,
   ): Promise<{ rental: Rental; penalty?: number; refund?: number }> {
     try {
-      const rental = await this.getRentalToReturn(rentalId);
-
       // Payload is the rentalId — the return action is fully determined by
       // which rental is being returned, no other parameters vary.
       const payloadHash = this.idempotencyService.hashPayload({ rentalId });
@@ -200,6 +181,21 @@ export class RentalsService {
         }>(idempotencyKey, payloadHash, manager);
 
         if (cached) return cached;
+
+         const rental = await manager.findOne(Rental, {
+          where: { id: rentalId },
+          lock: { mode: 'pessimistic_write' },
+          relations: ['car', 'originalCar', 'user'],
+        });
+
+        if (!rental) {
+          throw new BadRequestException(rentalsErrorMessages.RENTAL_NOT_FOUND);
+        }
+
+        if (rental.rentalEnd !== null) {
+          throw new BadRequestException(rentalsErrorMessages.CAR_IS_RETURNED);
+        }
+
 
         const returnDate = new Date();
         const { amount, transactionType } = this.calculatePenaltyOrRefund(

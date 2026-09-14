@@ -212,13 +212,20 @@ export class UsersService {
     manager?: EntityManager,
   ): Promise<User | null> {
     try {
-      const user = await this.findById(options.id);
-
       const payloadHash = options.idempotencyKey
         ? this.idempotencyService.hashPayload(options.balanceDto)
         : null;
 
       const updateBalance = async (manager: EntityManager): Promise<User> => {
+        // Read inside the transaction — eliminates TOCTOU race
+        const user = await manager.findOne(User, {
+          where: { id: options.id },
+        });
+
+        if (!user) {
+          throw new NotFoundException(`User ${options.id} not found`);
+        }
+
         if (options.idempotencyKey) {
           const cached = await this.idempotencyService.handleIdempotency<User>(
             options.idempotencyKey,
@@ -243,8 +250,24 @@ export class UsersService {
           manager,
         );
 
-        user.balance = user.balance + options.balanceDto.amount;
-        const updatedUser = await manager.save(user);
+        // Atomic increment — no read-modify-write, concurrent top-ups
+        // are fully compatible and don't need serialization
+        await manager
+          .createQueryBuilder()
+          .update(User)
+          .set({ balance: () => `balance + :amount` })
+          .where('id = :id', { id: options.id })
+          .setParameter('amount', options.balanceDto.amount)
+          .execute();
+
+        // Re-fetch to return accurate post-update state
+        const updatedUser = await manager.findOne(User, {
+          where: { id: options.id },
+        });
+
+        if (!updatedUser) {
+          throw new NotFoundException(`User ${options.id} not found after update`);
+        }
 
         // Mark the record complete inside the same transaction. If this
         // commit fails, the PENDING row remains and subsequent retries
